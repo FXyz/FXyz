@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
-import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.control.Button;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -36,30 +38,32 @@ import org.fxyz.utils.CameraTransformer;
  */
 public class BezierTest extends FXyzSample {
 
+    double mousePosX;
+    double mousePosY;
+    double mouseOldX;
+    double mouseOldY;
+    double mouseDeltaX;
+    double mouseDeltaY;
+    long lastEffect;
     
-    private PerspectiveCamera camera;
-    private final double sceneWidth = 600;
-    private final double sceneHeight = 600;
-    private final CameraTransformer cameraTransform = new CameraTransformer();
-    
-    private double mousePosX;
-    private double mousePosY;
-    private double mouseOldX;
-    private double mouseOldY;
-    private double mouseDeltaX;
-    private double mouseDeltaY;
-    private ArrayList<BezierMesh> beziers;
-    private Rotate rotateY;
-    private DensityFunction<Point3D> dens = p->(double)p.f;
-    private long lastEffect;
-    private final Group root = new Group();
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    public Node getSample() throws Exception {
+        PerspectiveCamera camera;
+        final double sceneWidth = 600;
+        final double sceneHeight = 600;
+        final CameraTransformer cameraTransform = new CameraTransformer();
+
+        ArrayList<BezierMesh> beziers;
+        Rotate rotateY;
+        DensityFunction<Point3D> dens = p -> (double) p.f;
         
-        Scene scene = new Scene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.BLACK);
-        camera = new PerspectiveCamera(true);        
-     
+
+        SubScene subScene;
+
+        Group sceneRoot = new Group();
+        subScene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
+        subScene.setFill(Color.BLACK);
+        camera = new PerspectiveCamera(true);
+
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
@@ -74,148 +78,158 @@ public class BezierTest extends FXyzSample {
         cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(camera.getTranslateZ());        
-        scene.setCamera(camera);
-        
+        light.setTranslateZ(camera.getTranslateZ());
+        subScene.setCamera(camera);
+
         rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
         Group group = new Group();
-        group.getChildren().add(cameraTransform);    
-        
+        group.getChildren().add(cameraTransform);
+
 //        List<Point3D> knots=Arrays.asList(new Point3D(0f,0f,0f),new Point3D(3f,0f,2f),
 //                new Point3D(5f,2f,3f),new Point3D(7f,-3f,0f),new Point3D(6f,-1f,-4f));
-        List<Point3D> knots=Arrays.asList(new Point3D(3f,0f,0f),new Point3D(0.77171f,1.68981f,0.989821f),
-                new Point3D(-0.681387f,0.786363f,-0.281733f),new Point3D(-2.31757f,-0.680501f,-0.909632f),
-                new Point3D(-0.404353f,-2.81233f,0.540641f),new Point3D(1.1316f,-0.727237f,0.75575f),
-                new Point3D(1.1316f,0.727237f,-0.75575f),new Point3D(-0.404353f,2.81233f,-0.540641f),
-                new Point3D(-2.31757f,0.680501f,0.909632f),new Point3D(-0.681387f,-0.786363f,0.281733f),
-                new Point3D(0.77171f,-1.68981f,-0.989821f),new Point3D(3f,0f,0f));
-        
-        boolean showControlPoints=true;
-        boolean showKnots=true;
-        
+        List<Point3D> knots = Arrays.asList(new Point3D(3f, 0f, 0f), new Point3D(0.77171f, 1.68981f, 0.989821f),
+                new Point3D(-0.681387f, 0.786363f, -0.281733f), new Point3D(-2.31757f, -0.680501f, -0.909632f),
+                new Point3D(-0.404353f, -2.81233f, 0.540641f), new Point3D(1.1316f, -0.727237f, 0.75575f),
+                new Point3D(1.1316f, 0.727237f, -0.75575f), new Point3D(-0.404353f, 2.81233f, -0.540641f),
+                new Point3D(-2.31757f, 0.680501f, 0.909632f), new Point3D(-0.681387f, -0.786363f, 0.281733f),
+                new Point3D(0.77171f, -1.68981f, -0.989821f), new Point3D(3f, 0f, 0f));
+
+        boolean showControlPoints = true;
+        boolean showKnots = true;
+
         InterpolateBezier interpolate = new InterpolateBezier(knots);
-        beziers=new ArrayList<>();
-        AtomicInteger sp=new AtomicInteger();
-        if(showKnots || showControlPoints){
-            interpolate.getSplines().forEach(spline->{
-                Point3D k0=spline.getPoints().get(0);
-                Point3D k1=spline.getPoints().get(1);
-                Point3D k2=spline.getPoints().get(2);
-                Point3D k3=spline.getPoints().get(3);
-                if(showKnots){
-                    Sphere s=new Sphere(0.2d);
+        beziers = new ArrayList<>();
+        AtomicInteger sp = new AtomicInteger();
+        if (showKnots || showControlPoints) {
+            interpolate.getSplines().forEach(spline -> {
+                Point3D k0 = spline.getPoints().get(0);
+                Point3D k1 = spline.getPoints().get(1);
+                Point3D k2 = spline.getPoints().get(2);
+                Point3D k3 = spline.getPoints().get(3);
+                if (showKnots) {
+                    Sphere s = new Sphere(0.2d);
                     s.getTransforms().add(new Translate(k0.x, k0.y, k0.z));
                     s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
                     group.getChildren().add(s);
-                    s=new Sphere(0.2d);
+                    s = new Sphere(0.2d);
                     s.getTransforms().add(new Translate(k3.x, k3.y, k3.z));
                     s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
                     group.getChildren().add(s);
                 }
-                if(showControlPoints){
-                    Point3D dir=k1.substract(k0).crossProduct(new Point3D(0,-1,0));
-                    double angle=Math.acos(k1.substract(k0).normalize().dotProduct(new Point3D(0,-1,0)));
-                    double h1=k1.substract(k0).magnitude();
-                    Cylinder c=new Cylinder(0.03d,h1);
-                    c.getTransforms().addAll(new Translate(k0.x, k0.y-h1/2d, k0.z),
-                            new Rotate(-Math.toDegrees(angle), 0d,h1/2d,0d,
-                                    new javafx.geometry.Point3D(dir.x,-dir.y,dir.z)));
+                if (showControlPoints) {
+                    Point3D dir = k1.substract(k0).crossProduct(new Point3D(0, -1, 0));
+                    double angle = Math.acos(k1.substract(k0).normalize().dotProduct(new Point3D(0, -1, 0)));
+                    double h1 = k1.substract(k0).magnitude();
+                    Cylinder c = new Cylinder(0.03d, h1);
+                    c.getTransforms().addAll(new Translate(k0.x, k0.y - h1 / 2d, k0.z),
+                            new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
+                                    new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
                     c.setMaterial(new PhongMaterial(Color.GREEN));
                     group.getChildren().add(c);
 
-                    dir=k2.substract(k1).crossProduct(new Point3D(0,-1,0));
-                    angle=Math.acos(k2.substract(k1).normalize().dotProduct(new Point3D(0,-1,0)));
-                    h1=k2.substract(k1).magnitude();
-                    c=new Cylinder(0.03d,h1);
-                    c.getTransforms().addAll(new Translate(k1.x, k1.y-h1/2d, k1.z),
-                            new Rotate(-Math.toDegrees(angle), 0d,h1/2d,0d,
-                                    new javafx.geometry.Point3D(dir.x,-dir.y,dir.z)));
+                    dir = k2.substract(k1).crossProduct(new Point3D(0, -1, 0));
+                    angle = Math.acos(k2.substract(k1).normalize().dotProduct(new Point3D(0, -1, 0)));
+                    h1 = k2.substract(k1).magnitude();
+                    c = new Cylinder(0.03d, h1);
+                    c.getTransforms().addAll(new Translate(k1.x, k1.y - h1 / 2d, k1.z),
+                            new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
+                                    new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
                     c.setMaterial(new PhongMaterial(Color.GREEN));
                     group.getChildren().add(c);
 
-                    dir=k3.substract(k2).crossProduct(new Point3D(0,-1,0));
-                    angle=Math.acos(k3.substract(k2).normalize().dotProduct(new Point3D(0,-1,0)));
-                    h1=k3.substract(k2).magnitude();
-                    c=new Cylinder(0.03d,h1);
-                    c.getTransforms().addAll(new Translate(k2.x, k2.y-h1/2d, k2.z),
-                            new Rotate(-Math.toDegrees(angle), 0d,h1/2d,0d,
-                                    new javafx.geometry.Point3D(dir.x,-dir.y,dir.z)));
+                    dir = k3.substract(k2).crossProduct(new Point3D(0, -1, 0));
+                    angle = Math.acos(k3.substract(k2).normalize().dotProduct(new Point3D(0, -1, 0)));
+                    h1 = k3.substract(k2).magnitude();
+                    c = new Cylinder(0.03d, h1);
+                    c.getTransforms().addAll(new Translate(k2.x, k2.y - h1 / 2d, k2.z),
+                            new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
+                                    new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
                     c.setMaterial(new PhongMaterial(Color.GREEN));
                     group.getChildren().add(c);
 
-                    Sphere s=new Sphere(0.1d);
+                    Sphere s = new Sphere(0.1d);
                     s.getTransforms().add(new Translate(k1.x, k1.y, k1.z));
                     s.setMaterial(new PhongMaterial(Color.RED));
                     group.getChildren().add(s);
-                    s=new Sphere(0.1d);
+                    s = new Sphere(0.1d);
                     s.getTransforms().add(new Translate(k2.x, k2.y, k2.z));
                     s.setMaterial(new PhongMaterial(Color.RED));
                     group.getChildren().add(s);
                 }
             });
         }
-        long time=System.currentTimeMillis();
-        interpolate.getSplines().stream().forEach(spline->{
-            BezierMesh bezier = new BezierMesh(spline,0.1d,
-                                    300,20,0,0);
+        long time = System.currentTimeMillis();
+        interpolate.getSplines().stream().forEach(spline -> {
+            BezierMesh bezier = new BezierMesh(spline, 0.1d,
+                    300, 20, 0, 0);
 //            bezier.setDrawMode(DrawMode.LINE);
             bezier.setCullFace(CullFace.NONE);
 //            bezier.setSectionType(SectionType.TRIANGLE);
 
-        // NONE
+            // NONE
 //            bezier.setTextureModeNone(Color.hsb(360d*sp.getAndIncrement()/interpolate.getSplines().size(), 1, 1));
-        // IMAGE
+            // IMAGE
 //            bezier.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
-        // PATTERN
+            // PATTERN
 //           bezier.setTextureModePattern(3d);
-        // FUNCTION
+            // FUNCTION
 //            bezier.setTextureModeVertices1D(256*256,t->spline.getKappa(t));
-        // DENSITY
+            // DENSITY
 //            bezier.setTextureModeVertices3D(256*256,dens);
-        // FACES
-            bezier.setTextureModeFaces(256*256);
+            // FACES
+            bezier.setTextureModeFaces(256 * 256);
 
-            bezier.getTransforms().addAll(new Rotate(0,Rotate.X_AXIS),rotateY);
+            bezier.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
             beziers.add(bezier);
         });
-        System.out.println("time: "+(System.currentTimeMillis()-time)); //43.815->25.606->15
+        System.out.println("time: " + (System.currentTimeMillis() - time)); //43.815->25.606->15
         group.getChildren().addAll(beziers);
-        
-        root.getChildren().addAll(group);        
-        
+
+        sceneRoot.getChildren().addAll(group);
+
         //First person shooter keyboard movement 
-        scene.setOnKeyPressed(event -> {
-            
+        subScene.setOnKeyPressed(event -> {
+
             double change = 10.0;
             //Add shift modifier to simulate "Running Speed"
-            if(event.isShiftDown()) { change = 50.0; }
+            if (event.isShiftDown()) {
+                change = 50.0;
+            }
             //What key did the user press?
             KeyCode keycode = event.getCode();
             //Step 2c: Add Zoom controls
-            if(keycode == KeyCode.W) { camera.setTranslateZ(camera.getTranslateZ() + change); }
-            if(keycode == KeyCode.S) { camera.setTranslateZ(camera.getTranslateZ() - change); }
+            if (keycode == KeyCode.W) {
+                camera.setTranslateZ(camera.getTranslateZ() + change);
+            }
+            if (keycode == KeyCode.S) {
+                camera.setTranslateZ(camera.getTranslateZ() - change);
+            }
             //Step 2d:  Add Strafe controls
-            if(keycode == KeyCode.A) { camera.setTranslateX(camera.getTranslateX() - change); }
-            if(keycode == KeyCode.D) { camera.setTranslateX(camera.getTranslateX() + change); }
-        });        
-        
-        scene.setOnMousePressed((MouseEvent me) -> {
+            if (keycode == KeyCode.A) {
+                camera.setTranslateX(camera.getTranslateX() - change);
+            }
+            if (keycode == KeyCode.D) {
+                camera.setTranslateX(camera.getTranslateX() + change);
+            }
+        });
+
+        subScene.setOnMousePressed((MouseEvent me) -> {
             mousePosX = me.getSceneX();
             mousePosY = me.getSceneY();
             mouseOldX = me.getSceneX();
             mouseOldY = me.getSceneY();
         });
-        scene.setOnMouseDragged((MouseEvent me) -> {
+        subScene.setOnMouseDragged((MouseEvent me) -> {
             mouseOldX = mousePosX;
             mouseOldY = mousePosY;
             mousePosX = me.getSceneX();
             mousePosY = me.getSceneY();
             mouseDeltaX = (mousePosX - mouseOldX);
             mouseDeltaY = (mousePosY - mouseOldY);
-            
+
             double modifier = 10.0;
             double modifierFactor = 0.1;
-            
+
             if (me.isControlDown()) {
                 modifier = 0.1;
             }
@@ -234,9 +248,9 @@ public class BezierTest extends FXyzSample {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-        
+
         lastEffect = System.nanoTime();
-        AtomicInteger count=new AtomicInteger();
+        AtomicInteger count = new AtomicInteger();
         AnimationTimer timerEffect = new AnimationTimer() {
 
             @Override
@@ -256,7 +270,7 @@ public class BezierTest extends FXyzSample {
 //                    beziers.forEach(b->b.setDensity(dens));
 //                    knot.setP(1+(count.get()%5));
 //                    knot.setQ(2+(count.get()%15));
-                    
+
 //                    if(count.get()%100<50){
 //                        knot.setDrawMode(DrawMode.LINE);
 //                    } else {
@@ -271,14 +285,13 @@ public class BezierTest extends FXyzSample {
                 }
             }
         };
-        
-        
-        primaryStage.setTitle("F(X)yz - Bezier Splines");
-        primaryStage.setScene(scene);
-        primaryStage.show();   
-        
+        //testing for binding width and height
+        if(subScene.getParent() != null){
+            subScene.widthProperty().bind(((Pane)subScene.getParent()).prefWidthProperty());
+            subScene.heightProperty().bind(((Pane)subScene.getParent()).prefHeightProperty());
+        }
 //        timerEffect.start();
-        
+        return (subScene);
     }
 
     @Override
@@ -288,8 +301,13 @@ public class BezierTest extends FXyzSample {
 
     @Override
     public Node getPanel(Stage stage) {
-        //return root;    // does not work
-        return new Button("Adding root(group) doesn't work .. But this worked .. Looks like we need to change things to SubScene or some other Node");
+        try {
+            return getSample();    // does not work
+            //return new Button("Adding root(group) doesn't work .. But this worked .. Looks like we need to change things to SubScene or some other Node");
+        } catch (Exception ex) {
+            Logger.getLogger(BezierTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     @Override
