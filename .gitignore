@@ -1,1 +1,8 @@
-/dist/
+/FXyzLib/.nb-gradle/private/
+/FXyzLib/FXyz-Samples/build/
+/FXyzLib/Fxyz-Core/build/
+/FXyzLib/build/
+/.nb-gradle/private/
+/build/
+/FXyz-Samples/build/
+/Fxyz-Core/build/

@@ -1,0 +1,37 @@
+import org.gradle.api.artifacts.*
+apply plugin: 'java'
+apply plugin: 'base' // To add "clean" task to the root project.
+
+subprojects {
+    apply from: rootProject.file('common.gradle')
+}
+Properties cfg = new Properties()
+cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
+    
+ext {
+      artifact_suffix       = cfg.artifact_suffix
+      specification_title   = cfg.fxyz_specification_title  //'Java 8u20'
+      specification_version = cfg.fxyz_specification_version //'8.20.7'
+      fxyz_name       = 'FXyzLib'
+      fxsampler_name        = 'fxsampler'
+      fxsampler_version     = cfg.fxsampler_specification_version + artifact_suffix
+      fxsampler_mainClass   = 'fxsampler.FXSampler'
+}
+    
+// TASKS========================================================================
+task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
+    title = 'All modules'
+    destinationDir = new File(project.buildDir, 'merged-javadoc')
+
+    // Note: The closures below are executed lazily.
+    source {
+       subprojects*.sourceSets*.main*.allSource
+    }
+    classpath.from {
+        subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
+    }
+}
+
+task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
+    gradleVersion = '2.1'
+}
