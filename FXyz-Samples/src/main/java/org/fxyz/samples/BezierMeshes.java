@@ -7,8 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -49,22 +47,17 @@ import org.fxyz.utils.CameraTransformer;
  *
  * @author jpereda
  */
-public class BezierTest extends FXyzSample {
-
-    double mousePosX;
-    double mousePosY;
-    double mouseOldX;
-    double mouseOldY;
-    double mouseDeltaX;
-    double mouseDeltaY;
+public class BezierMeshes extends FXyzSample {
+    
     long lastEffect;
     
     private final BooleanProperty showKnots = new SimpleBooleanProperty();
     private final BooleanProperty showControlPoints = new SimpleBooleanProperty();
     
-    public Node getSample() throws Exception {
+    @Override
+    public Node getSample(){
         PerspectiveCamera camera;
-        final double sceneWidth = 600;
+        final double sceneWidth = 800;
         final double sceneHeight = 600;
         final CameraTransformer cameraTransform = new CameraTransformer();
 
@@ -334,7 +327,7 @@ public class BezierTest extends FXyzSample {
             return getSample();    // does not work
             //return new Button("Adding root(group) doesn't work .. But this worked .. Looks like we need to change things to SubScene or some other Node");
         } catch (Exception ex) {
-            Logger.getLogger(BezierTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BezierMeshes.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
