@@ -7,6 +7,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -14,9 +19,17 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -45,6 +58,9 @@ public class BezierTest extends FXyzSample {
     double mouseDeltaX;
     double mouseDeltaY;
     long lastEffect;
+    
+    private final BooleanProperty showKnots = new SimpleBooleanProperty();
+    private final BooleanProperty showControlPoints = new SimpleBooleanProperty();
     
     public Node getSample() throws Exception {
         PerspectiveCamera camera;
@@ -94,29 +110,35 @@ public class BezierTest extends FXyzSample {
                 new Point3D(-2.31757f, 0.680501f, 0.909632f), new Point3D(-0.681387f, -0.786363f, 0.281733f),
                 new Point3D(0.77171f, -1.68981f, -0.989821f), new Point3D(3f, 0f, 0f));
 
-        boolean showControlPoints = true;
-        boolean showKnots = true;
 
         InterpolateBezier interpolate = new InterpolateBezier(knots);
         beziers = new ArrayList<>();
-        AtomicInteger sp = new AtomicInteger();
-        if (showKnots || showControlPoints) {
-            interpolate.getSplines().forEach(spline -> {
+        showKnots.addListener((obs,b,b1)->interpolate.getSplines().forEach(spline -> {
                 Point3D k0 = spline.getPoints().get(0);
                 Point3D k1 = spline.getPoints().get(1);
                 Point3D k2 = spline.getPoints().get(2);
                 Point3D k3 = spline.getPoints().get(3);
-                if (showKnots) {
+                if (showKnots.get()) {
                     Sphere s = new Sphere(0.2d);
+                    s.setId("knot");
                     s.getTransforms().add(new Translate(k0.x, k0.y, k0.z));
                     s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
                     group.getChildren().add(s);
                     s = new Sphere(0.2d);
+                    s.setId("knot");
                     s.getTransforms().add(new Translate(k3.x, k3.y, k3.z));
                     s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
                     group.getChildren().add(s);
+                } else {
+                    group.getChildren().removeIf(s->s.getId()!=null && s.getId().equals("knot"));
                 }
-                if (showControlPoints) {
+        }));
+        showControlPoints.addListener((obs,b,b1)->interpolate.getSplines().forEach(spline -> {
+                Point3D k0 = spline.getPoints().get(0);
+                Point3D k1 = spline.getPoints().get(1);
+                Point3D k2 = spline.getPoints().get(2);
+                Point3D k3 = spline.getPoints().get(3);
+                 if (showControlPoints.get()) {
                     Point3D dir = k1.substract(k0).crossProduct(new Point3D(0, -1, 0));
                     double angle = Math.acos(k1.substract(k0).normalize().dotProduct(new Point3D(0, -1, 0)));
                     double h1 = k1.substract(k0).magnitude();
@@ -125,6 +147,7 @@ public class BezierTest extends FXyzSample {
                             new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
                                     new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
                     c.setMaterial(new PhongMaterial(Color.GREEN));
+                    c.setId("Control");
                     group.getChildren().add(c);
 
                     dir = k2.substract(k1).crossProduct(new Point3D(0, -1, 0));
@@ -135,6 +158,7 @@ public class BezierTest extends FXyzSample {
                             new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
                                     new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
                     c.setMaterial(new PhongMaterial(Color.GREEN));
+                    c.setId("Control");
                     group.getChildren().add(c);
 
                     dir = k3.substract(k2).crossProduct(new Point3D(0, -1, 0));
@@ -145,19 +169,24 @@ public class BezierTest extends FXyzSample {
                             new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
                                     new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
                     c.setMaterial(new PhongMaterial(Color.GREEN));
+                    c.setId("Control");
                     group.getChildren().add(c);
 
                     Sphere s = new Sphere(0.1d);
                     s.getTransforms().add(new Translate(k1.x, k1.y, k1.z));
                     s.setMaterial(new PhongMaterial(Color.RED));
+                    s.setId("Control");
                     group.getChildren().add(s);
                     s = new Sphere(0.1d);
                     s.getTransforms().add(new Translate(k2.x, k2.y, k2.z));
                     s.setMaterial(new PhongMaterial(Color.RED));
+                    s.setId("Control");
                     group.getChildren().add(s);
+                } else {
+                    group.getChildren().removeIf(s->s.getId()!=null && s.getId().equals("Control"));
                 }
-            });
-        }
+            }));
+        
         long time = System.currentTimeMillis();
         interpolate.getSplines().stream().forEach(spline -> {
             BezierMesh bezier = new BezierMesh(spline, 0.1d,
@@ -308,6 +337,57 @@ public class BezierTest extends FXyzSample {
             Logger.getLogger(BezierTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    @Override
+    public Node getControlPanel() {
+        Accordion accordion=new Accordion();
+        /****************************
+        **** TITLEDPANE 1. FRAME ****
+        *****************************/
+        TitledPane tpFrame=new TitledPane();
+        tpFrame.setText("Frame");
+        // the result
+        GridPane lGridPane = new GridPane();
+        lGridPane.setVgap(2.0);
+        lGridPane.setHgap(2.0);
+
+        // setup the grid so all the labels will not grow, but the rest will
+        ColumnConstraints lColumnConstraintsAlwaysGrow = new ColumnConstraints();
+        lColumnConstraintsAlwaysGrow.setHgrow(Priority.ALWAYS);
+        ColumnConstraints lColumnConstraintsNeverGrow = new ColumnConstraints();
+        lColumnConstraintsNeverGrow.setHgrow(Priority.NEVER);
+        lGridPane.getColumnConstraints().addAll(lColumnConstraintsNeverGrow, lColumnConstraintsAlwaysGrow);
+        int lRowIdx = 0;
+        
+        CheckBox chkKnots=new CheckBox();
+        chkKnots.setSelected(showKnots.get());
+        Label lLabel = new Label("Show Knots: ");
+        lLabel.setTooltip(new Tooltip("Select if the knots are visible or not"));
+        lGridPane.add(lLabel,0,lRowIdx);
+        chkKnots.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) -> {
+            showKnots.set(t1);
+        });
+        lGridPane.add(chkKnots, 1,lRowIdx);
+        lRowIdx++;
+        
+        CheckBox chkControl=new CheckBox();
+        chkControl.setSelected(showControlPoints.get());
+        Label lControl = new Label("Show Control Points: ");
+        lControl.setTooltip(new Tooltip("Select if the control points are visible or not"));
+        lGridPane.add(lControl,0,lRowIdx);
+        chkControl.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) -> {
+            showControlPoints.set(t1);
+        });
+        lGridPane.add(chkControl, 1,lRowIdx);
+        lRowIdx++;
+        
+        tpFrame.setContent(lGridPane);
+        
+        accordion.getPanes().addAll(tpFrame);
+        accordion.setExpandedPane(tpFrame);
+    
+        return accordion;
     }
 
     @Override
