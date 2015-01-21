@@ -7,8 +7,6 @@ package org.fxyz.scene;
 
 import com.sun.javafx.Utils;
 import javafx.animation.AnimationTimer;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Point3D;
@@ -16,6 +14,7 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -26,14 +25,14 @@ import javafx.scene.transform.Translate;
 import javafx.util.Callback;
 
 /**
- * A self initializing First Person Shooter camera 
+ * A self initializing First Person Shooter camera
  *
  * @author Jason Pollastrini aka jdub1581
  */
 public class SimpleFPSCamera extends Parent {
 
     public SimpleFPSCamera() {
-        initialize();        
+        initialize();
     }
 
     private void update() {
@@ -81,75 +80,71 @@ public class SimpleFPSCamera extends Parent {
     private double mouseDeltaX;
     private double mouseDeltaY;
 
-    private final InvalidationListener sceneListener = new InvalidationListener() {
-        @Override
-        public void invalidated(Observable observable) {
-            if (getScene() != null) {
-                initializeCamera();
-                loadCameraControls(getScene());
-                getScene().setCamera(getCamera());
-                sceneProperty().removeListener(this);
-            }
-        }
-    };
-
-    private void initialize() {       
+    private void initialize() {
         getChildren().add(root);
-        sceneProperty().addListener(sceneListener);
         getTransforms().add(affine);
+        initializeCamera();
         startUpdateThread();
     }
 
-    private void loadCameraControls(Scene scene) {
-        scene.addEventHandler(KeyEvent.ANY, ke -> {
-            if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
-                switch (ke.getCode()) {
-                    case Q: up = true;                    
-                        break;
-                    case E: down = true;
-                        break;
-                    case W:
-                        fwd = true;
-                        break;
-                    case S:
-                        back = true;
-                        break;
-                    case A:
-                        strafeL = true;
-                        break;
-                    case D:
-                        strafeR = true;
-                        break;
-                    case SHIFT:
-                        shift = true;
-                        moveSpeed = 20;
-                        break;
-                }
-            } else if (ke.getEventType() == KeyEvent.KEY_RELEASED) {
-                switch (ke.getCode()) {
-                    case Q: up = false;
-                        break;
-                    case E: down = false;
-                        break;
-                    case W:
-                        fwd = false;
-                        break;
-                    case S:
-                        back = false;
-                        break;
-                    case A:
-                        strafeL = false;
-                        break;
-                    case D:
-                        strafeR = false;
-                        break;
-                    case SHIFT:
-                        moveSpeed = 10;
-                        shift = false;
-                        break;
-                }
+    public void loadControlsForSubScene(SubScene scene) {
+        sceneProperty().addListener(l -> {
+            if (getScene() != null) {
+                getScene().addEventHandler(KeyEvent.ANY, ke -> {
+                    if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
+                        switch (ke.getCode()) {
+                            case Q:
+                                up = true;
+                                break;
+                            case E:
+                                down = true;
+                                break;
+                            case W:
+                                fwd = true;
+                                break;
+                            case S:
+                                back = true;
+                                break;
+                            case A:
+                                strafeL = true;
+                                break;
+                            case D:
+                                strafeR = true;
+                                break;
+                            case SHIFT:
+                                shift = true;
+                                moveSpeed = 20;
+                                break;
+                        }
+                    } else if (ke.getEventType() == KeyEvent.KEY_RELEASED) {
+                        switch (ke.getCode()) {
+                            case Q:
+                                up = false;
+                                break;
+                            case E:
+                                down = false;
+                                break;
+                            case W:
+                                fwd = false;
+                                break;
+                            case S:
+                                back = false;
+                                break;
+                            case A:
+                                strafeL = false;
+                                break;
+                            case D:
+                                strafeR = false;
+                                break;
+                            case SHIFT:
+                                moveSpeed = 10;
+                                shift = false;
+                                break;
+                        }
+                    }
+                    ke.consume();
+                });
             }
-            ke.consume();
         });
         scene.addEventHandler(MouseEvent.ANY, me -> {
             if (me.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
@@ -157,7 +152,7 @@ public class SimpleFPSCamera extends Parent {
                 mousePosY = me.getSceneY();
                 mouseOldX = me.getSceneX();
                 mouseOldY = me.getSceneY();
-                
+
             } else if (me.getEventType().equals(MouseEvent.MOUSE_DRAGGED)) {
                 mouseOldX = mousePosX;
                 mouseOldY = mousePosY;
@@ -189,7 +184,125 @@ public class SimpleFPSCamera extends Parent {
                             Utils.clamp(-45, ((rotateX.getAngle() - mouseDeltaY * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 35)
                     ); // vertical
                     affine.prepend(t.createConcatenation(rotateY.createConcatenation(rotateX)));
-                   
+
+                } else if (me.isSecondaryButtonDown()) {
+                    /*
+                     init zoom?
+                     */
+                } else if (me.isMiddleButtonDown()) {
+                    /*
+                     init panning?
+                     */
+                }
+            }
+        });
+
+        scene.addEventHandler(ScrollEvent.ANY, se -> {
+
+            if (se.getEventType().equals(ScrollEvent.SCROLL_STARTED)) {
+
+            } else if (se.getEventType().equals(ScrollEvent.SCROLL)) {
+
+            } else if (se.getEventType().equals(ScrollEvent.SCROLL_FINISHED)) {
+
+            }
+        });
+    }
+
+    public void loadControlsForScene(Scene scene) {
+        scene.addEventHandler(KeyEvent.ANY, ke -> {
+            if (ke.getEventType() == KeyEvent.KEY_PRESSED) {
+                switch (ke.getCode()) {
+                    case Q:
+                        up = true;
+                        break;
+                    case E:
+                        down = true;
+                        break;
+                    case W:
+                        fwd = true;
+                        break;
+                    case S:
+                        back = true;
+                        break;
+                    case A:
+                        strafeL = true;
+                        break;
+                    case D:
+                        strafeR = true;
+                        break;
+                    case SHIFT:
+                        shift = true;
+                        moveSpeed = 20;
+                        break;
+                }
+            } else if (ke.getEventType() == KeyEvent.KEY_RELEASED) {
+                switch (ke.getCode()) {
+                    case Q:
+                        up = false;
+                        break;
+                    case E:
+                        down = false;
+                        break;
+                    case W:
+                        fwd = false;
+                        break;
+                    case S:
+                        back = false;
+                        break;
+                    case A:
+                        strafeL = false;
+                        break;
+                    case D:
+                        strafeR = false;
+                        break;
+                    case SHIFT:
+                        moveSpeed = 10;
+                        shift = false;
+                        break;
+                }
+            }
+            ke.consume();
+        });
+        scene.addEventHandler(MouseEvent.ANY, me -> {
+            if (me.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
+                mousePosX = me.getSceneX();
+                mousePosY = me.getSceneY();
+                mouseOldX = me.getSceneX();
+                mouseOldY = me.getSceneY();
+
+            } else if (me.getEventType().equals(MouseEvent.MOUSE_DRAGGED)) {
+                mouseOldX = mousePosX;
+                mouseOldY = mousePosY;
+                mousePosX = me.getSceneX();
+                mousePosY = me.getSceneY();
+                mouseDeltaX = (mousePosX - mouseOldX);
+                mouseDeltaY = (mousePosY - mouseOldY);
+
+                mouseSpeed = 1.0;
+                mouseModifier = 0.1;
+
+                if (me.isPrimaryButtonDown()) {
+                    if (me.isControlDown()) {
+                        mouseSpeed = 0.1;
+                    }
+                    if (me.isShiftDown()) {
+                        mouseSpeed = 1.0;
+                    }
+                    t.setX(getPosition().getX());
+                    t.setY(getPosition().getY());
+                    t.setZ(getPosition().getZ());
+
+                    affine.setToIdentity();
+
+                    rotateY.setAngle(
+                            Utils.clamp(-360, ((rotateY.getAngle() + mouseDeltaX * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 360)
+                    ); // horizontal                
+                    rotateX.setAngle(
+                            Utils.clamp(-45, ((rotateX.getAngle() - mouseDeltaY * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 35)
+                    ); // vertical
+                    affine.prepend(t.createConcatenation(rotateY.createConcatenation(rotateX)));
+
                 } else if (me.isSecondaryButtonDown()) {
                     /*
                      init zoom?
@@ -223,7 +336,7 @@ public class SimpleFPSCamera extends Parent {
     }
 
     private void startUpdateThread() {
-        new AnimationTimer(){
+        new AnimationTimer() {
             @Override
             public void handle(long now) {
                 update();
@@ -285,7 +398,7 @@ public class SimpleFPSCamera extends Parent {
 
     /*==========================================================================
      Callbacks    
-       | R | Up| F |  | P|
+     | R | Up| F |  | P|
      U |mxx|mxy|mxz|  |tx|
      V |myx|myy|myz|  |ty|
      N |mzx|mzy|mzz|  |tz|
@@ -320,13 +433,18 @@ public class SimpleFPSCamera extends Parent {
     private Point3D getF() {
         return F.call(getLocalToSceneTransform());
     }
-    
-    public Point3D getLookDirection(){return getF();}
+
+    public Point3D getLookDirection() {
+        return getF();
+    }
 
     private Point3D getN() {
         return N.call(getLocalToSceneTransform());
     }
-    public Point3D getLookNormal(){return getN();}
+
+    public Point3D getLookNormal() {
+        return getN();
+    }
 
     private Point3D getR() {
         return R.call(getLocalToSceneTransform());
@@ -347,6 +465,5 @@ public class SimpleFPSCamera extends Parent {
     public final Point3D getPosition() {
         return P.call(getLocalToSceneTransform());
     }
-      
-   
+
 }
