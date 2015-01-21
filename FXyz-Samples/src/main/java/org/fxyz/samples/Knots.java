@@ -2,23 +2,22 @@ package org.fxyz.samples;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
-import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import org.fxyz.FXyzSample;
 import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
-import org.fxyz.io.OBJWriter;
 import org.fxyz.shapes.primitives.KnotMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 import org.fxyz.utils.CameraTransformer;
@@ -27,30 +26,27 @@ import org.fxyz.utils.CameraTransformer;
  *
  * @author jpereda
  */
-public class Knots extends Application {
-    private PerspectiveCamera camera;
-    private final double sceneWidth = 600;
-    private final double sceneHeight = 600;
-    private final CameraTransformer cameraTransform = new CameraTransformer();
-    
-    private double mousePosX;
-    private double mousePosY;
-    private double mouseOldX;
-    private double mouseOldY;
-    private double mouseDeltaX;
-    private double mouseDeltaY;
-    private KnotMesh knot;
-    private Rotate rotateY;
-    private DensityFunction<Point3D> dens = p->(double)p.x;
+public class Knots extends FXyzSample {
+
+    private DensityFunction<Point3D> dens = p -> (double) p.x;
     private long lastEffect;
-    
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public Node getSample() {
+
+        PerspectiveCamera camera;
+        final double sceneWidth = 800;
+        final double sceneHeight = 600;
+        final CameraTransformer cameraTransform = new CameraTransformer();
+
+        KnotMesh knot;
+        Rotate rotateY;
+
         Group sceneRoot = new Group();
-        Scene scene = new Scene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
+        SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.WHEAT);
-        camera = new PerspectiveCamera(true);        
-     
+        camera = new PerspectiveCamera(true);
+
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
@@ -65,53 +61,63 @@ public class Knots extends Application {
         cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(camera.getTranslateZ());        
+        light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
-        
+
         rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
         Group group = new Group();
-        group.getChildren().add(cameraTransform);    
-        
-        knot = new KnotMesh(2d,1d,0.4d,2d,3d,
-                                1000,60,0,0);
+        group.getChildren().add(cameraTransform);
+
+        knot = new KnotMesh(2d, 1d, 0.4d, 2d, 3d,
+                1000, 60, 0, 0);
         knot.setDrawMode(DrawMode.LINE);
 //        knot.setCullFace(CullFace.NONE);
         knot.setSectionType(SectionType.TRIANGLE);
-        
-    // NONE
+
+        // NONE
         knot.setTextureModeNone(Color.BROWN);
     // IMAGE
 //        knot.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
-    // PATTERN
+        // PATTERN
 //       knot.setTextureModePattern(3d);
-    // FUNCTION
+        // FUNCTION
 //        knot.setTextureModeVertices1D(256*256,t->t*t);
-    // DENSITY
+        // DENSITY
 //        knot.setTextureModeVertices3D(256*256,dens);
-    // FACES
+        // FACES
 //        knot.setTextureModeFaces(256*256);
- 
-        knot.getTransforms().addAll(new Rotate(0,Rotate.X_AXIS),rotateY);
-        
+
+        knot.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
+
         group.getChildren().add(knot);
-        
-        sceneRoot.getChildren().addAll(group);        
-        
+
+        sceneRoot.getChildren().addAll(group);
+
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
             double change = 10.0;
             //Add shift modifier to simulate "Running Speed"
-            if(event.isShiftDown()) { change = 50.0; }
+            if (event.isShiftDown()) {
+                change = 50.0;
+            }
             //What key did the user press?
             KeyCode keycode = event.getCode();
             //Step 2c: Add Zoom controls
-            if(keycode == KeyCode.W) { camera.setTranslateZ(camera.getTranslateZ() + change); }
-            if(keycode == KeyCode.S) { camera.setTranslateZ(camera.getTranslateZ() - change); }
+            if (keycode == KeyCode.W) {
+                camera.setTranslateZ(camera.getTranslateZ() + change);
+            }
+            if (keycode == KeyCode.S) {
+                camera.setTranslateZ(camera.getTranslateZ() - change);
+            }
             //Step 2d:  Add Strafe controls
-            if(keycode == KeyCode.A) { camera.setTranslateX(camera.getTranslateX() - change); }
-            if(keycode == KeyCode.D) { camera.setTranslateX(camera.getTranslateX() + change); }
-        });        
-        
+            if (keycode == KeyCode.A) {
+                camera.setTranslateX(camera.getTranslateX() - change);
+            }
+            if (keycode == KeyCode.D) {
+                camera.setTranslateX(camera.getTranslateX() + change);
+            }
+        });
+
         scene.setOnMousePressed((MouseEvent me) -> {
             mousePosX = me.getSceneX();
             mousePosY = me.getSceneY();
@@ -125,10 +131,10 @@ public class Knots extends Application {
             mousePosY = me.getSceneY();
             mouseDeltaX = (mousePosX - mouseOldX);
             mouseDeltaY = (mousePosY - mouseOldY);
-            
+
             double modifier = 10.0;
             double modifierFactor = 0.1;
-            
+
             if (me.isControlDown()) {
                 modifier = 0.1;
             }
@@ -147,9 +153,9 @@ public class Knots extends Application {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-        
+
         lastEffect = System.nanoTime();
-        AtomicInteger count=new AtomicInteger();
+        AtomicInteger count = new AtomicInteger();
         AnimationTimer timerEffect = new AnimationTimer() {
 
             @Override
@@ -169,7 +175,7 @@ public class Knots extends Application {
 //                    knot.setDensity(dens);
 //                    knot.setP(1+(count.get()%5));
 //                    knot.setQ(2+(count.get()%15));
-                    
+
 //                    if(count.get()%100<50){
 //                        knot.setDrawMode(DrawMode.LINE);
 //                    } else {
@@ -186,22 +192,27 @@ public class Knots extends Application {
                 }
             }
         };
-        
-        
-        primaryStage.setTitle("F(X)yz - Knots");
-        primaryStage.setScene(scene);
-        primaryStage.show();   
-        
-        OBJWriter writer=new OBJWriter((TriangleMesh) knot.getMesh(),"knot");
-        writer.setMaterialColor(Color.BROWN);
-        writer.exportMesh();
+
+        //OBJWriter writer = new OBJWriter((TriangleMesh) knot.getMesh(), "knot");
+        //writer.setMaterialColor(Color.BROWN);
+        //writer.exportMesh();
 //        timerEffect.start();
-        
+        return scene;
+
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }    
+
+    @Override
+    public String getSampleName() {
+        return getClass().getSimpleName().concat(" Sample");
+    }
+
+    @Override
+    public Node getPanel(Stage stage) {
+        return getSample();
+    }
+
+    @Override
+    public String getJavaDocURL() {
+        return null;
+    }
 }

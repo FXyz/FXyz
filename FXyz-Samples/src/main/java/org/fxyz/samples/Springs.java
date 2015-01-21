@@ -194,6 +194,7 @@ public class Springs extends FXyzSample {
 
     @Override
     public Node getPanel(Stage stage) {
+        
         return getSample();
     }
 

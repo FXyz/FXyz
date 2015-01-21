@@ -12,6 +12,7 @@ public abstract class FXyzSample extends SampleBase {
     protected double mouseDeltaX;
     protected double mouseDeltaY;
 
+    
     @Override
     public String getProjectName() {
         return "FXyz-Samples";

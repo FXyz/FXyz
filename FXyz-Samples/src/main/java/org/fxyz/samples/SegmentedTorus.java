@@ -2,18 +2,19 @@ package org.fxyz.samples;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
-import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import org.fxyz.FXyzSample;
 import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.SegmentedTorusMesh;
@@ -23,30 +24,27 @@ import org.fxyz.utils.CameraTransformer;
  *
  * @author jpereda
  */
-public class SegmentedTorus extends Application {
-    private PerspectiveCamera camera;
-    private final double sceneWidth = 600;
-    private final double sceneHeight = 600;
-    private final CameraTransformer cameraTransform = new CameraTransformer();
-    
-    private double mousePosX;
-    private double mousePosY;
-    private double mouseOldX;
-    private double mouseOldY;
-    private double mouseDeltaX;
-    private double mouseDeltaY;
-    private Rotate rotateY;
-    private SegmentedTorusMesh torus;
-    private DensityFunction<Point3D> dens = p->(double)p.x;
+public class SegmentedTorus extends FXyzSample {
+
+    private DensityFunction<Point3D> dens = p -> (double) p.x;
     private long lastEffect;
-    
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public Node getSample() {
+
+        PerspectiveCamera camera;
+        final double sceneWidth = 800;
+        final double sceneHeight = 600;
+        final CameraTransformer cameraTransform = new CameraTransformer();
+
+        Rotate rotateY;
+        SegmentedTorusMesh torus;
+
         Group sceneRoot = new Group();
-        Scene scene = new Scene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
+        SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        camera = new PerspectiveCamera(true);        
-     
+        camera = new PerspectiveCamera(true);
+
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
@@ -61,47 +59,57 @@ public class SegmentedTorus extends Application {
         cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(camera.getTranslateZ());        
+        light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
-        
+
         rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
         Group group = new Group();
-        group.getChildren().add(cameraTransform);    
-        
-        torus = new SegmentedTorusMesh(50, 42, 0, 500d, 150d); 
+        group.getChildren().add(cameraTransform);
+
+        torus = new SegmentedTorusMesh(50, 42, 0, 500d, 150d);
 //        torus.setDrawMode(DrawMode.LINE);
-    // NONE
+        // NONE
 //        torus.setTextureModeNone(Color.ROYALBLUE);
-    // IMAGE
+        // IMAGE
 //        torus.setTextureModeImage(getClass().getResource("res/grid.png").toExternalForm());
-    // PATTERN
-       torus.setTextureModePattern(1.0d);
+        // PATTERN
+        torus.setTextureModePattern(1.0d);
     // DENSITY
 //        torus.setTextureModeVertices3D(256*256,dens);
-    // FACES
+        // FACES
 //        torus.setTextureModeFaces(256*256);
-        
-        torus.getTransforms().addAll(new Rotate(0,Rotate.X_AXIS),rotateY);
-        
+
+        torus.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
+
         group.getChildren().add(torus);
-        
-        sceneRoot.getChildren().addAll(group);        
-        
+
+        sceneRoot.getChildren().addAll(group);
+
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
             double change = 10.0;
             //Add shift modifier to simulate "Running Speed"
-            if(event.isShiftDown()) { change = 50.0; }
+            if (event.isShiftDown()) {
+                change = 50.0;
+            }
             //What key did the user press?
             KeyCode keycode = event.getCode();
             //Step 2c: Add Zoom controls
-            if(keycode == KeyCode.W) { camera.setTranslateZ(camera.getTranslateZ() + change); }
-            if(keycode == KeyCode.S) { camera.setTranslateZ(camera.getTranslateZ() - change); }
+            if (keycode == KeyCode.W) {
+                camera.setTranslateZ(camera.getTranslateZ() + change);
+            }
+            if (keycode == KeyCode.S) {
+                camera.setTranslateZ(camera.getTranslateZ() - change);
+            }
             //Step 2d:  Add Strafe controls
-            if(keycode == KeyCode.A) { camera.setTranslateX(camera.getTranslateX() - change); }
-            if(keycode == KeyCode.D) { camera.setTranslateX(camera.getTranslateX() + change); }
-        });        
-        
+            if (keycode == KeyCode.A) {
+                camera.setTranslateX(camera.getTranslateX() - change);
+            }
+            if (keycode == KeyCode.D) {
+                camera.setTranslateX(camera.getTranslateX() + change);
+            }
+        });
+
         scene.setOnMousePressed((MouseEvent me) -> {
             mousePosX = me.getSceneX();
             mousePosY = me.getSceneY();
@@ -115,10 +123,10 @@ public class SegmentedTorus extends Application {
             mousePosY = me.getSceneY();
             mouseDeltaX = (mousePosX - mouseOldX);
             mouseDeltaY = (mousePosY - mouseOldY);
-            
+
             double modifier = 10.0;
             double modifierFactor = 0.1;
-            
+
             if (me.isControlDown()) {
                 modifier = 0.1;
             }
@@ -137,9 +145,9 @@ public class SegmentedTorus extends Application {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-        
+
         lastEffect = System.nanoTime();
-        AtomicInteger count=new AtomicInteger();
+        AtomicInteger count = new AtomicInteger();
         AnimationTimer timerEffect = new AnimationTimer() {
 
             @Override
@@ -147,7 +155,7 @@ public class SegmentedTorus extends Application {
                 if (now > lastEffect + 1_000_000_000l) {
 //                    dens = p->(float)(p.x*Math.cos(count.get()%100d*2d*Math.PI/50d)+p.y*Math.sin(count.get()%100d*2d*Math.PI/50d));
 //                    torus.setDensity(dens);
-                    
+
 //                    if(count.get()%100<50){
 //                        torus.setDrawMode(DrawMode.LINE);
 //                    } else {
@@ -163,19 +171,24 @@ public class SegmentedTorus extends Application {
                 }
             }
         };
-        
-        
-        primaryStage.setTitle("F(X)yz - Torus");
-        primaryStage.setScene(scene);
-        primaryStage.show();   
-        
+
+        return scene;
+
 //        timerEffect.start();
-        
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }    
+
+    @Override
+    public String getSampleName() {
+        return getClass().getSimpleName().concat(" Sample");
+    }
+
+    @Override
+    public Node getPanel(Stage stage) {
+        return getSample();
+    }
+
+    @Override
+    public String getJavaDocURL() {
+        return null;
+    }
 }

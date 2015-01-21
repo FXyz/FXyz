@@ -7,6 +7,7 @@ package org.fxyz;
 
 import fxsampler.FXSamplerProject;
 import fxsampler.model.WelcomePage;
+import javafx.application.Application;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -18,6 +19,10 @@ import javafx.scene.layout.VBox;
  */
 public class FXyzProject implements FXSamplerProject{
 
+    static{
+        Application.setUserAgentStylesheet(FXyzSample.class.getResource("styles/modenaDark.css").toExternalForm());
+    }
+    
     @Override
     public String getProjectName() {
         return "FXyz-Samples";

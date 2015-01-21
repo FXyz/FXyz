@@ -1,20 +1,19 @@
 package org.fxyz.samples;
 
-import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
-import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import org.fxyz.FXyzSample;
 import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
-import org.fxyz.io.OBJWriter;
 import org.fxyz.shapes.primitives.CylinderMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 import org.fxyz.utils.CameraTransformer;
@@ -23,30 +22,25 @@ import org.fxyz.utils.CameraTransformer;
  *
  * @author jpereda
  */
-public class Cylinders extends Application {
-    private PerspectiveCamera camera;
-    private final double sceneWidth = 600;
-    private final double sceneHeight = 600;
-    private final CameraTransformer cameraTransform = new CameraTransformer();
-    
-    private double mousePosX;
-    private double mousePosY;
-    private double mouseOldX;
-    private double mouseOldY;
-    private double mouseDeltaX;
-    private double mouseDeltaY;
-    private CylinderMesh cylinder;
-    private Rotate rotateY;
-    
-    private DensityFunction<Point3D> dens = p-> (double)p.x;
-    
+public class Cylinders extends FXyzSample {
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public Node getSample() {
+        final double sceneWidth = 800;
+        final double sceneHeight = 600;
+        final CameraTransformer cameraTransform = new CameraTransformer();
+
+        CylinderMesh cylinder;
+        Rotate rotateY;
+
+        DensityFunction<Point3D> dens = p -> (double) p.x;
+
+        PerspectiveCamera camera;
         Group sceneRoot = new Group();
-        Scene scene = new Scene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
+        SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        camera = new PerspectiveCamera(true);        
-     
+        camera = new PerspectiveCamera(true);
+
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
@@ -60,47 +54,56 @@ public class Cylinders extends Application {
         cameraTransform.getChildren().add(light);
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(10*camera.getTranslateZ());        
+        light.setTranslateZ(10 * camera.getTranslateZ());
         scene.setCamera(camera);
-        
+
         rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
         Group group = new Group();
-        group.getChildren().add(cameraTransform);    
-        cylinder = new CylinderMesh(2,5,4);
+        group.getChildren().add(cameraTransform);
+        cylinder = new CylinderMesh(2, 5, 4);
 //        cylinder.setDrawMode(DrawMode.LINE);
 //        cylinder.setCullFace(CullFace.NONE);
-    // SECTION TYPE
+        // SECTION TYPE
         cylinder.setSectionType(TriangleMeshHelper.SectionType.DECAGON);
     // NONE
 //        cylinder.setTextureModeNone(Color.ROYALBLUE);
-    // IMAGE
+        // IMAGE
         cylinder.setTextureModeImage(getClass().getResource("res/netCylinder.png").toExternalForm());
     // DENSITY
 //        cylinder.setTextureModeVertices3D(256*256,p->(double)(2.5-p.y)*(2.5-p.y));
-    // FACES
+        // FACES
 //        cylinder.setTextureModeFaces(256*256);
 
-        
-        cylinder.getTransforms().addAll(new Rotate(0,Rotate.X_AXIS),rotateY);
+        cylinder.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
         group.getChildren().add(cylinder);
-        
-        sceneRoot.getChildren().addAll(group);        
-        
+
+        sceneRoot.getChildren().addAll(group);
+
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
             double change = 10.0;
             //Add shift modifier to simulate "Running Speed"
-            if(event.isShiftDown()) { change = 50.0; }
+            if (event.isShiftDown()) {
+                change = 50.0;
+            }
             //What key did the user press?
             KeyCode keycode = event.getCode();
             //Step 2c: Add Zoom controls
-            if(keycode == KeyCode.W) { camera.setTranslateZ(camera.getTranslateZ() + change); }
-            if(keycode == KeyCode.S) { camera.setTranslateZ(camera.getTranslateZ() - change); }
+            if (keycode == KeyCode.W) {
+                camera.setTranslateZ(camera.getTranslateZ() + change);
+            }
+            if (keycode == KeyCode.S) {
+                camera.setTranslateZ(camera.getTranslateZ() - change);
+            }
             //Step 2d:  Add Strafe controls
-            if(keycode == KeyCode.A) { camera.setTranslateX(camera.getTranslateX() - change); }
-            if(keycode == KeyCode.D) { camera.setTranslateX(camera.getTranslateX() + change); }
-        });        
-        
+            if (keycode == KeyCode.A) {
+                camera.setTranslateX(camera.getTranslateX() - change);
+            }
+            if (keycode == KeyCode.D) {
+                camera.setTranslateX(camera.getTranslateX() + change);
+            }
+        });
+
         scene.setOnMousePressed((MouseEvent me) -> {
             mousePosX = me.getSceneX();
             mousePosY = me.getSceneY();
@@ -114,10 +117,10 @@ public class Cylinders extends Application {
             mousePosY = me.getSceneY();
             mouseDeltaX = (mousePosX - mouseOldX);
             mouseDeltaY = (mousePosY - mouseOldY);
-            
+
             double modifier = 10.0;
             double modifierFactor = 0.1;
-            
+
             if (me.isControlDown()) {
                 modifier = 0.1;
             }
@@ -136,22 +139,28 @@ public class Cylinders extends Application {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-        
-        primaryStage.setTitle("F(X)yz - Cylinder Test");
-        primaryStage.setScene(scene);
-        primaryStage.show();        
-        
-        OBJWriter writer=new OBJWriter((TriangleMesh) cylinder.getMesh(),"cylinder2");
+
+        return scene;
+        //OBJWriter writer=new OBJWriter((TriangleMesh) cylinder.getMesh(),"cylinder2");
 //        writer.setMaterialColor(Color.AQUA);
 //        writer.setTextureImage(getClass().getResource("res/netCylinder.png").toExternalForm());
-        writer.setTextureColors(256*256);
-        writer.exportMesh();
-        
+        //writer.setTextureColors(256*256);
+        //writer.exportMesh();
+
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }    
+
+    @Override
+    public String getSampleName() {
+        return getClass().getSimpleName().concat(" Sample");
+    }
+
+    @Override
+    public Node getPanel(Stage stage) {
+        return getSample();
+    }
+
+    @Override
+    public String getJavaDocURL() {
+        return null;
+    }
 }
