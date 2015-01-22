@@ -11,6 +11,8 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
@@ -197,7 +199,18 @@ public class Knots extends FXyzSample {
         //writer.setMaterialColor(Color.BROWN);
         //writer.exportMesh();
 //        timerEffect.start();
-        return scene;
+        StackPane sp = new StackPane();
+        sp.setPrefSize(sceneWidth, sceneHeight);
+        sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        sp.setMinSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        sp.setBackground(Background.EMPTY);
+        sp.getChildren().add(scene);
+        sp.setPickOnBounds(false);
+        
+        scene.widthProperty().bind(sp.widthProperty());
+        scene.heightProperty().bind(sp.heightProperty());
+        
+        return (sp);
 
     }
 

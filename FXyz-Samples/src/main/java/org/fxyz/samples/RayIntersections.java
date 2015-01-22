@@ -15,6 +15,8 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -53,7 +55,7 @@ public class RayIntersections extends FXyzSample {
 
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.WHEAT);
+        scene.setFill(Color.web("#303030"));
         camera = new PerspectiveCamera(true);
 
         //setup camera transform for rotational support
@@ -239,7 +241,18 @@ public class RayIntersections extends FXyzSample {
             }
         });
 
-        return scene;
+        StackPane sp = new StackPane();
+        sp.setPrefSize(sceneWidth, sceneHeight);
+        sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        sp.setMinSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        sp.setBackground(Background.EMPTY);
+        sp.getChildren().add(scene);
+        sp.setPickOnBounds(false);
+        
+        scene.widthProperty().bind(sp.widthProperty());
+        scene.heightProperty().bind(sp.heightProperty());
+        
+        return (sp);
     }
 
     @Override

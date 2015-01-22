@@ -24,10 +24,11 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -48,14 +49,14 @@ import org.fxyz.utils.CameraTransformer;
  * @author jpereda
  */
 public class BezierMeshes extends FXyzSample {
-    
+
     long lastEffect;
-    
+
     private final BooleanProperty showKnots = new SimpleBooleanProperty();
     private final BooleanProperty showControlPoints = new SimpleBooleanProperty();
-    
+
     @Override
-    public Node getSample(){
+    public Node getSample() {
         PerspectiveCamera camera;
         final double sceneWidth = 800;
         final double sceneHeight = 600;
@@ -64,7 +65,6 @@ public class BezierMeshes extends FXyzSample {
         ArrayList<BezierMesh> beziers;
         Rotate rotateY;
         DensityFunction<Point3D> dens = p -> (double) p.f;
-        
 
         SubScene subScene;
 
@@ -103,83 +103,82 @@ public class BezierMeshes extends FXyzSample {
                 new Point3D(-2.31757f, 0.680501f, 0.909632f), new Point3D(-0.681387f, -0.786363f, 0.281733f),
                 new Point3D(0.77171f, -1.68981f, -0.989821f), new Point3D(3f, 0f, 0f));
 
-
         InterpolateBezier interpolate = new InterpolateBezier(knots);
         beziers = new ArrayList<>();
-        showKnots.addListener((obs,b,b1)->interpolate.getSplines().forEach(spline -> {
-                Point3D k0 = spline.getPoints().get(0);
-                Point3D k1 = spline.getPoints().get(1);
-                Point3D k2 = spline.getPoints().get(2);
-                Point3D k3 = spline.getPoints().get(3);
-                if (showKnots.get()) {
-                    Sphere s = new Sphere(0.2d);
-                    s.setId("knot");
-                    s.getTransforms().add(new Translate(k0.x, k0.y, k0.z));
-                    s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
-                    group.getChildren().add(s);
-                    s = new Sphere(0.2d);
-                    s.setId("knot");
-                    s.getTransforms().add(new Translate(k3.x, k3.y, k3.z));
-                    s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
-                    group.getChildren().add(s);
-                } else {
-                    group.getChildren().removeIf(s->s.getId()!=null && s.getId().equals("knot"));
-                }
+        showKnots.addListener((obs, b, b1) -> interpolate.getSplines().forEach(spline -> {
+            Point3D k0 = spline.getPoints().get(0);
+            Point3D k1 = spline.getPoints().get(1);
+            Point3D k2 = spline.getPoints().get(2);
+            Point3D k3 = spline.getPoints().get(3);
+            if (showKnots.get()) {
+                Sphere s = new Sphere(0.2d);
+                s.setId("knot");
+                s.getTransforms().add(new Translate(k0.x, k0.y, k0.z));
+                s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
+                group.getChildren().add(s);
+                s = new Sphere(0.2d);
+                s.setId("knot");
+                s.getTransforms().add(new Translate(k3.x, k3.y, k3.z));
+                s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
+                group.getChildren().add(s);
+            } else {
+                group.getChildren().removeIf(s -> s.getId() != null && s.getId().equals("knot"));
+            }
         }));
-        showControlPoints.addListener((obs,b,b1)->interpolate.getSplines().forEach(spline -> {
-                Point3D k0 = spline.getPoints().get(0);
-                Point3D k1 = spline.getPoints().get(1);
-                Point3D k2 = spline.getPoints().get(2);
-                Point3D k3 = spline.getPoints().get(3);
-                 if (showControlPoints.get()) {
-                    Point3D dir = k1.substract(k0).crossProduct(new Point3D(0, -1, 0));
-                    double angle = Math.acos(k1.substract(k0).normalize().dotProduct(new Point3D(0, -1, 0)));
-                    double h1 = k1.substract(k0).magnitude();
-                    Cylinder c = new Cylinder(0.03d, h1);
-                    c.getTransforms().addAll(new Translate(k0.x, k0.y - h1 / 2d, k0.z),
-                            new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
-                                    new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
-                    c.setMaterial(new PhongMaterial(Color.GREEN));
-                    c.setId("Control");
-                    group.getChildren().add(c);
+        showControlPoints.addListener((obs, b, b1) -> interpolate.getSplines().forEach(spline -> {
+            Point3D k0 = spline.getPoints().get(0);
+            Point3D k1 = spline.getPoints().get(1);
+            Point3D k2 = spline.getPoints().get(2);
+            Point3D k3 = spline.getPoints().get(3);
+            if (showControlPoints.get()) {
+                Point3D dir = k1.substract(k0).crossProduct(new Point3D(0, -1, 0));
+                double angle = Math.acos(k1.substract(k0).normalize().dotProduct(new Point3D(0, -1, 0)));
+                double h1 = k1.substract(k0).magnitude();
+                Cylinder c = new Cylinder(0.03d, h1);
+                c.getTransforms().addAll(new Translate(k0.x, k0.y - h1 / 2d, k0.z),
+                        new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
+                                new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
+                c.setMaterial(new PhongMaterial(Color.GREEN));
+                c.setId("Control");
+                group.getChildren().add(c);
 
-                    dir = k2.substract(k1).crossProduct(new Point3D(0, -1, 0));
-                    angle = Math.acos(k2.substract(k1).normalize().dotProduct(new Point3D(0, -1, 0)));
-                    h1 = k2.substract(k1).magnitude();
-                    c = new Cylinder(0.03d, h1);
-                    c.getTransforms().addAll(new Translate(k1.x, k1.y - h1 / 2d, k1.z),
-                            new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
-                                    new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
-                    c.setMaterial(new PhongMaterial(Color.GREEN));
-                    c.setId("Control");
-                    group.getChildren().add(c);
+                dir = k2.substract(k1).crossProduct(new Point3D(0, -1, 0));
+                angle = Math.acos(k2.substract(k1).normalize().dotProduct(new Point3D(0, -1, 0)));
+                h1 = k2.substract(k1).magnitude();
+                c = new Cylinder(0.03d, h1);
+                c.getTransforms().addAll(new Translate(k1.x, k1.y - h1 / 2d, k1.z),
+                        new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
+                                new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
+                c.setMaterial(new PhongMaterial(Color.GREEN));
+                c.setId("Control");
+                group.getChildren().add(c);
 
-                    dir = k3.substract(k2).crossProduct(new Point3D(0, -1, 0));
-                    angle = Math.acos(k3.substract(k2).normalize().dotProduct(new Point3D(0, -1, 0)));
-                    h1 = k3.substract(k2).magnitude();
-                    c = new Cylinder(0.03d, h1);
-                    c.getTransforms().addAll(new Translate(k2.x, k2.y - h1 / 2d, k2.z),
-                            new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
-                                    new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
-                    c.setMaterial(new PhongMaterial(Color.GREEN));
-                    c.setId("Control");
-                    group.getChildren().add(c);
+                dir = k3.substract(k2).crossProduct(new Point3D(0, -1, 0));
+                angle = Math.acos(k3.substract(k2).normalize().dotProduct(new Point3D(0, -1, 0)));
+                h1 = k3.substract(k2).magnitude();
+                c = new Cylinder(0.03d, h1);
+                c.getTransforms().addAll(new Translate(k2.x, k2.y - h1 / 2d, k2.z),
+                        new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
+                                new javafx.geometry.Point3D(dir.x, -dir.y, dir.z)));
+                c.setMaterial(new PhongMaterial(Color.GREEN));
+                c.setId("Control");
+                group.getChildren().add(c);
 
-                    Sphere s = new Sphere(0.1d);
-                    s.getTransforms().add(new Translate(k1.x, k1.y, k1.z));
-                    s.setMaterial(new PhongMaterial(Color.RED));
-                    s.setId("Control");
-                    group.getChildren().add(s);
-                    s = new Sphere(0.1d);
-                    s.getTransforms().add(new Translate(k2.x, k2.y, k2.z));
-                    s.setMaterial(new PhongMaterial(Color.RED));
-                    s.setId("Control");
-                    group.getChildren().add(s);
-                } else {
-                    group.getChildren().removeIf(s->s.getId()!=null && s.getId().equals("Control"));
-                }
-            }));
-        
+                Sphere s = new Sphere(0.1d);
+                s.getTransforms().add(new Translate(k1.x, k1.y, k1.z));
+                s.setMaterial(new PhongMaterial(Color.RED));
+                s.setId("Control");
+                group.getChildren().add(s);
+                s = new Sphere(0.1d);
+                s.getTransforms().add(new Translate(k2.x, k2.y, k2.z));
+                s.setMaterial(new PhongMaterial(Color.RED));
+                s.setId("Control");
+                group.getChildren().add(s);
+            } else {
+                group.getChildren().removeIf(s -> s.getId() != null && s.getId().equals("Control"));
+            }
+        }));
+
         long time = System.currentTimeMillis();
         interpolate.getSplines().stream().forEach(spline -> {
             BezierMesh bezier = new BezierMesh(spline, 0.1d,
@@ -277,7 +276,10 @@ public class BezierMeshes extends FXyzSample {
 
             @Override
             public void handle(long now) {
-                if (now > lastEffect + 1_000_000_000l) {
+                
+                if (now > lastEffect + 5_000_000_000l && subScene.getScene() != null) {
+                    System.out.println(subScene.getScene().getRoot().getClass().getName());
+                    
 //                    Point3D loc = knot.getPositionAt((count.get()%100)*2d*Math.PI/100d);
 //                    Point3D dir = knot.getTangentAt((count.get()%100)*2d*Math.PI/100d);
 //                    cameraTransform.t.setX(loc.x);
@@ -302,18 +304,26 @@ public class BezierMeshes extends FXyzSample {
 //                    beziers.forEach(b->b.setWireRadius(0.1d+(count.get()%6)/10d));
 //                    beziers.forEach(b->b.setPatternScale(1d+(count.get()%10)*3d));
 //                    beziers.forEach(b->b.setSectionType(SectionType.values()[count.get()%SectionType.values().length]));
-                    count.getAndIncrement();
-                    lastEffect = now;
+                   // count.getAndIncrement();
+                    //lastEffect = now;
                 }
             }
         };
-        //testing for binding width and height
-        if(subScene.getParent() != null){
-            subScene.widthProperty().bind(((Pane)subScene.getParent()).prefWidthProperty());
-            subScene.heightProperty().bind(((Pane)subScene.getParent()).prefHeightProperty());
-        }
-//        timerEffect.start();
-        return (subScene);
+        
+        //timerEffect.start();
+        
+        StackPane sp = new StackPane();
+        sp.setPrefSize(sceneWidth, sceneHeight);
+        sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        sp.setMinSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        sp.setBackground(Background.EMPTY);
+        sp.getChildren().add(subScene);
+        sp.setPickOnBounds(false);
+        
+        subScene.widthProperty().bind(sp.widthProperty());
+        subScene.heightProperty().bind(sp.heightProperty());
+        
+        return (sp);
     }
 
     @Override
@@ -331,14 +341,17 @@ public class BezierMeshes extends FXyzSample {
         }
         return null;
     }
-    
+
     @Override
     public Node getControlPanel() {
-        Accordion accordion=new Accordion();
-        /****************************
-        **** TITLEDPANE 1. FRAME ****
-        *****************************/
-        TitledPane tpFrame=new TitledPane();
+        Accordion accordion = new Accordion();
+        /**
+         * **************************
+         **** TITLEDPANE 1. FRAME ****
+        ****************************
+         */
+        
+        TitledPane tpFrame = new TitledPane();
         tpFrame.setText("Frame");
         // the result
         GridPane lGridPane = new GridPane();
@@ -352,40 +365,53 @@ public class BezierMeshes extends FXyzSample {
         lColumnConstraintsNeverGrow.setHgrow(Priority.NEVER);
         lGridPane.getColumnConstraints().addAll(lColumnConstraintsNeverGrow, lColumnConstraintsAlwaysGrow);
         int lRowIdx = 0;
-        
-        CheckBox chkKnots=new CheckBox();
+
+        CheckBox chkKnots = new CheckBox();
         chkKnots.setSelected(showKnots.get());
         Label lLabel = new Label("Show Knots: ");
         lLabel.setTooltip(new Tooltip("Select if the knots are visible or not"));
-        lGridPane.add(lLabel,0,lRowIdx);
+        lGridPane.add(lLabel, 0, lRowIdx);
         chkKnots.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) -> {
             showKnots.set(t1);
         });
-        lGridPane.add(chkKnots, 1,lRowIdx);
+        lGridPane.add(chkKnots, 1, lRowIdx);
         lRowIdx++;
-        
-        CheckBox chkControl=new CheckBox();
+
+        CheckBox chkControl = new CheckBox();
         chkControl.setSelected(showControlPoints.get());
         Label lControl = new Label("Show Control Points: ");
         lControl.setTooltip(new Tooltip("Select if the control points are visible or not"));
-        lGridPane.add(lControl,0,lRowIdx);
+        lGridPane.add(lControl, 0, lRowIdx);
         chkControl.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) -> {
             showControlPoints.set(t1);
         });
-        lGridPane.add(chkControl, 1,lRowIdx);
+        lGridPane.add(chkControl, 1, lRowIdx);
         lRowIdx++;
-        
+
         tpFrame.setContent(lGridPane);
         
         accordion.getPanes().addAll(tpFrame);
         accordion.setExpandedPane(tpFrame);
-    
+
         return accordion;
     }
 
     @Override
     public String getJavaDocURL() {
         return "";
+    }
+
+    @Override
+    public String getSampleDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nBezierMesh:\nAllows for a Tubular mesh to be built using a BezierCurve method ")
+                .append("allowing the use of control points in 3D space.");
+        return sb.toString();
+    }
+
+    @Override
+    public double getControlPanelDividerPosition() {
+        return 0.8D;
     }
 
 }

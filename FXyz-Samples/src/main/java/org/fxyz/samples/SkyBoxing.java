@@ -15,6 +15,8 @@ import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -188,7 +190,20 @@ public class SkyBoxing extends FXyzSample {
 
         root.getChildren().addAll(skyBox, torusGroup);
         root.setAutoSizeChildren(true);
-        return scene;
+        
+        
+        StackPane sp = new StackPane();
+        sp.setPrefSize(800, 600);
+        sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        sp.setMinSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        sp.setBackground(Background.EMPTY);
+        sp.getChildren().add(scene);
+        sp.setPickOnBounds(false);
+        
+        scene.widthProperty().bind(sp.widthProperty());
+        scene.heightProperty().bind(sp.heightProperty());
+        
+        return (sp);
     }
 
     @Override

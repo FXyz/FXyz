@@ -5,6 +5,7 @@ apply plugin: 'base' // To add "clean" task to the root project.
 subprojects {
     apply from: rootProject.file('common.gradle')
 }
+
 Properties cfg = new Properties()
 cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
     

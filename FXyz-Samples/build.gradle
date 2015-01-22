@@ -15,11 +15,16 @@ sourceSets {
         compileClasspath += configurations.jdk
     }
 }
+repositories{
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/' 
+    }    
+}
 
 dependencies{
     compile project(':Fxyz-Core')
     compile 'org.controlsfx:fxsampler:1.0.8'
-    
+    compile 'org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT'
     
     try {
         jdk files(jfxrtJar)
