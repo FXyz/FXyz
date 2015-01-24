@@ -25,6 +25,7 @@ import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 import org.fxyz.collections.FloatCollector;
+import org.fxyz.geometry.Face3;
 
 /**
  *
@@ -285,8 +286,8 @@ public class CylinderMesh extends TexturedMesh {
             m0.getFaces().toArray(faces0);
         }
         
-        List<Point3D> faces1 = IntStream.range(0, numFaces)
-                    .mapToObj(i -> new Point3D(faces0[6*i], faces0[6*i+2], faces0[6*i+4]))
+        List<Face3> faces1 = IntStream.range(0, numFaces)
+                    .mapToObj(i -> new Face3(faces0[6*i], faces0[6*i+2], faces0[6*i+4]))
                     .collect(Collectors.toList());
 
         index.set(points1.size());
@@ -296,47 +297,47 @@ public class CylinderMesh extends TexturedMesh {
         listVertices.addAll(points1);
         
         faces1.forEach(face->{
-            int v1=(int)face.x;
-            int v2=(int)face.y;
-            int v3=(int)face.z;
+            int v1=face.p0;
+            int v2=face.p1;
+            int v3=face.p2;
             if(level>0){
                 int a = getMiddle(v1,points1.get(v1),v2,points1.get(v2));
                 int b = getMiddle(v2,points1.get(v2),v3,points1.get(v3));
                 int c = getMiddle(v3,points1.get(v3),v1,points1.get(v1));
 
-                listFaces.add(new Point3D(v1,a,c));
-                listFaces.add(new Point3D(v2,b,a));
-                listFaces.add(new Point3D(v3,c,b));
-                listFaces.add(new Point3D(a,b,c));
+                listFaces.add(new Face3(v1,a,c));
+                listFaces.add(new Face3(v2,b,a));
+                listFaces.add(new Face3(v3,c,b));
+                listFaces.add(new Face3(a,b,c));
             } else {
-                listFaces.add(new Point3D(v1,v2,v3));
+                listFaces.add(new Face3(v1,v2,v3));
             }
         });
         map.clear();
         numVertices=listVertices.size();
         numFaces=listFaces.size();
         
-        List<Point3D> textures1 = IntStream.range(0, faces0.length/6)
-                    .mapToObj(i -> new Point3D(faces0[6*i+1], faces0[6*i+3], faces0[6*i+5]))
+        List<Face3> textures1 = IntStream.range(0, faces0.length/6)
+                    .mapToObj(i -> new Face3(faces0[6*i+1], faces0[6*i+3], faces0[6*i+5]))
                     .collect(Collectors.toList());
 
         index.set(texCoord1.size());
         listTextures.clear();
         textures1.forEach(face->{
-            int v1=(int)face.x;
-            int v2=(int)face.y;
-            int v3=(int)face.z;
+            int v1=face.p0;
+            int v2=face.p1;
+            int v3=face.p2;
             if(level>0){
                 int a = getMiddle(v1,texCoord1.get(v1),v2,texCoord1.get(v2));
                 int b = getMiddle(v2,texCoord1.get(v2),v3,texCoord1.get(v3));
                 int c = getMiddle(v3,texCoord1.get(v3),v1,texCoord1.get(v1));
 
-                listTextures.add(new Point3D(v1,a,c));
-                listTextures.add(new Point3D(v2,b,a));
-                listTextures.add(new Point3D(v3,c,b));
-                listTextures.add(new Point3D(a,b,c));
+                listTextures.add(new Face3(v1,a,c));
+                listTextures.add(new Face3(v2,b,a));
+                listTextures.add(new Face3(v3,c,b));
+                listTextures.add(new Face3(a,b,c));
             } else {
-                listTextures.add(new Point3D(v1,v2,v3));
+                listTextures.add(new Face3(v1,v2,v3));
             }
         });
         map.clear();

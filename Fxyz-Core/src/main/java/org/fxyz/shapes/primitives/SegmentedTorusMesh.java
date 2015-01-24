@@ -8,6 +8,7 @@ import javafx.scene.DepthTest;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
+import org.fxyz.geometry.Face3;
 import org.fxyz.geometry.Point3D;
 
 /**
@@ -306,8 +307,8 @@ public class SegmentedTorusMesh extends TexturedMesh {
                 int p01 = p00 + 1;
                 int p10 = p00 + numDivX;
                 int p11 = p10 + 1;
-                listTextures.add(new Point3D(p00,p10,p11));                
-                listTextures.add(new Point3D(p11,p01,p00));
+                listTextures.add(new Face3(p00,p10,p11));                
+                listTextures.add(new Face3(p11,p01,p00));
             }
         }
         // Create faces
@@ -326,8 +327,8 @@ public class SegmentedTorusMesh extends TexturedMesh {
                 if(crop==0 && x==subDivX-1){
                     p11-=subDivX;
                 }                
-                listFaces.add(new Point3D(p00,p10,p11));                
-                listFaces.add(new Point3D(p11,p01,p00));
+                listFaces.add(new Face3(p00,p10,p11));                
+                listFaces.add(new Face3(p11,p01,p00));
             }
         }
         return createMesh();

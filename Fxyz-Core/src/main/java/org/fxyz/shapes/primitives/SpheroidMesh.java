@@ -6,6 +6,7 @@
 
 package org.fxyz.shapes.primitives;
 
+import java.util.Objects;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -66,7 +67,7 @@ public class SpheroidMesh extends MeshView{
     }
     
     public boolean isSphere(){
-        return getMajorRadius() == getMinorRadius();
+        return Objects.equals(getMajorRadius(), getMinorRadius());
     }
     public boolean isOblateSpheroid(){
         return getMajorRadius() > getMinorRadius();

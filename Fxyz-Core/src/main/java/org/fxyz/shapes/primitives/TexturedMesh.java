@@ -15,6 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.TriangleMesh;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.geometry.DensityFunction;
+import org.fxyz.geometry.Face3;
 import org.fxyz.shapes.primitives.helper.MeshHelper;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLORS;
@@ -45,8 +46,8 @@ public abstract class TexturedMesh extends MeshView {
     protected TriangleMesh mesh;
     
     protected final List<Point3D> listVertices = new ArrayList<>();
-    protected final List<Point3D> listTextures = new ArrayList<>();
-    protected final List<Point3D> listFaces = new ArrayList<>();
+    protected final List<Face3> listTextures = new ArrayList<>();
+    protected final List<Face3> listFaces = new ArrayList<>();
     protected float[] textureCoords;
     protected int[] smoothingGroups;
     
@@ -471,7 +472,7 @@ public abstract class TexturedMesh extends MeshView {
         int[] faces= helper.updateFacesWithIntersections(origin, direction, listVertices, listFaces);
         mesh.getFaces().setAll(faces);
         long time=System.currentTimeMillis();
-        List<Point3D> listIntersections = helper.getListIntersections(origin, direction, listVertices, listFaces);
+        List<Face3> listIntersections = helper.getListIntersections(origin, direction, listVertices, listFaces);
         System.out.println("t: "+(System.currentTimeMillis()-time));
         listIntersections.forEach(System.out::println);
         return listIntersections.size();        
