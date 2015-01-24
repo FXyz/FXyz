@@ -172,7 +172,7 @@ public class BezierMesh extends TexturedMesh {
     }
 
     private final IntegerProperty wireCrop = new SimpleIntegerProperty(DEFAULT_WIRE_CROP){
-
+    
         @Override protected void invalidated() {
             if(mesh!=null){
                 updateMesh();
@@ -193,7 +193,7 @@ public class BezierMesh extends TexturedMesh {
     }
     
     private final DoubleProperty tubeStartAngleOffset = new SimpleDoubleProperty(DEFAULT_START_ANGLE){
-
+    
         @Override protected void invalidated() {
             if(mesh!=null){
                 updateMesh();

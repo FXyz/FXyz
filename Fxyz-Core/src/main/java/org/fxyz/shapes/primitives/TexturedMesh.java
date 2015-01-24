@@ -15,6 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.TriangleMesh;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.geometry.DensityFunction;
+import org.fxyz.shapes.primitives.helper.MeshHelper;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLORS;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_DENSITY_FUNCTION;
@@ -40,6 +41,7 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 public abstract class TexturedMesh extends MeshView {
     
     private TriangleMeshHelper helper = new TriangleMeshHelper();
+    protected MeshHelper meshHelper;
     protected TriangleMesh mesh;
     
     protected final List<Point3D> listVertices = new ArrayList<>();
@@ -58,7 +60,7 @@ public abstract class TexturedMesh extends MeshView {
             if(mesh!=null){
                 updateTexture();
                 updateTextureOnFaces();
-            }
+    }
         });
     }
     private final ObjectProperty<SectionType> sectionType = new SimpleObjectProperty<SectionType>(){
@@ -83,7 +85,7 @@ public abstract class TexturedMesh extends MeshView {
     public ObjectProperty sectionTypeProperty() {
         return sectionType;
     }
-    
+
     private final ObjectProperty<TextureType> textureType = new SimpleObjectProperty<>();
 
     public void setTextureModeNone() {
@@ -146,7 +148,7 @@ public abstract class TexturedMesh extends MeshView {
     }
     
     private final DoubleProperty patternScale = new SimpleDoubleProperty(DEFAULT_PATTERN_SCALE){
-
+    
         @Override
         protected void invalidated() {
             updateTexture();
@@ -165,7 +167,7 @@ public abstract class TexturedMesh extends MeshView {
     public DoubleProperty patternScaleProperty(){
         return patternScale;
     }
-    
+
     private final IntegerProperty colors = new SimpleIntegerProperty(DEFAULT_COLORS){
 
         @Override protected void invalidated() {
@@ -206,7 +208,7 @@ public abstract class TexturedMesh extends MeshView {
     public final ObjectProperty<DensityFunction> densityProperty() {
         return density;
     }
-    
+
     private final ObjectProperty<DensityFunction<Double>> function = new SimpleObjectProperty<DensityFunction<Double>>(DEFAULT_UNIDIM_FUNCTION){
         
         @Override protected void invalidated() {
@@ -315,9 +317,75 @@ public abstract class TexturedMesh extends MeshView {
         textureCoords=helper.createReverseTexCoords(width, height);
     }
     
+    protected MeshHelper precreateMesh(){
+        MeshHelper mh = new MeshHelper();
+        mh.setPoints(helper.updateVertices(listVertices));
+        switch(textureType.get()){
+            case NONE:
+                mh.setTexCoords(textureCoords);
+                mh.setFaces(helper.updateFacesWithTextures(listFaces,listTextures));
+                break;
+            case PATTERN: 
+                if(areaMesh.getHeight()>0 && areaMesh.getWidth()>0){
+                    mh.setTexCoords(
+                        helper.updateTexCoordsWithPattern((int)rectMesh.getWidth(),
+                                (int)rectMesh.getHeight(),patternScale.get(),
+                                areaMesh.getHeight()/areaMesh.getWidth()));
+                } else {
+                    mh.setTexCoords(
+                        helper.updateTexCoordsWithPattern((int)rectMesh.getWidth(),
+                                (int)rectMesh.getHeight(),patternScale.get()));
+                }
+                mh.setFaces(helper.updateFacesWithTextures(listFaces,listTextures));
+                break;
+            case IMAGE: 
+                mh.setTexCoords(textureCoords);
+                if(listTextures.size()>0){
+                    mh.setFaces(helper.updateFacesWithTextures(listFaces,listTextures));
+                } else { 
+                    mh.setFaces(helper.updateFacesWithVertices(listFaces));
+                }
+                break;
+            case COLORED_VERTICES_1D:
+                mh.setTexCoords(helper.getTexturePaletteArray());
+                mh.setFaces(helper.updateFacesWithFunctionMap(listVertices, listFaces));
+                break;
+            case COLORED_VERTICES_3D:
+                mh.setTexCoords(helper.getTexturePaletteArray());
+                mh.setFaces(helper.updateFacesWithDensityMap(listVertices, listFaces));
+                break;
+            case COLORED_FACES:
+                mh.setTexCoords(helper.getTexturePaletteArray());
+                mh.setFaces(helper.updateFacesWithFaces(listFaces));
+                break;
+        }
+        
+        int[] faceSmoothingGroups = new int[listFaces.size()]; // 0 == hard edges
+        Arrays.fill(faceSmoothingGroups, 1); // 1: soft edges, all the faces in same surface
+        if(smoothingGroups!=null){
+//            for(int i=0; i<smoothingGroups.length; i++){
+//                System.out.println("i: "+smoothingGroups[i]);
+//            }
+            mh.setFaceSmoothingGroups(smoothingGroups);
+        } else {
+            mh.setFaceSmoothingGroups(faceSmoothingGroups);
+        }
+        
+        return mh;
+    }
+    
+    protected TriangleMesh createMesh(MeshHelper mh){
+        TriangleMesh triangleMesh = new TriangleMesh();
+        triangleMesh.getPoints().setAll(mh.getPoints());
+        triangleMesh.getTexCoords().setAll(mh.getTexCoords());
+        triangleMesh.getFaces().setAll(mh.getFaces());
+        triangleMesh.getFaceSmoothingGroups().setAll(mh.getFaceSmoothingGroups());
+        return triangleMesh;
+    }
+    
     protected TriangleMesh createMesh(){
         TriangleMesh triangleMesh = new TriangleMesh();
-        triangleMesh.getPoints().setAll(helper.updateVertices(listVertices));
+                triangleMesh.getPoints().setAll(helper.updateVertices(listVertices));
         switch(textureType.get()){
             case NONE:
                 triangleMesh.getTexCoords().setAll(textureCoords);
