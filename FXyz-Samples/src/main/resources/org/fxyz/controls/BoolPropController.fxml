@@ -5,11 +5,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root minHeight="40.0" minWidth="167.0" style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="40.0" minWidth="180.0" style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="5.0" StackPane.alignment="CENTER_LEFT">
          <children>
-            <CheckBox fx:id="checkBox" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" HBox.hgrow="NEVER">
+            <CheckBox fx:id="checkBox" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" graphicTextGap="0.0" mnemonicParsing="false" HBox.hgrow="NEVER">
                <padding>
                   <Insets right="-2.5" />
                </padding>

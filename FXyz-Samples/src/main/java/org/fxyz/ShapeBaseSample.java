@@ -214,6 +214,6 @@ public abstract class ShapeBaseSample extends FXyzSample {
     
     @Override
     public double getControlPanelDividerPosition() {
-        return 0.8D;
+        return 0.78D;
     }
 }

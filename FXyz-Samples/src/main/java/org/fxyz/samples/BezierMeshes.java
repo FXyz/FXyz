@@ -6,13 +6,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
@@ -21,7 +20,10 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import org.fxyz.ShapeBaseSample;
 import org.fxyz.controls.BoolPropertyControl;
+import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlFactory;
+import org.fxyz.controls.ControlPanel;
+import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.BezierMesh;
@@ -39,12 +41,23 @@ public class BezierMeshes extends ShapeBaseSample {
     private final BooleanProperty showKnots = new SimpleBooleanProperty(this,"Show Knots");
     private final BooleanProperty showControlPoints = new SimpleBooleanProperty(this,"Show Control Points");
     
+    private final DoubleProperty wireRad = new SimpleDoubleProperty(this,"Wire Radius");
+    private final DoubleProperty _x = new SimpleDoubleProperty(this,"X Offset");
+    private final DoubleProperty _y = new SimpleDoubleProperty(this,"Y Offset");
+    private final DoubleProperty _z = new SimpleDoubleProperty(this,"Z Offset");
+    private final DoubleProperty _angle = new SimpleDoubleProperty(this,"Tube Angle Offset");
+    
+    private final IntegerProperty wireDivs = new SimpleIntegerProperty(this,"Wire Divisions");
+    private final IntegerProperty lenDivs = new SimpleIntegerProperty(this,"Length Divisions");
+    private final IntegerProperty wireCrop = new SimpleIntegerProperty(this,"Wire Crop");
+    private final IntegerProperty lenCrop = new SimpleIntegerProperty(this,"Length Crop");
+    
     private List<BezierMesh> beziers;
     private List<BezierHelper> splines;
 
     @Override
     protected void createMesh() {
-        
+        System.err.println(showKnots.getClass().getSimpleName());
         List<Point3D> knots = Arrays.asList(new Point3D(3f, 0f, 0f), new Point3D(0.77171f, 1.68981f, 0.989821f),
                 new Point3D(-0.681387f, 0.786363f, -0.281733f), new Point3D(-2.31757f, -0.680501f, -0.909632f),
                 new Point3D(-0.404353f, -2.81233f, 0.540641f), new Point3D(1.1316f, -0.727237f, 0.75575f),
@@ -55,6 +68,7 @@ public class BezierMeshes extends ShapeBaseSample {
         splines = interpolate.getSplines();
         beziers = splines.parallelStream().map(spline -> {
             BezierMesh bezier = new BezierMesh(spline, 0.1d, 200, 10, 0, 0);
+           
             bezier.setTextureModeNone(Color.ROYALBLUE);
 //            CountDownLatch latch=new CountDownLatch(1);
 //            Platform.runLater(()->{group.getChildren().add(bezier);latch.countDown();});
@@ -70,10 +84,25 @@ public class BezierMeshes extends ShapeBaseSample {
         System.out.println("building");
         
         group.getChildren().addAll(beziers);
-        beziers.forEach(bezier->bezier.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY));
+        beziers.forEach(bezier->{
+            bezier.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
+            
+            //bezier.wireDivisionsProperty().bind(wireDivs);
+            
+            //bezier.wireCropProperty().bind(wireCrop);
+            
+            //bezier.lengthDivisionsProperty().bind(lenDivs);
+            //bezier.lengthCropProperty().bind(lenCrop);
+            
+           // bezier.xOffsetProperty().bind(_x);
+           // bezier.yOffsetProperty().bind(_y);
+           // bezier.zOffsetProperty().bind(_z);
+           // bezier.tubeStartAngleOffsetProperty().bind(_angle);
+            
+        });
         
         DensityFunction<Point3D> dens = p -> (double) p.f;
-
+        wireRad.addListener(i->{beziers.forEach(bm ->{bm.setWireRadius(wireRad.doubleValue());});});
         showKnots.addListener((obs, b, b1) -> splines.forEach(spline -> {
             Point3D k0 = spline.getPoints().get(0);
             Point3D k1 = spline.getPoints().get(1);
@@ -216,33 +245,19 @@ public class BezierMeshes extends ShapeBaseSample {
     @Override
     public Node getControlPanel() {
         
-        // Accordian Will also be replaced with FXML controls
-        // including TitledPanes allowing for SubSections
-        // This is just a demo of the ControlerFactory / BooleanControl
-        
-        Accordion accordion = new Accordion();
-        TitledPane tpFrame = new TitledPane();
-        tpFrame.setText("Frame");        
-        VBox fr = new VBox(); 
-        fr.setSpacing(3);
-        fr.setFillWidth(true);
-        fr.setAlignment(Pos.TOP_LEFT);
-        fr.setPadding(new Insets(3,3,3,3));
-        
-        //######################################################################
-        
         BoolPropertyControl chkKnots = ControlFactory.buildBooleanControl(showKnots);
-        chkKnots.loadBindings();
         BoolPropertyControl chkPnts = ControlFactory.buildBooleanControl(showControlPoints);
-        chkPnts.loadBindings();
         
-        //######################################################################
+        NumberSliderControl radSlider = ControlFactory.buildNumberSlider(wireRad, 0.1D, 1.0D);
+        radSlider.getSlider().setBlockIncrement(0.0001d);
+                
+        ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         
-        fr.getChildren().addAll(chkKnots,chkPnts);
-        tpFrame.setContent(fr);
-        accordion.getPanes().addAll(tpFrame);
-        accordion.setExpandedPane(tpFrame);
-        return accordion;
+        geomControls.addControls(chkKnots,chkPnts, radSlider);
+        ControlPanel cPanel = ControlFactory.buildControlPanel(geomControls);
+       
+        
+        return cPanel;
     }
 
     @Override

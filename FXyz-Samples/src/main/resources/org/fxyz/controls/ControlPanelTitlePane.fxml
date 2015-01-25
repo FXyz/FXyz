@@ -5,13 +5,20 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-
-<fx:root fx:id="root" cache="true" cacheHint="SPEED" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="335.0" prefWidth="175.0" type="TitledPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root cache="true" cacheHint="SPEED" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="330.0" minWidth="175.0" type="TitledPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <VBox fx:id="controls" prefHeight="309.0" prefWidth="173.0" spacing="5.0">
-         <padding>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-         </padding>
-      </VBox>
+      <ScrollPane cache="true" cacheHint="SPEED" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" hmax="0.0" vmax="0.0">
+         <content>
+            <HBox>
+               <children>
+                  <VBox fx:id="controls" minWidth="173.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+         </content>
+      </ScrollPane>
    </content>
 </fx:root>
