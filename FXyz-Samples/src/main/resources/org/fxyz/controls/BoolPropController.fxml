@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root minHeight="40.0" minWidth="167.0" style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="5.0" StackPane.alignment="CENTER_LEFT">
+         <children>
+            <CheckBox fx:id="checkBox" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" HBox.hgrow="NEVER">
+               <padding>
+                  <Insets right="-2.5" />
+               </padding>
+            </CheckBox>
+            <StackPane fx:id="spacer" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="2.0" />
+               </padding>
+            </StackPane>
+            <Label fx:id="boolPropTitle" text="Label" HBox.hgrow="NEVER" />
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </HBox>
+      <Separator StackPane.alignment="BOTTOM_CENTER">
+         <padding>
+            <Insets bottom="1.0" />
+         </padding>
+      </Separator>
+   </children>
+</fx:root>

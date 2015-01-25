@@ -11,7 +11,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker.State;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -27,7 +26,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.stage.Stage;
 import org.fxyz.utils.CameraTransformer;
 
 /**
@@ -41,12 +39,12 @@ import org.fxyz.utils.CameraTransformer;
 public abstract class ShapeBaseSample extends FXyzSample {
 
     private final double sceneWidth = 800;
-    private final double sceneHeight = 600;
+    private final double sceneHeight = 600;    
     
-    private StackPane mainPane;
     private SubScene subScene;
     private Group root;
     protected Group group;
+    protected StackPane mainPane;
         
     private PerspectiveCamera camera;
     private CameraTransformer cameraTransform;
@@ -64,19 +62,21 @@ public abstract class ShapeBaseSample extends FXyzSample {
     protected abstract void addMeshAndListeners();
     
     private final BooleanProperty onService=new SimpleBooleanProperty();
-    
+       
     @Override
-    public Node getPanel(Stage stage) {
+    public Node getSample() {        
         if(!onService.get()){
             cameraTransform = new CameraTransformer();
             camera = new PerspectiveCamera(true);
+            camera.setNearClip(0.1);
+            camera.setFarClip(100000.0);
+            camera.setTranslateZ(-10);
+            camera.setVerticalFieldOfView(true);
+            camera.setFieldOfView(42);
 
             //setup camera transform for rotational support
             cameraTransform.setTranslate(0, 0, 0);
-            cameraTransform.getChildren().add(camera);
-            camera.setNearClip(0.1);
-            camera.setFarClip(10000.0);
-            camera.setTranslateZ(-10);
+            cameraTransform.getChildren().add(camera);            
             cameraTransform.ry.setAngle(-45.0);
             cameraTransform.rx.setAngle(-10.0);
 
@@ -208,17 +208,12 @@ public abstract class ShapeBaseSample extends FXyzSample {
                 time = System.currentTimeMillis();
                 service.start();
 //            }
-        }
+        }        
         return mainPane;
     }
     
     @Override
     public double getControlPanelDividerPosition() {
         return 0.8D;
-    }
-    
-    @Override
-    public Node getSample() {
-        return mainPane;
     }
 }

@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.*
 
 apply plugin: 'application'
-
+applicationDefaultJvmArgs = ["-Xms4g", "-Xmx4g", "-XX:+UseConcMarkSweepGC"]
 applicationName = 'FXyz-Sampler'
 
 mainClassName = fxsampler_mainClass
