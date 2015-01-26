@@ -33,6 +33,10 @@ public class ControlPanel extends StackPane{
         return accordion.getExpandedPane();
     }
 
+    public final void setExpandedPane(TitledPane value) {
+        accordion.setExpandedPane(value);
+    }
+
     public final ObjectProperty<TitledPane> expandedPaneProperty() {
         return accordion.expandedPaneProperty();
     }

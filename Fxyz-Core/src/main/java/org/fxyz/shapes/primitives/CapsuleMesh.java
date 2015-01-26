@@ -15,9 +15,9 @@ public class CapsuleMesh extends MeshView{
     /*
         Field vars
     */
-    private static final int DEFAULT_DIVISIONS = 64;    
-    private static final double DEFAULT_RADIUS = 25.0D;
-    private static final double DEFAULT_HEIGHT = 50.0D;
+    public static final int DEFAULT_DIVISIONS = 64;    
+    public static final double DEFAULT_RADIUS = 2.0D;
+    public static final double DEFAULT_HEIGHT = 10.0D;
     /*
     Constructors
      */
@@ -76,7 +76,7 @@ public class CapsuleMesh extends MeshView{
                 float lx = (float) Math.cos(localTheta);
                 if(i >= (halfDivisions - 1) / 2){
                     points[pointIndex + 0] = x = ly * hdX * (radius);    //X
-                    points[pointIndex + 1] = y = hdY * (radius) + height;//Y
+                    points[pointIndex + 1] = y = hdY * (radius) * height;//Y
                     points[pointIndex + 2] = z = lx * hdX * radius;      //Z
                 }else{
                     points[pointIndex + 0] = x = ly * hdX * (radius);   //X
@@ -187,12 +187,11 @@ public class CapsuleMesh extends MeshView{
     /*
         Properties
     */
-    private final DoubleProperty radius = new SimpleDoubleProperty(){
+    private final DoubleProperty radius = new SimpleDoubleProperty(DEFAULT_RADIUS){
         @Override
         protected void invalidated() {
             setMesh(createCapsule(DEFAULT_DIVISIONS, (float)getRadius(), (float)getHeight()));
-        }
-        
+        }        
     };
 
     public final double getRadius() {
@@ -207,13 +206,14 @@ public class CapsuleMesh extends MeshView{
         return radius;
     }
     
-    private final DoubleProperty height = new SimpleDoubleProperty(){
+    private final DoubleProperty height = new SimpleDoubleProperty(DEFAULT_HEIGHT){
         @Override
         protected void invalidated() {
             setMesh(createCapsule(DEFAULT_DIVISIONS, (float)getRadius(), (float)getHeight()));
         }        
     };
 
+    
     public final double getHeight() {
         return height.get();
     }
@@ -225,6 +225,7 @@ public class CapsuleMesh extends MeshView{
     public DoubleProperty heightProperty() {
         return height;
     }
+    
     
          
 }

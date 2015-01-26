@@ -5,21 +5,31 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root minHeight="40.0" minWidth="167.0" style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER">
          <children>
             <HBox>
                <children>
-                  <Label fx:id="propName" maxWidth="80.0" text="Label" HBox.hgrow="NEVER" />
+                  <Label fx:id="propName" text="Label" HBox.hgrow="NEVER" />
                   <StackPane fx:id="spacer" HBox.hgrow="ALWAYS" />
                   <Label fx:id="valueLabel" text="Label" />
                </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
             </HBox>
-            <Slider fx:id="valSlider" blockIncrement="0.0" max="0.0" showTickMarks="true" VBox.vgrow="NEVER" />
+            <HBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+               <children>
+                  <Slider fx:id="valSlider" blockIncrement="0.0" focusTraversable="false" majorTickUnit="1.0" max="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" showTickMarks="true" HBox.hgrow="ALWAYS" VBox.vgrow="NEVER" />
+               </children>
+            </HBox>
          </children>
          <padding>
-            <Insets bottom="1.5" left="1.5" right="1.5" top="1.5" />
+            <Insets left="3.0" right="3.0" top="3.0" />
          </padding>
       </VBox>
    </children>

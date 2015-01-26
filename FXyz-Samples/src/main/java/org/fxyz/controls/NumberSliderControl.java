@@ -17,30 +17,43 @@ import javafx.scene.layout.StackPane;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class NumberSliderControl  extends ControlBase<Property<Number>>{
-    
-    public NumberSliderControl(Property<Number> prop, Number lowerBound, Number upperBound) {
+public class NumberSliderControl extends ControlBase<Property<Number>> {
+
+    public enum PrecisionString {
+        DEFAULT,
+        D_2,
+        D_4,
+        INT;
+
+        private PrecisionString() {
+        }
+    }
+
+    private final NumberFormat numFormat = NumberFormat.getInstance();
+
+    public NumberSliderControl(Property<Number> prop, Number lowerBound, Number upperBound, PrecisionString format) {
         super("NumberSliderControl.fxml", prop);
         valSlider.setMin(lowerBound.doubleValue());
         valSlider.setMax(upperBound.doubleValue());
         controlledProp.bind(valSlider.valueProperty());
-        valSlider.valueProperty().addListener(i->{
-            double v = valSlider.getValue();
-            NumberFormat f = NumberFormat.getInstance();
-            f.setMaximumFractionDigits(4);
-            
-            valueLabel.setText(String.valueOf(f.format(v)));            
+        switch(format) {
+            case DEFAULT: numFormat.setMaximumFractionDigits(1);break;
+            case D_2: numFormat.setMaximumFractionDigits(2);break;
+            case D_4: numFormat.setMaximumFractionDigits(4);break;
+            case INT: numFormat.setMaximumFractionDigits(0);break;
+            default: numFormat.setMaximumFractionDigits(1);break;
+        }
+        valSlider.valueProperty().addListener(i -> {
+            valueLabel.setText(String.valueOf(numFormat.format(valSlider.getValue())));
         });
         propName.setText(!controlledProp.getName().isEmpty() ? controlledProp.getName() : "Empty Property Name:");
-        valueLabel.setText(String.valueOf(prop.getValue()));  
+        valueLabel.setText(String.valueOf(prop.getValue()));
     }
 
     public Slider getSlider() {
         return valSlider;
     }
-    
-    
-    
+
     @FXML
     private Label propName;
     @FXML
@@ -49,6 +62,5 @@ public class NumberSliderControl  extends ControlBase<Property<Number>>{
     private Label valueLabel;
     @FXML
     private Slider valSlider;
- 
-    
+
 }

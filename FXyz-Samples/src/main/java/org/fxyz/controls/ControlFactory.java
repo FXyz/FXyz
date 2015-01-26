@@ -6,6 +6,7 @@
 package org.fxyz.controls;
 
 import javafx.beans.property.Property;
+import org.fxyz.controls.NumberSliderControl.PrecisionString;
 
 /**
  *
@@ -27,8 +28,8 @@ public class ControlFactory{
         return new BoolPropertyControl(p);
     }
      
-    public static final NumberSliderControl buildNumberSlider(Property<Number> p, Number lb, Number ub){
-        return new NumberSliderControl(p,lb,ub);
+    public static final NumberSliderControl buildNumberSlider(Property<Number> p, Number lb, Number ub, PrecisionString prec){
+        return new NumberSliderControl(p,lb,ub, prec);
     }
     /*==========================================================================
                             Generic "auto" builder

@@ -2,9 +2,7 @@ package org.fxyz.samples;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -24,6 +22,7 @@ import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlFactory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.NumberSliderControl;
+import org.fxyz.controls.NumberSliderControl.PrecisionString;
 import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.BezierMesh;
@@ -38,20 +37,20 @@ public class BezierMeshes extends ShapeBaseSample {
 
     long lastEffect;
 
-    private final BooleanProperty showKnots = new SimpleBooleanProperty(this,"Show Knots");
-    private final BooleanProperty showControlPoints = new SimpleBooleanProperty(this,"Show Control Points");
-    
-    private final DoubleProperty wireRad = new SimpleDoubleProperty(this,"Wire Radius");
-    private final DoubleProperty _x = new SimpleDoubleProperty(this,"X Offset");
-    private final DoubleProperty _y = new SimpleDoubleProperty(this,"Y Offset");
-    private final DoubleProperty _z = new SimpleDoubleProperty(this,"Z Offset");
-    private final DoubleProperty _angle = new SimpleDoubleProperty(this,"Tube Angle Offset");
-    
-    private final IntegerProperty wireDivs = new SimpleIntegerProperty(this,"Wire Divisions");
-    private final IntegerProperty lenDivs = new SimpleIntegerProperty(this,"Length Divisions");
-    private final IntegerProperty wireCrop = new SimpleIntegerProperty(this,"Wire Crop");
-    private final IntegerProperty lenCrop = new SimpleIntegerProperty(this,"Length Crop");
-    
+    private final BooleanProperty showKnots = new SimpleBooleanProperty(this, "Show Knots");
+    private final BooleanProperty showControlPoints = new SimpleBooleanProperty(this, "Show Control Points");
+
+    private final DoubleProperty wireRad = new SimpleDoubleProperty(this, "Wire Radius");
+    private final DoubleProperty _x = new SimpleDoubleProperty(this, "X Offset");
+    private final DoubleProperty _y = new SimpleDoubleProperty(this, "Y Offset");
+    private final DoubleProperty _z = new SimpleDoubleProperty(this, "Z Offset");
+    private final DoubleProperty _angle = new SimpleDoubleProperty(this, "Tube Angle Offset");
+
+    private final IntegerProperty wireDivs = new SimpleIntegerProperty(this, "Wire Divisions");
+    private final IntegerProperty lenDivs = new SimpleIntegerProperty(this, "Length Divisions");
+    private final IntegerProperty wireCrop = new SimpleIntegerProperty(this, "Wire Crop");
+    private final IntegerProperty lenCrop = new SimpleIntegerProperty(this, "Length Crop");
+
     private List<BezierMesh> beziers;
     private List<BezierHelper> splines;
 
@@ -68,7 +67,7 @@ public class BezierMeshes extends ShapeBaseSample {
         splines = interpolate.getSplines();
         beziers = splines.parallelStream().map(spline -> {
             BezierMesh bezier = new BezierMesh(spline, 0.1d, 200, 10, 0, 0);
-           
+
             bezier.setTextureModeNone(Color.ROYALBLUE);
 //            CountDownLatch latch=new CountDownLatch(1);
 //            Platform.runLater(()->{group.getChildren().add(bezier);latch.countDown();});
@@ -78,31 +77,36 @@ public class BezierMeshes extends ShapeBaseSample {
             return bezier;
         }).collect(Collectors.toList());
     }
-    
+
     @Override
-    protected void addMeshAndListeners() {  
+    protected void addMeshAndListeners() {
         System.out.println("building");
-        
+
         group.getChildren().addAll(beziers);
-        beziers.forEach(bezier->{
+        beziers.forEach(bezier -> {
             bezier.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
-            
+
             //bezier.wireDivisionsProperty().bind(wireDivs);
-            
             //bezier.wireCropProperty().bind(wireCrop);
-            
             //bezier.lengthDivisionsProperty().bind(lenDivs);
             //bezier.lengthCropProperty().bind(lenCrop);
-            
            // bezier.xOffsetProperty().bind(_x);
-           // bezier.yOffsetProperty().bind(_y);
-           // bezier.zOffsetProperty().bind(_z);
-           // bezier.tubeStartAngleOffsetProperty().bind(_angle);
-            
+            // bezier.yOffsetProperty().bind(_y);
+            // bezier.zOffsetProperty().bind(_z);
+            // bezier.tubeStartAngleOffsetProperty().bind(_angle);
         });
-        
+
         DensityFunction<Point3D> dens = p -> (double) p.f;
-        wireRad.addListener(i->{beziers.forEach(bm ->{bm.setWireRadius(wireRad.doubleValue());});});
+        wireRad.addListener(i -> {
+            beziers.forEach(bm -> {
+                bm.setWireRadius(wireRad.doubleValue());
+            });
+        });
+        wireDivs.addListener(i -> {
+            beziers.forEach(bm -> {
+                bm.setWireDivisions(wireDivs.intValue());
+            });
+        });
         showKnots.addListener((obs, b, b1) -> splines.forEach(spline -> {
             Point3D k0 = spline.getPoints().get(0);
             Point3D k1 = spline.getPoints().get(1);
@@ -176,29 +180,25 @@ public class BezierMeshes extends ShapeBaseSample {
                 group.getChildren().removeIf(s -> s.getId() != null && s.getId().equals("Control"));
             }
         }));
+        /*
+        bezier.setDrawMode(DrawMode.LINE);
+        bezier.setCullFace(CullFace.NONE);
+        bezier.setSectionType(SectionType.TRIANGLE);
 
-        
-        
-//            bezier.setDrawMode(DrawMode.LINE);
-//            bezier.setCullFace(CullFace.NONE);
-//            bezier.setSectionType(SectionType.TRIANGLE);
+        // NONE
+        bezier.setTextureModeNone(Color.hsb(360d * mainPane.getAndIncrement() / interpolate.getSplines().size(), 1, 1));
+        // IMAGE
+        bezier.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
+        // PATTERN
+        bezier.setTextureModePattern(3d);
+        // FUNCTION
+        bezier.setTextureModeVertices1D(256 * 256, t -> spline.getKappa(t));
+        // DENSITY
+        bezier.setTextureModeVertices3D(256 * 256, dens);
+        // FACES
+        bezier.setTextureModeFaces(256 * 256);
 
-            // NONE
-//            bezier.setTextureModeNone(Color.hsb(360d*mainPane.getAndIncrement()/interpolate.getSplines().size(), 1, 1));
-            // IMAGE
-//            bezier.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
-            // PATTERN
-//           bezier.setTextureModePattern(3d);
-            // FUNCTION
-//            bezier.setTextureModeVertices1D(256*256,t->spline.getKappa(t));
-            // DENSITY
-//            bezier.setTextureModeVertices3D(256*256,dens);
-            // FACES
-//            bezier.setTextureModeFaces(256 * 256);
-        
-//        beziers.forEach(b->b.setTextureModeFaces(256 * 256));
-        
-        
+        beziers.forEach(b -> b.setTextureModeFaces(256 * 256));
 
         lastEffect = System.nanoTime();
         AtomicInteger count = new AtomicInteger();
@@ -206,57 +206,67 @@ public class BezierMeshes extends ShapeBaseSample {
 
             @Override
             public void handle(long now) {
-                
-                if (now > lastEffect + 5_000_000_000l && getScene() != null) {
-                    
-//                    Point3D loc = knot.getPositionAt((count.get()%100)*2d*Math.PI/100d);
-//                    Point3D dir = knot.getTangentAt((count.get()%100)*2d*Math.PI/100d);
-//                    cameraTransform.t.setX(loc.x);
-//                    cameraTransform.t.setY(loc.y);
-//                    cameraTransform.t.setZ(-loc.z);
-//                    javafx.geometry.Point3D axis = cameraTransform.rx.getAxis();
-//                    javafx.geometry.Point3D cross = axis.crossProduct(-dir.x,-dir.y,-dir.z);
-//                    double angle = axis.angle(-dir.x,-dir.y,-dir.z);
-//                    cameraTransform.rx.setAngle(angle);
-//                    cameraTransform.rx.setAxis(new javafx.geometry.Point3D(cross.getX(),-cross.getY(),cross.getZ()));
-//                    dens = p->(float)(p.x*Math.cos(count.get()%100d*2d*Math.PI/50d)+p.y*Math.sin(count.get()%100d*2d*Math.PI/50d));
-//                    beziers.forEach(b->b.setDensity(dens));
-//                    knot.setP(1+(count.get()%5));
-//                    knot.setQ(2+(count.get()%15));
 
-//                    if(count.get()%100<50){
-//                        knot.setDrawMode(DrawMode.LINE);
-//                    } else {
-//                        knot.setDrawMode(DrawMode.FILL);
-//                    }
-//                    beziers.forEach(b->b.setColors((int)Math.pow(2,count.get()%16)));
-//                    beziers.forEach(b->b.setWireRadius(0.1d+(count.get()%6)/10d));
-//                    beziers.forEach(b->b.setPatternScale(1d+(count.get()%10)*3d));
-//                    beziers.forEach(b->b.setSectionType(SectionType.values()[count.get()%SectionType.values().length]));
-                   // count.getAndIncrement();
-                    //lastEffect = now;
+                if (now > lastEffect + 5_000_000_000l && getScene() != null) {
+
+                    Point3D loc = knot.getPositionAt((count.get()%100)*2d*Math.PI/100d);
+                    Point3D dir = knot.getTangentAt((count.get()%100)*2d*Math.PI/100d);
+                    cameraTransform.t.setX(loc.x);
+                    cameraTransform.t.setY(loc.y);
+                    cameraTransform.t.setZ(-loc.z);
+                    javafx.geometry.Point3D axis = cameraTransform.rx.getAxis();
+                    javafx.geometry.Point3D cross = axis.crossProduct(-dir.x,-dir.y,-dir.z);
+                    double angle = axis.angle(-dir.x,-dir.y,-dir.z);
+                    cameraTransform.rx.setAngle(angle);
+                    cameraTransform.rx.setAxis(new javafx.geometry.Point3D(cross.getX(),-cross.getY(),cross.getZ()));
+                    dens = p->(float)(p.x*Math.cos(count.get()%100d*2d*Math.PI/50d)+p.y*Math.sin(count.get()%100d*2d*Math.PI/50d));
+                    beziers.forEach(b->b.setDensity(dens));
+                    knot.setP(1+(count.get()%5));
+                    knot.setQ(2+(count.get()%15));
+                    if(count.get()%100<50){
+                        knot.setDrawMode(DrawMode.LINE);
+                    } else {
+                        knot.setDrawMode(DrawMode.FILL);
+                    }
+                    beziers.forEach(b->b.setColors((int)Math.pow(2,count.get()%16)));
+                    beziers.forEach(b->b.setWireRadius(0.1d+(count.get()%6)/10d));
+                    beziers.forEach(b->b.setPatternScale(1d+(count.get()%10)*3d));
+                    beziers.forEach(b->b.setSectionType(SectionType.values()[count.get()%SectionType.values().length]));
+                    count.getAndIncrement();
+                    lastEffect = now;
                 }
             }
         };
-        
-        //timerEffect.start();
+
+        timerEffect.start();
+        */
     }
 
     @Override
     public Node getControlPanel() {
-        
+
         BoolPropertyControl chkKnots = ControlFactory.buildBooleanControl(showKnots);
         BoolPropertyControl chkPnts = ControlFactory.buildBooleanControl(showControlPoints);
-        
-        NumberSliderControl radSlider = ControlFactory.buildNumberSlider(wireRad, 0.1D, 1.0D);
-        radSlider.getSlider().setBlockIncrement(0.0001d);
-                
+
+        NumberSliderControl radSlider = ControlFactory.buildNumberSlider(wireRad, 0.1D, 0.5D, PrecisionString.DEFAULT);
+        radSlider.getSlider().setMinorTickCount(4);
+        radSlider.getSlider().setMajorTickUnit(0.5);
+        radSlider.getSlider().setBlockIncrement(0.1d);
+        radSlider.getSlider().setSnapToTicks(true);
+
+        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(wireDivs, 3.0D, 30.0D, PrecisionString.INT);
+        wDivSlider.getSlider().setBlockIncrement(1);
+        wDivSlider.getSlider().setMajorTickUnit(28);
+        wDivSlider.getSlider().setMinorTickCount(29);
+        wDivSlider.getSlider().setSnapToTicks(true);
+
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        
-        geomControls.addControls(chkKnots,chkPnts, radSlider);
+        geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider);
+        geomControls.setExpanded(true);
+
         ControlPanel cPanel = ControlFactory.buildControlPanel(geomControls);
-       
-        
+        cPanel.setExpandedPane(geomControls);
+
         return cPanel;
     }
 
