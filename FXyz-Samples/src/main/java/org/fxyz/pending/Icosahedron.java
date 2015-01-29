@@ -1,8 +1,10 @@
-package org.fxyz.samples;
+package org.fxyz.pending;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
-import javafx.scene.AmbientLight;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -14,49 +16,56 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.CullFace;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.fxyz.FXyzSample;
 import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.CurvedSpringMesh;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
+import org.fxyz.shapes.primitives.IcosahedronMesh;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
  * @author jpereda
  */
-public class CurvedSpring extends FXyzSample {
+public class Icosahedron extends FXyzSample {
 
+    long lastEffect;
+    DensityFunction<Point3D> dens = p -> (double) p.x;
+    
     @Override
     public Node getSample() {
-        final double sceneWidth = 800;
+
+        PerspectiveCamera camera;
+        final double sceneWidth = 600;
         final double sceneHeight = 600;
         final CameraTransformer cameraTransform = new CameraTransformer();
 
-        CurvedSpringMesh spring;
+        IcosahedronMesh ico;
         Rotate rotateY;
-        DensityFunction<Point3D> dens = p -> (double) p.x;
-        long lastEffect;
-        PerspectiveCamera camera = new PerspectiveCamera(true);
+
+        
+//         (float)(3d*Math.pow(Math.sin(p.phi),2)*Math.pow(Math.abs(Math.cos(p.theta)),0.1)+
+//         Math.pow(Math.cos(p.phi),2)*Math.pow(Math.abs(Math.sin(p.theta)),0.1));
+//         private Density dens = p->p.x*p.y*p.z;
+
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.web("#3d3d3d"));
+        scene.setFill(Color.BLACK);
+        camera = new PerspectiveCamera(true);
 
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-60);
+        camera.setTranslateZ(-5);
         cameraTransform.ry.setAngle(-45.0);
         cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
-        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
         light.setTranslateZ(camera.getTranslateZ());
@@ -65,29 +74,21 @@ public class CurvedSpring extends FXyzSample {
         rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
         Group group = new Group();
         group.getChildren().add(cameraTransform);
-
-        spring = new CurvedSpringMesh(6d, 2d, 0.4d, 25d, 12.5d * 2d * Math.PI,
-                1000, 60, 0, 0);
-        spring.setSectionType(SectionType.TRIANGLE);
-        spring.setCullFace(CullFace.NONE);
-//        spring.setDrawMode(DrawMode.LINE);
-
+        ico = new IcosahedronMesh(5, 1f);
+//                ico.setDrawMode(DrawMode.LINE);
         // NONE
-        spring.setTextureModeNone(Color.ROYALBLUE);
-    // IMAGE
-//        spring.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
+//        ico.setTextureModeNone(Color.ROYALBLUE);
+        // IMAGE
+//        ico.setTextureModeImage(getClass().getResource("res/0ZKMx.png").toExternalForm());
         // PATTERN
-//       spring.setTextureModePattern(10d);
-        // FUNCTION
-//        spring.setTextureModeVertices1D(256*256,t->t);
+//        ico.setTextureModePattern(2d);
         // DENSITY
-//        spring.setTextureModeVertices3D(256*256,dens);
-        // FACES
-//        spring.setTextureModeFaces(256*256);
+        ico.setTextureModeVertices3D(256 * 256, dens);
+    // FACES
+//        ico.setTextureModeFaces(256);
 
-        spring.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
-
-        group.getChildren().add(spring);
+        ico.getTransforms().addAll(new Rotate(30, Rotate.X_AXIS), rotateY);
+        group.getChildren().add(ico);
 
         sceneRoot.getChildren().addAll(group);
 
@@ -158,29 +159,29 @@ public class CurvedSpring extends FXyzSample {
 
             @Override
             public void handle(long now) {
-                if (now > lastEffect + 500_000_000l) {
-//                    dens = p->(float)(p.x*Math.cos(count.get()%100d*2d*Math.PI/50d)+p.y*Math.sin(count.get()%100d*2d*Math.PI/50d));
-//                    spring.setDensity(dens);
-//                    spring.setPitch(20+5*(count.get()%10));
-
-//                    if(count.get()%100<50){
-//                        spring.setDrawMode(DrawMode.LINE);
-//                    } else {
-//                        spring.setDrawMode(DrawMode.FILL);
-//                    }
-//                    spring.setLength(100+20*(count.get()%10));
-//                    spring.setColors((int)Math.pow(2,count.get()%16));
-//                    spring.setMajorRadius(5d+(count.get()%10));
-//                    spring.setMinorRadius(1d+(count.get()%10)/4d);
-//                    spring.setWireRadius(0.1d+(count.get()%6)/10d);
-//                    spring.setPatternScale(1d+(count.get()%10)*5d);
-//                    spring.setFunction(t->Math.sin((25+count.get()%25)*t));
-                    count.getAndIncrement();
-                    //lastEffect = now;
+                if (now > lastEffect + 50_000_000l) {
+                    double cont1 = 0.1 + (count.get() % 60) / 10d;
+                    double cont2 = 0.1 + (count.getAndIncrement() % 30) / 10d;
+//                    dens = p->(float)(3d*Math.pow(Math.sin(p.phi),2)*Math.pow(Math.abs(Math.cos(p.theta)),cont1)+
+//                            Math.pow(Math.cos(p.phi),2)*Math.pow(Math.abs(Math.sin(p.theta)),cont2));
+                    dens = p -> 10 * cont1 * Math.pow(Math.abs(p.x), cont1) * Math.pow(Math.abs(p.y), cont2) * Math.pow(p.z, 2);
+                    ico.setDensity(dens);
+//                    ico.setColors((int)Math.pow(2,count.get()%16));
+//                    ico.setLevel(count.get()%8);
+//                    ico.setDiameter(0.5f+10*(float)cont1);
+                    lastEffect = now;
                 }
             }
         };
 
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(50), new KeyValue(rotateY.angleProperty(), 360)));
+
+
+        //timerEffect.start();
+//        timeline.play();
+        
         StackPane sp = new StackPane();
         sp.setPrefSize(sceneWidth, sceneHeight);
         sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
@@ -193,12 +194,6 @@ public class CurvedSpring extends FXyzSample {
         scene.heightProperty().bind(sp.heightProperty());
         
         return (sp);
-
-        //OBJWriter writer=new OBJWriter((TriangleMesh) spring.getMesh(),"curvedSpring");
-        // writer.setTextureColors(256*256);
-        //writer.setMaterialColor(Color.ROYALBLUE);
-        //writer.exportMesh();
-//        timerEffect.start();
     }
 
     @Override
@@ -213,6 +208,6 @@ public class CurvedSpring extends FXyzSample {
 
     @Override
     public String getJavaDocURL() {
-        return "";
+        return null;
     }
 }

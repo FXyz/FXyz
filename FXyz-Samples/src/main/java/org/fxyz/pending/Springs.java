@@ -1,4 +1,4 @@
-package org.fxyz.samples;
+package org.fxyz.pending;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;

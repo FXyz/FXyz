@@ -93,13 +93,13 @@ is being used to size a border should also be in pixels.
     /* A light grey that is the base color for objects.  Instead of using
      * -fx-base directly, the sections in this file will typically use -fx-color.
      */
-    -fx-base: #3d3d3d77;
+    -fx-base: rgba(60,60,60,0.9);
 
     /* A very light grey used for the background of windows.  See also
      * -fx-text-background-color, which should be used as the -fx-text-fill
      * value for text painted on top of backgrounds colored with -fx-background.
      */
-    -fx-background: derive(-fx-base,26.4%);
+    -fx-background: derive(-fx-base,50.4%);
 
     /* Used for the inside of text boxes, password boxes, lists, trees, and
      * tables.  See also -fx-text-inner-color, which should be used as the
@@ -3114,21 +3114,18 @@ is being used to size a border should also be in pixels.
 
 
 #body{
-    -fx-border-radius: 10;
-    -fx-border-width: 1;
-    -fx-border-color: linear-gradient(from 0% 50% to 100%  50%, derive(-fx-base, 45%) 0%, derive(-fx-base, -25%) 50%, derive(-fx-base, 45%) 100%);
-    -fx-background-radius: 10;
-    -fx-background-color: linear-gradient(from 0% 50% to 100% 50%, -fx-base 0%, rgba(0,0,0,0.5) 50%, -fx-base 100%);
+    -fx-border-width: 0.5;
+    -fx-border-color: linear-gradient(from 0% 50% to 100%  50%, derive(rgba(0,0,0,0.8), 45%) 0%, derive(-fx-base, -25%) 50%, derive(rgba(0,0,0,0.8), 45%) 100%);    
+    -fx-background-color: linear-gradient(from 0% 50% to 100% 50%, rgba(0,0,0,0.2) 0%, transparent 50%, rgba(0,0,0,0.2) 100%);
+    -fx-effect:  dropshadow(gaussian ,black ,10,0,0,0);
 }
 
 /*   Main Frame    */
 #frame{
     -fx-background-color: linear-gradient(to right, #2e2e2e 0%, #666666 50%, #2e2e2e 100%);
-    -fx-background-radius:10;
-    -fx-border-radius: 10; 
     -fx-border-width: 1.5;
     -fx-border-color: linear-gradient(from 0% 50% to 100%  50%, rgba(0,0,0,0.9) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.9) 100%);
-    -fx-effect:  dropshadow(gaussian ,black ,10,0,0,0);
+    
 }
 
 #no-frame{

@@ -1,8 +1,10 @@
-package org.fxyz.samples;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.fxyz.pending;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import javafx.animation.AnimationTimer;
-import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -14,78 +16,59 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.geometry.DensityFunction;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.SegmentedTorusMesh;
+import org.fxyz.shapes.composites.Histogram;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
- * @author jpereda
+ * @author Sean
  */
-public class SegmentedTorus extends FXyzSample {
-
-    private DensityFunction<Point3D> dens = p -> (double) p.x;
-    private long lastEffect;
+public class Histograms extends FXyzSample {
 
     @Override
     public Node getSample() {
-
-        PerspectiveCamera camera;
+        PerspectiveCamera camera = new PerspectiveCamera(true);
+        CameraTransformer cameraTransform = new CameraTransformer();
         final double sceneWidth = 800;
         final double sceneHeight = 600;
-        final CameraTransformer cameraTransform = new CameraTransformer();
-
-        Rotate rotateY;
-        SegmentedTorusMesh torus;
+        double cameraDistance = 5000;
+        Histogram histogram;
 
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        camera = new PerspectiveCamera(true);
-
-        //setup camera transform for rotational support
+       //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-2000);
-        cameraTransform.ry.setAngle(-45.0);
-        cameraTransform.rx.setAngle(-10.0);
+        camera.setTranslateZ(-30);
+//        cameraTransform.ry.setAngle(-45.0);
+//        cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
-        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(camera.getTranslateZ());
+        light.setTranslateZ(10 * camera.getTranslateZ());
         scene.setCamera(camera);
 
-        rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
-        Group group = new Group();
-        group.getChildren().add(cameraTransform);
+        histogram = new Histogram(1000, 1, true);
+        sceneRoot.getChildren().addAll(histogram);
 
-        torus = new SegmentedTorusMesh(50, 42, 0, 500d, 150d);
-//        torus.setDrawMode(DrawMode.LINE);
-        // NONE
-//        torus.setTextureModeNone(Color.ROYALBLUE);
-        // IMAGE
-//        torus.setTextureModeImage(getClass().getResource("res/grid.png").toExternalForm());
-        // PATTERN
-        torus.setTextureModePattern(1.0d);
-    // DENSITY
-//        torus.setTextureModeVertices3D(256*256,dens);
-        // FACES
-//        torus.setTextureModeFaces(256*256);
-
-        torus.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
-
-        group.getChildren().add(torus);
-
-        sceneRoot.getChildren().addAll(group);
+        int size = 30;
+        float[][] arrayY = new float[2 * size][2 * size];
+        for (int i = -size; i < size; i++) {
+            for (int j = -size; j < size; j++) {
+                //Transcedental Gradient
+                double xterm = (Math.cos(Math.PI * i / size) * Math.cos(Math.PI * i / size));
+                double yterm = (Math.cos(Math.PI * j / size) * Math.cos(Math.PI * j / size));
+                arrayY[i + size][j + size] = (float) (10 * ((xterm + yterm) * (xterm + yterm)));
+            }
+        }
+        histogram.setHeightData(arrayY, 1, 4, Color.SKYBLUE, false, true);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
@@ -147,34 +130,6 @@ public class SegmentedTorus extends FXyzSample {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-
-        lastEffect = System.nanoTime();
-        AtomicInteger count = new AtomicInteger();
-        AnimationTimer timerEffect = new AnimationTimer() {
-
-            @Override
-            public void handle(long now) {
-                if (now > lastEffect + 1_000_000_000l) {
-//                    dens = p->(float)(p.x*Math.cos(count.get()%100d*2d*Math.PI/50d)+p.y*Math.sin(count.get()%100d*2d*Math.PI/50d));
-//                    torus.setDensity(dens);
-
-//                    if(count.get()%100<50){
-//                        torus.setDrawMode(DrawMode.LINE);
-//                    } else {
-//                        torus.setDrawMode(DrawMode.FILL);
-//                    }
-//                    spring.setLength(100+20*(count.get()%10));
-//                    torus.setColors((int)Math.pow(2,count.get()%16));
-//                    torus.setMajorRadius(500+100*(count.get()%10));
-//                    torus.setMinorRadius(150+10*(count.get()%10));
-//                    torus.setPatternScale(1d+(count.get()%10)*5d);
-                    count.getAndIncrement();
-                    lastEffect = now;
-                }
-            }
-        };
-
-        timerEffect.start();
         
         StackPane sp = new StackPane();
         sp.setPrefSize(sceneWidth, sceneHeight);

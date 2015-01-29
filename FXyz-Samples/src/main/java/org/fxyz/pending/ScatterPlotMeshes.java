@@ -1,5 +1,12 @@
-package org.fxyz.samples;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.fxyz.pending;
 
+import java.util.ArrayList;
+import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -11,75 +18,61 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.geometry.DensityFunction;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.CylinderMesh;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
+import org.fxyz.shapes.composites.ScatterPlotMesh;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
- * @author jpereda
+ * @author Sean
  */
-public class Cylinders extends FXyzSample {
+public class ScatterPlotMeshes extends FXyzSample {
 
     @Override
     public Node getSample() {
+
+        final CameraTransformer cameraTransform = new CameraTransformer();
+        PerspectiveCamera camera = new PerspectiveCamera(true);
         final double sceneWidth = 800;
         final double sceneHeight = 600;
-        final CameraTransformer cameraTransform = new CameraTransformer();
+        double cameraDistance = 5000;
+        ScatterPlotMesh scatterPlotMesh;
 
-        CylinderMesh cylinder;
-        Rotate rotateY;
-
-        DensityFunction<Point3D> dens = p -> (double) p.x;
-
-        PerspectiveCamera camera;
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        camera = new PerspectiveCamera(true);
-
+        
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-30);
-//        cameraTransform.ry.setAngle(-45.0);
-//        cameraTransform.rx.setAngle(-10.0);
+        camera.setTranslateZ(-40);
+        cameraTransform.ry.setAngle(-45.0);
+        cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
+        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(10 * camera.getTranslateZ());
+        light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
 
-        rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
-        Group group = new Group();
-        group.getChildren().add(cameraTransform);
-        cylinder = new CylinderMesh(2, 5, 4);
-//        cylinder.setDrawMode(DrawMode.LINE);
-//        cylinder.setCullFace(CullFace.NONE);
-        // SECTION TYPE
-        cylinder.setSectionType(TriangleMeshHelper.SectionType.DECAGON);
-    // NONE
-//        cylinder.setTextureModeNone(Color.ROYALBLUE);
-        // IMAGE
-        cylinder.setTextureModeImage(getClass().getResource("res/netCylinder.png").toExternalForm());
-    // DENSITY
-//        cylinder.setTextureModeVertices3D(256*256,p->(double)(2.5-p.y)*(2.5-p.y));
-        // FACES
-//        cylinder.setTextureModeFaces(256*256);
+        scatterPlotMesh = new ScatterPlotMesh(1000, 1, true);
+        sceneRoot.getChildren().addAll(scatterPlotMesh);
 
-        cylinder.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
-        group.getChildren().add(cylinder);
+        ArrayList<Double> dataX = new ArrayList<>();
+        ArrayList<Double> dataY = new ArrayList<>();
+        ArrayList<Double> dataZ = new ArrayList<>();
+        for (int i = -250; i < 250; i++) {
+            dataX.add(new Double(i));
+            dataY.add(new Double(Math.sin(i) * 50) + i);
+            dataZ.add(new Double(Math.cos(i) * 50) + i);
+        }
 
-        sceneRoot.getChildren().addAll(group);
+        scatterPlotMesh.setXYZData(dataX, dataY, dataZ);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
@@ -154,12 +147,6 @@ public class Cylinders extends FXyzSample {
         scene.heightProperty().bind(sp.heightProperty());
         
         return (sp);
-        //OBJWriter writer=new OBJWriter((TriangleMesh) cylinder.getMesh(),"cylinder2");
-//        writer.setMaterialColor(Color.AQUA);
-//        writer.setTextureImage(getClass().getResource("res/netCylinder.png").toExternalForm());
-        //writer.setTextureColors(256*256);
-        //writer.exportMesh();
-
     }
 
     @Override

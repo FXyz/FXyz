@@ -26,7 +26,7 @@ public class ControlBasePane extends Accordion{
             loader.load();
         } catch (IOException ex) {
             
-            Logger.getLogger(BoolPropertyControl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckBoxControl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

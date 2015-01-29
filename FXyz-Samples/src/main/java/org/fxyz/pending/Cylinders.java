@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.fxyz.samples;
+package org.fxyz.pending;
 
-import java.util.Random;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -18,30 +12,35 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.Torus;
+import org.fxyz.geometry.DensityFunction;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.CylinderMesh;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
- * @author Sean
+ * @author jpereda
  */
-public class Tori extends FXyzSample {
+public class Cylinders extends FXyzSample {
 
     @Override
-    public Node getSample(){
-        PerspectiveCamera camera;
+    public Node getSample() {
         final double sceneWidth = 800;
         final double sceneHeight = 600;
-        double cameraDistance = 5000;
-        CameraTransformer cameraTransform = new CameraTransformer();
+        final CameraTransformer cameraTransform = new CameraTransformer();
 
+        CylinderMesh cylinder;
+        Rotate rotateY;
+
+        DensityFunction<Point3D> dens = p -> (double) p.x;
+
+        PerspectiveCamera camera;
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        //Setup camera and scatterplot cubeviewer
         camera = new PerspectiveCamera(true);
 
         //setup camera transform for rotational support
@@ -49,54 +48,38 @@ public class Tori extends FXyzSample {
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-5000);
-        cameraTransform.ry.setAngle(-45.0);
-        cameraTransform.rx.setAngle(-10.0);
+        camera.setTranslateZ(-30);
+//        cameraTransform.ry.setAngle(-45.0);
+//        cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(camera.getTranslateZ());
+        light.setTranslateZ(10 * camera.getTranslateZ());
         scene.setCamera(camera);
 
-        //Make a bunch of semi random Torusesessses(toroids?) and stuff
-        Group torusGroup = new Group();
-        torusGroup.getChildren().add(cameraTransform);
-        for (int i = 0; i < 30; i++) {
-            Random r = new Random();
-            //A lot of magic numbers in here that just artificially constrain the math
-            float randomRadius = (float) ((r.nextFloat() * 300) + 50);
-            float randomTubeRadius = (float) ((r.nextFloat() * 100) + 1);
-            int randomTubeDivisions = (int) ((r.nextFloat() * 64) + 1);
-            int randomRadiusDivisions = (int) ((r.nextFloat() * 64) + 1);
-            Color randomColor = new Color(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
+        rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+        Group group = new Group();
+        group.getChildren().add(cameraTransform);
+        cylinder = new CylinderMesh(2, 5, 4);
+//        cylinder.setDrawMode(DrawMode.LINE);
+//        cylinder.setCullFace(CullFace.NONE);
+        // SECTION TYPE
+        cylinder.setSectionType(TriangleMeshHelper.SectionType.DECAGON);
+    // NONE
+//        cylinder.setTextureModeNone(Color.ROYALBLUE);
+        // IMAGE
+        cylinder.setTextureModeImage(getClass().getResource("res/netCylinder.png").toExternalForm());
+    // DENSITY
+//        cylinder.setTextureModeVertices3D(256*256,p->(double)(2.5-p.y)*(2.5-p.y));
+        // FACES
+//        cylinder.setTextureModeFaces(256*256);
 
-            Torus torus = new Torus(randomTubeDivisions, randomRadiusDivisions, randomRadius, randomTubeRadius, randomColor);
+        cylinder.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
+        group.getChildren().add(cylinder);
 
-            double translationX = Math.random() * sceneWidth * 1.95;
-            if (Math.random() >= 0.5) {
-                translationX *= -1;
-            }
-            double translationY = Math.random() * sceneWidth * 1.95;
-            if (Math.random() >= 0.5) {
-                translationY *= -1;
-            }
-            double translationZ = Math.random() * sceneWidth * 1.95;
-            if (Math.random() >= 0.5) {
-                translationZ *= -1;
-            }
-            Translate translate = new Translate(translationX, translationY, translationZ);
-            Rotate rotateX = new Rotate(Math.random() * 360, Rotate.X_AXIS);
-            Rotate rotateY = new Rotate(Math.random() * 360, Rotate.Y_AXIS);
-            Rotate rotateZ = new Rotate(Math.random() * 360, Rotate.Z_AXIS);
-
-            torus.getTransforms().addAll(translate, rotateX, rotateY, rotateZ);
-            //torus.getTransforms().add(translate);
-            torusGroup.getChildren().add(torus);
-
-        }
-        sceneRoot.getChildren().addAll(torusGroup);
+        sceneRoot.getChildren().addAll(group);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
@@ -158,7 +141,7 @@ public class Tori extends FXyzSample {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-        
+
         StackPane sp = new StackPane();
         sp.setPrefSize(sceneWidth, sceneHeight);
         sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
@@ -171,8 +154,13 @@ public class Tori extends FXyzSample {
         scene.heightProperty().bind(sp.heightProperty());
         
         return (sp);
-    }
+        //OBJWriter writer=new OBJWriter((TriangleMesh) cylinder.getMesh(),"cylinder2");
+//        writer.setMaterialColor(Color.AQUA);
+//        writer.setTextureImage(getClass().getResource("res/netCylinder.png").toExternalForm());
+        //writer.setTextureColors(256*256);
+        //writer.exportMesh();
 
+    }
 
     @Override
     public String getSampleName() {
@@ -186,6 +174,6 @@ public class Tori extends FXyzSample {
 
     @Override
     public String getJavaDocURL() {
-        return "";
+        return null;
     }
 }

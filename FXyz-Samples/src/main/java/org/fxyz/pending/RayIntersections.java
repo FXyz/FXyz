@@ -1,7 +1,11 @@
-package org.fxyz.samples;
+package org.fxyz.pending;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import javafx.animation.AnimationTimer;
+import java.util.stream.IntStream;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -14,12 +18,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.CullFace;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.geometry.DensityFunction;
-import org.fxyz.geometry.Point3D;
+import org.fxyz.scene.Axes;
+import org.fxyz.shapes.primitives.CurvedSpringMesh;
 import org.fxyz.shapes.primitives.KnotMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 import org.fxyz.utils.CameraTransformer;
@@ -28,10 +38,7 @@ import org.fxyz.utils.CameraTransformer;
  *
  * @author jpereda
  */
-public class Knots extends FXyzSample {
-
-    private DensityFunction<Point3D> dens = p -> (double) p.x;
-    private long lastEffect;
+public class RayIntersections extends FXyzSample {
 
     @Override
     public Node getSample() {
@@ -42,11 +49,13 @@ public class Knots extends FXyzSample {
         final CameraTransformer cameraTransform = new CameraTransformer();
 
         KnotMesh knot;
+        CurvedSpringMesh spring;
+
         Rotate rotateY;
 
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.WHEAT);
+        scene.setFill(Color.web("#303030"));
         camera = new PerspectiveCamera(true);
 
         //setup camera transform for rotational support
@@ -54,7 +63,7 @@ public class Knots extends FXyzSample {
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-30);
+        camera.setTranslateZ(-40);
         cameraTransform.ry.setAngle(-45.0);
         cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
@@ -71,27 +80,103 @@ public class Knots extends FXyzSample {
         group.getChildren().add(cameraTransform);
 
         knot = new KnotMesh(2d, 1d, 0.4d, 2d, 3d,
-                1000, 60, 0, 0);
-        knot.setDrawMode(DrawMode.LINE);
-//        knot.setCullFace(CullFace.NONE);
+                100, 20, 0, 0);
+//        knot.setDrawMode(DrawMode.LINE);
+        knot.setCullFace(CullFace.NONE);
         knot.setSectionType(SectionType.TRIANGLE);
-
+        spring = new CurvedSpringMesh(6d, 2d, 0.4d, 25d, 6.25d * 2d * Math.PI,
+                1000, 60, 0, 0);
+        spring.getTransforms().addAll(new Translate(6, -6, 0));
+        spring.setDrawMode(DrawMode.LINE);
+        spring.setCullFace(CullFace.NONE);
+//        spring.setTextureModeVertices3D(256*256,dens);
         // NONE
         knot.setTextureModeNone(Color.BROWN);
-    // IMAGE
-//        knot.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
-        // PATTERN
-//       knot.setTextureModePattern(3d);
-        // FUNCTION
-//        knot.setTextureModeVertices1D(256*256,t->t*t);
-        // DENSITY
-//        knot.setTextureModeVertices3D(256*256,dens);
-        // FACES
-//        knot.setTextureModeFaces(256*256);
+        spring.setTextureModeNone(Color.BROWN);
 
         knot.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
 
         group.getChildren().add(knot);
+        group.getChildren().add(spring);
+
+        /*
+         Origin in knot
+         Target in spring
+         */
+        org.fxyz.geometry.Point3D locOrigin = knot.getOrigin();
+        Point3D gloOrigin = knot.localToScene(new Point3D(locOrigin.x, locOrigin.y, locOrigin.z));
+        org.fxyz.geometry.Point3D locTarget1 = spring.getOrigin();
+        Point3D locTarget2 = new Point3D(locTarget1.x, locTarget1.y, locTarget1.z);
+        Point3D gloTarget = spring.localToScene(locTarget2);
+
+        Point3D gloDirection = gloTarget.subtract(gloOrigin).normalize();
+        Point3D gloOriginInLoc = spring.sceneToLocal(gloOrigin);
+
+        Bounds locBounds = spring.getBoundsInLocal();
+        Bounds gloBounds = spring.localToScene(locBounds);
+
+        Sphere s = new Sphere(0.05d);
+        s.getTransforms().add(new Translate(gloOrigin.getX(), gloOrigin.getY(), gloOrigin.getZ()));
+        s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
+        group.getChildren().add(s);
+        s = new Sphere(0.05d);
+        s.getTransforms().add(new Translate(gloTarget.getX(), gloTarget.getY(), gloTarget.getZ()));
+        s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
+
+        Point3D dir = gloTarget.subtract(gloOrigin).crossProduct(new Point3D(0, -1, 0));
+        double angle = Math.acos(gloTarget.subtract(gloOrigin).normalize().dotProduct(new Point3D(0, -1, 0)));
+        double h1 = gloTarget.subtract(gloOrigin).magnitude();
+        Cylinder c = new Cylinder(0.01d, h1);
+        c.getTransforms().addAll(new Translate(gloOrigin.getX(), gloOrigin.getY() - h1 / 2d, gloOrigin.getZ()),
+                new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
+                        new Point3D(dir.getX(), -dir.getY(), dir.getZ())));
+        c.setMaterial(new PhongMaterial(Color.GREEN));
+        group.getChildren().add(c);
+
+        group.getChildren().add(new Axes(0.02));
+        Box box = new Box(gloBounds.getWidth(), gloBounds.getHeight(), gloBounds.getDepth());
+        box.setDrawMode(DrawMode.LINE);
+        box.setMaterial(new PhongMaterial(Color.BLUEVIOLET));
+        box.getTransforms().add(new Translate(gloBounds.getMinX() + gloBounds.getWidth() / 2d,
+                gloBounds.getMinY() + gloBounds.getHeight() / 2d, gloBounds.getMinZ() + gloBounds.getDepth() / 2d));
+        group.getChildren().add(box);
+
+        /*
+         FIRST STEP; Check the ray crosses the bounding box of the shape at any of
+         its 6 faces
+         */
+        List<Point3D> normals = Arrays.asList(new Point3D(-1, 0, 0), new Point3D(1, 0, 0), new Point3D(0, -1, 0),
+                new Point3D(0, 1, 0), new Point3D(0, 0, -1), new Point3D(0, 0, 1));
+        List<Point3D> positions = Arrays.asList(new Point3D(locBounds.getMinX(), 0, 0), new Point3D(locBounds.getMaxX(), 0, 0),
+                new Point3D(0, locBounds.getMinY(), 0), new Point3D(0, locBounds.getMaxY(), 0),
+                new Point3D(0, 0, locBounds.getMinZ()), new Point3D(0, 0, locBounds.getMaxZ()));
+        AtomicInteger counter = new AtomicInteger();
+        IntStream.range(0, 6).forEach(i -> {
+            // ray[t]= ori+t.dir; t/ray[t]=P in plane
+            // plane P·N+d=0->(ori+t*dir)·N+d=0->t=-(ori.N+d)/(dir.N)
+            // P=P(x,y,z), N={a,b,c}, d=-a·x0-b·y0-c·z0
+            double d = -normals.get(i).dotProduct(positions.get(i));
+            double t = -(gloOriginInLoc.dotProduct(normals.get(i)) + d) / (gloDirection.dotProduct(normals.get(i)));
+            Point3D locInter = gloOriginInLoc.add(gloDirection.multiply(t));
+            if (locBounds.contains(locInter)) {
+                counter.getAndIncrement();
+                Point3D gloInter = spring.localToScene(locInter);
+                Sphere s2 = new Sphere(0.1d);
+                s2.getTransforms().add(new Translate(gloInter.getX(), gloInter.getY(), gloInter.getZ()));
+                s2.setMaterial(new PhongMaterial(Color.GOLD));
+                group.getChildren().add(s2);
+            }
+        });
+        if (counter.get() > 0) {
+            /*
+             SECOND STEP: Check if the ray crosses any of the triangles of the mesh
+             */
+            // triangle mesh
+            org.fxyz.geometry.Point3D gloOriginInLoc1 = new org.fxyz.geometry.Point3D((float) gloOriginInLoc.getX(), (float) gloOriginInLoc.getY(), (float) gloOriginInLoc.getZ());
+            org.fxyz.geometry.Point3D gloDirection1 = new org.fxyz.geometry.Point3D((float) gloDirection.getX(), (float) gloDirection.getY(), (float) gloDirection.getZ());
+
+            System.out.println("inter: " + spring.getIntersections(gloOriginInLoc1, gloDirection1));
+        }
 
         sceneRoot.getChildren().addAll(group);
 
@@ -156,49 +241,6 @@ public class Knots extends FXyzSample {
             }
         });
 
-        lastEffect = System.nanoTime();
-        AtomicInteger count = new AtomicInteger();
-        AnimationTimer timerEffect = new AnimationTimer() {
-
-            @Override
-            public void handle(long now) {
-                if (now > lastEffect + 100_000_000l) {
-//                    Point3D loc = knot.getPositionAt((count.get()%100)*2d*Math.PI/100d);
-//                    Point3D dir = knot.getTangentAt((count.get()%100)*2d*Math.PI/100d);
-//                    cameraTransform.t.setX(loc.x);
-//                    cameraTransform.t.setY(loc.y);
-//                    cameraTransform.t.setZ(-loc.z);
-//                    javafx.geometry.Point3D axis = cameraTransform.rx.getAxis();
-//                    javafx.geometry.Point3D cross = axis.crossProduct(-dir.x,-dir.y,-dir.z);
-//                    double angle = axis.angle(-dir.x,-dir.y,-dir.z);
-//                    cameraTransform.rx.setAngle(angle);
-//                    cameraTransform.rx.setAxis(new javafx.geometry.Point3D(cross.getX(),-cross.getY(),cross.getZ()));
-//                    dens = p->(float)(p.x*Math.cos(count.get()%100d*2d*Math.PI/50d)+p.y*Math.sin(count.get()%100d*2d*Math.PI/50d));
-//                    knot.setDensity(dens);
-//                    knot.setP(1+(count.get()%5));
-//                    knot.setQ(2+(count.get()%15));
-
-//                    if(count.get()%100<50){
-//                        knot.setDrawMode(DrawMode.LINE);
-//                    } else {
-//                        knot.setDrawMode(DrawMode.FILL);
-//                    }
-//                    knot.setColors((int)Math.pow(2,count.get()%16));
-//                    knot.setMajorRadius(0.5d+(count.get()%10));
-//                    knot.setMinorRadius(2d+(count.get()%60));
-//                    knot.setWireRadius(0.1d+(count.get()%6)/10d);
-//                    knot.setPatternScale(1d+(count.get()%10)*3d);
-//                    knot.setSectionType(SectionType.values()[count.get()%SectionType.values().length]);
-                    count.getAndIncrement();
-                    lastEffect = now;
-                }
-            }
-        };
-
-        //OBJWriter writer = new OBJWriter((TriangleMesh) knot.getMesh(), "knot");
-        //writer.setMaterialColor(Color.BROWN);
-        //writer.exportMesh();
-//        timerEffect.start();
         StackPane sp = new StackPane();
         sp.setPrefSize(sceneWidth, sceneHeight);
         sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
@@ -211,7 +253,6 @@ public class Knots extends FXyzSample {
         scene.heightProperty().bind(sp.heightProperty());
         
         return (sp);
-
     }
 
     @Override

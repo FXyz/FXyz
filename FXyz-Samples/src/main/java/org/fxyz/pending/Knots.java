@@ -1,10 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.fxyz.samples;
+package org.fxyz.pending;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import javafx.animation.AnimationTimer;
+import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -16,59 +14,86 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.composites.Histogram;
+import org.fxyz.geometry.DensityFunction;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.KnotMesh;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
- * @author Sean
+ * @author jpereda
  */
-public class Histograms extends FXyzSample {
+public class Knots extends FXyzSample {
+
+    private DensityFunction<Point3D> dens = p -> (double) p.x;
+    private long lastEffect;
 
     @Override
     public Node getSample() {
-        PerspectiveCamera camera = new PerspectiveCamera(true);
-        CameraTransformer cameraTransform = new CameraTransformer();
+
+        PerspectiveCamera camera;
         final double sceneWidth = 800;
         final double sceneHeight = 600;
-        double cameraDistance = 5000;
-        Histogram histogram;
+        final CameraTransformer cameraTransform = new CameraTransformer();
+
+        KnotMesh knot;
+        Rotate rotateY;
 
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.BLACK);
-       //setup camera transform for rotational support
+        scene.setFill(Color.WHEAT);
+        camera = new PerspectiveCamera(true);
+
+        //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setTranslateZ(-30);
-//        cameraTransform.ry.setAngle(-45.0);
-//        cameraTransform.rx.setAngle(-10.0);
+        cameraTransform.ry.setAngle(-45.0);
+        cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
+        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(10 * camera.getTranslateZ());
+        light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
 
-        histogram = new Histogram(1000, 1, true);
-        sceneRoot.getChildren().addAll(histogram);
+        rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+        Group group = new Group();
+        group.getChildren().add(cameraTransform);
 
-        int size = 30;
-        float[][] arrayY = new float[2 * size][2 * size];
-        for (int i = -size; i < size; i++) {
-            for (int j = -size; j < size; j++) {
-                //Transcedental Gradient
-                double xterm = (Math.cos(Math.PI * i / size) * Math.cos(Math.PI * i / size));
-                double yterm = (Math.cos(Math.PI * j / size) * Math.cos(Math.PI * j / size));
-                arrayY[i + size][j + size] = (float) (10 * ((xterm + yterm) * (xterm + yterm)));
-            }
-        }
-        histogram.setHeightData(arrayY, 1, 4, Color.SKYBLUE, false, true);
+        knot = new KnotMesh(2d, 1d, 0.4d, 2d, 3d,
+                1000, 60, 0, 0);
+        knot.setDrawMode(DrawMode.LINE);
+//        knot.setCullFace(CullFace.NONE);
+        knot.setSectionType(SectionType.TRIANGLE);
+
+        // NONE
+        knot.setTextureModeNone(Color.BROWN);
+    // IMAGE
+//        knot.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
+        // PATTERN
+//       knot.setTextureModePattern(3d);
+        // FUNCTION
+//        knot.setTextureModeVertices1D(256*256,t->t*t);
+        // DENSITY
+//        knot.setTextureModeVertices3D(256*256,dens);
+        // FACES
+//        knot.setTextureModeFaces(256*256);
+
+        knot.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
+
+        group.getChildren().add(knot);
+
+        sceneRoot.getChildren().addAll(group);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
@@ -130,7 +155,50 @@ public class Histograms extends FXyzSample {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-        
+
+        lastEffect = System.nanoTime();
+        AtomicInteger count = new AtomicInteger();
+        AnimationTimer timerEffect = new AnimationTimer() {
+
+            @Override
+            public void handle(long now) {
+                if (now > lastEffect + 100_000_000l) {
+//                    Point3D loc = knot.getPositionAt((count.get()%100)*2d*Math.PI/100d);
+//                    Point3D dir = knot.getTangentAt((count.get()%100)*2d*Math.PI/100d);
+//                    cameraTransform.t.setX(loc.x);
+//                    cameraTransform.t.setY(loc.y);
+//                    cameraTransform.t.setZ(-loc.z);
+//                    javafx.geometry.Point3D axis = cameraTransform.rx.getAxis();
+//                    javafx.geometry.Point3D cross = axis.crossProduct(-dir.x,-dir.y,-dir.z);
+//                    double angle = axis.angle(-dir.x,-dir.y,-dir.z);
+//                    cameraTransform.rx.setAngle(angle);
+//                    cameraTransform.rx.setAxis(new javafx.geometry.Point3D(cross.getX(),-cross.getY(),cross.getZ()));
+//                    dens = p->(float)(p.x*Math.cos(count.get()%100d*2d*Math.PI/50d)+p.y*Math.sin(count.get()%100d*2d*Math.PI/50d));
+//                    knot.setDensity(dens);
+//                    knot.setP(1+(count.get()%5));
+//                    knot.setQ(2+(count.get()%15));
+
+//                    if(count.get()%100<50){
+//                        knot.setDrawMode(DrawMode.LINE);
+//                    } else {
+//                        knot.setDrawMode(DrawMode.FILL);
+//                    }
+//                    knot.setColors((int)Math.pow(2,count.get()%16));
+//                    knot.setMajorRadius(0.5d+(count.get()%10));
+//                    knot.setMinorRadius(2d+(count.get()%60));
+//                    knot.setWireRadius(0.1d+(count.get()%6)/10d);
+//                    knot.setPatternScale(1d+(count.get()%10)*3d);
+//                    knot.setSectionType(SectionType.values()[count.get()%SectionType.values().length]);
+                    count.getAndIncrement();
+                    lastEffect = now;
+                }
+            }
+        };
+
+        //OBJWriter writer = new OBJWriter((TriangleMesh) knot.getMesh(), "knot");
+        //writer.setMaterialColor(Color.BROWN);
+        //writer.exportMesh();
+//        timerEffect.start();
         StackPane sp = new StackPane();
         sp.setPrefSize(sceneWidth, sceneHeight);
         sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
@@ -143,6 +211,7 @@ public class Histograms extends FXyzSample {
         scene.heightProperty().bind(sp.heightProperty());
         
         return (sp);
+
     }
 
     @Override

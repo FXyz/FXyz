@@ -5,7 +5,6 @@
  */
 package org.fxyz.controls;
 
-import java.text.NumberFormat;
 import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -28,26 +27,14 @@ public class NumberSliderControl extends ControlBase<Property<Number>> {
         private PrecisionString() {
         }
     }
-
-    private final NumberFormat numFormat = NumberFormat.getInstance();
-
-    public NumberSliderControl(Property<Number> prop, Number lowerBound, Number upperBound, PrecisionString format) {
+    
+    public NumberSliderControl(final Property<Number> prop, final Number lowerBound, final Number upperBound) {
         super("NumberSliderControl.fxml", prop);
         valSlider.setMin(lowerBound.doubleValue());
         valSlider.setMax(upperBound.doubleValue());
-        controlledProp.bind(valSlider.valueProperty());
-        switch(format) {
-            case DEFAULT: numFormat.setMaximumFractionDigits(1);break;
-            case D_2: numFormat.setMaximumFractionDigits(2);break;
-            case D_4: numFormat.setMaximumFractionDigits(4);break;
-            case INT: numFormat.setMaximumFractionDigits(0);break;
-            default: numFormat.setMaximumFractionDigits(1);break;
-        }
-        valSlider.valueProperty().addListener(i -> {
-            valueLabel.setText(String.valueOf(numFormat.format(valSlider.getValue())));
-        });
-        propName.setText(!controlledProp.getName().isEmpty() ? controlledProp.getName() : "Empty Property Name:");
-        valueLabel.setText(String.valueOf(prop.getValue()));
+        controlledProperty.bind(valSlider.valueProperty());
+        propName.setText(!controlledProperty.getName().isEmpty() ? controlledProperty.getName() : "Empty Property Name:");
+      
     }
 
     public Slider getSlider() {

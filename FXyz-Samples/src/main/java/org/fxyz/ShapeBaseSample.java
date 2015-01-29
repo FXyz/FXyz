@@ -41,12 +41,12 @@ public abstract class ShapeBaseSample extends FXyzSample {
     private final double sceneWidth = 800;
     private final double sceneHeight = 600;    
     
-    private SubScene subScene;
+    protected SubScene subScene;
     private Group root;
     protected Group group;
     protected StackPane mainPane;
         
-    private PerspectiveCamera camera;
+    protected PerspectiveCamera camera;
     private CameraTransformer cameraTransform;
     protected Rotate rotateY;
     
@@ -71,7 +71,7 @@ public abstract class ShapeBaseSample extends FXyzSample {
             camera.setNearClip(0.1);
             camera.setFarClip(100000.0);
             camera.setTranslateZ(-10);
-            camera.setVerticalFieldOfView(true);
+            //camera.setVerticalFieldOfView(true);
             camera.setFieldOfView(42);
 
             //setup camera transform for rotational support
@@ -82,8 +82,10 @@ public abstract class ShapeBaseSample extends FXyzSample {
 
             //add a Point Light for better viewing of the grid coordinate system
             PointLight light = new PointLight(Color.WHITE);
+            AmbientLight amb = new AmbientLight(Color.WHITE);
+            amb.getScope().add(camera);
             cameraTransform.getChildren().add(light);
-            cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
+            cameraTransform.getChildren().add(amb);
             light.setTranslateX(camera.getTranslateX());
             light.setTranslateY(camera.getTranslateY());
             light.setTranslateZ(camera.getTranslateZ());
@@ -197,8 +199,8 @@ public abstract class ShapeBaseSample extends FXyzSample {
                     double newZ = z + mouseDeltaX * modifierFactor * modifier;
                     camera.setTranslateZ(newZ);
                 } else if (me.isMiddleButtonDown()) {
-                    cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3);  // -
-                    cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
+                    //cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3);  // -
+                    //cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
                 }
             });
 

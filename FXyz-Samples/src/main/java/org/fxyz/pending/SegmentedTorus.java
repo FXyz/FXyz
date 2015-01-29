@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.fxyz.samples;
+package org.fxyz.pending;
 
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import javafx.animation.AnimationTimer;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -19,29 +15,37 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.SphereSegment;
+import org.fxyz.geometry.DensityFunction;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.SegmentedTorusMesh;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
- * @author Sean
+ * @author jpereda
  */
-public class SphereSegments extends FXyzSample {
+public class SegmentedTorus extends FXyzSample {
+
+    private DensityFunction<Point3D> dens = p -> (double) p.x;
+    private long lastEffect;
 
     @Override
     public Node getSample() {
 
-        PerspectiveCamera camera = new PerspectiveCamera(true);
+        PerspectiveCamera camera;
         final double sceneWidth = 800;
         final double sceneHeight = 600;
         final CameraTransformer cameraTransform = new CameraTransformer();
 
+        Rotate rotateY;
+        SegmentedTorusMesh torus;
+
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
+        camera = new PerspectiveCamera(true);
 
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
@@ -60,59 +64,28 @@ public class SphereSegments extends FXyzSample {
         light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
 
-        //Make a bunch of semi random sphere segments and stuff
-        Group sphereGroup = new Group();
-        for (int i = 0; i < 30; i++) {
-            Random r = new Random();
-            //A lot of magic numbers in here that just artificially constrain the math
-            float randomRadius = (float) ((r.nextFloat() * 150) + 10);
-            float randomThetaMax = (float) ((r.nextFloat() * 360) + 1);
-            float randomThetaMin = (float) ((r.nextFloat()) + 1);
-            if (randomThetaMin > randomThetaMax) {
-                float swap = randomThetaMin;
-                randomThetaMin = randomThetaMax;
-                randomThetaMax = swap;
-            }
-            float randomPolarMax = (float) ((r.nextFloat() * 90) + 1);
-            float randomPolarMin = (float) ((r.nextFloat()) + 1);
-            if (randomPolarMin > randomPolarMax) {
-                float swap = randomPolarMin;
-                randomPolarMin = randomPolarMax;
-                randomPolarMax = swap;
-            }
-            int randomSegments = (int) ((r.nextFloat() * 15) + 5);
-            Color randomColor = new Color(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
-            boolean ambientRandom = r.nextBoolean();
-            boolean fillRandom = r.nextBoolean();
+        rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+        Group group = new Group();
+        group.getChildren().add(cameraTransform);
 
-            SphereSegment sphereSegment = new SphereSegment(randomRadius, randomColor,
-                    Math.toRadians(0), Math.toRadians(360),
-                    Math.toRadians(randomPolarMin), Math.toRadians(randomPolarMax),
-                    randomSegments, ambientRandom, fillRandom);
+        torus = new SegmentedTorusMesh(50, 42, 0, 500d, 150d);
+//        torus.setDrawMode(DrawMode.LINE);
+        // NONE
+//        torus.setTextureModeNone(Color.ROYALBLUE);
+        // IMAGE
+//        torus.setTextureModeImage(getClass().getResource("res/grid.png").toExternalForm());
+        // PATTERN
+        torus.setTextureModePattern(1.0d);
+    // DENSITY
+//        torus.setTextureModeVertices3D(256*256,dens);
+        // FACES
+//        torus.setTextureModeFaces(256*256);
 
-            double translationX = Math.random() * sceneWidth / 2;
-            if (Math.random() >= 0.5) {
-                translationX *= -1;
-            }
-            double translationY = Math.random() * sceneWidth / 2;
-            if (Math.random() >= 0.5) {
-                translationY *= -1;
-            }
-            double translationZ = Math.random() * sceneWidth / 2;
-            if (Math.random() >= 0.5) {
-                translationZ *= -1;
-            }
-            Translate translate = new Translate(translationX, translationY, translationZ);
-            Rotate rotateX = new Rotate(Math.random() * 360, Rotate.X_AXIS);
-            Rotate rotateY = new Rotate(Math.random() * 360, Rotate.Y_AXIS);
-            Rotate rotateZ = new Rotate(Math.random() * 360, Rotate.Z_AXIS);
+        torus.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
 
-            sphereSegment.getTransforms().addAll(translate, rotateX, rotateY, rotateZ);
-            sphereSegment.getTransforms().add(translate);
-            sphereGroup.getChildren().add(sphereSegment);
+        group.getChildren().add(torus);
 
-        }
-        sceneRoot.getChildren().addAll(sphereGroup);
+        sceneRoot.getChildren().addAll(group);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
@@ -175,6 +148,34 @@ public class SphereSegments extends FXyzSample {
             }
         });
 
+        lastEffect = System.nanoTime();
+        AtomicInteger count = new AtomicInteger();
+        AnimationTimer timerEffect = new AnimationTimer() {
+
+            @Override
+            public void handle(long now) {
+                if (now > lastEffect + 1_000_000_000l) {
+//                    dens = p->(float)(p.x*Math.cos(count.get()%100d*2d*Math.PI/50d)+p.y*Math.sin(count.get()%100d*2d*Math.PI/50d));
+//                    torus.setDensity(dens);
+
+//                    if(count.get()%100<50){
+//                        torus.setDrawMode(DrawMode.LINE);
+//                    } else {
+//                        torus.setDrawMode(DrawMode.FILL);
+//                    }
+//                    spring.setLength(100+20*(count.get()%10));
+//                    torus.setColors((int)Math.pow(2,count.get()%16));
+//                    torus.setMajorRadius(500+100*(count.get()%10));
+//                    torus.setMinorRadius(150+10*(count.get()%10));
+//                    torus.setPatternScale(1d+(count.get()%10)*5d);
+                    count.getAndIncrement();
+                    lastEffect = now;
+                }
+            }
+        };
+
+        timerEffect.start();
+        
         StackPane sp = new StackPane();
         sp.setPrefSize(sceneWidth, sceneHeight);
         sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);

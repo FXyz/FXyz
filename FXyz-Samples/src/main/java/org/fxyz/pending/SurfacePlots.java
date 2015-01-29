@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.samples;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.fxyz.pending;
+
+import com.sun.javafx.Utils;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -19,67 +19,62 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.CullFace;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.composites.ScatterPlot;
+import org.fxyz.shapes.composites.SurfacePlot;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
  * @author Sean
  */
-public class ScatterPlotColors extends FXyzSample {
+public class SurfacePlots extends FXyzSample { 
 
     @Override
     public Node getSample() {
-
+        
+        SurfacePlot surfacePlot;  
         PerspectiveCamera camera = new PerspectiveCamera(true);
         final double sceneWidth = 800;
         final double sceneHeight = 600;
-        double cameraDistance = 5000;
-        ScatterPlot scatterPlot;
         final CameraTransformer cameraTransform = new CameraTransformer();
-
+        
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-
+        
+        int size = 10;
+        float [][] arrayY = new float[2*size][2*size];
+        //The Sombrero
+        for(int i=-size;i<size;i++) {
+            for(int j=-size;j<size;j++) {
+                double R = Math.sqrt((i * i)  + (j * j)) + 0.00000000000000001;
+                arrayY[i+size][j+size] = ((float) -(Math.sin(R)/R)) * 100;
+            }
+        }
+        surfacePlot = new SurfacePlot(arrayY, 10, Color.AQUA, false, false);
+        surfacePlot.meshView.setCullFace(CullFace.NONE);
+        sceneRoot.getChildren().addAll(surfacePlot);
+        
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-40);
+        camera.setTranslateZ(-1000);
         cameraTransform.ry.setAngle(-45.0);
         cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
-        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
+        cameraTransform.getChildren().add(new AmbientLight(Color.GAINSBORO));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
         light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
-
-        scatterPlot = new ScatterPlot(1000, 1, true);
-        sceneRoot.getChildren().addAll(scatterPlot);
-
-        List<Double> dataX = new ArrayList<>();
-        List<Double> dataY = new ArrayList<>();
-        List<Double> dataZ = new ArrayList<>();
-        List<Color> colors = new ArrayList<>();
-        int k = 0;
-        for (int i = -250; i < 250; i++) {
-            dataX.add(new Double(i));
-            dataY.add(Math.sin(i) * 50 + i);
-            dataZ.add(Math.cos(i) * 50 + i);
-            colors.add(new Color(Math.abs(i) / 250D, Math.abs(dataY.get(k)) / 300D, Math.abs(dataZ.get(k) / 300D), 0.25));
-            k++;
-        }
-
-        scatterPlot.setXYZData(dataX, dataY, dataZ, colors);
-
-        //First person shooter keyboard movement 
+        
+        //First person shooter keyboard movement
         scene.setOnKeyPressed(event -> {
             double change = 10.0;
             //Add shift modifier to simulate "Running Speed"
@@ -95,13 +90,14 @@ public class ScatterPlotColors extends FXyzSample {
             if (keycode == KeyCode.S) {
                 camera.setTranslateZ(camera.getTranslateZ() - change);
             }
-            //Step 2d:  Add Strafe controls
+            //Step 2d: Add Strafe controls
             if (keycode == KeyCode.A) {
                 camera.setTranslateX(camera.getTranslateX() - change);
             }
             if (keycode == KeyCode.D) {
                 camera.setTranslateX(camera.getTranslateX() + change);
             }
+
         });
 
         scene.setOnMousePressed((MouseEvent me) -> {
@@ -128,15 +124,19 @@ public class ScatterPlotColors extends FXyzSample {
                 modifier = 50.0;
             }
             if (me.isPrimaryButtonDown()) {
-                cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + mouseDeltaX * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // +
-                cameraTransform.rx.setAngle(((cameraTransform.rx.getAngle() - mouseDeltaY * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // -
+                cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + mouseDeltaX * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180); // +
+                cameraTransform.rx.setAngle(
+                        Utils.clamp(-90,
+                                (((cameraTransform.rx.getAngle() - mouseDeltaY * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180),
+                                90)); // - 
+
             } else if (me.isSecondaryButtonDown()) {
                 double z = camera.getTranslateZ();
                 double newZ = z + mouseDeltaX * modifierFactor * modifier;
                 camera.setTranslateZ(newZ);
             } else if (me.isMiddleButtonDown()) {
-                cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3);  // -
-                cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
+                cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3); // -
+                cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3); // -
             }
         });
 
@@ -151,9 +151,9 @@ public class ScatterPlotColors extends FXyzSample {
         scene.widthProperty().bind(sp.widthProperty());
         scene.heightProperty().bind(sp.heightProperty());
         
-        return (sp);
+        return (sp);       
     }
-
+    
     @Override
     public String getSampleName() {
         return getClass().getSimpleName().concat(" Sample");
@@ -166,6 +166,6 @@ public class ScatterPlotColors extends FXyzSample {
 
     @Override
     public String getJavaDocURL() {
-        return null;
-    }
+        return "";
+    }   
 }

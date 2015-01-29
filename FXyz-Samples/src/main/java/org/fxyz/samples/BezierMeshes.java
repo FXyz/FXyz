@@ -10,6 +10,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
@@ -17,12 +19,11 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import org.fxyz.ShapeBaseSample;
-import org.fxyz.controls.BoolPropertyControl;
+import org.fxyz.controls.CheckBoxControl;
 import org.fxyz.controls.ControlCategory;
-import org.fxyz.controls.ControlFactory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.NumberSliderControl;
-import org.fxyz.controls.NumberSliderControl.PrecisionString;
+import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.BezierMesh;
@@ -244,28 +245,47 @@ public class BezierMeshes extends ShapeBaseSample {
 
     @Override
     public Node getControlPanel() {
-
-        BoolPropertyControl chkKnots = ControlFactory.buildBooleanControl(showKnots);
-        BoolPropertyControl chkPnts = ControlFactory.buildBooleanControl(showControlPoints);
-
-        NumberSliderControl radSlider = ControlFactory.buildNumberSlider(wireRad, 0.1D, 0.5D, PrecisionString.DEFAULT);
+        DropShadow is = new DropShadow();
+        is.setBlurType(BlurType.GAUSSIAN);
+        is.setColor(Color.GAINSBORO);
+        is.setHeight(1.5);
+        is.setWidth(0.5);
+        is.setOffsetY(1);
+        is.setRadius(5);
+        
+        CheckBoxControl chkKnots = ControlFactory.buildBooleanControl(showKnots);
+        chkKnots.setEffect(is);
+        CheckBoxControl chkPnts = ControlFactory.buildBooleanControl(showControlPoints);
+        chkPnts.setEffect(is);
+        NumberSliderControl radSlider = ControlFactory.buildNumberSlider(wireRad, 0.1D, 0.5D);
         radSlider.getSlider().setMinorTickCount(4);
         radSlider.getSlider().setMajorTickUnit(0.5);
         radSlider.getSlider().setBlockIncrement(0.1d);
         radSlider.getSlider().setSnapToTicks(true);
-
-        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(wireDivs, 3.0D, 30.0D, PrecisionString.INT);
+        radSlider.setEffect(is);
+                
+        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(wireDivs, 3.0D, 30.0D);
         wDivSlider.getSlider().setBlockIncrement(1);
         wDivSlider.getSlider().setMajorTickUnit(28);
         wDivSlider.getSlider().setMinorTickCount(29);
         wDivSlider.getSlider().setSnapToTicks(true);
-
+        wDivSlider.setEffect(is);
+        
+        NumberSliderControl wCropSlider = ControlFactory.buildNumberSlider(wireCrop, 1, 30.0D);
+        wCropSlider.getSlider().setBlockIncrement(1);
+        wCropSlider.getSlider().setMajorTickUnit(28);
+        wCropSlider.getSlider().setMinorTickCount(29);
+        wCropSlider.getSlider().setSnapToTicks(true);
+        wCropSlider.setEffect(is);
+        
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider);
+        geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider, wCropSlider);
         geomControls.setExpanded(true);
+        geomControls.setEffect(is);
+        geomControls.getContent().setEffect(is);
 
         ControlPanel cPanel = ControlFactory.buildControlPanel(geomControls);
-        cPanel.setExpandedPane(geomControls);
+        cPanel.setExpandedPane(geomControls);       
 
         return cPanel;
     }

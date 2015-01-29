@@ -19,8 +19,8 @@ import javafx.scene.layout.StackPane;
  * @param <P>
  */
 public abstract class ControlBase<P extends Property> extends StackPane{
-    protected P controlledProp;
-    public ControlBase(String fxml, P prop) {
+    protected P controlledProperty;
+    public ControlBase(final String fxml, final P prop) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             loader.setRoot(ControlBase.this);
@@ -28,18 +28,17 @@ public abstract class ControlBase<P extends Property> extends StackPane{
             loader.load();
         } catch (IOException ex) {
             
-            Logger.getLogger(BoolPropertyControl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckBoxControl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.controlledProp = prop;
+        this.controlledProperty = prop;
     }
 
     private ControlBase() {
-        this.controlledProp = null;
+        throw new UnsupportedOperationException("Cannot assign");
     }
 
     private ControlBase(Node... children) {
-        super(children);
-        this.controlledProp = null;
+        throw new UnsupportedOperationException("Cannot assign");
     }
     
 }

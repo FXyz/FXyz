@@ -16,11 +16,11 @@ import javafx.scene.layout.StackPane;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class BoolPropertyControl extends ControlBase<Property<Boolean>>{
+public class CheckBoxControl extends ControlBase<Property<Boolean>>{
 
     
-    public BoolPropertyControl(Property<Boolean> prop) {
-        super("BoolPropController.fxml", prop);
+    public CheckBoxControl(Property<Boolean> prop) {
+        super("CheckBoxControl.fxml", prop);
         loadBindings();
     }
 
@@ -31,8 +31,8 @@ public class BoolPropertyControl extends ControlBase<Property<Boolean>>{
     @FXML
     private Label boolPropTitle;
     public final void loadBindings() {
-        controlledProp.bind(checkBox.selectedProperty());
-        boolPropTitle.setText(!controlledProp.getName().isEmpty() ? controlledProp.getName() : "Empty Name");
+        controlledProperty.bindBidirectional(checkBox.selectedProperty());
+        boolPropTitle.setText(!controlledProperty.getName().isEmpty() ? controlledProperty.getName() : "Empty Name");
     }
     
 }

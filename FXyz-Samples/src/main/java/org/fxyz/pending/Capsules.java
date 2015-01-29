@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.fxyz.samples;
+package org.fxyz.pending;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,9 +13,9 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
 import org.fxyz.ShapeBaseSample;
 import org.fxyz.controls.ControlCategory;
-import org.fxyz.controls.ControlFactory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.NumberSliderControl;
+import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.shapes.primitives.CapsuleMesh;
 
 /**
@@ -46,13 +46,13 @@ public class Capsules extends ShapeBaseSample{
     @Override
     public Node getControlPanel() {
         
-        NumberSliderControl radSlider = ControlFactory.buildNumberSlider(rad, 1.0d, 24.0d, NumberSliderControl.PrecisionString.INT);
+        NumberSliderControl radSlider = ControlFactory.buildNumberSlider(rad, 1.0d, 24.0d);
         radSlider.getSlider().setMinorTickCount(22);
         radSlider.getSlider().setMajorTickUnit(23);
         radSlider.getSlider().setBlockIncrement(1);
         radSlider.getSlider().setSnapToTicks(true);       
         
-        NumberSliderControl heightSlider = ControlFactory.buildNumberSlider(height, 10.0d, 34.0d, NumberSliderControl.PrecisionString.INT);
+        NumberSliderControl heightSlider = ControlFactory.buildNumberSlider(height, 10.0d, 34.0d);
         heightSlider.getSlider().setMajorTickUnit(24);
         heightSlider.getSlider().setMinorTickCount(22);        
         heightSlider.getSlider().setBlockIncrement(1);

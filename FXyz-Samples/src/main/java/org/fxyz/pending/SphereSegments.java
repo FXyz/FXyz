@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package org.fxyz.pending;
 
-package org.fxyz.samples;
-
-import com.sun.javafx.Utils;
+import java.util.Random;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -19,62 +18,103 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.CullFace;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.composites.SurfacePlot;
+import org.fxyz.shapes.SphereSegment;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
  * @author Sean
  */
-public class SurfacePlots extends FXyzSample { 
+public class SphereSegments extends FXyzSample {
 
     @Override
     public Node getSample() {
-        
-        SurfacePlot surfacePlot;  
+
         PerspectiveCamera camera = new PerspectiveCamera(true);
         final double sceneWidth = 800;
         final double sceneHeight = 600;
         final CameraTransformer cameraTransform = new CameraTransformer();
-        
+
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        
-        int size = 10;
-        float [][] arrayY = new float[2*size][2*size];
-        //The Sombrero
-        for(int i=-size;i<size;i++) {
-            for(int j=-size;j<size;j++) {
-                double R = Math.sqrt((i * i)  + (j * j)) + 0.00000000000000001;
-                arrayY[i+size][j+size] = ((float) -(Math.sin(R)/R)) * 100;
-            }
-        }
-        surfacePlot = new SurfacePlot(arrayY, 10, Color.AQUA, false, false);
-        surfacePlot.meshView.setCullFace(CullFace.NONE);
-        sceneRoot.getChildren().addAll(surfacePlot);
-        
+
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-1000);
+        camera.setTranslateZ(-2000);
         cameraTransform.ry.setAngle(-45.0);
         cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
-        cameraTransform.getChildren().add(new AmbientLight(Color.GAINSBORO));
+        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
         light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
-        
-        //First person shooter keyboard movement
+
+        //Make a bunch of semi random sphere segments and stuff
+        Group sphereGroup = new Group();
+        for (int i = 0; i < 30; i++) {
+            Random r = new Random();
+            //A lot of magic numbers in here that just artificially constrain the math
+            float randomRadius = (float) ((r.nextFloat() * 150) + 10);
+            float randomThetaMax = (float) ((r.nextFloat() * 360) + 1);
+            float randomThetaMin = (float) ((r.nextFloat()) + 1);
+            if (randomThetaMin > randomThetaMax) {
+                float swap = randomThetaMin;
+                randomThetaMin = randomThetaMax;
+                randomThetaMax = swap;
+            }
+            float randomPolarMax = (float) ((r.nextFloat() * 90) + 1);
+            float randomPolarMin = (float) ((r.nextFloat()) + 1);
+            if (randomPolarMin > randomPolarMax) {
+                float swap = randomPolarMin;
+                randomPolarMin = randomPolarMax;
+                randomPolarMax = swap;
+            }
+            int randomSegments = (int) ((r.nextFloat() * 15) + 5);
+            Color randomColor = new Color(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
+            boolean ambientRandom = r.nextBoolean();
+            boolean fillRandom = r.nextBoolean();
+
+            SphereSegment sphereSegment = new SphereSegment(randomRadius, randomColor,
+                    Math.toRadians(0), Math.toRadians(360),
+                    Math.toRadians(randomPolarMin), Math.toRadians(randomPolarMax),
+                    randomSegments, ambientRandom, fillRandom);
+
+            double translationX = Math.random() * sceneWidth / 2;
+            if (Math.random() >= 0.5) {
+                translationX *= -1;
+            }
+            double translationY = Math.random() * sceneWidth / 2;
+            if (Math.random() >= 0.5) {
+                translationY *= -1;
+            }
+            double translationZ = Math.random() * sceneWidth / 2;
+            if (Math.random() >= 0.5) {
+                translationZ *= -1;
+            }
+            Translate translate = new Translate(translationX, translationY, translationZ);
+            Rotate rotateX = new Rotate(Math.random() * 360, Rotate.X_AXIS);
+            Rotate rotateY = new Rotate(Math.random() * 360, Rotate.Y_AXIS);
+            Rotate rotateZ = new Rotate(Math.random() * 360, Rotate.Z_AXIS);
+
+            sphereSegment.getTransforms().addAll(translate, rotateX, rotateY, rotateZ);
+            sphereSegment.getTransforms().add(translate);
+            sphereGroup.getChildren().add(sphereSegment);
+
+        }
+        sceneRoot.getChildren().addAll(sphereGroup);
+
+        //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
             double change = 10.0;
             //Add shift modifier to simulate "Running Speed"
@@ -90,14 +130,13 @@ public class SurfacePlots extends FXyzSample {
             if (keycode == KeyCode.S) {
                 camera.setTranslateZ(camera.getTranslateZ() - change);
             }
-            //Step 2d: Add Strafe controls
+            //Step 2d:  Add Strafe controls
             if (keycode == KeyCode.A) {
                 camera.setTranslateX(camera.getTranslateX() - change);
             }
             if (keycode == KeyCode.D) {
                 camera.setTranslateX(camera.getTranslateX() + change);
             }
-
         });
 
         scene.setOnMousePressed((MouseEvent me) -> {
@@ -124,19 +163,15 @@ public class SurfacePlots extends FXyzSample {
                 modifier = 50.0;
             }
             if (me.isPrimaryButtonDown()) {
-                cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + mouseDeltaX * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180); // +
-                cameraTransform.rx.setAngle(
-                        Utils.clamp(-90,
-                                (((cameraTransform.rx.getAngle() - mouseDeltaY * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180),
-                                90)); // - 
-
+                cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + mouseDeltaX * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // +
+                cameraTransform.rx.setAngle(((cameraTransform.rx.getAngle() - mouseDeltaY * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // -
             } else if (me.isSecondaryButtonDown()) {
                 double z = camera.getTranslateZ();
                 double newZ = z + mouseDeltaX * modifierFactor * modifier;
                 camera.setTranslateZ(newZ);
             } else if (me.isMiddleButtonDown()) {
-                cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3); // -
-                cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3); // -
+                cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3);  // -
+                cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
 
@@ -151,9 +186,9 @@ public class SurfacePlots extends FXyzSample {
         scene.widthProperty().bind(sp.widthProperty());
         scene.heightProperty().bind(sp.heightProperty());
         
-        return (sp);       
+        return (sp);
     }
-    
+
     @Override
     public String getSampleName() {
         return getClass().getSimpleName().concat(" Sample");
@@ -166,6 +201,6 @@ public class SurfacePlots extends FXyzSample {
 
     @Override
     public String getJavaDocURL() {
-        return "";
-    }   
+        return null;
+    }
 }

@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.samples;
+package org.fxyz.pending;
 
-import java.util.ArrayList;
-import javafx.scene.AmbientLight;
+import java.util.Random;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -18,61 +17,86 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.composites.ScatterPlotMesh;
+import org.fxyz.shapes.Torus;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
  * @author Sean
  */
-public class ScatterPlotMeshes extends FXyzSample {
+public class Tori extends FXyzSample {
 
     @Override
-    public Node getSample() {
-
-        final CameraTransformer cameraTransform = new CameraTransformer();
-        PerspectiveCamera camera = new PerspectiveCamera(true);
+    public Node getSample(){
+        PerspectiveCamera camera;
         final double sceneWidth = 800;
         final double sceneHeight = 600;
         double cameraDistance = 5000;
-        ScatterPlotMesh scatterPlotMesh;
+        CameraTransformer cameraTransform = new CameraTransformer();
 
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        
+        //Setup camera and scatterplot cubeviewer
+        camera = new PerspectiveCamera(true);
+
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-40);
+        camera.setTranslateZ(-5000);
         cameraTransform.ry.setAngle(-45.0);
         cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
-        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
         light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
 
-        scatterPlotMesh = new ScatterPlotMesh(1000, 1, true);
-        sceneRoot.getChildren().addAll(scatterPlotMesh);
+        //Make a bunch of semi random Torusesessses(toroids?) and stuff
+        Group torusGroup = new Group();
+        torusGroup.getChildren().add(cameraTransform);
+        for (int i = 0; i < 30; i++) {
+            Random r = new Random();
+            //A lot of magic numbers in here that just artificially constrain the math
+            float randomRadius = (float) ((r.nextFloat() * 300) + 50);
+            float randomTubeRadius = (float) ((r.nextFloat() * 100) + 1);
+            int randomTubeDivisions = (int) ((r.nextFloat() * 64) + 1);
+            int randomRadiusDivisions = (int) ((r.nextFloat() * 64) + 1);
+            Color randomColor = new Color(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
 
-        ArrayList<Double> dataX = new ArrayList<>();
-        ArrayList<Double> dataY = new ArrayList<>();
-        ArrayList<Double> dataZ = new ArrayList<>();
-        for (int i = -250; i < 250; i++) {
-            dataX.add(new Double(i));
-            dataY.add(new Double(Math.sin(i) * 50) + i);
-            dataZ.add(new Double(Math.cos(i) * 50) + i);
+            Torus torus = new Torus(randomTubeDivisions, randomRadiusDivisions, randomRadius, randomTubeRadius, randomColor);
+
+            double translationX = Math.random() * sceneWidth * 1.95;
+            if (Math.random() >= 0.5) {
+                translationX *= -1;
+            }
+            double translationY = Math.random() * sceneWidth * 1.95;
+            if (Math.random() >= 0.5) {
+                translationY *= -1;
+            }
+            double translationZ = Math.random() * sceneWidth * 1.95;
+            if (Math.random() >= 0.5) {
+                translationZ *= -1;
+            }
+            Translate translate = new Translate(translationX, translationY, translationZ);
+            Rotate rotateX = new Rotate(Math.random() * 360, Rotate.X_AXIS);
+            Rotate rotateY = new Rotate(Math.random() * 360, Rotate.Y_AXIS);
+            Rotate rotateZ = new Rotate(Math.random() * 360, Rotate.Z_AXIS);
+
+            torus.getTransforms().addAll(translate, rotateX, rotateY, rotateZ);
+            //torus.getTransforms().add(translate);
+            torusGroup.getChildren().add(torus);
+
         }
-
-        scatterPlotMesh.setXYZData(dataX, dataY, dataZ);
+        sceneRoot.getChildren().addAll(torusGroup);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
@@ -134,7 +158,7 @@ public class ScatterPlotMeshes extends FXyzSample {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-
+        
         StackPane sp = new StackPane();
         sp.setPrefSize(sceneWidth, sceneHeight);
         sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
@@ -149,6 +173,7 @@ public class ScatterPlotMeshes extends FXyzSample {
         return (sp);
     }
 
+
     @Override
     public String getSampleName() {
         return getClass().getSimpleName().concat(" Sample");
@@ -161,6 +186,6 @@ public class ScatterPlotMeshes extends FXyzSample {
 
     @Override
     public String getJavaDocURL() {
-        return null;
+        return "";
     }
 }

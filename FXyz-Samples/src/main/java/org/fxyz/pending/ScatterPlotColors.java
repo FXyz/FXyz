@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.samples;
+package org.fxyz.pending;
 
 import java.util.ArrayList;
+import java.util.List;
+import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -19,56 +21,63 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.composites.PolyLine3D;
+import org.fxyz.shapes.composites.ScatterPlot;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
  * @author Sean
  */
-public class PolyLines3D extends FXyzSample {
+public class ScatterPlotColors extends FXyzSample {
 
     @Override
     public Node getSample() {
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
-        CameraTransformer cameraTransform = new CameraTransformer();
         final double sceneWidth = 800;
         final double sceneHeight = 600;
         double cameraDistance = 5000;
-        PolyLine3D polyLine3D;
+        ScatterPlot scatterPlot;
+        final CameraTransformer cameraTransform = new CameraTransformer();
 
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        scene.setCamera(camera);
 
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-30);
-//        cameraTransform.ry.setAngle(-45.0);
-//        cameraTransform.rx.setAngle(-10.0);
+        camera.setTranslateZ(-40);
+        cameraTransform.ry.setAngle(-45.0);
+        cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
+        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(10 * camera.getTranslateZ());
+        light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
 
-        ArrayList<Point3D> points = new ArrayList<>();
+        scatterPlot = new ScatterPlot(1000, 1, true);
+        sceneRoot.getChildren().addAll(scatterPlot);
+
+        List<Double> dataX = new ArrayList<>();
+        List<Double> dataY = new ArrayList<>();
+        List<Double> dataZ = new ArrayList<>();
+        List<Color> colors = new ArrayList<>();
+        int k = 0;
         for (int i = -250; i < 250; i++) {
-            points.add(new Point3D(
-                    (float) i,
-                    (float) Math.sin(i) * 50 + i,
-                    (float) Math.cos(i) * 50 + i));
+            dataX.add(new Double(i));
+            dataY.add(Math.sin(i) * 50 + i);
+            dataZ.add(Math.cos(i) * 50 + i);
+            colors.add(new Color(Math.abs(i) / 250D, Math.abs(dataY.get(k)) / 300D, Math.abs(dataZ.get(k) / 300D), 0.25));
+            k++;
         }
-        polyLine3D = new PolyLine3D(points, 3, Color.STEELBLUE);
-        sceneRoot.getChildren().addAll(polyLine3D);
+
+        scatterPlot.setXYZData(dataX, dataY, dataZ, colors);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {

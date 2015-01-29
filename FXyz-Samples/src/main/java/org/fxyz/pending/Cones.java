@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.fxyz.samples;
+package org.fxyz.pending;
 
 import java.util.Random;
 import javafx.scene.Group;

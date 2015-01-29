@@ -17,13 +17,14 @@ import javafx.scene.control.ComboBox;
  */
 public class ComboBoxControl<T> extends ControlBase<ObjectProperty<?>>{
 
-    public ComboBoxControl(ObjectProperty<?> p, Collection<T> items) {
+    public ComboBoxControl(final ObjectProperty<T> p, final Collection<T> items) {
         super("ComboBoxControl.fxml", p);
         selection.getItems().addAll(items);
+        selection.getSelectionModel().select(0);
     }   
     
     @FXML
-    private ComboBox<? super T> selection;
+    private ComboBox<T> selection;
 
     public ComboBox getComboBox() {
         return selection;

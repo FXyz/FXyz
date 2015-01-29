@@ -3,33 +3,53 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.controls;
+package org.fxyz.controls.factory;
 
 import javafx.beans.property.Property;
-import org.fxyz.controls.NumberSliderControl.PrecisionString;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.CullFace;
+import org.fxyz.controls.CheckBoxControl;
+import org.fxyz.controls.ColorPickControl;
+import org.fxyz.controls.ControlCategory;
+import org.fxyz.controls.ControlPanel;
+import org.fxyz.controls.CullFaceControl;
+import org.fxyz.controls.ImagePreviewControl;
+import org.fxyz.controls.NumberSliderControl;
 
 /**
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class ControlFactory{
+public final class ControlFactory{
     
-    public static ControlPanel buildControlPanel(ControlCategory titlePane){
+    public static ControlPanel buildControlPanel(final ControlCategory titlePane){
         return new ControlPanel(titlePane);
     }
     
-    public static ControlCategory buildCategory(String title){                
+    public static ControlCategory buildCategory(final String title){                
         return new ControlCategory(title);
     }
     /*==========================================================================
                               Specific Control Types
     ==========================================================================*/
-    public static final BoolPropertyControl buildBooleanControl(Property<Boolean> p){
-        return new BoolPropertyControl(p);
+    public static final CheckBoxControl buildBooleanControl(final Property<Boolean> p){
+        return new CheckBoxControl(p);
     }
      
-    public static final NumberSliderControl buildNumberSlider(Property<Number> p, Number lb, Number ub, PrecisionString prec){
-        return new NumberSliderControl(p,lb,ub, prec);
+    public static final NumberSliderControl buildNumberSlider(final Property<Number> p, final Number lb, final Number ub){
+        return new NumberSliderControl(p,lb,ub);
+    }
+    
+    public static final CullFaceControl buildCullFaceControl(final Property<CullFace> p){
+        return new CullFaceControl(p);
+    }
+    public static final ColorPickControl buildColorControl(final Property<Color> p){
+        return new ColorPickControl(p);
+    }
+    
+    public static final ImagePreviewControl buildImageToggle(final String fxml, final Property<Boolean> prop, final Image img){
+        return new ImagePreviewControl(fxml, prop, img);
     }
     /*==========================================================================
                             Generic "auto" builder

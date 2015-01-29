@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import java.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="root" style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    
    <children>
       <VBox alignment="CENTER">
          <children>
             <HBox>
                <children>
-                  <Label fx:id="propName" text="Label" HBox.hgrow="NEVER" />
+                  <Label fx:id="propName" text="Label" textFill="WHITE" HBox.hgrow="ALWAYS" />
                   <StackPane fx:id="spacer" HBox.hgrow="ALWAYS" />
-                  <Label fx:id="valueLabel" text="Label" />
+                  <Label fx:id="valueLabel" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="50.0" text="${valSlider.value}" textFill="WHITE" textOverrun="CLIP" HBox.hgrow="SOMETIMES" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -22,9 +24,11 @@
                   <Insets left="5.0" right="5.0" />
                </padding>
             </HBox>
-            <HBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+            <HBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="${root.prefWidth}" minHeight="-Infinity" minWidth="-Infinity">
                <children>
-                  <Slider fx:id="valSlider" blockIncrement="0.0" focusTraversable="false" majorTickUnit="1.0" max="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" showTickMarks="true" HBox.hgrow="ALWAYS" VBox.vgrow="NEVER" />
+                  <Slider fx:id="valSlider" blockIncrement="0.0" focusTraversable="false" majorTickUnit="10.0" max="20.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="1" prefWidth="${root.prefWidth}" showTickMarks="true" value="10.0" HBox.hgrow="ALWAYS" VBox.vgrow="NEVER">
+                    
+                  </Slider>
                </children>
             </HBox>
          </children>
