@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -29,6 +31,7 @@ import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.BezierMesh;
 import org.fxyz.shapes.primitives.helper.BezierHelper;
 import org.fxyz.shapes.primitives.helper.InterpolateBezier;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *
@@ -47,10 +50,12 @@ public class BezierMeshes extends ShapeBaseSample {
     private final DoubleProperty _z = new SimpleDoubleProperty(this, "Z Offset");
     private final DoubleProperty _angle = new SimpleDoubleProperty(this, "Tube Angle Offset");
 
-    private final IntegerProperty wireDivs = new SimpleIntegerProperty(this, "Wire Divisions");
+    private final IntegerProperty colors = new SimpleIntegerProperty(this, "Wire Divisions");
     private final IntegerProperty lenDivs = new SimpleIntegerProperty(this, "Length Divisions");
     private final IntegerProperty wireCrop = new SimpleIntegerProperty(this, "Wire Crop");
     private final IntegerProperty lenCrop = new SimpleIntegerProperty(this, "Length Crop");
+    
+    private final Property<TextureType> texType = new SimpleObjectProperty<>(this, "Texture Type");
 
     private List<BezierMesh> beziers;
     private List<BezierHelper> splines;
@@ -103,9 +108,9 @@ public class BezierMeshes extends ShapeBaseSample {
                 bm.setWireRadius(wireRad.doubleValue());
             });
         });
-        wireDivs.addListener(i -> {
+        colors.addListener(i -> {
             beziers.forEach(bm -> {
-                bm.setWireDivisions(wireDivs.intValue());
+                bm.setColors(colors.intValue());
             });
         });
         showKnots.addListener((obs, b, b1) -> splines.forEach(spline -> {
@@ -253,10 +258,11 @@ public class BezierMeshes extends ShapeBaseSample {
         is.setOffsetY(1);
         is.setRadius(5);
         
-        CheckBoxControl chkKnots = ControlFactory.buildBooleanControl(showKnots);
+        CheckBoxControl chkKnots = ControlFactory.buildCheckBoxControl(showKnots);
         chkKnots.setEffect(is);
-        CheckBoxControl chkPnts = ControlFactory.buildBooleanControl(showControlPoints);
+        CheckBoxControl chkPnts = ControlFactory.buildCheckBoxControl(showControlPoints);
         chkPnts.setEffect(is);
+        
         NumberSliderControl radSlider = ControlFactory.buildNumberSlider(wireRad, 0.1D, 0.5D);
         radSlider.getSlider().setMinorTickCount(4);
         radSlider.getSlider().setMajorTickUnit(0.5);
@@ -264,10 +270,10 @@ public class BezierMeshes extends ShapeBaseSample {
         radSlider.getSlider().setSnapToTicks(true);
         radSlider.setEffect(is);
                 
-        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(wireDivs, 3.0D, 30.0D);
+        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(colors, 8.0D, 255.0D);
         wDivSlider.getSlider().setBlockIncrement(1);
-        wDivSlider.getSlider().setMajorTickUnit(28);
-        wDivSlider.getSlider().setMinorTickCount(29);
+        wDivSlider.getSlider().setMajorTickUnit(63);
+        wDivSlider.getSlider().setMinorTickCount(254);
         wDivSlider.getSlider().setSnapToTicks(true);
         wDivSlider.setEffect(is);
         
@@ -279,7 +285,7 @@ public class BezierMeshes extends ShapeBaseSample {
         wCropSlider.setEffect(is);
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider, wCropSlider);
+        geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider, wCropSlider, ControlFactory.buildTextureTypeControl(texType));
         geomControls.setExpanded(true);
         geomControls.setEffect(is);
         geomControls.getContent().setEffect(is);

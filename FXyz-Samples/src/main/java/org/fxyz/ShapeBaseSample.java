@@ -25,6 +25,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import org.fxyz.utils.CameraTransformer;
 
@@ -35,8 +37,9 @@ import org.fxyz.utils.CameraTransformer;
  * ++++ group     Group created in the subclass with the 3D Shape
  * 
  * @author jpereda
+ * @param <T> 
  */
-public abstract class ShapeBaseSample extends FXyzSample {
+public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
 
     private final double sceneWidth = 800;
     private final double sceneHeight = 600;    
@@ -45,7 +48,9 @@ public abstract class ShapeBaseSample extends FXyzSample {
     private Group root;
     protected Group group;
     protected StackPane mainPane;
-        
+    
+    protected T model; // added this for testing .. 
+    
     protected PerspectiveCamera camera;
     private CameraTransformer cameraTransform;
     protected Rotate rotateY;
@@ -58,6 +63,7 @@ public abstract class ShapeBaseSample extends FXyzSample {
         return subScene.getScene();
     }
 
+    protected PhongMaterial material = new PhongMaterial();
     protected abstract void createMesh();
     protected abstract void addMeshAndListeners();
     

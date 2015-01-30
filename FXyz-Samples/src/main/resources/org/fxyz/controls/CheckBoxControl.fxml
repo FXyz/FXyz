@@ -19,7 +19,7 @@
                   <Insets bottom="2.0" />
                </padding>
             </StackPane>
-            <Label fx:id="boolPropTitle" text="Label" HBox.hgrow="NEVER" />
+            <Label fx:id="boolPropTitle" text="Label" textFill="WHITE" HBox.hgrow="NEVER" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

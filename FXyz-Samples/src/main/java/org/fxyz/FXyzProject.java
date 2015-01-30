@@ -22,14 +22,15 @@ public class FXyzProject implements FXSamplerProject{
     static{
         Application.setUserAgentStylesheet(FXyzSample.class.getResource("styles/modenaDark.css").toExternalForm());
     }
+
     
     @Override
-    public String getProjectName() {
+    public final String getProjectName() {
         return "FXyz-Samples";
     }
 
     @Override
-    public String getSampleBasePackage() {
+    public final String getSampleBasePackage() {
         return "org.fxyz.samples";
     }
 

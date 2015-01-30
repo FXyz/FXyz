@@ -5,83 +5,109 @@
  */
 package org.fxyz.controls.factory;
 
+import java.util.Arrays;
 import javafx.beans.property.Property;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
+import javafx.scene.shape.DrawMode;
 import org.fxyz.controls.CheckBoxControl;
 import org.fxyz.controls.ColorPickControl;
+import org.fxyz.controls.ComboBoxControl;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
-import org.fxyz.controls.CullFaceControl;
 import org.fxyz.controls.ImagePreviewControl;
 import org.fxyz.controls.NumberSliderControl;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public final class ControlFactory{
-    
-    public static ControlPanel buildControlPanel(final ControlCategory titlePane){
+public final class ControlFactory {
+
+    public static ControlPanel buildControlPanel(final ControlCategory titlePane) {
         return new ControlPanel(titlePane);
     }
-    
-    public static ControlCategory buildCategory(final String title){                
+
+    public static ControlCategory buildCategory(final String title) {
         return new ControlCategory(title);
     }
     /*==========================================================================
-                              Specific Control Types
-    ==========================================================================*/
-    public static final CheckBoxControl buildBooleanControl(final Property<Boolean> p){
+     Specific Control Types
+     ==========================================================================*/
+
+    public static final CheckBoxControl buildCheckBoxControl(final Property<Boolean> p) {
         return new CheckBoxControl(p);
     }
-     
-    public static final NumberSliderControl buildNumberSlider(final Property<Number> p, final Number lb, final Number ub){
-        return new NumberSliderControl(p,lb,ub);
+
+    public static final NumberSliderControl buildNumberSlider(final Property<Number> p, final Number lb, final Number ub) {
+        return new NumberSliderControl(p, lb, ub);
     }
-    
-    public static final CullFaceControl buildCullFaceControl(final Property<CullFace> p){
-        return new CullFaceControl(p);
+
+    public static final ColorPickControl buildColorControl(final Property<Color> p, String name) {
+        return new ColorPickControl(p, name);
     }
-    public static final ColorPickControl buildColorControl(final Property<Color> p){
-        return new ColorPickControl(p);
-    }
-    
-    public static final ImagePreviewControl buildImageToggle(final String fxml, final Property<Boolean> prop, final Image img){
-        return new ImagePreviewControl(fxml, prop, img);
+
+    public static final ImagePreviewControl buildImageToggle(final Property<Boolean> prop, final Property<? extends Image> img, String name) {
+        return new ImagePreviewControl(prop, img, name);
     }
     /*==========================================================================
-                            Generic "auto" builder
-    ==========================================================================/
-    private static <T extends Property> ControlBase buildControlForProperty(T prop, Number lb, Number ub){
-        String propName = prop.getClass().getSimpleName();
-        switch(propName){
-            case "ReadOnlyBooleanWrapper":break;
-            case "ReadOnlyBooleanProperty":break;
-            case "SimpleBooleanProperty":return buildBooleanControl((BooleanProperty) prop); 
-            case "BooleanProperty": return buildBooleanControl((BooleanProperty) prop);  
-                //
-            case "ReadOnlyIntegerWrapper":break;
-            case "ReadOnlyIntegerProperty":break;            
-            case "ReadOnlyDoubleWrapper":break;
-            case "ReadOnlyDoubleProperty":break;
-                //
-            case "SimpleIntegerProperty": return buildNumberSlider(prop, lb, ub); 
-            case "IntegerProperty": return buildNumberSlider(prop, lb, ub); 
-            case "SimpleDoubleProperty": return buildNumberSlider(prop, lb, ub); 
-            case "DoubleProperty": return buildNumberSlider(prop, lb, ub); 
-                  
-                //
-            case "ReadOnlyObjectWrapper":break;
-            case "ReadOnlyObjectProperty":break;
-            case "SimpleObjectProperty":break;
-            case "ObjectProperty":break;
-            
-            default:break;
-        }
-        throw new UnsupportedOperationException("Unable to find a propper control for: " + prop.getClass().getSimpleName());
+        List like Items
+    ==========================================================================*/
+    public static final ComboBoxControl buildCullFaceControl(final Property<CullFace> p) {
+        return new ComboBoxControl("Cull Face: ", p, Arrays.asList(CullFace.values()));
     }
-    */
     
+    public static ComboBoxControl<DrawMode> buildDrawModeControl(final Property<DrawMode> dmp) {
+        return new ComboBoxControl<>("Draw Mode: ", dmp, Arrays.asList(DrawMode.values()));
+    }
+
+    public static ComboBoxControl<TextureType> buildTextureTypeControl(final Property<TextureType> p) {
+        return new ComboBoxControl<>("Texture Type: ", p, Arrays.asList(TextureType.values()));
+    }
+
+    public static ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
+        return new ComboBoxControl<>("Section Type: ", p, Arrays.asList(SectionType.values()));
+    }
+
+    /*==========================================================================
+     Standard Controls for MeshView
+     ==========================================================================*/
+    /* 
+     builds the complete ControlCategory, shared by all MeshViews
+     DrawMode, CullFace, DiffuseColor, SpecularColor
+     */
+    public static ControlCategory buildMeshViewCategory(final Property<Boolean> useMat, final Property<DrawMode> dmp, final Property<CullFace> cfp,
+            final Property<Color> dcp, final Property<Color> scp) {
+        ControlCategory mvc = new ControlCategory("Standard MeshView Properties");
+        mvc.addControls(
+                buildCheckBoxControl(useMat),
+                buildDrawModeControl(dmp),
+                buildCullFaceControl(cfp),
+                buildColorControl(dcp, "Diffuse Color: "), 
+                buildColorControl(scp, "Specular Color: ")
+        );
+
+        return mvc;
+    }
+    /*
+        Build a Category for the four Image maps available to PhongMaterial
+    */
+    public static ControlCategory buildMaterialMapCategory(
+            final Property<Image> dm, final Property<Boolean> udm,
+            final Property<? extends Image> bm, final Property<Boolean> ubm,
+            final Property<Image> sm, final Property<Boolean> usm,
+            final Property<Image> im, final Property<Boolean> uim
+    ) {
+        ControlCategory mvc = new ControlCategory("Material Image Maps");
+        mvc.addControls(
+                buildImageToggle(udm, dm, "Use Diffuse Map"),
+                buildImageToggle(ubm, bm, "Use Bump Map"),
+                buildImageToggle(usm, sm, "Use Specular Map"),
+                buildImageToggle(uim, im, "Use Illumination Map")
+        );
+        return mvc;
+    }
 }

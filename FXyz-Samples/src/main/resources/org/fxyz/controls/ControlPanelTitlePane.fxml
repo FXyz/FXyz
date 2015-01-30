@@ -11,7 +11,7 @@
          <content>
             <HBox>
                <children>
-                  <VBox fx:id="controls" spacing="5.0" HBox.hgrow="ALWAYS">
+                  <VBox fx:id="controls" spacing="2.0" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                      </padding>

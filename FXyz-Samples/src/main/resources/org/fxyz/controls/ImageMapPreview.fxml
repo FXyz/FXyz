@@ -10,10 +10,8 @@
    <children>
       <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="2.0" StackPane.alignment="TOP_CENTER">
          <children>
-            <ImageView fx:id="preview" cache="true" cacheHint="SPEED" fitHeight="94.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER" VBox.vgrow="NEVER">
-              
-            </ImageView>
-            <CheckBox fx:id="useImage" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Use Illumination Map" textFill="WHITE" />
+            <ImageView fx:id="preview" cache="true" cacheHint="SPEED" fitHeight="94.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER" VBox.vgrow="NEVER"/>
+            <CheckBox fx:id="useImage" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Use Diffuse Map" textFill="WHITE" />
          </children>
          <padding>
             <Insets bottom="5.0" top="5.0" />

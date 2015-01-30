@@ -6,25 +6,30 @@
 package org.fxyz.controls;
 
 import java.util.Collection;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 
 /**
  * FXML Controller class
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class ComboBoxControl<T> extends ControlBase<ObjectProperty<?>>{
+public class ComboBoxControl<T> extends ControlBase<Property<T>>{
 
-    public ComboBoxControl(final ObjectProperty<T> p, final Collection<T> items) {
+    public ComboBoxControl(final String lbl, final Property<T> p, final Collection<T> items) {
         super("ComboBoxControl.fxml", p);
-        selection.getItems().addAll(items);
+        title.setText(lbl);
+        selection.getItems().addAll(items);        
+        controlledProperty.bind(selection.getSelectionModel().selectedItemProperty());
         selection.getSelectionModel().select(0);
     }   
     
     @FXML
     private ComboBox<T> selection;
+    @FXML
+    private Label title;
 
     public ComboBox getComboBox() {
         return selection;

@@ -33,7 +33,7 @@ public class NormalMap extends WritableImage {
     private final double DEFAULT_INTENSITY = 5.0, DEFAULT_INTENSITY_SCALE = 5.0;
     private final boolean DEFAULT_INVERTED = new Random().nextBoolean();
     
-    private PixelReader pReader;
+    protected PixelReader pReader;
     private final PixelWriter pWriter;
     private final Image srcImage;
     
@@ -41,11 +41,14 @@ public class NormalMap extends WritableImage {
     public NormalMap(final Image src){
         super(src.getPixelReader(),0,0, (int)src.getWidth(), (int)src.getHeight());
         this.srcImage = src;
-        this.pReader = getPixelReader();
         this.pWriter = getPixelWriter();
         this.buildNormalMap(DEFAULT_INTENSITY, DEFAULT_INTENSITY_SCALE, DEFAULT_INVERTED);
     }
 
+    public NormalMap(final double i, final double is, final boolean inv, final Image src){
+        this(src);
+        this.buildNormalMap(i, is, inv);
+    }
     
     private void buildNormalMap(double scale, double scaleFactor, boolean invert) {
 
@@ -133,10 +136,6 @@ public class NormalMap extends WritableImage {
      */
     private final DoubleProperty intensity = new SimpleDoubleProperty(this, "intensity" , DEFAULT_INTENSITY){
 
-        @Override
-        protected void invalidated() {
-            buildNormalMap(get(), getIntensityScale(), isInvertNormals());
-        }
         
     };
     /**
@@ -166,10 +165,6 @@ public class NormalMap extends WritableImage {
      */
     private final DoubleProperty intensityScale = new SimpleDoubleProperty(this, "intensityScale" , DEFAULT_INTENSITY_SCALE){
 
-        @Override
-        protected void invalidated() {
-             buildNormalMap(getIntensity(), get(), isInvertNormals());
-        }
         
     };
     /**
@@ -199,10 +194,6 @@ public class NormalMap extends WritableImage {
      */
     private final BooleanProperty invertNormals = new SimpleBooleanProperty(this, "inverted" , DEFAULT_INVERTED){
 
-        @Override
-        protected void invalidated() {
-             buildNormalMap(getIntensity(), getIntensityScale(), get());
-        }
         
     };
     /**

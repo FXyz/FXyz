@@ -7,9 +7,11 @@
 
 <fx:root style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER" StackPane.alignment="CENTER">
+      <HBox alignment="CENTER" StackPane.alignment="CENTER_LEFT">
          <children>
-            <ColorPicker fx:id="colors" editable="true" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS" />
+            <Label fx:id="title" textFill="WHITE" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <ColorPicker fx:id="colors" editable="true" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefWidth="90.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>
