@@ -22,7 +22,7 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
  *
  * @author jpereda
  */
-public class Knots extends ShapeBaseSample {
+public class Knots extends ShapeBaseSample<KnotMesh> {
 
     private DensityFunction<Point3D> dens = p -> (double) p.x;
     private long lastEffect;
@@ -33,31 +33,31 @@ public class Knots extends ShapeBaseSample {
     
     @Override
     protected void createMesh() {
-        
-
+        model = new KnotMesh(2d, 1d, 0.4d, 2d, 3d, 1000, 60, 0, 0);
+        model.setDrawMode(DrawMode.LINE);
+        model.setCullFace(CullFace.NONE);
+        model.setSectionType(SectionType.TRIANGLE);
+        model.setTextureModeNone(Color.BROWN);
     }
 
     @Override
     protected void addMeshAndListeners() {
-        KnotMesh knot = new KnotMesh(2d, 1d, 0.4d, 2d, 3d, 1000, 60, 0, 0);
-        knot.setDrawMode(DrawMode.LINE);
-        knot.setCullFace(CullFace.NONE);
-        knot.setSectionType(SectionType.TRIANGLE);
-        knot.setTextureModeNone(Color.BROWN);
         
-        knot.drawModeProperty().bindBidirectional(drawMode); // DOES NOT work binding the other way prop->mesh
-        knot.cullFaceProperty().bindBidirectional(culling);       
+        
+        
+        model.drawModeProperty().bindBidirectional(drawMode); // DOES NOT work binding the other way prop->mesh
+        model.cullFaceProperty().bindBidirectional(culling);       
         
         useMaterial.addListener(i -> {
             if (useMaterial.getValue()) {
-                knot.setMaterial(material);
+                model.setMaterial(material);
             } else if (!useMaterial.getValue()) {
-                knot.setMaterial(null);
-                knot.setTextureModeNone(Color.BROWN);
+                model.setMaterial(null);
+                model.setTextureModeNone(Color.BROWN);
             }
         });
 
-        knot.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
+        model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
 
         // IMAGE
 //        knot.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
@@ -108,7 +108,7 @@ public class Knots extends ShapeBaseSample {
             }
         };
 
-        group.getChildren().add(knot);
+        group.getChildren().add(model);
     }
 
     @Override
