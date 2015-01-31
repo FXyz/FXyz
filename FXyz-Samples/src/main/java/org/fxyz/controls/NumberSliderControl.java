@@ -5,6 +5,9 @@
  */
 package org.fxyz.controls;
 
+import java.text.NumberFormat;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -28,10 +31,22 @@ public class NumberSliderControl extends ControlBase<Property<Number>> {
         }
     }
     
+    private final NumberFormat format = NumberFormat.getInstance();
+    
     public NumberSliderControl(final Property<Number> prop, final Number lowerBound, final Number upperBound) {
         super("NumberSliderControl.fxml", prop);
-        valSlider.setMin(lowerBound.doubleValue());
-        valSlider.setMax(upperBound.doubleValue());
+        if(prop instanceof IntegerProperty){
+            format.setMaximumFractionDigits(0);
+            valSlider.setMin(lowerBound.intValue());
+            valSlider.setMax(upperBound.intValue());
+        }
+        else if(prop instanceof DoubleProperty){
+            format.setMaximumFractionDigits(2);
+            valSlider.setMin(lowerBound.doubleValue());
+            valSlider.setMax(upperBound.doubleValue());
+        }
+        valueLabel.textProperty().bindBidirectional(valSlider.valueProperty(),format);
+        
         controlledProperty.bind(valSlider.valueProperty());
         propName.setText(!controlledProperty.getName().isEmpty() ? controlledProperty.getName() : "Empty Property Name:");
       

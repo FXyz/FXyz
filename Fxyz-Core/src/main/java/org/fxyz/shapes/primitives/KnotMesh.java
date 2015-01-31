@@ -187,7 +187,7 @@ public class KnotMesh extends TexturedMesh {
         return p.get();
     }
 
-    public void setP(double value) {
+    public final void setP(double value) {
         p.set(value);
     }
 

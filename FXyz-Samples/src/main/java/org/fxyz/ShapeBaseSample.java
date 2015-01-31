@@ -6,7 +6,6 @@
 
 package org.fxyz;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Service;
@@ -139,10 +138,8 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
             service.setOnSucceeded(e->{
                 onService.set(false);
                 System.out.println("time: " + (System.currentTimeMillis() - time)); 
-                Platform.runLater(()->{
-                    addMeshAndListeners();
-                    mainPane.getChildren().remove(progressBar);
-                });
+                addMeshAndListeners();
+                mainPane.getChildren().remove(progressBar);          
             });
 
             subScene.widthProperty().bind(mainPane.widthProperty());

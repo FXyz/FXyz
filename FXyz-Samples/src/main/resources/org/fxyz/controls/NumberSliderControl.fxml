@@ -15,7 +15,7 @@
                <children>
                   <Label fx:id="propName" text="Label" textFill="WHITE" HBox.hgrow="ALWAYS" />
                   <StackPane fx:id="spacer" HBox.hgrow="ALWAYS" />
-                  <Label fx:id="valueLabel" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="50.0" text="${valSlider.value}" textFill="WHITE" textOverrun="CLIP" HBox.hgrow="SOMETIMES" />
+                  <Label fx:id="valueLabel" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="50.0" textFill="WHITE" textOverrun="CLIP" HBox.hgrow="SOMETIMES" />
                </children>
                <VBox.margin>
                   <Insets />

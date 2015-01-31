@@ -7,13 +7,16 @@
 
 <fx:root style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER_LEFT">
+      <VBox>
          <children>
             <Label fx:id="title" text="Label" textFill="WHITE" />
-            <Pane HBox.hgrow="ALWAYS" />
-            <ComboBox fx:id="selection" cache="true" cacheHint="SPEED" focusTraversable="false" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="90.0" HBox.hgrow="ALWAYS" />
+            <HBox fx:id="hbox" alignment="CENTER_LEFT" StackPane.alignment="CENTER_LEFT">
+               <children>
+                  <ComboBox fx:id="selection" cache="true" cacheHint="SPEED" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

@@ -27,15 +27,22 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
  */
 public final class ControlFactory {
 
-    public static ControlPanel buildControlPanel(final ControlCategory titlePane) {
+    public static final ControlPanel buildControlPanel(final ControlCategory titlePane) {
         return new ControlPanel(titlePane);
     }
+    public static final ControlPanel buildControlPanel(final ControlCategory ... titlePane) {
+        ControlPanel panel = new ControlPanel(titlePane[0]);
+        for(int i = 1; i < titlePane.length; i++){
+            panel.getPanes().add(titlePane[i]);
+        }
+        return panel;
+    }
 
-    public static ControlCategory buildCategory(final String title) {
+    public static final ControlCategory buildCategory(final String title) {
         return new ControlCategory(title);
     }
     /*==========================================================================
-     Specific Control Types
+     Standard Control Types
      ==========================================================================*/
 
     public static final CheckBoxControl buildCheckBoxControl(final Property<Boolean> p) {
@@ -60,16 +67,16 @@ public final class ControlFactory {
         return new ComboBoxControl("Cull Face: ", p, Arrays.asList(CullFace.values()));
     }
     
-    public static ComboBoxControl<DrawMode> buildDrawModeControl(final Property<DrawMode> dmp) {
+    public static final ComboBoxControl<DrawMode> buildDrawModeControl(final Property<DrawMode> dmp) {
         return new ComboBoxControl<>("Draw Mode: ", dmp, Arrays.asList(DrawMode.values()));
     }
 
-    public static ComboBoxControl<TextureType> buildTextureTypeControl(final Property<TextureType> p) {
-        return new ComboBoxControl<>("Texture Type: ", p, Arrays.asList(TextureType.values()));
+    public static final ComboBoxControl<TextureType> buildTextureTypeControl(final Property<TextureType> p) {
+        return new ComboBoxControl<>("", p, Arrays.asList(TextureType.values()));
     }
 
-    public static ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
-        return new ComboBoxControl<>("Section Type: ", p, Arrays.asList(SectionType.values()));
+    public static final ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
+        return new ComboBoxControl<>("", p, Arrays.asList(SectionType.values()));
     }
 
     /*==========================================================================
@@ -110,4 +117,29 @@ public final class ControlFactory {
         );
         return mvc;
     }
+    /*
+    
+    */
+    public static ControlCategory buildTextureMeshCategory(
+            final Property<TextureType> tt, final Property<SectionType> st, final Property<Number> colors
+    ) {
+        NumberSliderControl colorSlider = ControlFactory.buildNumberSlider(colors, 8.0D, 255.0D);
+        colorSlider.getSlider().setBlockIncrement(1);
+        colorSlider.getSlider().setMajorTickUnit(63);
+        colorSlider.getSlider().setMinorTickCount(254);
+        colorSlider.getSlider().setSnapToTicks(true);
+        
+        ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
+        mvc.addControls(
+                buildTextureTypeControl(tt),
+                colorSlider,
+                buildSectionTypeControl(st)
+        );
+
+        return mvc;
+    }
+    /*
+        Build a Category for the four Image maps available to PhongMaterial
+    */
+    
 }
