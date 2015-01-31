@@ -5,9 +5,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<fx:root cache="true" cacheHint="SPEED" focusTraversable="false" type="TitledPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root cache="true" cacheHint="SPEED" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="TitledPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <ScrollPane cache="true" cacheHint="SPEED" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" hmax="0.0" vmax="0.0">
+      <ScrollPane cache="true" cacheHint="SPEED" fitToHeight="true" fitToWidth="true" focusTraversable="false" hbarPolicy="NEVER" hmax="0.0" minHeight="-Infinity" minWidth="-Infinity" vmax="0.0">
          <content>
             <HBox>
                <children>

@@ -46,6 +46,7 @@ public class NumberSliderControl extends ControlBase<Property<Number>> {
             valSlider.setMax(upperBound.doubleValue());
         }
         valueLabel.textProperty().bindBidirectional(valSlider.valueProperty(),format);
+        valSlider.setValue(controlledProperty.getValue().doubleValue());
         
         controlledProperty.bind(valSlider.valueProperty());
         propName.setText(!controlledProperty.getName().isEmpty() ? controlledProperty.getName() : "Empty Property Name:");

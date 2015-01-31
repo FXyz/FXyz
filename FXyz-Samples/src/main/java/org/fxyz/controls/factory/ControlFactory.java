@@ -72,11 +72,11 @@ public final class ControlFactory {
     }
 
     public static final ComboBoxControl<TextureType> buildTextureTypeControl(final Property<TextureType> p) {
-        return new ComboBoxControl<>("", p, Arrays.asList(TextureType.values()));
+        return new ComboBoxControl<>("Texture Type:", p, Arrays.asList(TextureType.values()));
     }
 
     public static final ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
-        return new ComboBoxControl<>("", p, Arrays.asList(SectionType.values()));
+        return new ComboBoxControl<>("Section Type", p, Arrays.asList(SectionType.values()));
     }
 
     /*==========================================================================
@@ -96,7 +96,6 @@ public final class ControlFactory {
                 buildColorControl(dcp, "Diffuse Color: "), 
                 buildColorControl(scp, "Specular Color: ")
         );
-
         return mvc;
     }
     /*

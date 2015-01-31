@@ -26,7 +26,7 @@
             </HBox>
             <HBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="${root.prefWidth}" minHeight="-Infinity" minWidth="-Infinity">
                <children>
-                  <Slider fx:id="valSlider" blockIncrement="0.0" focusTraversable="false" majorTickUnit="10.0" max="20.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="1" prefWidth="${root.prefWidth}" showTickMarks="true" value="10.0" HBox.hgrow="ALWAYS" VBox.vgrow="NEVER">
+                  <Slider fx:id="valSlider" blockIncrement="0.1" focusTraversable="false" majorTickUnit="10.0" max="20.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="1" prefWidth="${root.prefWidth}" showTickMarks="true" value="10.0" HBox.hgrow="ALWAYS" VBox.vgrow="NEVER">
                     
                   </Slider>
                </children>

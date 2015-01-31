@@ -124,6 +124,12 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
 
                     };
                 }
+
+                @Override
+                protected void failed() {
+                    super.failed(); 
+                    getException().printStackTrace(System.err);
+                }               
             };
 
             progressBar = new ProgressBar();
