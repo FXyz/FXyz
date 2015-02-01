@@ -1,5 +1,7 @@
 package org.fxyz.samples;
 
+import java.io.File;
+import java.io.FileInputStream;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -9,7 +11,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -26,22 +31,8 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *
- * @author jpereda
- */
-public class Knots extends ShapeBaseSample<KnotMesh> {
-
-    private final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 1.0d);
-    private DensityFunction<Point3D> dens = p -> (double) p.x;
-    private final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ", 100.0d);
-    //standard
-    private final Property<Boolean> useMaterial = new SimpleBooleanProperty(this, "Use PhongMaterial", false);
-   
-    private final Property<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
-    private final Property<CullFace> culling = new SimpleObjectProperty<>(CullFace.BACK);
-    //specific
-    private final Property<SectionType> sectionType = new SimpleObjectProperty<>(model, "", SectionType.TRIANGLE);
-    private final Property<TextureType> textureType = new SimpleObjectProperty<>(model, "", TextureType.NONE);
-    /*
+ * 
+ * 
      * TextureType.NONE: no texture applied, so diffuseColor can be used.
      Arguments:
      -setTextureModeNone() None (default color)
@@ -68,21 +59,186 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
     
      KnotMesh(double majorRadius, double minorRadius, double wireRadius, double p, double q, 
      int rDivs, int tDivs, int lengthCrop, int wireCrop)
-     */
-    private final DoubleProperty majRad = new SimpleDoubleProperty(this, "Major Radius", 2);
-    private final DoubleProperty minRad = new SimpleDoubleProperty(this, "Minor Radius", 1);
-    private final DoubleProperty wireRad = new SimpleDoubleProperty(this, "Wire Radius", 0.2);
-    private final DoubleProperty wireLen = new SimpleDoubleProperty(this, "Wire Length");
+     
+ * 
+ * 
+ * @author jpereda
+ */
+public class Knots extends ShapeBaseSample<KnotMesh> {
 
-    private final DoubleProperty _p = new SimpleDoubleProperty(this, "P Value", 2);
-    private final DoubleProperty _q = new SimpleDoubleProperty(this, "Q Value", 3);
+    private final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 1.0d) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setTextureModePattern(pattScale.doubleValue());
+            }
+        }
+    };
+    private DensityFunction<Point3D> dens = p -> (double) p.x;
+    private final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ", 100.0d) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setDensity(dens);
+            }
+        }
+    };
+    //standard
+    private final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", "");
+    private final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                if (diffMapPath.get().isEmpty()) {
+                    //load default
+                    material.setDiffuseMap(new Image(getClass().getResourceAsStream("res/LaminateSteel.jpg")));
+                    //model.setTextureModeImage(STYLESHEET_MODENA);
+                } else {
+                    try { // should be given the string from filechooser
+                        material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
+                    } catch (Exception e) {
+                        e.printStackTrace(System.err);
+                    }
+                }
+            }
+        }
+    };
 
-    private final DoubleProperty _x = new SimpleDoubleProperty(this, "X Offset");
-    private final DoubleProperty _y = new SimpleDoubleProperty(this, "Y Offset");
-    private final DoubleProperty _z = new SimpleDoubleProperty(this, "Z Offset");
-    private final DoubleProperty _angle = new SimpleDoubleProperty(this, "Tube Angle Offset");
+    private final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setDrawMode(drawMode.getValue());
+            }
+        }
+    };
+    private final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setCullFace(culling.getValue());
+            }
+        }
+    };
+    //specific
+    private final Property<SectionType> sectionType = new SimpleObjectProperty<SectionType>(model, "secType", SectionType.TRIANGLE) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setSectionType(sectionType.getValue());
+            }
+        }
+    };
+    private final Property<TextureType> textureType = new SimpleObjectProperty<TextureType>(model, "texType", TextureType.NONE) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setTextureType(textureType.getValue());
+            }
+        }
+    };
 
-    private final ObjectProperty<Color> colorBinding = new SimpleObjectProperty<Color>() {
+    private final DoubleProperty majRad = new SimpleDoubleProperty(model, "Major Radius", 2) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setMajorRadius(majRad.get());
+            }
+        }
+    };
+    private final DoubleProperty minRad = new SimpleDoubleProperty(model, "Minor Radius", 1) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setMinorRadius(minRad.get());
+            }
+        }
+    };
+    private final DoubleProperty wireRad = new SimpleDoubleProperty(model, "Wire Radius", 0.2) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setWireRadius(wireRad.get());
+            }
+        }
+    };
+    private final DoubleProperty wireLen = new SimpleDoubleProperty(model, "Wire Length") {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setLength(wireLen.get());
+            }
+        }
+    };
+
+    private final DoubleProperty _p = new SimpleDoubleProperty(model, "P Value", 2) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setP(_p.doubleValue());
+            }
+        }
+    };
+    private final DoubleProperty _q = new SimpleDoubleProperty(model, "Q Value", 3) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setQ(_q.doubleValue());
+            }
+        }
+    };
+
+    private final DoubleProperty _x = new SimpleDoubleProperty(model, "X Offset") {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setxOffset(_x.doubleValue());
+            }
+        }
+    };
+    private final DoubleProperty _y = new SimpleDoubleProperty(model, "Y Offset") {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setyOffset(_y.doubleValue());
+            }
+        }
+    };
+    private final DoubleProperty _z = new SimpleDoubleProperty(model, "Z Offset") {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setzOffset(_z.doubleValue());
+            }
+        }
+    };
+    private final DoubleProperty _angle = new SimpleDoubleProperty(model, "Tube Angle Offset") {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                model.setTubeStartAngleOffset(_angle.doubleValue());
+            }
+        }
+    };
+
+    private final ObjectProperty<Color> colorBinding = new SimpleObjectProperty<Color>(Color.BROWN) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -91,7 +247,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
             }
         }
     };
-    private final IntegerProperty colors = new SimpleIntegerProperty(this, "Colors :", 1530) {
+    private final IntegerProperty colors = new SimpleIntegerProperty(model, "Color :", 1530) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -100,7 +256,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
             }
         }
     };
-    private final IntegerProperty wireDivs = new SimpleIntegerProperty(this, "Wire Divisions", 100) {
+    private final IntegerProperty wireDivs = new SimpleIntegerProperty(model, "Wire Divisions", 100) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -109,7 +265,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
             }
         }
     };
-    private final IntegerProperty lenDivs = new SimpleIntegerProperty(this, "Length Divisions", 500) {
+    private final IntegerProperty lenDivs = new SimpleIntegerProperty(model, "Length Divisions", 500) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -118,7 +274,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
             }
         }
     };
-    private final IntegerProperty wireCrop = new SimpleIntegerProperty(this, "Wire Crop", 0) {
+    private final IntegerProperty wireCrop = new SimpleIntegerProperty(model, "Wire Crop", 0) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -127,7 +283,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
             }
         }
     };
-    private final IntegerProperty lenCrop = new SimpleIntegerProperty(this, "Length Crop", 0) {
+    private final IntegerProperty lenCrop = new SimpleIntegerProperty(model, "Length Crop", 0) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -153,43 +309,18 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
                 wireCrop.get()
         );
         model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
-
-        model.setTextureModeNone(Color.BROWN);
-
-        // DOES NOT work binding the other way prop->mesh
-        model.drawModeProperty().bindBidirectional(drawMode);
-        model.cullFaceProperty().bindBidirectional(culling);
-
-        //model.textureTypeProperty().bindBidirectional(textureType);
-        //model.sectionTypeProperty().bindBidirectional(sectionType);
-
-        //model.majorRadiusProperty().bindBidirectional(majRad);
-        //model.minorRadiusProperty().bindBidirectional(minRad);
-
-        //model.wireRadiusProperty().bindBidirectional(wireRad);
-        //model.wireDivisionsProperty().bindBidirectional(wireDivs);
-        //model.wireCropProperty().bindBidirectional(wireCrop);
-
-        //model.lengthProperty().bindBidirectional(wireLen);
-        //model.lengthDivisionsProperty().bindBidirectional(lenDivs);
-        //model.lengthCropProperty().bindBidirectional(lenCrop);
-
-        //model.pProperty().bindBidirectional(_p);
-        //model.qProperty().bindBidirectional(_q);
-        //model.xOffsetProperty().bindBidirectional(_x);
-        //model.yOffsetProperty().bindBidirectional(_y);
-        //model.zOffsetProperty().bindBidirectional(_z);
-        //model.tubeStartAngleOffsetProperty().bindBidirectional(_angle);
+        model.setTextureModeNone(colorBinding.get());
+        
         buildControlPanel();
     }
 
     @Override
     protected void addMeshAndListeners() {
 
-        useMaterial.addListener(new WeakInvalidationListener(i -> {
-            if (useMaterial.getValue()) {
+        useDiffMap.addListener(new WeakInvalidationListener(i -> {
+            if (useDiffMap.getValue()) {
                 model.setMaterial(material);
-            } else if (!useMaterial.getValue()) {
+            } else if (!useDiffMap.getValue()) {
                 model.setMaterial(null);
             }
         }));
@@ -204,50 +335,48 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         //model.setTextureModeVertices3D(256 * 256, dens);
         // FACES
         //model.setTextureModeFaces(256 * 256);
-        
     }
 
     @Override
     public String getSampleDescription() {
         return "Knots, they tie things together ;)";
     }
-   
 
     @Override
     protected Node buildControlPanel() {
-        NumberSliderControl majRadSlider = ControlFactory.buildNumberSlider(majRad, 1D, 100D);
+        NumberSliderControl majRadSlider = ControlFactory.buildNumberSlider(majRad, 1D, 200D);
         majRadSlider.getSlider().setMinorTickCount(10);
         majRadSlider.getSlider().setMajorTickUnit(0.5);
         majRadSlider.getSlider().setBlockIncrement(0.1d);
 
-        NumberSliderControl minRadSlider = ControlFactory.buildNumberSlider(minRad, 1D, 100D);
+        NumberSliderControl minRadSlider = ControlFactory.buildNumberSlider(minRad, 1D, 200D);
         minRadSlider.getSlider().setMinorTickCount(10);
         minRadSlider.getSlider().setMajorTickUnit(0.5);
         minRadSlider.getSlider().setBlockIncrement(0.1d);
 
-        NumberSliderControl tRadSlider = ControlFactory.buildNumberSlider(wireRad, 0.01D, 10D);
+        NumberSliderControl tRadSlider = ControlFactory.buildNumberSlider(wireRad, 0.01D, 25D);
         tRadSlider.getSlider().setMinorTickCount(1);
         tRadSlider.getSlider().setMajorTickUnit(0.1);
         tRadSlider.getSlider().setBlockIncrement(0.1d);
 
-        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(wireDivs, 2, 100l);
+        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(wireDivs, 2, 100);
         wDivSlider.getSlider().setMinorTickCount(25);
         wDivSlider.getSlider().setMajorTickUnit(99);
         wDivSlider.getSlider().setBlockIncrement(1);
         wDivSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl mCropSlider = ControlFactory.buildNumberSlider(wireCrop, 0l, 98l);
+        NumberSliderControl mCropSlider = ControlFactory.buildNumberSlider(wireCrop, 0l, 98);
         mCropSlider.getSlider().setMinorTickCount(48);
         mCropSlider.getSlider().setMajorTickUnit(49);
         mCropSlider.getSlider().setBlockIncrement(1);
         mCropSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(lenDivs, 4l, 498l);
-        lDivSlider.getSlider().setMinorTickCount(100);
-        lDivSlider.getSlider().setMajorTickUnit(500);
+        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(lenDivs, 4l, 250);
+        lDivSlider.getSlider().setMinorTickCount(50);
+        lDivSlider.getSlider().setMajorTickUnit(250);
         lDivSlider.getSlider().setBlockIncrement(1);
 
-        NumberSliderControl lCropSlider = ControlFactory.buildNumberSlider(lenCrop, 0l, 250l);
+        NumberSliderControl lCropSlider = ControlFactory.buildNumberSlider(lenCrop, 0l, 200);
         lCropSlider.getSlider().setMinorTickCount(0);
         lCropSlider.getSlider().setMajorTickUnit(0.5);
         lCropSlider.getSlider().setBlockIncrement(1);
@@ -272,16 +401,16 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
 
         controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
-                        useMaterial,
+                        useDiffMap,
                         drawMode,
                         culling,
                         material.diffuseColorProperty(),
                         material.specularColorProperty()
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(textureType, colors, sectionType, useMaterial, material.diffuseMapProperty(), pattScale, densMax)
+                ControlFactory.buildTextureMeshCategory(textureType, colors, sectionType, useDiffMap, material.diffuseMapProperty(), pattScale, densMax)
         );
-        
+
         return controlPanel;
     }
 
