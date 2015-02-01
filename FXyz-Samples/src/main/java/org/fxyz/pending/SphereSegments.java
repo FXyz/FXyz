@@ -203,4 +203,11 @@ public class SphereSegments extends FXyzSample {
     public String getJavaDocURL() {
         return null;
     }
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
+    
+    
 }

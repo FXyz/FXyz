@@ -286,5 +286,11 @@ public class NewBezierMeshes extends ShapeBaseSample {
                 .append("allowing the use of control points in 3D space.");
         return sb.toString();
     }
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
+    
 
 }

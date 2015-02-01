@@ -285,7 +285,7 @@ public class BezierMeshes extends ShapeBaseSample {
         wCropSlider.setEffect(is);
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider, wCropSlider, ControlFactory.buildTextureTypeControl(texType));
+        //geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider, wCropSlider, ControlFactory.buildTextureTypeControl(texType));
         geomControls.setExpanded(true);
         geomControls.setEffect(is);
         geomControls.getContent().setEffect(is);
@@ -302,6 +302,11 @@ public class BezierMeshes extends ShapeBaseSample {
         sb.append("\nBezierMesh:\nAllows for a Tubular mesh to be built using a BezierCurve method ")
                 .append("allowing the use of control points in 3D space.");
         return sb.toString();
+    }
+
+    @Override
+    protected Node buildControlPanel() {
+        return null;
     }
 
 }

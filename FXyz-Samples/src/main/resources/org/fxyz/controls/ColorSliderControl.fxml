@@ -25,7 +25,7 @@
                </HBox>
             <HBox>
                <children>
-                  <Slider id="colorSlider" fx:id="valSlider" showTickLabels="true" showTickMarks="true" styleClass="colorSlider" />
+                  <Slider id="colorSlider" fx:id="valSlider" focusTraversable="false" styleClass="colorSlider" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>

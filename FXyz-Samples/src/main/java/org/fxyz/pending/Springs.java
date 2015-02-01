@@ -216,4 +216,11 @@ public class Springs extends FXyzSample {
     public String getJavaDocURL() {
         return "";
     }
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
+    
+    
 }

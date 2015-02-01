@@ -13,6 +13,7 @@ public abstract class FXyzSample extends SampleBase {
     protected double mouseDeltaX;
     protected double mouseDeltaY;
     
+    protected Node controlPanel;
     
     @Override
     public String getProjectName() {
@@ -53,5 +54,11 @@ public abstract class FXyzSample extends SampleBase {
         return null;
     }    
    
+    protected abstract Node buildControlPanel();
+    
+    @Override
+    public Node getControlPanel() {
+        return controlPanel;       
+    }
     
 }

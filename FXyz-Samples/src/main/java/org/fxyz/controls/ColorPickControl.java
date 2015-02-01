@@ -5,6 +5,7 @@
  */
 package org.fxyz.controls;
 
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
@@ -24,7 +25,9 @@ public class ColorPickControl extends ControlBase{
     
     public ColorPickControl(Property<Color> prop, String name) {
         super("ColorControl.fxml", prop);
-        prop.bindBidirectional(colors.valueProperty());
+        colors.valueProperty().addListener(new WeakInvalidationListener(e->{
+            prop.setValue(colors.getValue());
+        }));        
         title.setText(name);
     }
     

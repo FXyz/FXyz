@@ -266,5 +266,10 @@ public class CuboidTest extends FXyzSample {
     public String getJavaDocURL() {
         return "";
     }
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
 
 }

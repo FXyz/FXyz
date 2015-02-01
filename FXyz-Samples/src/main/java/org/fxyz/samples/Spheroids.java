@@ -17,7 +17,6 @@ import javafx.scene.DepthTest;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import org.fxyz.ShapeBaseSample;
@@ -35,29 +34,28 @@ import org.fxyz.texture.NormalMap;
  */
 public class Spheroids extends ShapeBaseSample {
 
-    private final PhongMaterial material = new PhongMaterial();
     private final SpheroidMesh sm = new SpheroidMesh();
 
     private final DoubleProperty minRad = new SimpleDoubleProperty(this, "Minor Radius : ", 25.0);
     private final DoubleProperty majRad = new SimpleDoubleProperty(this, "Major Radius : ", 50.0);
     private final IntegerProperty divs = new SimpleIntegerProperty(this, "Divisions :", 64);
 
-    private final Property<Color> diffColor = new SimpleObjectProperty<>(this, "Diffuse Color :", Color.AQUAMARINE);
-    private final Property<Color> specColor = new SimpleObjectProperty<>(this, "Specular Color :", Color.TRANSPARENT);
+    private final Property<Color> diffColor = new SimpleObjectProperty<>(this, "Diffuse Color :", Color.GAINSBORO);
+    private final Property<Color> specColor = new SimpleObjectProperty<>(this, "Specular Color :", Color.WHITE);
 
     private final Property<Image> diffuseImage = new SimpleObjectProperty<>(this, "Diffuse Map :", null);
     private final Property<NormalMap> bumpImage = new SimpleObjectProperty<>(this, "Normal Map :", null);
     private final Property<Image> specImage = new SimpleObjectProperty<>(this, "Specula Map :", null);
     private final Property<Image> illumImage = new SimpleObjectProperty<>(this, "Illumination Map :", null);
 
-    private final Property<CullFace> culling = new SimpleObjectProperty<>(this, "Cull Mode :", CullFace.BACK);
+    private final Property<CullFace> culling = new SimpleObjectProperty<>(this, "Cull Mode :", CullFace.NONE);
     private final Property<DrawMode> wireMode = new SimpleObjectProperty<>(this, "Draw Mode :", DrawMode.FILL);
 
     private final BooleanProperty useDiffImage = new SimpleBooleanProperty(false);
     private final BooleanProperty useSpecImage = new SimpleBooleanProperty(false);
     private final BooleanProperty useNormImage = new SimpleBooleanProperty(false);
     private final BooleanProperty useIlluImage = new SimpleBooleanProperty(false);
-
+    private final BooleanProperty useMaterial = new SimpleBooleanProperty(true);
     @Override
     protected void createMesh() {
         
@@ -88,6 +86,15 @@ public class Spheroids extends ShapeBaseSample {
         material.diffuseColorProperty().bindBidirectional(diffColor);
         material.specularColorProperty().bindBidirectional(specColor);
         
+        useMaterial.addListener((e)->{
+            if(useMaterial.get()){
+                if(sm.getMaterial() != null){
+                    sm.setMaterial(null);
+                }else if(sm.getMaterial() == null){
+                    sm.setMaterial(material);
+                }
+            }
+        });
         group.getChildren().addAll(sm);
         camera.setTranslateZ(-250);
 
@@ -128,7 +135,7 @@ public class Spheroids extends ShapeBaseSample {
             sm.setCullFace(culling.getValue());
         });
         
-        
+      
     }
 
     @Override
@@ -153,11 +160,16 @@ public class Spheroids extends ShapeBaseSample {
                 illumImage, useIlluImage
         );
         //==============================================================
-        ControlPanel cPanel = ControlFactory.buildControlPanel(geom);
+        ControlPanel cPanel = ControlFactory.buildControlPanel(ControlFactory.buildMeshViewCategory(useMaterial, wireMode, culling, diffColor, specColor), geom);
         cPanel.getPanes().add(images);
         cPanel.setExpandedPane(geom);
 
         return cPanel;
+    }
+
+    @Override
+    protected Node buildControlPanel() {
+        return null;
     }
 
 }

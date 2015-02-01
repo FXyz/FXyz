@@ -5,6 +5,7 @@
  */
 package org.fxyz.pending;
 
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import org.fxyz.ShapeBaseSample;
 import org.fxyz.scene.Skybox;
@@ -47,6 +48,11 @@ public class SkyBoxing extends ShapeBaseSample {
 
     @Override
     protected void addMeshAndListeners() {
+    }
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
     }
 
 }

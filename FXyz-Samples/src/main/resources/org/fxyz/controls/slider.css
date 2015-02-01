@@ -11,27 +11,28 @@ and open the template in the editor.
     -fx-effect: dropshadow(two-pass-box , rgba(0, 0, 0, 0.3), 5, 0.0 , 0, 2);
 }
 .colorSlider .axis {
-    -fx-tick-label-fill: #320120;
-    -fx-tick-length: 10px;
-    -fx-minor-tick-length: 6px;
+    -fx-tick-label-fill:black;
+    -fx-tick-length: 3px;
 }
-.colorSlider .axis .axis-tick-mark, 
+.colorSlider .axis .axis-tick-mark,
 .colorSlider .axis .axis-minor-tick-mark {
     -fx-fill: null;
     -fx-stroke: #120120;
 }
 .colorSlider .thumb {
+    
     -fx-background-color: transparent;
-    -fx-border-color: #120120;
+    -fx-border-color: linear-gradient(to bottom, white 20%, black 21%, black 79%, white 80%);
     -fx-border-width: 0.5px;
     -fx-background-insets: 0;
-    -fx-background-radius: 0;
+    -fx-background-radius: 10;
     -fx-padding: 6 2 6 2;
 }
 .colorSlider .track {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
     -fx-background-image: url("palette_1530.png");
+    -fx-background-position: center;
     -fx-background-repeat: stretch;
-    -fx-background-size: 140 40;
+    -fx-background-size: stretch, contain;
 }

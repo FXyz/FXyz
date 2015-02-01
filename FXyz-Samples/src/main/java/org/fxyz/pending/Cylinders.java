@@ -176,4 +176,9 @@ public class Cylinders extends FXyzSample {
     public String getJavaDocURL() {
         return null;
     }
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
 }

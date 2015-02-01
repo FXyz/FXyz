@@ -215,4 +215,9 @@ public class CurvedSpring extends FXyzSample {
     public String getJavaDocURL() {
         return "";
     }
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
 }

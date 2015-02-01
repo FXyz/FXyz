@@ -19,6 +19,7 @@ import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.ImagePreviewControl;
 import org.fxyz.controls.NumberSliderControl;
+import org.fxyz.controls.TextureTypeControl;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
@@ -31,9 +32,10 @@ public final class ControlFactory {
     public static final ControlPanel buildControlPanel(final ControlCategory titlePane) {
         return new ControlPanel(titlePane);
     }
-    public static final ControlPanel buildControlPanel(final ControlCategory ... titlePane) {
+
+    public static final ControlPanel buildControlPanel(final ControlCategory... titlePane) {
         ControlPanel panel = new ControlPanel(titlePane[0]);
-        for(int i = 1; i < titlePane.length; i++){
+        for (int i = 1; i < titlePane.length; i++) {
             panel.getPanes().add(titlePane[i]);
         }
         return panel;
@@ -53,7 +55,7 @@ public final class ControlFactory {
     public static final NumberSliderControl buildNumberSlider(final Property<Number> p, final Number lb, final Number ub) {
         return new NumberSliderControl(p, lb, ub);
     }
-    
+
     public static final ColorSliderControl buildColorSliderControl(final Property<Number> p, final Number lb, final Number ub) {
         return new ColorSliderControl(p, lb, ub);
     }
@@ -66,22 +68,25 @@ public final class ControlFactory {
         return new ImagePreviewControl(prop, img, name);
     }
     /*==========================================================================
-        List like Items
-    ==========================================================================*/
+     List like Items
+     ==========================================================================*/
+
     public static final ComboBoxControl buildCullFaceControl(final Property<CullFace> p) {
-        return new ComboBoxControl("Cull Face: ", p, Arrays.asList(CullFace.values()));
-    }
-    
-    public static final ComboBoxControl<DrawMode> buildDrawModeControl(final Property<DrawMode> dmp) {
-        return new ComboBoxControl<>("Draw Mode: ", dmp, Arrays.asList(DrawMode.values()));
+        return new ComboBoxControl("Cull Face: ", p, Arrays.asList(CullFace.values()), false);
     }
 
-    public static final ComboBoxControl<TextureType> buildTextureTypeControl(final Property<TextureType> p) {
-        return new ComboBoxControl<>("Texture Type:", p, Arrays.asList(TextureType.values()));
+    public static final ComboBoxControl<DrawMode> buildDrawModeControl(final Property<DrawMode> dmp) {
+        return new ComboBoxControl<>("Draw Mode: ", dmp, Arrays.asList(DrawMode.values()), false);
+    }
+
+    public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p, 
+            final Property<Number> clrs, final Property<Boolean> uDiffMap, final Property<Image> imgP,
+            final Property<Number> pScale, final Property<Number> dens) {
+        return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()), clrs, uDiffMap, imgP, pScale, dens);
     }
 
     public static final ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
-        return new ComboBoxControl<>("Section Type", p, Arrays.asList(SectionType.values()));
+        return new ComboBoxControl<>("Section Type", p, Arrays.asList(SectionType.values()), false);
     }
 
     /*==========================================================================
@@ -98,14 +103,15 @@ public final class ControlFactory {
                 buildCheckBoxControl(useMat),
                 buildDrawModeControl(dmp),
                 buildCullFaceControl(cfp),
-                buildColorControl(dcp, "Diffuse Color: "), 
+                buildColorControl(dcp, "Diffuse Color: "),
                 buildColorControl(scp, "Specular Color: ")
         );
         return mvc;
     }
     /*
-        Build a Category for the four Image maps available to PhongMaterial
-    */
+     Build a Category for the four Image maps available to PhongMaterial
+     */
+
     public static ControlCategory buildMaterialMapCategory(
             final Property<Image> dm, final Property<Boolean> udm,
             final Property<? extends Image> bm, final Property<Boolean> ubm,
@@ -123,28 +129,30 @@ public final class ControlFactory {
     }
     /*
     
-    */
+     */
+
     public static ControlCategory buildTextureMeshCategory(
-            final Property<TextureType> tt, final Property<SectionType> st, final Property<Number> colors
+            final Property<TextureType> ttp,
+            final Property<Number> cp,
+            final Property<SectionType> stp,
+            final Property<Boolean> uDiffMap, 
+            final Property<Image> imgP,
+            final Property<Number> pScale, 
+            final Property<Number> dens
     ) {
-//        NumberSliderControl colorSlider = ControlFactory.buildNumberSlider(colors, 8.0D, 255.0D);
-//        colorSlider.getSlider().setBlockIncrement(1);
-//        colorSlider.getSlider().setMajorTickUnit(63);
-//        colorSlider.getSlider().setMinorTickCount(254);
-//        colorSlider.getSlider().setSnapToTicks(true);
         
-        ColorSliderControl colorSlider = ControlFactory.buildColorSliderControl(colors,0.0D,1530.0D);
+        final TextureTypeControl texType = buildTextureTypeControl(ttp, cp, uDiffMap, imgP, pScale, dens);
+
         ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(
-                buildTextureTypeControl(tt),
-                colorSlider,
-                buildSectionTypeControl(st)
+                texType,
+                buildSectionTypeControl(stp)
         );
 
         return mvc;
     }
     /*
-        Build a Category for the four Image maps available to PhongMaterial
-    */
-    
+     Build a Category for the four Image maps available to PhongMaterial
+     */
+
 }

@@ -225,5 +225,11 @@ public class SimpleRayTest extends ShapeBaseSample {
     public Node getControlPanel() {
         return super.getControlPanel(); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
+    
 
 }

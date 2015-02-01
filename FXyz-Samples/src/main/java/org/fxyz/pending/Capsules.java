@@ -67,5 +67,10 @@ public class Capsules extends ShapeBaseSample{
 
         return cPanel;
     }
+
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
     
 }

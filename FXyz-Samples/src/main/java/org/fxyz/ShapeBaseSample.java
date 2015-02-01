@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.AmbientLight;
+import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -27,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
+import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.utils.CameraTransformer;
 
 /**
@@ -66,7 +68,8 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
     protected abstract void createMesh();
     protected abstract void addMeshAndListeners();
     
-    private final BooleanProperty onService=new SimpleBooleanProperty();
+    
+    private final BooleanProperty onService = new SimpleBooleanProperty();
        
     @Override
     public Node getSample() {        
@@ -88,16 +91,23 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
             //add a Point Light for better viewing of the grid coordinate system
             PointLight light = new PointLight(Color.WHITE);
             AmbientLight amb = new AmbientLight(Color.WHITE);
-            amb.getScope().add(camera);
+            amb.getScope().add(cameraTransform);
+            
             cameraTransform.getChildren().add(light);
             cameraTransform.getChildren().add(amb);
+            
             light.setTranslateX(camera.getTranslateX());
             light.setTranslateY(camera.getTranslateY());
             light.setTranslateZ(camera.getTranslateZ());
 
-            root = new Group();
+            PointLight light2 = new PointLight(Color.GAINSBORO);
+            light2.setDepthTest(DepthTest.ENABLE);
+            light2.setLightOn(true);
+            light2.getScope().add(camera);
+            
+            root = new Group(light2);
             subScene = new SubScene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-            subScene.setFill(Color.BLACK);        
+            subScene.setFill(Color.web("#3d3d3d"));        
             subScene.setCamera(camera);
 
             rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
@@ -220,8 +230,24 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
                 service.start();
 //            }
         }        
+        
+        if(model != null){
+            if(model instanceof TexturedMesh){
+                if(model.getMaterial() != null){
+                    material = (PhongMaterial) model.getMaterial();
+                }
+            }
+            group.getChildren().add(model);
+        }
         return mainPane;
     }
+
+    @Override
+    public Node getControlPanel() {
+        return buildControlPanel() != null ? buildControlPanel() : null;         
+    }
+    
+    
     
     @Override
     public double getControlPanelDividerPosition() {

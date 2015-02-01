@@ -269,4 +269,10 @@ public class RayIntersections extends FXyzSample {
     public String getJavaDocURL() {
         return null;
     }
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
+    
+    
 }

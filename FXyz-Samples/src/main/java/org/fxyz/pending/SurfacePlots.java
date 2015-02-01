@@ -168,4 +168,11 @@ public class SurfacePlots extends FXyzSample {
     public String getJavaDocURL() {
         return "";
     }   
+    
+    @Override
+    protected Node buildControlPanel() {
+        return null;
+    }
+    
+    
 }
