@@ -13,6 +13,7 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import org.fxyz.controls.CheckBoxControl;
 import org.fxyz.controls.ColorPickControl;
+import org.fxyz.controls.ColorSliderControl;
 import org.fxyz.controls.ComboBoxControl;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
@@ -51,6 +52,10 @@ public final class ControlFactory {
 
     public static final NumberSliderControl buildNumberSlider(final Property<Number> p, final Number lb, final Number ub) {
         return new NumberSliderControl(p, lb, ub);
+    }
+    
+    public static final ColorSliderControl buildColorSliderControl(final Property<Number> p, final Number lb, final Number ub) {
+        return new ColorSliderControl(p, lb, ub);
     }
 
     public static final ColorPickControl buildColorControl(final Property<Color> p, String name) {
@@ -122,12 +127,13 @@ public final class ControlFactory {
     public static ControlCategory buildTextureMeshCategory(
             final Property<TextureType> tt, final Property<SectionType> st, final Property<Number> colors
     ) {
-        NumberSliderControl colorSlider = ControlFactory.buildNumberSlider(colors, 8.0D, 255.0D);
-        colorSlider.getSlider().setBlockIncrement(1);
-        colorSlider.getSlider().setMajorTickUnit(63);
-        colorSlider.getSlider().setMinorTickCount(254);
-        colorSlider.getSlider().setSnapToTicks(true);
+//        NumberSliderControl colorSlider = ControlFactory.buildNumberSlider(colors, 8.0D, 255.0D);
+//        colorSlider.getSlider().setBlockIncrement(1);
+//        colorSlider.getSlider().setMajorTickUnit(63);
+//        colorSlider.getSlider().setMinorTickCount(254);
+//        colorSlider.getSlider().setSnapToTicks(true);
         
+        ColorSliderControl colorSlider = ControlFactory.buildColorSliderControl(colors,0.0D,1530.0D);
         ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(
                 buildTextureTypeControl(tt),

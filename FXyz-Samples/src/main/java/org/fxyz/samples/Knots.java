@@ -1,7 +1,10 @@
 package org.fxyz.samples;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -54,7 +57,16 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
     private final DoubleProperty _z = new SimpleDoubleProperty(this, "Z Offset");
     private final DoubleProperty _angle = new SimpleDoubleProperty(this, "Tube Angle Offset");
 
-    private final IntegerProperty colors = new SimpleIntegerProperty(this, "Colors", 16);
+    private final ObjectProperty<Color> colorBinding = new SimpleObjectProperty<>();
+    private final IntegerProperty colors = new SimpleIntegerProperty(this, "Colors", 1530){
+
+        @Override
+        protected void invalidated() {
+            super.invalidated(); 
+            colorBinding.set(Color.hsb(360*(1d-colors.get()/1530d), 1, 1));
+        }
+        
+    };
     private final IntegerProperty wireDivs = new SimpleIntegerProperty(this, "Wire Divisions", 100);
     private final IntegerProperty lenDivs = new SimpleIntegerProperty(this, "Length Divisions", 500);
     private final IntegerProperty wireCrop = new SimpleIntegerProperty(this, "Wire Crop", 0);
@@ -76,6 +88,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         );
         model.setTextureModeNone(Color.BROWN);
         
+        model.diffuseColorProperty().bindBidirectional(colorBinding);
         model.drawModeProperty().bindBidirectional(drawMode); // DOES NOT work binding the other way prop->mesh
         model.cullFaceProperty().bindBidirectional(culling);
 
@@ -100,7 +113,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         //model.zOffsetProperty().bindBidirectional(_z);
         //model.tubeStartAngleOffsetProperty().bindBidirectional(_angle);
 
-        model.colorsProperty().bindBidirectional(colors);
+//        model.colorsProperty().bindBidirectional(colors);
     }
 
     @Override
