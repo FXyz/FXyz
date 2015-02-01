@@ -181,7 +181,13 @@ public class KnotMesh extends TexturedMesh {
     public DoubleProperty qProperty() {
         return q;
     }
-    private final DoubleProperty p = new SimpleDoubleProperty();
+    private final DoubleProperty p = new SimpleDoubleProperty(DEFAULT_P){
+        @Override protected void invalidated() {
+            if(mesh!=null){
+                updateMesh();
+            }
+        }
+    };
 
     public double getP() {
         return p.get();

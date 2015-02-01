@@ -126,6 +126,7 @@ public class TriangleMeshHelper {
     /*
     Colors, palette
     */
+    public final static Color DEFAULT_DIFFUSE_COLOR = Color.WHITE;
     public final static int DEFAULT_COLORS = 16;
     public final static boolean DEFAULT_SAVE_PALETTE = false;
     private Palette palette;

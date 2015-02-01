@@ -20,6 +20,7 @@ import org.fxyz.shapes.primitives.helper.MeshHelper;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLORS;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_DENSITY_FUNCTION;
+import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_DIFFUSE_COLOR;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_PATTERN_SCALE;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_UNIDIM_FUNCTION;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
@@ -168,6 +169,25 @@ public abstract class TexturedMesh extends MeshView {
     public DoubleProperty patternScaleProperty(){
         return patternScale;
     }
+    
+    private final ObjectProperty<Color> diffuseColor = new SimpleObjectProperty<Color>(DEFAULT_DIFFUSE_COLOR){
+        
+        @Override protected void invalidated() {
+            updateMaterial();
+        }
+    };
+
+    public Color getDiffuseColor() {
+        return diffuseColor.get();
+    }
+
+    public void setDiffuseColor(Color value) {
+        diffuseColor.set(value);
+    }
+
+    public ObjectProperty diffuseColorProperty() {
+        return diffuseColor;
+    }
 
     private final IntegerProperty colors = new SimpleIntegerProperty(DEFAULT_COLORS){
 
@@ -235,11 +255,16 @@ public abstract class TexturedMesh extends MeshView {
         setMaterial(helper.getMaterialWithPalette());
     }
     
+    public void updateMaterial(){
+        setMaterial(helper.getMaterialWithColor(diffuseColor.get()));
+    }
+    
     public void updateVertices(float factor){
         if(mesh!=null){
             mesh.getPoints().setAll(helper.updateVertices(listVertices, factor));
         }
     }
+        
     private void updateTexture(){
         if(mesh!=null){
             switch(textureType.get()){
