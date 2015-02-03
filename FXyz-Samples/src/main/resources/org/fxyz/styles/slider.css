@@ -31,7 +31,7 @@ and open the template in the editor.
 .colorSlider .track {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
-    -fx-background-image: url("palette_1530.png");
+    -fx-background-image: url("./samples/res/palette_1530.png");
     -fx-background-position: center;
     -fx-background-repeat: stretch;
     -fx-background-size: stretch, contain;

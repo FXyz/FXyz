@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.samples;
+package org.fxyz.pending;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;

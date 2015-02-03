@@ -2,6 +2,7 @@ package org.fxyz.samples;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Objects;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -31,41 +32,56 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *
- * 
- * 
-     * TextureType.NONE: no texture applied, so diffuseColor can be used.
-     Arguments:
-     -setTextureModeNone() None (default color)
-     -setTextureModeNone(Color color):  The color for diffuseColor.
-
-     * TextureType.IMAGE: an image is required for the texture (diffuseMap), the user should be able to upload one, and we should provide one by default (like those for material tab)
-     -setTextureModeImage(String image): the image for diffuseMap.
-
-     * TextureType.PATTERN: the only pattern for now is the carbon pattern. So we can only play with the scale
-     - setTextureModePattern(double scale):  scale of the pattern
-
-     * TextureType.COLORED_VERTICES_3D: We provide a maximum number of colors (using the HSB palette, maximum is 1530 (6x255), that should be our default), and a density function of the type p->f(p.x,p.y,p.z)
-     - setTextureModeVertices3D(int colors, DensityFunction<Point3D> dens) : I'm not sure how you will approach this as we need the user to enter a valid function. Max(f) and Min(f) are used to scale the funcion in the range of colors of the palette.
-     - setTextureModeVertices3D(int colors, DensityFunction<Point3D> dens, double min, double max): Max and min are used to scale the function.
-
-     * TextureType.COLORED_VERTICES_1D: We provide a maximum number of colors (using the HSB palette, maximum is 1530 (6x255), that should be our default), and a density function of the type x->f(x)
-     - setTextureModeVertices1D(int colors, DensityFunction<Double> function) :The user has to enter a valid function. Max(f) and Min(f) are used to scale the funcion in the range of colors of the palette.
-     - setTextureModeVertices1D(int colors, DensityFunction<Double> function, double min, double max): Max and min are used to scale the function.
-
-     * TextureType.COLORED_FACES: We provide a maximum number of colors (using the HSB palette, maximum is 1530 (6x255), that should be our default)
-     - setTextureModeFaces(int colors)
-
-     In all these cases, colors is a property to indicate the maximum number of colors to generate the palette, and it should go inside the texture type control.
-    
-     KnotMesh(double majorRadius, double minorRadius, double wireRadius, double p, double q, 
-     int rDivs, int tDivs, int lengthCrop, int wireCrop)
-     
- * 
- * 
+ *
+ *
+ * TextureType.NONE: no texture applied, so diffuseColor can be used. Arguments:
+ * -setTextureModeNone() None (default color) -setTextureModeNone(Color color):
+ * The color for diffuseColor.
+ *
+ * TextureType.IMAGE: an image is required for the texture (diffuseMap), the
+ * user should be able to upload one, and we should provide one by default (like
+ * those for material tab) -setTextureModeImage(String image): the image for
+ * diffuseMap.
+ *
+ * TextureType.PATTERN: the only pattern for now is the carbon pattern. So we
+ * can only play with the scale - setTextureModePattern(double scale): scale of
+ * the pattern
+ *
+ * TextureType.COLORED_VERTICES_3D: We provide a maximum number of colors (using
+ * the HSB palette, maximum is 1530 (6x255), that should be our default), and a
+ * density function of the type p->f(p.x,p.y,p.z) - setTextureModeVertices3D(int
+ * colors, DensityFunction<Point3D> dens) : I'm not sure how you will approach
+ * this as we need the user to enter a valid function. Max(f) and Min(f) are
+ * used to scale the funcion in the range of colors of the palette. -
+ * setTextureModeVertices3D(int colors, DensityFunction<Point3D> dens, double
+ * min, double max): Max and min are used to scale the function.
+ *
+ * TextureType.COLORED_VERTICES_1D: We provide a maximum number of colors (using
+ * the HSB palette, maximum is 1530 (6x255), that should be our default), and a
+ * density function of the type x->f(x) - setTextureModeVertices1D(int colors,
+ * DensityFunction<Double> function) :The user has to enter a valid function.
+ * Max(f) and Min(f) are used to scale the funcion in the range of colors of the
+ * palette. - setTextureModeVertices1D(int colors, DensityFunction<Double>
+ * function, double min, double max): Max and min are used to scale the
+ * function.
+ *
+ * TextureType.COLORED_FACES: We provide a maximum number of colors (using the
+ * HSB palette, maximum is 1530 (6x255), that should be our default) -
+ * setTextureModeFaces(int colors)
+ *
+ * In all these cases, colors is a property to indicate the maximum number of
+ * colors to generate the palette, and it should go inside the texture type
+ * control.
+ *
+ * KnotMesh(double majorRadius, double minorRadius, double wireRadius, double p,
+ * double q, int rDivs, int tDivs, int lengthCrop, int wireCrop)
+ *
+ *
+ *
  * @author jpereda
  */
 public class Knots extends ShapeBaseSample<KnotMesh> {
-
+    public static void main(String[] args){launch(args);}
     private final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 1.0d) {
         @Override
         protected void invalidated() {
@@ -75,8 +91,8 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
             }
         }
     };
-    private DensityFunction<Point3D> dens = p -> (double) p.x;
-    private final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ", 100.0d) {
+    private DensityFunction<Point3D> dens = p -> (double)(p.x * p.y * p.z / p.f);
+    private final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ", 1.0d) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -141,6 +157,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
             super.invalidated();
             if (model != null) {
                 model.setTextureType(textureType.getValue());
+                
             }
         }
     };
@@ -251,8 +268,19 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         @Override
         protected void invalidated() {
             super.invalidated();
+            // IMAGE
+            //model.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
+            // PATTERN
+            //model.setTextureModePattern(3d);
+            // FUNCTION
+            //model.setTextureModeVertices1D(256 * 256, t -> t * t);
+            // DENSITY
+            //model.setTextureModeVertices3D(256 * 256, dens);
+            // FACES
+            //model.setTextureModeFaces(256 * 256);
             if (model != null) {
                 colorBinding.set(Color.hsb(360 * (1d - colors.get() / 1530d), 1, 1));
+                
             }
         }
     };
@@ -310,7 +338,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         );
         model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
         model.setTextureModeNone(colorBinding.get());
-        
+
         buildControlPanel();
     }
 
@@ -325,16 +353,6 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
             }
         }));
 
-        // IMAGE
-        //model.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
-        // PATTERN
-        //model.setTextureModePattern(3d);
-        // FUNCTION
-        //model.setTextureModeVertices1D(256 * 256, t -> t * t);
-        // DENSITY
-        //model.setTextureModeVertices3D(256 * 256, dens);
-        // FACES
-        //model.setTextureModeFaces(256 * 256);
     }
 
     @Override
@@ -412,6 +430,38 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         );
 
         return controlPanel;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 61 * hash + Objects.hashCode(this.wireRad);
+        hash = 61 * hash + Objects.hashCode(this.colorBinding);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Knots other = (Knots) obj;
+        if (!Objects.equals(this.majRad, other.majRad)) {
+            return false;
+        }
+        if (!Objects.equals(this.minRad, other.minRad)) {
+            return false;
+        }
+        if (!Objects.equals(this.wireRad, other.wireRad)) {
+            return false;
+        }
+        if (!Objects.equals(this.wireLen, other.wireLen)) {
+            return false;
+        }
+        return true;
     }
 
 }

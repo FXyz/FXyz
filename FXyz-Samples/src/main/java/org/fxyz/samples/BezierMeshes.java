@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -39,6 +40,8 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
  */
 public class BezierMeshes extends ShapeBaseSample {
 
+    public static void main(String[] args){launch(args);}
+    
     long lastEffect;
 
     private final BooleanProperty showKnots = new SimpleBooleanProperty(this, "Show Knots");
@@ -87,8 +90,8 @@ public class BezierMeshes extends ShapeBaseSample {
     @Override
     protected void addMeshAndListeners() {
         System.out.println("building");
-
-        group.getChildren().addAll(beziers);
+        Group bez = new Group();
+        bez.getChildren().addAll(beziers);
         beziers.forEach(bezier -> {
             bezier.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
 
@@ -101,7 +104,7 @@ public class BezierMeshes extends ShapeBaseSample {
             // bezier.zOffsetProperty().bind(_z);
             // bezier.tubeStartAngleOffsetProperty().bind(_angle);
         });
-
+        model = bez;
         DensityFunction<Point3D> dens = p -> (double) p.f;
         wireRad.addListener(i -> {
             beziers.forEach(bm -> {
@@ -249,7 +252,15 @@ public class BezierMeshes extends ShapeBaseSample {
     }
 
     @Override
-    public Node getControlPanel() {
+    public String getSampleDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nBezierMesh:\nAllows for a Tubular mesh to be built using a BezierCurve method ")
+                .append("allowing the use of control points in 3D space.");
+        return sb.toString();
+    }
+
+    @Override
+    protected Node buildControlPanel() {
         DropShadow is = new DropShadow();
         is.setBlurType(BlurType.GAUSSIAN);
         is.setColor(Color.GAINSBORO);
@@ -285,7 +296,7 @@ public class BezierMeshes extends ShapeBaseSample {
         wCropSlider.setEffect(is);
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        //geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider, wCropSlider, ControlFactory.buildTextureTypeControl(texType));
+        geomControls.addControls(chkKnots, chkPnts, wDivSlider, radSlider, wCropSlider);
         geomControls.setExpanded(true);
         geomControls.setEffect(is);
         geomControls.getContent().setEffect(is);
@@ -294,19 +305,6 @@ public class BezierMeshes extends ShapeBaseSample {
         cPanel.setExpandedPane(geomControls);       
 
         return cPanel;
-    }
-
-    @Override
-    public String getSampleDescription() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\nBezierMesh:\nAllows for a Tubular mesh to be built using a BezierCurve method ")
-                .append("allowing the use of control points in 3D space.");
-        return sb.toString();
-    }
-
-    @Override
-    protected Node buildControlPanel() {
-        return null;
     }
 
 }

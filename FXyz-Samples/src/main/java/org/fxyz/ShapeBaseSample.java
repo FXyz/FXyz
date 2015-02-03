@@ -26,9 +26,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
-import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.utils.CameraTransformer;
 
 /**
@@ -40,7 +38,7 @@ import org.fxyz.utils.CameraTransformer;
  * @author jpereda
  * @param <T> 
  */
-public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
+public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     private final double sceneWidth = 800;
     private final double sceneHeight = 600;    
@@ -65,12 +63,14 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
     }
 
     protected PhongMaterial material = new PhongMaterial();
+   
     protected abstract void createMesh();
     protected abstract void addMeshAndListeners();
     
     
     private final BooleanProperty onService = new SimpleBooleanProperty();
-       
+   
+    
     @Override
     public Node getSample() {        
         if(!onService.get()){
@@ -78,7 +78,7 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
             camera = new PerspectiveCamera(true);
             camera.setNearClip(0.1);
             camera.setFarClip(100000.0);
-            camera.setTranslateZ(-10);
+            camera.setTranslateZ(-50);
             //camera.setVerticalFieldOfView(true);
             camera.setFieldOfView(42);
 
@@ -155,7 +155,9 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
                 onService.set(false);
                 System.out.println("time: " + (System.currentTimeMillis() - time)); 
                 addMeshAndListeners();
-                mainPane.getChildren().remove(progressBar);          
+                mainPane.getChildren().remove(progressBar); 
+                
+                group.getChildren().add(model);
             });
 
             subScene.widthProperty().bind(mainPane.widthProperty());
@@ -231,14 +233,6 @@ public abstract class ShapeBaseSample<T extends Shape3D> extends FXyzSample {
 //            }
         }        
         
-        if(model != null){
-            if(model instanceof TexturedMesh){
-                if(model.getMaterial() != null){
-                    material = (PhongMaterial) model.getMaterial();
-                }
-            }
-            group.getChildren().add(model);
-        }
         return mainPane;
     }
 

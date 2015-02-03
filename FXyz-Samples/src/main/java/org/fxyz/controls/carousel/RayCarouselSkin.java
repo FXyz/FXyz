@@ -93,7 +93,7 @@ public class RayCarouselSkin<T> extends AbstractCarouselSkin<T> {
   @SuppressWarnings("static-method")
   protected void fadeOutEdgeCells(RayLayoutPass layoutPass, double fadeOutCellCount) {
     double opacity = CellEffects.calculateEdgeCellOpacity(layoutPass.currentItem().getRelativeFractionalIndex(), layoutPass.getCellCount(), fadeOutCellCount);
-    double depth = TreeView.getNodeLevel(((TreeCell<?>)layoutPass.currentItem().getCell()).getTreeItem()) - layoutPass.depth;
+    double depth = getSkinnable().getTreeItemLevel(((TreeCell<?>)layoutPass.currentItem().getCell()).getTreeItem()) - layoutPass.depth;
 
     opacity /= Math.pow(1.6, Math.abs(depth));
 
@@ -203,8 +203,8 @@ public class RayCarouselSkin<T> extends AbstractCarouselSkin<T> {
       int rightIndex = (int)(fractionalIndex + 1);
       double fraction = fractionalIndex - leftIndex;
 
-      double depthLeft = TreeView.getNodeLevel(getSkinnable().getTreeItem(leftIndex));
-      double depthRight = TreeView.getNodeLevel(getSkinnable().getTreeItem(rightIndex));
+      double depthLeft = getSkinnable().getTreeItemLevel(getSkinnable().getTreeItem(leftIndex));
+      double depthRight = getSkinnable().getTreeItemLevel(getSkinnable().getTreeItem(rightIndex));
 
       return depthLeft * (1.0 - fraction) + depthRight * fraction;
     }
@@ -355,7 +355,7 @@ public class RayCarouselSkin<T> extends AbstractCarouselSkin<T> {
       double sin = -Math.sin(angleOnCarousel);
       double cos = -Math.cos(angleOnCarousel);
 
-      double depth = TreeView.getNodeLevel(((TreeCell<?>)getCell()).getTreeItem());
+      double depth = getSkinnable().getTreeItemLevel(((TreeCell<?>)getCell()).getTreeItem());
       double radius = getCarouselRadius() / Math.pow(1.3, depth - this.carouselDepth);
 
       double l = radius - cellRectangle.getMinX();

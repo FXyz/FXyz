@@ -6,7 +6,6 @@
 package org.fxyz.controls;
 
 import java.text.NumberFormat;
-import java.text.ParsePosition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;

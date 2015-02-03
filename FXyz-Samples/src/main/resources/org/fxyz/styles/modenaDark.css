@@ -3173,3 +3173,32 @@ is being used to size a border should also be in pixels.
     -fx-graphic: url(/images/window-close-over.png);   
 }
 
+.colorSlider {
+    -fx-effect: dropshadow(two-pass-box , rgba(0, 0, 0, 0.3), 5, 0.0 , 0, 2);
+}
+.colorSlider .axis {
+    -fx-tick-label-fill:black;
+    -fx-tick-length: 3px;
+}
+.colorSlider .axis .axis-tick-mark,
+.colorSlider .axis .axis-minor-tick-mark {
+    -fx-fill: null;
+    -fx-stroke: #120120;
+}
+.colorSlider .thumb {
+    
+    -fx-background-color: transparent;
+    -fx-border-color: linear-gradient(to bottom, white 20%, black 21%, black 79%, white 80%);
+    -fx-border-width: 0.5px;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10;
+    -fx-padding: 6 2 6 2;
+}
+.colorSlider .track {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-image: url("../samples/res/palette_1530.png");
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
+}

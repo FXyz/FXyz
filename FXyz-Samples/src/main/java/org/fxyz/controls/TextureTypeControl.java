@@ -76,7 +76,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         diffMapControl = ControlFactory.buildImageToggle(udm, img, "Diffuse Map Image:");
         imgLoader = new FileLoadControl();
         patternScaler = ControlFactory.buildNumberSlider(pScale, 1, 100);
-        densMinMax = ControlFactory.buildNumberSlider(densVal, 1, 100);
+        densMinMax = ControlFactory.buildNumberSlider(densVal, 0.01, 1);
     }
     
 }
