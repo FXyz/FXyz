@@ -9,10 +9,10 @@
    <children>
       <VBox spacing="3.0">
          <children>
-            <Label fx:id="title" text="Function F=F(x)" textFill="WHITE" />
+            <Label fx:id="title" text="Density Function F=F(p(x,y,z))" textFill="WHITE" />
             <HBox fx:id="hbox" alignment="CENTER_LEFT" StackPane.alignment="CENTER_LEFT">
                <children>
-                  <ComboBox fx:id="selection" cache="true" cacheHint="SPEED" editable="true" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="selection" cache="true" editable="true" cacheHint="SPEED" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <HBox>
