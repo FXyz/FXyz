@@ -41,13 +41,13 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             }
         }
     };
-    protected DensityFunction<Point3D> dens = p -> (double)(p.x * p.y * p.z);
+    protected final Property<DensityFunction<Point3D>> dens = new SimpleObjectProperty<>(p -> (double)(p.x * p.y * p.z));
     protected final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ") {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setDensity(dens);
+                model.setDensity(dens.getValue());
             }
         }
     };
@@ -110,13 +110,13 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                     model.setTextureModePattern(pattScale.getValue());
                         break;
                     case COLORED_VERTICES_1D:
-                    model.setTextureModeVertices1D(colors.getValue(), t -> t * t);
+                    model.setTextureModeVertices1D(colors.getValue() * colors.getValue(), t -> t * t);
                         break;
                     case COLORED_VERTICES_3D:
-                    model.setTextureModeVertices3D(colors.getValue(), dens);
+                    model.setTextureModeVertices3D(colors.getValue() * colors.getValue(), dens.getValue());
                         break;
                     case COLORED_FACES:
-                    model.setTextureModeFaces(colors.getValue());
+                    model.setTextureModeFaces(colors.getValue() * colors.getValue());
                         break;
                 }                
             }

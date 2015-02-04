@@ -28,8 +28,8 @@ public class Icosahedron extends TexturedMeshSample {
         // PATTERN
 //        ico.setTextureModePattern(2d);
         // DENSITY
-        dens = p-> (double)p.x;
-        model.setTextureModeVertices3D(colors.getValue(), dens);
+        dens.setValue(p-> (double)p.x);
+        model.setTextureModeVertices3D(256 * 256, dens.getValue());
     // FACES
 //        ico.setTextureModeFaces(256);
 
@@ -55,7 +55,10 @@ public class Icosahedron extends TexturedMeshSample {
                         this.material.specularColorProperty()
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), this.pattScale, this.densMax)
+                ControlFactory.buildTextureMeshCategory(this.textureType,
+                        this.colors, this.sectionType, 
+                        this.useDiffMap, this.material.diffuseMapProperty(),
+                        this.pattScale, this.densMax, this.dens)
         );
         
         return this.controlPanel;

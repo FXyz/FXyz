@@ -303,7 +303,13 @@ public class Knots extends TexturedMeshSample {
                         this.material.specularColorProperty()
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), this.pattScale, this.densMax)
+                ControlFactory.buildTextureMeshCategory(
+                        this.textureType, this.colors,
+                        this.sectionType, this.useDiffMap,
+                        this.material.diffuseMapProperty(), 
+                        this.pattScale, this.densMax,
+                        this.dens
+                )
         );
 
         return this.controlPanel;

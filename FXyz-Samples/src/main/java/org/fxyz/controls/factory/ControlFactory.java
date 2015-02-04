@@ -19,7 +19,10 @@ import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.ImagePreviewControl;
 import org.fxyz.controls.NumberSliderControl;
+import org.fxyz.controls.ScriptFunctionControl;
 import org.fxyz.controls.TextureTypeControl;
+import org.fxyz.geometry.DensityFunction;
+import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
@@ -81,14 +84,17 @@ public final class ControlFactory {
 
     public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p, 
             final Property<Number> clrs, final Property<Boolean> uDiffMap, final Property<Image> imgP,
-            final Property<Number> pScale, final Property<Number> dens) {
-        return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()), clrs, uDiffMap, imgP, pScale, dens);
+            final Property<Number> pScale, final Property<Number> dens, final Property<DensityFunction<Point3D>> densFunc) {
+        return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()), clrs, uDiffMap, imgP, pScale, dens, densFunc);
     }
 
     public static final ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
         return new ComboBoxControl<>("Section Type", p, Arrays.asList(SectionType.values()), false);
     }
 
+    public static final ScriptFunctionControl buildScriptFunctionControl(final Property<DensityFunction<Point3D>> p) {
+        return new ScriptFunctionControl(p, Arrays.asList("p.x", "p.y", "p.z", "p.x + p.y", "p.x + p.z", "p.x + p.y + p.z", "p.x + p.y + p.z * p.magnitude()"), false);
+    }
     /*==========================================================================
      Standard Controls for MeshView
      ==========================================================================*/
@@ -138,10 +144,11 @@ public final class ControlFactory {
             final Property<Boolean> uDiffMap, 
             final Property<Image> imgP,
             final Property<Number> pScale, 
-            final Property<Number> dens
+            final Property<Number> densScale,
+            final Property<DensityFunction<Point3D>> densFunc
     ) {
         
-        final TextureTypeControl texType = buildTextureTypeControl(ttp, cp, uDiffMap, imgP, pScale, dens);
+        final TextureTypeControl texType = buildTextureTypeControl(ttp, cp, uDiffMap, imgP, pScale, densScale, densFunc);
 
         ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(

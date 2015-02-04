@@ -21,7 +21,6 @@ import javafx.scene.SubScene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -101,7 +100,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             
             root = new Group();
             subScene = new SubScene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-            subScene.setFill(Color.web("#0d0d0d"));        
+            subScene.setFill(Color.TRANSPARENT);//Color.web("#0d0d0d"));        
             subScene.setCamera(camera);
 
             rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
@@ -110,7 +109,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             mainPane.setPrefSize(sceneWidth, sceneHeight);
             mainPane.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
             mainPane.setMinSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
-            mainPane.setBackground(Background.EMPTY);
+            mainPane.getStyleClass().add("sub-scene-container");
             mainPane.getChildren().add(subScene);
             mainPane.setPickOnBounds(false);
 
