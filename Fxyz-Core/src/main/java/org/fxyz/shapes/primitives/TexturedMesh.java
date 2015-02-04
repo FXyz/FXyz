@@ -3,6 +3,7 @@ package org.fxyz.shapes.primitives;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -14,7 +15,6 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.TriangleMesh;
 import org.fxyz.geometry.Point3D;
-import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Face3;
 import org.fxyz.shapes.primitives.helper.MeshHelper;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
@@ -88,7 +88,7 @@ public abstract class TexturedMesh extends MeshView {
         return sectionType;
     }
 
-    private final ObjectProperty<TextureType> textureType = new SimpleObjectProperty<>();
+    private final ObjectProperty<TextureType> textureType = new SimpleObjectProperty<TextureType>();
 
     public void setTextureModeNone() {
         helper.setTextureType(TextureType.NONE);
@@ -118,13 +118,13 @@ public abstract class TexturedMesh extends MeshView {
         setTextureType(helper.getTextureType());
     }
     
-    public void setTextureModeVertices3D(int colors, DensityFunction<Point3D> dens) {
+    public void setTextureModeVertices3D(int colors, Function<Point3D,Number> dens) {
         helper.setTextureType(TextureType.COLORED_VERTICES_3D);
         setColors(colors);
         setDensity(dens);
         setTextureType(helper.getTextureType());
     }
-    public void setTextureModeVertices1D(int colors, DensityFunction<Double> function) {
+    public void setTextureModeVertices1D(int colors, Function<Number,Number> function) {
         helper.setTextureType(TextureType.COLORED_VERTICES_1D);
         setColors(colors);
         setFunction(function);
@@ -210,7 +210,7 @@ public abstract class TexturedMesh extends MeshView {
         return colors;
     }
     
-    private final ObjectProperty<DensityFunction> density = new SimpleObjectProperty<DensityFunction>(DEFAULT_DENSITY_FUNCTION){
+    private final ObjectProperty<Function<Point3D,Number>> density = new SimpleObjectProperty<Function<Point3D,Number>>(DEFAULT_DENSITY_FUNCTION){
         
         @Override protected void invalidated() {
             helper.setDensity(density.get());
@@ -218,19 +218,19 @@ public abstract class TexturedMesh extends MeshView {
         }
     };
     
-    public final DensityFunction getDensity(){
+    public final Function<Point3D,Number> getDensity(){
         return density.get();
     }
     
-    public final void setDensity(DensityFunction value){
+    public final void setDensity(Function<Point3D,Number> value){
         this.density.set(value);
     }
     
-    public final ObjectProperty<DensityFunction> densityProperty() {
+    public final ObjectProperty<Function<Point3D,Number>> densityProperty() {
         return density;
     }
 
-    private final ObjectProperty<DensityFunction<Double>> function = new SimpleObjectProperty<DensityFunction<Double>>(DEFAULT_UNIDIM_FUNCTION){
+    private final ObjectProperty<Function<Number,Number>> function = new SimpleObjectProperty<Function<Number,Number>>(DEFAULT_UNIDIM_FUNCTION){
         
         @Override protected void invalidated() {
             helper.setFunction(function.get());
@@ -238,11 +238,11 @@ public abstract class TexturedMesh extends MeshView {
         }
     };
 
-    public DensityFunction<Double> getFunction() {
+    public Function<Number,Number> getFunction() {
         return function.get();
     }
 
-    public void setFunction(DensityFunction<Double> value) {
+    public void setFunction(Function<Number,Number> value) {
         function.set(value);
     }
 

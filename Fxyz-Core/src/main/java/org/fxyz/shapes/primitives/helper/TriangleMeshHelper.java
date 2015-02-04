@@ -2,6 +2,7 @@ package org.fxyz.shapes.primitives.helper;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javafx.scene.image.Image;
@@ -9,7 +10,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import org.fxyz.geometry.Point3D;
-import org.fxyz.geometry.DensityFunction;
 import org.fxyz.collections.FloatCollector;
 import org.fxyz.geometry.Face3;
 import org.fxyz.scene.paint.Palette;
@@ -178,17 +178,17 @@ public class TriangleMeshHelper {
     /*
     density functions
     */
-    public final static DensityFunction<Point3D> DEFAULT_DENSITY_FUNCTION= p->0d;
-    private DensityFunction<Point3D> density;
+    public final static Function<Point3D,Number> DEFAULT_DENSITY_FUNCTION= p->0d;
+    private Function<Point3D,Number> density;
     private double min = 0d;
     private double max = 1d;
     
-    public void setDensity(DensityFunction<Point3D> density){
+    public void setDensity(Function<Point3D,Number> density){
         this.density=density;
     }
     
     public int mapDensity(Point3D p){
-        int f=(int)((density.eval(p)-min)/(max-min)*colors);
+        int f=(int)((density.apply(p).doubleValue()-min)/(max-min)*colors);
         if(f<0){
             f=0;
         }
@@ -198,15 +198,15 @@ public class TriangleMeshHelper {
         return f;
     }
 
-    public final static DensityFunction<Double> DEFAULT_UNIDIM_FUNCTION= x->0d;
-    private DensityFunction<Double> function;
+    public final static Function<Number,Number> DEFAULT_UNIDIM_FUNCTION= x->0d;
+    private Function<Number,Number> function;
     
-    public void setFunction(DensityFunction<Double> function){
+    public void setFunction(Function<Number,Number> function){
         this.function=function;
     }
     
     public int mapFunction(double x){
-        int f=(int)((function.eval(x)-min)/(max-min)*colors);
+        int f=(int)((function.apply(x).doubleValue()-min)/(max-min)*colors);
         if(f<0){
             f=0;
         }
@@ -228,8 +228,8 @@ public class TriangleMeshHelper {
     }
 
     public void updateExtremes(List<Point3D> points){
-        max=points.parallelStream().mapToDouble(p->density.eval(p)).max().orElse(1.0);
-        min=points.parallelStream().mapToDouble(p->density.eval(p)).min().orElse(0.0);
+        max=points.parallelStream().mapToDouble(p->density.apply(p).doubleValue()).max().orElse(1.0);
+        min=points.parallelStream().mapToDouble(p->density.apply(p).doubleValue()).min().orElse(0.0);
         max=(float)Math.round(max*1e6)/1e6;
         min=(float)Math.round(min*1e6)/1e6;
         if(max==min){
@@ -239,8 +239,8 @@ public class TriangleMeshHelper {
     }
     
     public void updateExtremesByFunction(List<Point3D> points){
-        max=points.parallelStream().mapToDouble(p->function.eval(new Double(p.f))).max().orElse(1.0);
-        min=points.parallelStream().mapToDouble(p->function.eval(new Double(p.f))).min().orElse(0.0);
+        max=points.parallelStream().mapToDouble(p->function.apply(new Double(p.f)).doubleValue()).max().orElse(1.0);
+        min=points.parallelStream().mapToDouble(p->function.apply(new Double(p.f)).doubleValue()).min().orElse(0.0);
         max=(float)Math.round(max*1e6)/1e6;
         min=(float)Math.round(min*1e6)/1e6;
         if(max==min){
