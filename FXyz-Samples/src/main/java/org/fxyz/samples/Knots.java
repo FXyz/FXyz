@@ -1,34 +1,18 @@
 package org.fxyz.samples;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Objects;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.CullFace;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
-import org.fxyz.ShapeBaseSample;
+import org.fxyz.TexturedMeshSample;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
-import org.fxyz.geometry.DensityFunction;
-import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.KnotMesh;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *
@@ -80,94 +64,16 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
  *
  * @author jpereda
  */
-public class Knots extends ShapeBaseSample<KnotMesh> {
-    public static void main(String[] args){launch(args);}
-    private final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 1.0d) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setTextureModePattern(pattScale.doubleValue());
-            }
-        }
-    };
-    private DensityFunction<Point3D> dens = p -> (double)(p.x * p.y * p.z / p.f);
-    private final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ", 1.0d) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setDensity(dens);
-            }
-        }
-    };
-    //standard
-    private final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", "");
-    private final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                if (diffMapPath.get().isEmpty()) {
-                    //load default
-                    material.setDiffuseMap(new Image(getClass().getResourceAsStream("res/LaminateSteel.jpg")));
-                    //model.setTextureModeImage(STYLESHEET_MODENA);
-                } else {
-                    try { // should be given the string from filechooser
-                        material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                    }
-                }
-            }
-        }
-    };
-
-    private final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setDrawMode(drawMode.getValue());
-            }
-        }
-    };
-    private final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setCullFace(culling.getValue());
-            }
-        }
-    };
-    //specific
-    private final Property<SectionType> sectionType = new SimpleObjectProperty<SectionType>(model, "secType", SectionType.TRIANGLE) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setSectionType(sectionType.getValue());
-            }
-        }
-    };
-    private final Property<TextureType> textureType = new SimpleObjectProperty<TextureType>(model, "texType", TextureType.NONE) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setTextureType(textureType.getValue());
-                
-            }
-        }
-    };
-
+public class Knots extends TexturedMeshSample {
+    
+    public static void main(String[] args){Knots.launch(args);}
+    
     private final DoubleProperty majRad = new SimpleDoubleProperty(model, "Major Radius", 2) {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setMajorRadius(majRad.get());
+                ((KnotMesh)model).setMajorRadius(majRad.get());
             }
         }
     };
@@ -176,7 +82,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setMinorRadius(minRad.get());
+                ((KnotMesh)model).setMinorRadius(minRad.get());
             }
         }
     };
@@ -185,7 +91,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setWireRadius(wireRad.get());
+                ((KnotMesh)model).setWireRadius(wireRad.get());
             }
         }
     };
@@ -194,7 +100,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setLength(wireLen.get());
+                ((KnotMesh)model).setLength(wireLen.get());
             }
         }
     };
@@ -204,7 +110,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setP(_p.doubleValue());
+                ((KnotMesh)model).setP(_p.doubleValue());
             }
         }
     };
@@ -213,7 +119,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setQ(_q.doubleValue());
+                ((KnotMesh)model).setQ(_q.doubleValue());
             }
         }
     };
@@ -223,7 +129,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setxOffset(_x.doubleValue());
+                ((KnotMesh)model).setxOffset(_x.doubleValue());
             }
         }
     };
@@ -232,7 +138,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setyOffset(_y.doubleValue());
+                ((KnotMesh)model).setyOffset(_y.doubleValue());
             }
         }
     };
@@ -241,7 +147,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setzOffset(_z.doubleValue());
+                ((KnotMesh)model).setzOffset(_z.doubleValue());
             }
         }
     };
@@ -250,46 +156,17 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setTubeStartAngleOffset(_angle.doubleValue());
+                ((KnotMesh)model).setTubeStartAngleOffset(_angle.doubleValue());
             }
         }
     };
-
-    private final ObjectProperty<Color> colorBinding = new SimpleObjectProperty<Color>(Color.BROWN) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setDiffuseColor(colorBinding.get());
-            }
-        }
-    };
-    private final IntegerProperty colors = new SimpleIntegerProperty(model, "Color :", 1530) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            // IMAGE
-            //model.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
-            // PATTERN
-            //model.setTextureModePattern(3d);
-            // FUNCTION
-            //model.setTextureModeVertices1D(256 * 256, t -> t * t);
-            // DENSITY
-            //model.setTextureModeVertices3D(256 * 256, dens);
-            // FACES
-            //model.setTextureModeFaces(256 * 256);
-            if (model != null) {
-                colorBinding.set(Color.hsb(360 * (1d - colors.get() / 1530d), 1, 1));
-                
-            }
-        }
-    };
+    
     private final IntegerProperty wireDivs = new SimpleIntegerProperty(model, "Wire Divisions", 100) {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setWireDivisions(wireDivs.get());
+                ((KnotMesh)model).setWireDivisions(wireDivs.get());
             }
         }
     };
@@ -298,7 +175,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setLengthDivisions(lenDivs.get());
+                ((KnotMesh)model).setLengthDivisions(lenDivs.get());
             }
         }
     };
@@ -307,7 +184,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setWireCrop(wireCrop.get());
+                ((KnotMesh)model).setWireCrop(wireCrop.get());
             }
         }
     };
@@ -316,7 +193,7 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                model.setLengthCrop(lenCrop.get());
+                ((KnotMesh)model).setLengthCrop(lenCrop.get());
             }
         }
 
@@ -325,19 +202,19 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
     @Override
     protected void createMesh() {
         //model = new KnotMesh(2d, 1d, 0.4d, 2d, 3d, 1000, 60, 0, 0);
-        model = new KnotMesh(
-                majRad.get(),
-                minRad.get(),
-                wireRad.get(),
-                _p.get(),
-                _q.get(),
-                wireDivs.get(),
-                lenDivs.get(),
-                lenCrop.get(),
-                wireCrop.get()
+        this.model = new KnotMesh(
+                this.majRad.get(),
+                this.minRad.get(),
+                this.wireRad.get(),
+                this._p.get(),
+                this._q.get(),
+                this.wireDivs.get(),
+                this.lenDivs.get(),
+                this.lenCrop.get(),
+                this.wireCrop.get()
         );
-        model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
-        model.setTextureModeNone(colorBinding.get());
+        this.model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), this.rotateY);
+        this.model.setTextureModeNone(this.colorBinding.get());
 
         buildControlPanel();
     }
@@ -345,11 +222,11 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
     @Override
     protected void addMeshAndListeners() {
 
-        useDiffMap.addListener(new WeakInvalidationListener(i -> {
-            if (useDiffMap.getValue()) {
-                model.setMaterial(material);
-            } else if (!useDiffMap.getValue()) {
-                model.setMaterial(null);
+        this.useDiffMap.addListener(new WeakInvalidationListener(i -> {
+            if (this.useDiffMap.getValue()) {
+                this.model.setMaterial(this.material);
+            } else if (!this.useDiffMap.getValue()) {
+                this.model.setMaterial(null);
             }
         }));
 
@@ -362,52 +239,52 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
 
     @Override
     protected Node buildControlPanel() {
-        NumberSliderControl majRadSlider = ControlFactory.buildNumberSlider(majRad, 1D, 200D);
+        NumberSliderControl majRadSlider = ControlFactory.buildNumberSlider(this.majRad, .01D, 200D);
         majRadSlider.getSlider().setMinorTickCount(10);
         majRadSlider.getSlider().setMajorTickUnit(0.5);
-        majRadSlider.getSlider().setBlockIncrement(0.1d);
+        majRadSlider.getSlider().setBlockIncrement(0.01d);
 
-        NumberSliderControl minRadSlider = ControlFactory.buildNumberSlider(minRad, 1D, 200D);
+        NumberSliderControl minRadSlider = ControlFactory.buildNumberSlider(this.minRad, .01D, 200D);
         minRadSlider.getSlider().setMinorTickCount(10);
         minRadSlider.getSlider().setMajorTickUnit(0.5);
-        minRadSlider.getSlider().setBlockIncrement(0.1d);
+        minRadSlider.getSlider().setBlockIncrement(0.01d);
 
-        NumberSliderControl tRadSlider = ControlFactory.buildNumberSlider(wireRad, 0.01D, 25D);
+        NumberSliderControl tRadSlider = ControlFactory.buildNumberSlider(this.wireRad, 0.01D, 25D);
         tRadSlider.getSlider().setMinorTickCount(1);
         tRadSlider.getSlider().setMajorTickUnit(0.1);
-        tRadSlider.getSlider().setBlockIncrement(0.1d);
+        tRadSlider.getSlider().setBlockIncrement(0.01d);
 
-        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(wireDivs, 2, 100);
+        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(this.wireDivs, 2, 100);
         wDivSlider.getSlider().setMinorTickCount(25);
         wDivSlider.getSlider().setMajorTickUnit(99);
         wDivSlider.getSlider().setBlockIncrement(1);
         wDivSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl mCropSlider = ControlFactory.buildNumberSlider(wireCrop, 0l, 98);
+        NumberSliderControl mCropSlider = ControlFactory.buildNumberSlider(this.wireCrop, 0l, 98);
         mCropSlider.getSlider().setMinorTickCount(48);
         mCropSlider.getSlider().setMajorTickUnit(49);
         mCropSlider.getSlider().setBlockIncrement(1);
         mCropSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(lenDivs, 4l, 250);
+        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(this.lenDivs, 4l, 250);
         lDivSlider.getSlider().setMinorTickCount(50);
         lDivSlider.getSlider().setMajorTickUnit(250);
         lDivSlider.getSlider().setBlockIncrement(1);
 
-        NumberSliderControl lCropSlider = ControlFactory.buildNumberSlider(lenCrop, 0l, 200);
+        NumberSliderControl lCropSlider = ControlFactory.buildNumberSlider(this.lenCrop, 0l, 200);
         lCropSlider.getSlider().setMinorTickCount(0);
         lCropSlider.getSlider().setMajorTickUnit(0.5);
         lCropSlider.getSlider().setBlockIncrement(1);
 
-        NumberSliderControl pSlider = ControlFactory.buildNumberSlider(_p, 0.01d, 10.0D);
+        NumberSliderControl pSlider = ControlFactory.buildNumberSlider(this._p, 0.01d, 10.0D);
         pSlider.getSlider().setMinorTickCount(99);
         pSlider.getSlider().setMajorTickUnit(100);
-        pSlider.getSlider().setBlockIncrement(0.01);
+        pSlider.getSlider().setBlockIncrement(0.001);
 
-        NumberSliderControl qSlider = ControlFactory.buildNumberSlider(_q, 0.0d, 50.0D);
+        NumberSliderControl qSlider = ControlFactory.buildNumberSlider(this._q, 0.01d, 50.0D);
         qSlider.getSlider().setMinorTickCount(49);
         qSlider.getSlider().setMajorTickUnit(50);
-        qSlider.getSlider().setBlockIncrement(0.1);
+        qSlider.getSlider().setBlockIncrement(0.001);
 
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         geomControls.addControls(
@@ -417,19 +294,19 @@ public class Knots extends ShapeBaseSample<KnotMesh> {
                 pSlider, qSlider
         );
 
-        controlPanel = ControlFactory.buildControlPanel(
+        this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
-                        useDiffMap,
-                        drawMode,
-                        culling,
-                        material.diffuseColorProperty(),
-                        material.specularColorProperty()
+                        this.useDiffMap,
+                        this.drawMode,
+                        this.culling,
+                        this.material.diffuseColorProperty(),
+                        this.material.specularColorProperty()
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(textureType, colors, sectionType, useDiffMap, material.diffuseMapProperty(), pattScale, densMax)
+                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), this.pattScale, this.densMax)
         );
 
-        return controlPanel;
+        return this.controlPanel;
     }
 
     @Override

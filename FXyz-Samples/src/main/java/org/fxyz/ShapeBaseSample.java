@@ -11,7 +11,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.AmbientLight;
-import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -26,6 +25,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import org.fxyz.utils.CameraTransformer;
 
@@ -42,13 +42,14 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     private final double sceneWidth = 800;
     private final double sceneHeight = 600;    
+    protected long lastEffect;
     
     protected SubScene subScene;
     private Group root;
     protected Group group;
     protected StackPane mainPane;
     
-    protected T model; // added this for testing .. 
+    protected T model; 
     
     protected PerspectiveCamera camera;
     private CameraTransformer cameraTransform;
@@ -89,25 +90,18 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             cameraTransform.rx.setAngle(-10.0);
 
             //add a Point Light for better viewing of the grid coordinate system
-            PointLight light = new PointLight(Color.WHITE);
+            PointLight light = new PointLight(Color.GAINSBORO);
             AmbientLight amb = new AmbientLight(Color.WHITE);
             amb.getScope().add(cameraTransform);
+            cameraTransform.getChildren().addAll(light,amb);
             
-            cameraTransform.getChildren().add(light);
-            cameraTransform.getChildren().add(amb);
+            light.translateXProperty().bind(camera.translateXProperty());
+            light.translateYProperty().bind(camera.translateYProperty());
+            light.translateZProperty().bind(camera.translateZProperty());
             
-            light.setTranslateX(camera.getTranslateX());
-            light.setTranslateY(camera.getTranslateY());
-            light.setTranslateZ(camera.getTranslateZ());
-
-            PointLight light2 = new PointLight(Color.GAINSBORO);
-            light2.setDepthTest(DepthTest.ENABLE);
-            light2.setLightOn(true);
-            light2.getScope().add(camera);
-            
-            root = new Group(light2);
+            root = new Group();
             subScene = new SubScene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-            subScene.setFill(Color.web("#3d3d3d"));        
+            subScene.setFill(Color.web("#0d0d0d"));        
             subScene.setCamera(camera);
 
             rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
@@ -157,6 +151,9 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 addMeshAndListeners();
                 mainPane.getChildren().remove(progressBar); 
                 
+                if(model instanceof Shape3D){
+                    material = (PhongMaterial)((Shape3D)model).getMaterial();
+                }
                 group.getChildren().add(model);
             });
 
@@ -232,7 +229,6 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 service.start();
 //            }
         }        
-        
         return mainPane;
     }
 
@@ -245,6 +241,6 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     
     @Override
     public double getControlPanelDividerPosition() {
-        return 0.78D;
+        return 0.75D;
     }
 }

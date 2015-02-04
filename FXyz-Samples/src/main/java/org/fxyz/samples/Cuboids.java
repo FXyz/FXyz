@@ -1,32 +1,31 @@
 package org.fxyz.samples;
 
+import static javafx.application.Application.launch;
 import javafx.scene.Node;
-import org.fxyz.ShapeBaseSample;
-import org.fxyz.geometry.DensityFunction;
-import org.fxyz.geometry.Point3D;
+import org.fxyz.TexturedMeshSample;
+import org.fxyz.controls.ControlCategory;
+import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.shapes.primitives.CuboidMesh;
 
 /**
  *
  * @author jpereda
  */
-public class Cuboids extends ShapeBaseSample<CuboidMesh> {
+public class Cuboids extends TexturedMeshSample{
     public static void main(String[] args){launch(args);}
     @Override
     protected void createMesh() {
-
-        DensityFunction<Point3D> dens = p -> (double) p.x;
-        model = new CuboidMesh(10f, 12f, 4f, 2);
-//        cuboid.setDrawMode(DrawMode.LINE);
-//        cuboid.setCullFace(CullFace.NONE);
+      model = new CuboidMesh(10f, 12f, 4f, 2);
+        //cuboid.setDrawMode(DrawMode.LINE);
+        //cuboid.setCullFace(CullFace.NONE);
         // NONE
-//        cuboid.setTextureModeNone(Color.ROYALBLUE);
+        //cuboid.setTextureModeNone(Color.ROYALBLUE);
         // IMAGE
-//        cuboid.setTextureModeImage(getClass().getResource("res/netCuboid.png").toExternalForm());
+        //cuboid.setTextureModeImage(getClass().getResource("res/netCuboid.png").toExternalForm());
         // DENSITY
-        model.setTextureModeVertices3D(256 * 256, p -> (double) p.x * p.y * p.z);
-    // FACES
-//        ico.setTextureModeFaces(256*256);
+      
+        // FACES
+        //ico.setTextureModeFaces(256*256);
        
     }
 
@@ -118,7 +117,22 @@ public class Cuboids extends ShapeBaseSample<CuboidMesh> {
 
     @Override
     protected Node buildControlPanel() {
-        return null;
+        ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
+        //geomControls.addControls()
+
+        this.controlPanel = ControlFactory.buildControlPanel(
+                ControlFactory.buildMeshViewCategory(
+                        this.useDiffMap,
+                        this.drawMode,
+                        this.culling,
+                        this.material.diffuseColorProperty(),
+                        this.material.specularColorProperty()
+                ),
+                geomControls,
+                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), this.pattScale, this.densMax)
+        );
+        
+        return this.controlPanel;
     }
 
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.pending;
+package org.fxyz.samples;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -16,12 +16,10 @@ import org.fxyz.scene.Skybox;
  */
 public class SkyBoxing extends ShapeBaseSample {
 
-    
+    public static void main(String[] args){SkyBoxing.launch(args);}
 
     @Override
     protected void createMesh() {
-        Skybox skyBox;
-        
         final Image top = new Image(SkyBoxing.class.getResource("res/top.png").toExternalForm()),
                 bottom = new Image(SkyBoxing.class.getResource("res/bottom.png").toExternalForm()),
                 left = new Image(SkyBoxing.class.getResource("res/left.png").toExternalForm()),
@@ -32,7 +30,7 @@ public class SkyBoxing extends ShapeBaseSample {
 
         // Load Skybox AFTER camera is initialized
         double size = 100000D;
-        skyBox = new Skybox(
+        model = new Skybox(
                 top,
                 bottom,
                 left,
@@ -42,7 +40,6 @@ public class SkyBoxing extends ShapeBaseSample {
                 size,
                 camera
         );
-        group.getChildren().add(skyBox);
        
     }
 
