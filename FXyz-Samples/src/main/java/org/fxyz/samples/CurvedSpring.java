@@ -61,7 +61,10 @@ public class CurvedSpring extends TexturedMeshSample {
                         this.material.specularColorProperty()
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), this.pattScale, this.densMax, this.dens)
+                ControlFactory.buildTextureMeshCategory(this.textureType, 
+                        this.colors, this.sectionType, this.useDiffMap, 
+                        this.material.diffuseMapProperty(), this.pattScale, 
+                        this.densMax, this.dens, this.func)
         );
         
         return this.controlPanel;

@@ -2,6 +2,7 @@ package org.fxyz.samples;
 
 import static javafx.application.Application.launch;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import org.fxyz.TexturedMeshSample;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.factory.ControlFactory;
@@ -19,13 +20,13 @@ public class Cuboids extends TexturedMeshSample{
         //cuboid.setDrawMode(DrawMode.LINE);
         //cuboid.setCullFace(CullFace.NONE);
         // NONE
-        //cuboid.setTextureModeNone(Color.ROYALBLUE);
+        model.setTextureModeNone(Color.ROYALBLUE);
         // IMAGE
         //cuboid.setTextureModeImage(getClass().getResource("res/netCuboid.png").toExternalForm());
         // DENSITY
       
         // FACES
-        model.setTextureModeFaces(256*256);
+//        model.setTextureModeFaces(256*256);
        
     }
 
@@ -129,7 +130,9 @@ public class Cuboids extends TexturedMeshSample{
                         this.material.specularColorProperty()
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), this.pattScale, this.densMax, dens)
+                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
+                        this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), 
+                        this.pattScale, this.densMax, this.dens, this.func)
         );
         
         return this.controlPanel;

@@ -66,7 +66,7 @@ public class Springs extends TexturedMeshSample {
                         this.sectionType, this.useDiffMap,
                         this.material.diffuseMapProperty(),
                         this.pattScale, this.densMax,
-                        this.dens
+                        this.dens, this.func
                 )
         );
         

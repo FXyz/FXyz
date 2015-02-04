@@ -2,6 +2,7 @@ package org.fxyz.samples;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -27,7 +28,6 @@ import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
-import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.BezierMesh;
 import org.fxyz.shapes.primitives.helper.BezierHelper;
@@ -105,7 +105,7 @@ public class BezierMeshes extends ShapeBaseSample {
             // bezier.tubeStartAngleOffsetProperty().bind(_angle);
         });
         model = bez;
-        DensityFunction<Point3D> dens = p -> (double) p.f;
+        Function<Point3D,Double> dens = p -> (double) p.f;
         wireRad.addListener(i -> {
             beziers.forEach(bm -> {
                 bm.setWireRadius(wireRad.doubleValue());

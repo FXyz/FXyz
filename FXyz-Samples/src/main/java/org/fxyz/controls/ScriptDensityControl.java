@@ -35,18 +35,18 @@ import org.fxyz.geometry.Point3D;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class ScriptFunctionControl extends ControlBase<Property<Function<Number,Number>>>{
+public class ScriptDensityControl extends ControlBase<Property<Function<Point3D,Number>>>{
 
-    private ObjectProperty<Function<Number,Number>> function = new SimpleObjectProperty<>();
+    private ObjectProperty<Function<Point3D,Number>> function = new SimpleObjectProperty<>();
     
     private BooleanProperty change=new SimpleBooleanProperty();
     private BooleanProperty error=new SimpleBooleanProperty();
     
-    public ScriptFunctionControl(Property<Function<Number,Number>> prop, final Collection<String> items, boolean subControl) {
-        super("ScriptFunctionControl.fxml", prop);
+    public ScriptDensityControl(Property<Function<Point3D,Number>> prop, final Collection<String> items, boolean subControl) {
+        super("ScriptDensityControl.fxml", prop);
         
-       Double x=1d;
-        res1.setText("x: {"+x+"}");
+        Point3D p=new Point3D(1f,2f,3f);
+        res1.setText("p: {"+p.x+","+p.y+","+p.z+"}");
                     
         selection.getItems().setAll(items);
         selection.getItems().add("Enter a valid expression");
@@ -94,13 +94,13 @@ public class ScriptFunctionControl extends ControlBase<Property<Function<Number,
                     text=selection.getEditor().getText();
                 }
                 @SuppressWarnings("unchecked")
-                Function<Number,Number> f;
+                Function<Point3D,Number> f;
                 try {
-                    f = (Function<Number,Number>)engine.eval(
-                            String.format("new java.util.function.Function(%s)", "function(x) "+text));
+                    f = (Function<Point3D,Number>)engine.eval(
+                            String.format("new java.util.function.Function(%s)", "function(p) "+text));
                     // check if f is a valid function
                     try{
-                        res2.setText("val: "+String.format("%.3f", f.apply(x)));
+                        res2.setText("val: "+String.format("%.3f", f.apply(p)));
                         error.set(false);
                     } catch(Exception e){
                         res2.setText("val: error");
@@ -118,7 +118,7 @@ public class ScriptFunctionControl extends ControlBase<Property<Function<Number,
         
     }
     
-    public Property<Function<Number,Number>> functionProperty() { return function; }
+    public Property<Function<Point3D,Number>> functionProperty() { return function; }
             
     @FXML
     private Label res1;

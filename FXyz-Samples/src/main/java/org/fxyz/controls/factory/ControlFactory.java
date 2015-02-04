@@ -6,6 +6,7 @@
 package org.fxyz.controls.factory;
 
 import java.util.Arrays;
+import java.util.function.Function;
 import javafx.beans.property.Property;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -19,9 +20,9 @@ import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.ImagePreviewControl;
 import org.fxyz.controls.NumberSliderControl;
+import org.fxyz.controls.ScriptDensityControl;
 import org.fxyz.controls.ScriptFunctionControl;
 import org.fxyz.controls.TextureTypeControl;
-import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
@@ -84,16 +85,22 @@ public final class ControlFactory {
 
     public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p, 
             final Property<Number> clrs, final Property<Boolean> uDiffMap, final Property<Image> imgP,
-            final Property<Number> pScale, final Property<Number> dens, final Property<DensityFunction<Point3D>> densFunc) {
-        return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()), clrs, uDiffMap, imgP, pScale, dens, densFunc);
+            final Property<Number> pScale, final Property<Number> dens, 
+            final Property<Function<Point3D,Number>> densFunc, final Property<Function<Number,Number>> funcFunc) {
+        return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()), 
+                clrs, uDiffMap, imgP, pScale, dens, densFunc, funcFunc);
     }
 
     public static final ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
         return new ComboBoxControl<>("Section Type", p, Arrays.asList(SectionType.values()), false);
     }
 
-    public static final ScriptFunctionControl buildScriptFunctionControl(final Property<DensityFunction<Point3D>> p) {
-        return new ScriptFunctionControl(p, Arrays.asList("p.x", "p.y", "p.z", "p.x + p.y", "p.x + p.z", "p.x + p.y + p.z", "p.x + p.y + p.z * p.magnitude()"), false);
+    public static final ScriptDensityControl buildScriptDensityControl(final Property<Function<Point3D,Number>> p) {
+        return new ScriptDensityControl(p, Arrays.asList("Math.sin(p.x)", "p.y", "p.z", "p.x + p.y", "p.x + p.z", "p.f", "p.magnitude()"), false);
+    }
+
+    public static final ScriptFunctionControl buildScriptFunctionControl(final Property<Function<Number,Number>> p) {
+        return new ScriptFunctionControl(p, Arrays.asList("Math.sin(x)", "x*x", "x+3", "Math.pow(Math.abs(x),1/2.5)"), false);
     }
     /*==========================================================================
      Standard Controls for MeshView
@@ -145,10 +152,12 @@ public final class ControlFactory {
             final Property<Image> imgP,
             final Property<Number> pScale, 
             final Property<Number> densScale,
-            final Property<DensityFunction<Point3D>> densFunc
+            final Property<Function<Point3D,Number>> densFunc,
+            final Property<Function<Number,Number>> funcFunc
     ) {
         
-        final TextureTypeControl texType = buildTextureTypeControl(ttp, cp, uDiffMap, imgP, pScale, densScale, densFunc);
+        final TextureTypeControl texType = buildTextureTypeControl(
+                ttp, cp, uDiffMap, imgP, pScale, densScale, densFunc, funcFunc);
 
         ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(

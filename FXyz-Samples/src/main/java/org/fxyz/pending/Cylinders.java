@@ -1,5 +1,6 @@
 package org.fxyz.pending;
 
+import java.util.function.Function;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -14,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.CylinderMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
@@ -35,7 +35,7 @@ public class Cylinders extends FXyzSample {
         CylinderMesh cylinder;
         Rotate rotateY;
 
-        DensityFunction<Point3D> dens = p -> (double) p.x;
+        Function<Point3D,Double> dens = p -> (double) p.x;
 
         PerspectiveCamera camera;
         Group sceneRoot = new Group();

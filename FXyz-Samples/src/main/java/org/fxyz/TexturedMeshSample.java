@@ -7,6 +7,7 @@ package org.fxyz;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.function.Function;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -21,7 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
@@ -31,46 +31,6 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
  * @author Jason Pollastrini aka jdub1581
  */
 public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
-
-    protected final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 2.0d) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setTextureModePattern(pattScale.doubleValue());
-            }
-        }
-    };
-    protected final Property<DensityFunction<Point3D>> dens = new SimpleObjectProperty<>(p -> (double)(p.x * p.y * p.z));
-    protected final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ") {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setDensity(dens.getValue());
-            }
-        }
-    };
-    //standard
-    protected final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", "");
-    protected final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                if (diffMapPath.get().isEmpty()) {
-                    //load default
-                    model.setTextureModeImage(getClass().getResource("samples/res/LaminateSteel.jpg").toExternalForm());
-                } else {
-                    try { // should be given the string from filechooser
-                        material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                    }
-                }
-            }
-        }
-    };
 
     protected final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {
         @Override
@@ -91,7 +51,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
         }
     };
     //specific
-    protected final Property<TriangleMeshHelper.SectionType> sectionType = new SimpleObjectProperty<TriangleMeshHelper.SectionType>(model, "secType", TriangleMeshHelper.SectionType.TRIANGLE) {
+    protected final Property<TriangleMeshHelper.SectionType> sectionType = new SimpleObjectProperty<TriangleMeshHelper.SectionType>(model, "secType", TriangleMeshHelper.SectionType.CIRCLE) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -106,24 +66,41 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             super.invalidated();
             if (model != null) {
                 switch(getValue()){
+                    case NONE:
+                        model.setTextureModeNone(colorBinding.get());
+                        break;
+                    case IMAGE:
+                        model.setTextureModeImage(diffMapPath.get());
+                        break;
                     case PATTERN:
-                    model.setTextureModePattern(pattScale.getValue());
+                        model.setTextureModePattern(pattScale.getValue());
                         break;
                     case COLORED_VERTICES_1D:
-                    model.setTextureModeVertices1D(colors.getValue() * colors.getValue(), t -> t * t);
+                        model.setTextureModeVertices1D(1540, func.getValue());
                         break;
                     case COLORED_VERTICES_3D:
-                    model.setTextureModeVertices3D(colors.getValue() * colors.getValue(), dens.getValue());
+                        model.setTextureModeVertices3D(1600, dens.getValue());
                         break;
                     case COLORED_FACES:
-                    model.setTextureModeFaces(colors.getValue() * colors.getValue());
+                        model.setTextureModeFaces(1550);
                         break;
                 }                
             }
         }
     };
 
-    protected final ObjectProperty<Color> colorBinding = new SimpleObjectProperty<>(Color.BROWN);
+    /*
+     TriangleMeshHelper.TextureType.NONE 
+    */
+    protected final ObjectProperty<Color> colorBinding = new SimpleObjectProperty<Color>(Color.BROWN){
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.NONE)) {
+                model.setDiffuseColor(get());
+            }
+        }
+    };
     protected final IntegerProperty colors = new SimpleIntegerProperty(model, "Color :", 1530) {
         @Override
         protected void invalidated() {
@@ -133,6 +110,69 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                 colorBinding.set(Color.hsb(360 * (1d - colors.get() / 1530d), 1, 1));                
             }
         }
-    };    
+    };   
+    
+    /*
+     TriangleMeshHelper.TextureType.IMAGE 
+    */
+    protected final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", "");
+    protected final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.IMAGE)) {
+                if (diffMapPath.get().isEmpty()) {
+                    //load default
+                    material.setDiffuseMap((new Image(getClass().getResource("samples/res/LaminateSteel.jpg").toExternalForm())));
+                } else {
+                    try { // should be given the string from filechooser
+                        material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
+                    } catch (Exception e) {
+                        e.printStackTrace(System.err);
+                    }
+                }
+            }
+        }
+    };
+    
+    /*
+     TriangleMeshHelper.TextureType.PATTERN 
+    */
+    protected final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 2.0d) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
+                model.setPatternScale(pattScale.doubleValue());
+            }
+        }
+    };
+    
+    /*
+     TriangleMeshHelper.TextureType.COLORED_VERTICES_3D 
+    */
+    protected final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ");
+    protected final Property<Function<Point3D,Number>> dens = new SimpleObjectProperty<Function<Point3D,Number>>(p -> p.x * p.y * p.z) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.COLORED_VERTICES_3D)) {
+                model.setDensity(dens.getValue());
+            }
+        }
+    };
+    /*
+     TriangleMeshHelper.TextureType.COLORED_VERTICES_1D 
+    */
+    protected final Property<Function<Number,Number>> func = new SimpleObjectProperty<Function<Number,Number>>(t->t) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.COLORED_VERTICES_1D)) {
+                model.setFunction(func.getValue());
+            }
+        }
+    };
+    
     
 }

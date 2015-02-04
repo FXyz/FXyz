@@ -3,6 +3,7 @@ package org.fxyz.pending;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
@@ -24,7 +25,6 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import org.fxyz.ShapeBaseSample;
-import org.fxyz.geometry.DensityFunction;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.BezierMesh;
 import org.fxyz.shapes.primitives.helper.BezierHelper;
@@ -74,7 +74,7 @@ public class NewBezierMeshes extends ShapeBaseSample {
         group.getChildren().addAll(beziers);
         beziers.forEach(bezier->bezier.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY));
         
-        DensityFunction<Point3D> dens = p -> (double) p.f;
+        Function<Point3D,Double> dens = p -> (double) p.f;
 
         showKnots.addListener((obs, b, b1) -> splines.forEach(spline -> {
             Point3D k0 = spline.getPoints().get(0);
