@@ -32,7 +32,7 @@ public class ComboBoxControl<T> extends ControlBase<Property<T>> {
         title.setText(lbl);
         selection.getItems().addAll(items);
         selection.setValue(p.getValue());
-        controlledProperty.bindBidirectional(selection.valueProperty());
+        controlledProperty.bind(selection.valueProperty());
         if (subControl) {
             subControlCache = FXCollections.observableHashMap();
             this.usesSubControls.set(subControl);

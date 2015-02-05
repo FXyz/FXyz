@@ -31,7 +31,7 @@ public class CheckBoxControl extends ControlBase<Property<Boolean>>{
     @FXML
     private Label boolPropTitle;
     public final void loadBindings() {
-        controlledProperty.bindBidirectional(checkBox.selectedProperty());
+        controlledProperty.bind(checkBox.selectedProperty());
         boolPropTitle.setText(!controlledProperty.getName().isEmpty() ? controlledProperty.getName() : "Empty Name");
     }
     

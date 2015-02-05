@@ -215,8 +215,6 @@ public class Knots extends TexturedMeshSample {
         );
         this.model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), this.rotateY);
         this.model.setTextureModeNone(this.colorBinding.get());
-
-        buildControlPanel();
     }
 
     @Override

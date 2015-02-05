@@ -91,8 +91,7 @@ public abstract class TexturedMesh extends MeshView {
     private final ObjectProperty<TextureType> textureType = new SimpleObjectProperty<TextureType>();
 
     public void setTextureModeNone() {
-        helper.setTextureType(TextureType.NONE);
-        setTextureType(TextureType.NONE);
+        setTextureModeNone(Color.WHITE);
     }
     
     public void setTextureModeNone(Color color) {

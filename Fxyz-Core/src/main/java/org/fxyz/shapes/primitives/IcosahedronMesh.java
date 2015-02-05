@@ -29,15 +29,15 @@ public class IcosahedronMesh extends TexturedMesh {
     private final static float SPHERE_DIAMETER =  1f;
     
     public IcosahedronMesh(){
-        this(DEFAULT_LEVEL,SPHERE_DIAMETER);
+        this(SPHERE_DIAMETER, DEFAULT_LEVEL);
     }
     public IcosahedronMesh(int level){
-        this(level,SPHERE_DIAMETER);
+        this(SPHERE_DIAMETER, level);
     }
     public IcosahedronMesh(float diameter){
-        this(DEFAULT_LEVEL,diameter);
+        this(diameter, DEFAULT_LEVEL);
     }
-    public IcosahedronMesh(int level, float diameter){
+    public IcosahedronMesh(float diameter, int level){
         setLevel(level);
         setDiameter(diameter);
 
@@ -46,26 +46,26 @@ public class IcosahedronMesh extends TexturedMesh {
         setDrawMode(DrawMode.FILL);
         setDepthTest(DepthTest.ENABLE);
         
-        diameterProperty().addListener((obs,f0,f1)->{
-            if(mesh!=null && f0!=null && f1!=null && f0.floatValue()>0 && f1.floatValue()>0){
-                updateVertices(f1.floatValue()/f0.floatValue());
-            }
-        });
-        
-        levelProperty().addListener((obs,i0,i1)->{
-            if(mesh!=null && i1!=null && i1.intValue()>=0){
-                updateMesh();
-            }
-        });
     }
     
     @Override
     protected final void updateMesh(){       
         setMesh(null);
-        mesh=createSphere(level.get(), diameter.get());
+        mesh=createSphere(diameter.get(),level.get());
         setMesh(mesh);
     }
-    private final FloatProperty diameter = new SimpleFloatProperty(SPHERE_DIAMETER);
+    private final FloatProperty diameter = new SimpleFloatProperty(SPHERE_DIAMETER){
+
+        @Override
+        protected void invalidated() {
+            if(mesh!=null){
+                System.out.println("d: "+get());
+                updateMesh();
+                //updateVertices(f1.floatValue()/f0.floatValue());
+            }
+        }
+
+    };
 
     public final float getDiameter() {
         return diameter.get();
@@ -79,7 +79,16 @@ public class IcosahedronMesh extends TexturedMesh {
         return diameter;
     }
     
-    private final IntegerProperty level = new SimpleIntegerProperty(DEFAULT_LEVEL);
+    private final IntegerProperty level = new SimpleIntegerProperty(DEFAULT_LEVEL){
+
+        @Override
+        protected void invalidated() {
+            if(mesh!=null){
+                updateMesh();
+            }
+        }
+
+    };
 
     public final int getLevel() {
         return level.get();
@@ -148,10 +157,10 @@ public class IcosahedronMesh extends TexturedMesh {
     private int[] faces0;
     private List<Point2D> texCoord1;
     
-    private TriangleMesh createSphere(int level, float diameter) {
+    private TriangleMesh createSphere(float diameter, int level) {
         TriangleMesh m0=null;
         if(level>0){
-            m0= createSphere(level-1, diameter);
+            m0= createSphere(diameter, level-1);
         }
         
         // read vertices from level-1

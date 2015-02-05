@@ -1,10 +1,15 @@
 package org.fxyz.samples;
 
 import static javafx.application.Application.launch;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import org.fxyz.TexturedMeshSample;
 import org.fxyz.controls.ControlCategory;
+import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.shapes.primitives.CuboidMesh;
 
@@ -14,112 +19,79 @@ import org.fxyz.shapes.primitives.CuboidMesh;
  */
 public class Cuboids extends TexturedMeshSample{
     public static void main(String[] args){launch(args);}
+    
+    private final DoubleProperty width = new SimpleDoubleProperty(model, "Width", 10d) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                ((CuboidMesh)model).setWidth(width.get());
+            }
+        }
+    };
+    private final DoubleProperty height = new SimpleDoubleProperty(model, "Height", 12d) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                ((CuboidMesh)model).setHeight(height.get());
+            }
+        }
+    };
+    private final DoubleProperty depth = new SimpleDoubleProperty(model, "Depth", 4d) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                ((CuboidMesh)model).setDepth(depth.get());
+            }
+        }
+    };
+    private final IntegerProperty level = new SimpleIntegerProperty(model, "Level", 2) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                ((CuboidMesh)model).setLevel(level.get());
+            }
+        }
+    };
     @Override
     protected void createMesh() {
-      model = new CuboidMesh(10f, 12f, 4f, 2);
-        //cuboid.setDrawMode(DrawMode.LINE);
-        //cuboid.setCullFace(CullFace.NONE);
-        // NONE
-        model.setTextureModeNone(Color.ROYALBLUE);
-        // IMAGE
-        //cuboid.setTextureModeImage(getClass().getResource("res/netCuboid.png").toExternalForm());
-        // DENSITY
-      
-        // FACES
-//        model.setTextureModeFaces(256*256);
-       
+        model = new CuboidMesh(this.width.get(), this.height.get(), this.depth.get(), this.level.get());
+//        model.setTextureModeNone(Color.ROYALBLUE);
     }
 
 
     @Override
     protected void addMeshAndListeners() {
-       /*  boolean testRayIntersection = false;
-
-        if (testRayIntersection) {
-            /*
-             RAY INTERSECTION
-             /
-            javafx.geometry.Point3D gloOrigin = new javafx.geometry.Point3D(4, -7, -4);
-            javafx.geometry.Point3D gloTarget = new javafx.geometry.Point3D(2, 3, 4);
-
-            javafx.geometry.Point3D gloDirection = gloTarget.subtract(gloOrigin).normalize();
-            javafx.geometry.Point3D gloOriginInLoc = model.sceneToLocal(gloOrigin);
-
-            Bounds locBounds = model.getBoundsInLocal();
-            Bounds gloBounds = model.localToScene(locBounds);
-
-            Sphere s = new Sphere(0.05d);
-            s.getTransforms().add(new Translate(gloOrigin.getX(), gloOrigin.getY(), gloOrigin.getZ()));
-            s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
-            group.getChildren().add(s);
-            s = new Sphere(0.05d);
-            s.getTransforms().add(new Translate(gloTarget.getX(), gloTarget.getY(), gloTarget.getZ()));
-            s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
-            group.getChildren().add(s);
-
-            javafx.geometry.Point3D dir = gloTarget.subtract(gloOrigin).crossProduct(new javafx.geometry.Point3D(0, -1, 0));
-            double angle = Math.acos(gloTarget.subtract(gloOrigin).normalize().dotProduct(new javafx.geometry.Point3D(0, -1, 0)));
-            double h1 = gloTarget.subtract(gloOrigin).magnitude();
-            Cylinder c = new Cylinder(0.03d, h1);
-            c.getTransforms().addAll(new Translate(gloOrigin.getX(), gloOrigin.getY() - h1 / 2d, gloOrigin.getZ()),
-                    new Rotate(-Math.toDegrees(angle), 0d, h1 / 2d, 0d,
-                            new javafx.geometry.Point3D(dir.getX(), -dir.getY(), dir.getZ())));
-            c.setMaterial(new PhongMaterial(Color.GREEN));
-            group.getChildren().add(c);
-
-            group.getChildren().add(new Axes(0.02));
-            Box box = new Box(gloBounds.getWidth(), gloBounds.getHeight(), gloBounds.getDepth());
-            box.setDrawMode(DrawMode.LINE);
-            box.setMaterial(new PhongMaterial(Color.BLUEVIOLET));
-            box.getTransforms().add(new Translate(gloBounds.getMinX() + gloBounds.getWidth() / 2d,
-                    gloBounds.getMinY() + gloBounds.getHeight() / 2d, gloBounds.getMinZ() + gloBounds.getDepth() / 2d));
-    //        group.getChildren().add(box);
-
-            /*
-             FIRST STEP; Check the ray crosses the bounding box of the shape at any of
-             its 6 faces
-             /
-            List<javafx.geometry.Point3D> normals = Arrays.asList(new javafx.geometry.Point3D(-1, 0, 0), new javafx.geometry.Point3D(1, 0, 0), new javafx.geometry.Point3D(0, -1, 0),
-                    new javafx.geometry.Point3D(0, 1, 0), new javafx.geometry.Point3D(0, 0, -1), new javafx.geometry.Point3D(0, 0, 1));
-            List<javafx.geometry.Point3D> positions = Arrays.asList(new javafx.geometry.Point3D(locBounds.getMinX(), 0, 0), new javafx.geometry.Point3D(locBounds.getMaxX(), 0, 0),
-                    new javafx.geometry.Point3D(0, locBounds.getMinY(), 0), new javafx.geometry.Point3D(0, locBounds.getMaxY(), 0),
-                    new javafx.geometry.Point3D(0, 0, locBounds.getMinZ()), new javafx.geometry.Point3D(0, 0, locBounds.getMaxZ()));
-            AtomicInteger counter = new AtomicInteger();
-            IntStream.range(0, 6).forEach(i -> {
-                // ray[t]= ori+t.dir; t/ray[t]=P in plane
-                // plane P·N+d=0->(ori+t*dir)·N+d=0->t=-(ori.N+d)/(dir.N)
-                // P=P(x,y,z), N={a,b,c}, d=-a·x0-b·y0-c·z0
-                double d = -normals.get(i).dotProduct(positions.get(i));
-                double t = -(gloOriginInLoc.dotProduct(normals.get(i)) + d) / (gloDirection.dotProduct(normals.get(i)));
-                javafx.geometry.Point3D locInter = gloOriginInLoc.add(gloDirection.multiply(t));
-                if (locBounds.contains(locInter)) {
-                    counter.getAndIncrement();
-
-                    javafx.geometry.Point3D gloInter = model.localToScene(locInter);
-                    Sphere s2 = new Sphere(0.1d);
-                    s2.getTransforms().add(new Translate(gloInter.getX(), gloInter.getY(), gloInter.getZ()));
-                    s2.setMaterial(new PhongMaterial(Color.GOLD));
-                    //                group.getChildren().add(s2);
-                }
-            });
-            if (counter.get() > 0) {
-                /*
-                 SECOND STEP: Check if the ray crosses any of the triangles of the mesh
-                 /
-                // triangle mesh
-                org.fxyz.geometry.Point3D gloOriginInLoc1 = new org.fxyz.geometry.Point3D((float) gloOriginInLoc.getX(), (float) gloOriginInLoc.getY(), (float) gloOriginInLoc.getZ());
-                org.fxyz.geometry.Point3D gloDirection1 = new org.fxyz.geometry.Point3D((float) gloDirection.getX(), (float) gloDirection.getY(), (float) gloDirection.getZ());
-
-                System.out.println("number of intersections: " + model.getIntersections(gloOriginInLoc1, gloDirection1));
-            }
-        }
-               */
     }
 
     @Override
     protected Node buildControlPanel() {
+        NumberSliderControl widthSlider = ControlFactory.buildNumberSlider(this.width, .01D, 200D);
+        widthSlider.getSlider().setMinorTickCount(10);
+        widthSlider.getSlider().setMajorTickUnit(0.5);
+        widthSlider.getSlider().setBlockIncrement(0.01d);
+
+        NumberSliderControl heightSlider = ControlFactory.buildNumberSlider(this.height, .01D, 200D);
+        heightSlider.getSlider().setMinorTickCount(10);
+        heightSlider.getSlider().setMajorTickUnit(0.5);
+        heightSlider.getSlider().setBlockIncrement(0.01d);
+        
+        NumberSliderControl depthSlider = ControlFactory.buildNumberSlider(this.depth, .01D, 200D);
+        depthSlider.getSlider().setMinorTickCount(10);
+        depthSlider.getSlider().setMajorTickUnit(0.5);
+        depthSlider.getSlider().setBlockIncrement(0.01d);
+        
+        NumberSliderControl levelSlider = ControlFactory.buildNumberSlider(this.level, 0, 8);
+        levelSlider.getSlider().setMinorTickCount(0);
+        levelSlider.getSlider().setMajorTickUnit(1);
+        levelSlider.getSlider().setBlockIncrement(1);
+        levelSlider.getSlider().setSnapToTicks(true);
+        
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        //geomControls.addControls()
+        geomControls.addControls(widthSlider,heightSlider,depthSlider,levelSlider);
 
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
@@ -131,7 +103,7 @@ public class Cuboids extends TexturedMeshSample{
                 ),
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
-                        this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), 
+                        null, this.useDiffMap, this.material.diffuseMapProperty(), 
                         this.pattScale, this.dens, this.func)
         );
         

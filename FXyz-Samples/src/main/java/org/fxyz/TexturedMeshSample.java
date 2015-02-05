@@ -101,13 +101,13 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             }
         }
     };
-    protected final IntegerProperty colors = new SimpleIntegerProperty(model, "Color :", 1530) {
+    protected final IntegerProperty colors = new SimpleIntegerProperty(model, "Color :", 700) {
         @Override
         protected void invalidated() {
             super.invalidated();
             
             if (model != null) {
-                colorBinding.set(Color.hsb(360 * (1d - colors.get() / 1530d), 1, 1));                
+                colorBinding.set(Color.hsb(360 * (1d - get() / 1530d), 1, 1));                
             }
         }
     };   

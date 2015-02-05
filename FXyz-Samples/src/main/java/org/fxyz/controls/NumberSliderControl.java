@@ -48,7 +48,7 @@ public class NumberSliderControl extends ControlBase<Property<Number>> {
         valueLabel.textProperty().bindBidirectional(valSlider.valueProperty(),format);
         valSlider.setValue(controlledProperty.getValue().doubleValue());
         
-        controlledProperty.bindBidirectional(valSlider.valueProperty());
+        controlledProperty.bind(valSlider.valueProperty());
         propName.setText(!controlledProperty.getName().isEmpty() ? controlledProperty.getName() : "Empty Property Name:");
       
     }
