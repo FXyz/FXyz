@@ -159,11 +159,11 @@ public final class ControlFactory {
                 ttp, cp, uDiffMap, imgP, pScale, densFunc, funcFunc);
 
         ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
-        mvc.addControls(
-                texType,
-                buildSectionTypeControl(stp)
-        );
-
+        mvc.addControls(texType);
+        if(stp!=null){
+                mvc.addControl(buildSectionTypeControl(stp));
+        }
+        
         return mvc;
     }
     /*

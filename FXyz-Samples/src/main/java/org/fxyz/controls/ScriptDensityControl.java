@@ -72,7 +72,7 @@ public class ScriptDensityControl extends ControlBase<Property<Function<Point3D,
                     change.set(true);
                 }
                 controlledProperty.unbind();
-                controlledProperty.bindBidirectional(function);
+                controlledProperty.bind(function);
             }
         });
         

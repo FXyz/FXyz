@@ -55,7 +55,7 @@ public class SegmentedTorus extends TexturedMeshSample {
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(
                         this.textureType, this.colors,
-                        this.sectionType, this.useDiffMap,
+                        null, this.useDiffMap,
                         this.material.diffuseMapProperty(),
                         this.pattScale, this.dens, this.func
                 )

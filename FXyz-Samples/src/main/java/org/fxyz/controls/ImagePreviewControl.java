@@ -38,7 +38,7 @@ public class ImagePreviewControl extends ControlBase<Property<Boolean>> {
         useImage.setText(name);
         image.bindBidirectional((Property<Image>) img);
         preview.imageProperty().bind(image);
-        controlledProperty.bindBidirectional(useImage.selectedProperty());
+        controlledProperty.bind(useImage.selectedProperty());
     }
 
 }
