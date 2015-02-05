@@ -121,7 +121,7 @@ is being used to size a border should also be in pixels.
      * -fx-selection-bar-text for text on top of -fx-selection-bar
      */
     -fx-dark-text-color: black;
-    -fx-mid-text-color: #333;
+    -fx-mid-text-color: dimgray;
     -fx-light-text-color: white;
 
     /* A bright blue for highlighting/accenting objects.  For example: selected
@@ -218,7 +218,7 @@ is being used to size a border should also be in pixels.
      */
     -fx-box-border: ladder(
         -fx-color,
-        black 20%,
+        rgba(0,0,0,0.5) 20%,
         derive(-fx-color,-15%) 30%
     );
 
@@ -227,7 +227,7 @@ is being used to size a border should also be in pixels.
      */
     -fx-text-box-border: ladder(
         -fx-background,
-        black 10%,
+        rgba(0,0,0,0.5) 10%,
         derive(-fx-background, -15%) 30%
     );
 
@@ -295,24 +295,18 @@ is being used to size a border should also be in pixels.
     /* The color to use as -fx-text-fill when painting text on top of
      * backgrounds filled with -fx-base, -fx-color, and -fx-body-color.
      */
-    -fx-text-base-color: ladder(
-        -fx-color,
-        -fx-light-text-color 45%,
-        -fx-dark-text-color  46%,
-        -fx-dark-text-color  59%,
-        -fx-mid-text-color   60%
-    );
+    -fx-text-base-color: white;
 
     /* The color to use as -fx-text-fill when painting text on top of
      * backgrounds filled with -fx-control-inner-background.
      */
-    -fx-text-inner-color: ladder(
+    -fx-text-inner-color: white; /* ladder(
         -fx-control-inner-background,
         -fx-light-text-color 45%,
         -fx-dark-text-color  46%,
         -fx-dark-text-color  59%,
         -fx-mid-text-color   60%
-    );
+    );*/
 
     /* The color to use for small mark-like objects such as checks on check
      * boxes, filled in circles in radio buttons, arrows on scroll bars, etc.
@@ -333,30 +327,30 @@ is being used to size a border should also be in pixels.
 
     /* Background for items in list like things such as menus, lists, trees,
      * and tables. */
-    -fx-selection-bar: -fx-accent;
+    -fx-selection-bar: linear-gradient(to right, white 0%, transparent 65%);
 
     /* Background color to use for selection of list cells etc. This is when
      * the control doesn't have focus or the row of a previously selected item. */
-    -fx-selection-bar-non-focused: lightgrey;
+    -fx-selection-bar-non-focused: linear-gradient(to right, white 0%, transparent 50%, white 100%);
 
     /* The color to use as -fx-text-fill when painting text on top of
      * backgrounds filled with -fx-selection-bar.
      *
      * TODO: this can be removed
      */
-    -fx-selection-bar-text: -fx-text-background-color;
+    -fx-selection-bar-text: white;
 
     /* These are needed for Popup */
-    -fx-background-color: rgba(0,0,0,0.45);
-    -fx-background-radius: inherit;
-    -fx-background-insets: inherit;
-    -fx-padding: inherit;
+    -fx-background-color: rgba(0,0,0,0.5);
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+    -fx-padding: 2;
 
     /* The color to use in ListView/TreeView/TableView to indicate hover. */
-    -fx-cell-hover-color: #cce3f4;
+    -fx-cell-hover-color: linear-gradient(to right, cyan 0%, transparent 65%);//#cce3f4;
 
     /** Focus line for keyboard focus traversal on cell based controls */
-    -fx-cell-focus-inner-border: derive(-fx-selection-bar,30%);
+    -fx-cell-focus-inner-border: derive(rgba(255,255,255,0.5),30%);
 
     /* The colors to use in Pagination */
     -fx-page-bullet-border: #acacac;
@@ -395,7 +389,6 @@ is being used to size a border should also be in pixels.
 .button,
 .toggle-button,
 .radio-button > .radio,
-.check-box > .box,
 .menu-button,
 .choice-box,
 .color-picker.split-button > .color-picker-label,
@@ -405,9 +398,9 @@ is being used to size a border should also be in pixels.
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
     -fx-background-radius: 3px, 3px, 2px, 1px;
     -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
-    -fx-text-fill: -fx-text-base-color;
-    -fx-alignment: CENTER;
-    -fx-content-display: LEFT;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER_LEFT;
+    -fx-content-display: CENTER;
 }
 .button:hover,
 .toggle-button:hover,
@@ -449,7 +442,6 @@ is being used to size a border should also be in pixels.
 .button:focused,
 .toggle-button:focused,
 .radio-button:focused > .radio,
-.check-box:focused > .box,
 .menu-button:focused,
 .choice-box:focused,
 .color-picker.split-button:focused > .color-picker-label,
@@ -521,7 +513,7 @@ is being used to size a border should also be in pixels.
 .hyperlink:show-mnemonics > .mnemonic-underline,
 .split-menu-button:show-mnemonics > .mnemonic-underline,
 .menu-button:show-mnemonics > .mnemonic-underline {
-    -fx-stroke: -fx-text-base-color;
+    -fx-stroke: white; //-fx-text-base-color;
 } 
 
 /* ====   MARKS   =========================================================== */
@@ -529,7 +521,7 @@ is being used to size a border should also be in pixels.
 .radio-button:selected > .radio > .dot,
 .check-box:selected > .box > .mark,
 .check-box:indeterminate  > .box > .mark {
-    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color !important;
+    -fx-background-color: transparent; //-fx-mark-highlight-color, -fx-mark-color !important;
     -fx-background-insets: 1 0 -1 0, 0;
 }
 
@@ -565,7 +557,7 @@ is being used to size a border should also be in pixels.
 .menu-button > .label,
 .color-picker > .label {
     -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
-    -fx-text-fill: -fx-text-base-color;
+    -fx-text-fill: white;
 }
 .choice-box > .open-button,
 .menu-button > .arrow-button {
@@ -581,7 +573,7 @@ is being used to size a border should also be in pixels.
 .table-view, 
 .tree-table-view,
 .html-editor {
-    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-color: transparent;//-fx-box-border, -fx-control-inner-background;
     -fx-background-insets: 0, 1;
     -fx-padding: 1;
 }
@@ -592,18 +584,18 @@ is being used to size a border should also be in pixels.
 .table-view:focused,
 .tree-table-view:focused,
 .html-editor:focused {
-    -fx-background-color: -fx-faint-focus-color, -fx-focus-color, -fx-control-inner-background; 
+    -fx-background-color: transparent; //-fx-faint-focus-color, -fx-focus-color, -fx-control-inner-background; 
     -fx-background-insets: -1.4, -0.3, 1;
     -fx-background-radius: 2, 0, 0;
 }
 /* ones with grey -fx-background not lighter -fx-control-inner-background */
 .scroll-pane,
 .split-pane {
-    -fx-background-color: -fx-box-border, -fx-background;
+    -fx-background-color: transparent;//-fx-box-border, -fx-background;
 }
 .scroll-pane:focused,
 .split-pane:focused {
-    -fx-background-color: -fx-faint-focus-color, -fx-focus-color, -fx-background; 
+    -fx-background-color: transparent; //-fx-faint-focus-color, -fx-focus-color, -fx-background; 
 }
 
 /*******************************************************************************
@@ -613,7 +605,7 @@ is being used to size a border should also be in pixels.
  ******************************************************************************/
 
 .label {
-    -fx-text-fill: -fx-text-background-color;
+    -fx-text-fill: white;
 }
 
 /*******************************************************************************
@@ -738,14 +730,18 @@ is being used to size a border should also be in pixels.
 
 .check-box {
     -fx-label-padding: 0.0em 0.0em 0.0em 0.416667em; /* 0 0 0 5 */
-    -fx-text-fill: -fx-text-background-color;
+    -fx-text-fill: white;//-fx-text-background-color;
 }
 .check-box > .box {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-border-radius: 3, 2, 1;
     -fx-background-radius: 3, 2, 1;
     -fx-padding: 0.166667em 0.166667em 0.25em 0.25em; /* 2 2 3 3 */
 }
 .check-box > .box > .mark {
-    -fx-background-color: null;
+    -fx-background-color: white;
     -fx-padding: 0.416667em 0.416667em 0.5em 0.5em; /* 5 5 6 6 */
     -fx-shape: "M-0.25,6.083c0.843-0.758,4.583,4.833,5.75,4.833S14.5-1.5,15.917-0.917c1.292,0.532-8.75,17.083-10.5,17.083C3,16.167-1.083,6.833-0.25,6.083z";
 }
@@ -757,7 +753,9 @@ is being used to size a border should also be in pixels.
     -fx-scale-shape: false;
     -fx-padding: 0.666667em; /* 16x16 = 8+8 */
 }
-
+.check-box:focused > .box{
+    -fx-background-color: transparent;
+}
 /*******************************************************************************
  *                                                                             *
  * Hyperlink                                                                   *
@@ -1683,9 +1681,9 @@ is being used to size a border should also be in pixels.
 
 /* Customise the ListCell that appears in the ComboBox button itself */
 .combo-box > .list-cell {
-    -fx-background: transparent;
+    -fx-background: null;
     -fx-background-color: transparent;
-    -fx-text-fill: -fx-text-base-color;
+    -fx-text-fill: white;
     -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
 }
 .combo-box-base > .arrow-button  {
@@ -1737,31 +1735,27 @@ is being used to size a border should also be in pixels.
 /* -------------- STYLES FOR THE DEFAULT LISTVIEW-BASED COMBOBOX ------------- */
 
 .combo-box-popup > .list-view {
-    -fx-background-color:
-        linear-gradient(to bottom,
-            derive(-fx-color,-17%),
-            derive(-fx-color,-30%)
-        ),
-        -fx-control-inner-background;
+    -fx-background-color: rgba(0,0,0,0.75);
+        //linear-gradient(to right, rgba(255,255,255,0.25) 0%, transparent 35%, transparent 65%, rgba(255,255,255,0.25) 100%);
     -fx-background-insets: 0, 1;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
 }
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
     -fx-padding: 4 0 4 5;
     /* No alternate highlighting */
-    -fx-background: -fx-control-inner-background;
+    -fx-background: linear-gradient(to right, rgba(255,255,255,0.25) 0%, transparent 85%);// -fx-control-inner-background;
 }
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
     -fx-background:  -fx-selection-bar-non-focused;
-    -fx-background-color:  -fx-background !important;
+    -fx-background-color: linear-gradient(to right, rgba(128,255,255,0.25) 0%, transparent 85%); //-fx-background !important;
 }
 .combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover,
 .combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
     -fx-background: -fx-accent;
-    -fx-background-color: -fx-selection-bar !important;
+    -fx-background-color: linear-gradient(to right, rgba(0,255,255,0.25) 0%, transparent 85%);//-fx-selection-bar !important;
 }
 .combo-box-popup > .list-view > .placeholder > .label {
-    -fx-text-fill: derive(-fx-control-inner-background,-30%);
+    -fx-text-fill: white;
 }
 
 /*******************************************************************************
@@ -1771,7 +1765,7 @@ is being used to size a border should also be in pixels.
  ******************************************************************************/
 
 .titled-pane {
-    -fx-text-fill: -fx-text-base-color;
+    -fx-text-fill: white; //-fx-text-base-color;
 }
 .titled-pane > .title {
     -fx-background-color:
@@ -2165,7 +2159,7 @@ is being used to size a border should also be in pixels.
     -fx-background-radius: 0;
     -fx-padding: 0.0em 0.5em 0.0em 0.0em; /* 0 6 0 0 */
     -fx-alignment: CENTER_LEFT;
-    -fx-content-display: LEFT;
+    -fx-content-display: CENTER;
 }
 .cell > .choice-box > .label {
     -fx-padding: 0em 0.333333em 0.0em 0.333333; /* 2 4 3 6 */
@@ -2207,9 +2201,9 @@ is being used to size a border should also be in pixels.
 /* standard cell */
 .list-cell,
 .tree-cell {
-    -fx-background: -fx-control-inner-background;
-    -fx-background-color: -fx-background;
-    -fx-text-fill: -fx-text-background-color;
+    -fx-background: null;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
 }
 /* Selected rows */
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
@@ -2218,7 +2212,7 @@ is being used to size a border should also be in pixels.
 .tree-table-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell:filled:selected,
 .table-view:focused > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell:selected,
 .tree-table-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell .tree-table-cell:selected {
-    -fx-background: -fx-selection-bar;
+    -fx-background: null;
     -fx-table-cell-border-color: derive(-fx-selection-bar, 20%);
 }
 /* Selected when control is not focused */
@@ -2228,7 +2222,7 @@ is being used to size a border should also be in pixels.
 .tree-table-row-cell:filled:selected,
 .table-row-cell:filled > .table-cell:selected,
 .tree-table-row-cell:filled > .tree-table-cell:selected {
-    -fx-background: -fx-selection-bar-non-focused;
+    -fx-background: linear-gradient(to right, rgba(0,255,255,0.25) 0%, transparent 85%);
     -fx-table-cell-border-color: derive(-fx-selection-bar-non-focused, 20%);
 }
 /* focused cell (keyboard navigation) */
@@ -2238,7 +2232,7 @@ is being used to size a border should also be in pixels.
 .tree-table-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell:focused,
 .table-view:focused > .virtual-flow > .clipped-container > .sheet > .table-row-cell > .table-cell:focused,
 .tree-table-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell > .tree-table-cell:focused {
-    -fx-background-color: -fx-background, -fx-cell-focus-inner-border, -fx-background !important;
+    -fx-background-color: linear-gradient(to right, rgba(0,255,255,0.25) 0%, transparent 85%);
     -fx-background-insets: 0, 1, 2 !important;
 }
 
@@ -2250,9 +2244,10 @@ is being used to size a border should also be in pixels.
 
 .list-cell {
     -fx-padding: 0.25em 0.583em 0.25em 0.583em; /* 3 7 3 7 */
+    -fx-text-fill: white;
 }
 .list-cell:odd {
-    -fx-background: -fx-control-inner-background-alt;
+    -fx-background: null;
 }
 
 /*******************************************************************************
@@ -2265,17 +2260,22 @@ is being used to size a border should also be in pixels.
     -fx-padding: 0.25em; /* 3 */
     -fx-indent: 1em;
 }
+.tree-cell:hover{
+    -fx-background-color: linear-gradient(to right, rgba(255,255,255,0.25) 0%, transparent 85%);
+}
 .tree-cell .label {
     -fx-padding: 0.0em 0.0em 0.0em 0.25em; /* 0 0 0 3 */
 }
 .tree-cell > .tree-disclosure-node,
 .tree-table-row-cell > .tree-disclosure-node {
     -fx-padding: 4 6 4 8;
-    -fx-background-color: transparent;
+    -fx-background-color: null;
 }
 .tree-cell > .tree-disclosure-node > .arrow,
 .tree-table-row-cell > .tree-disclosure-node > .arrow {
-    -fx-background-color: -fx-text-background-color;
+    -fx-background-color: null;
+    -fx-border-color: white;
+    -fx-border-width: 0.5;
     -fx-padding: 0.333333em 0.229em 0.333333em 0.229em; /* 4 */
     -fx-shape: "M 0 -3.5 L 4 0 L 0 3.5 z";
 }
@@ -2315,7 +2315,7 @@ is being used to size a border should also be in pixels.
     -fx-background-color: null;
     -fx-border-color: transparent -fx-table-cell-border-color transparent transparent;
     -fx-cell-size: 2.0em; /* 24 */
-    -fx-text-fill: -fx-text-background-color;
+    -fx-text-fill: white;
 }
 .table-view > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell:selected,
 .tree-table-view > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell .tree-table-cell:selected {
@@ -2472,7 +2472,7 @@ is being used to size a border should also be in pixels.
     -fx-background: -fx-control-inner-background;
     -fx-background-color: -fx-background;
     -fx-padding: 0;
-    -fx-text-fill: -fx-text-background-color;
+    -fx-text-fill: white;//-fx-text-background-color;
     -fx-indent: 1em;
 }
 .tree-table-cell {
@@ -2482,7 +2482,7 @@ is being used to size a border should also be in pixels.
     -fx-background-color: null;
     -fx-border-color: transparent -fx-table-cell-border-color transparent transparent;
     -fx-cell-size: 2.0em; /* 24 */
-    -fx-text-fill: -fx-text-background-color;
+    -fx-text-fill: white;//-fx-text-background-color;
 }
 
 /*******************************************************************************
@@ -2511,7 +2511,7 @@ is being used to size a border should also be in pixels.
     -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-selection-bar;
     -fx-background-insets: 0 1 0 0, 1 2 1 1, 2 3 2 2;
     -fx-background: -fx-accent;
-    -fx-text-fill: -fx-selection-bar-text;
+    -fx-text-fill: white;//-fx-selection-bar-text;
 }
 
 /*******************************************************************************

@@ -9,11 +9,12 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
-import org.fxyz.geometry.Point3D;
 import org.fxyz.collections.FloatCollector;
 import org.fxyz.geometry.Face3;
+import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Palette;
 import org.fxyz.scene.paint.Patterns;
+import org.fxyz.tools.NormalMap;
 
 /**
  *
@@ -119,7 +120,9 @@ public class TriangleMeshHelper {
     
     public Material getMaterialWithPattern(){
         PhongMaterial mat = new PhongMaterial();
-        mat.setDiffuseMap(getPatternImage());
+        Image img = getPatternImage();
+        mat.setDiffuseMap(img);
+        mat.setBumpMap(new NormalMap(3,10,false,img));
         return mat;
     }
     
@@ -156,7 +159,9 @@ public class TriangleMeshHelper {
     
     public Material getMaterialWithPalette(){
         PhongMaterial mat = new PhongMaterial();
-        mat.setDiffuseMap(getPaletteImage());
+        Image img = getPaletteImage();
+        mat.setDiffuseMap(img);        
+        //mat.setBumpMap(new NormalMap(1,10,true,img));
         return mat;
     }
     
@@ -253,7 +258,9 @@ public class TriangleMeshHelper {
     */
     public Material getMaterialWithImage(String image){
         PhongMaterial mat = new PhongMaterial();
-        mat.setDiffuseMap(new Image(image));
+        Image img = new Image(image);
+        mat.setDiffuseMap(img);
+        mat.setBumpMap(new NormalMap(img));
         return mat;
     }
     

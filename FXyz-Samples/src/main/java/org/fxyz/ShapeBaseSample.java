@@ -7,7 +7,9 @@
 package org.fxyz;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.AmbientLight;
@@ -43,6 +45,12 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private final double sceneHeight = 600;    
     protected long lastEffect;
     
+    protected PointLight sceneLight1;
+    protected PointLight sceneLight2;
+    
+    private Group light1Group;
+    private Group light2Group;
+    private Group lightingGroup;
     protected SubScene subScene;
     private Group root;
     protected Group group;
@@ -67,6 +75,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     protected abstract void createMesh();
     protected abstract void addMeshAndListeners();
     
+    private final Property<Color> light1Color = new SimpleObjectProperty<>(Color.WHITE);
+    private final Property<Color> light2Color = new SimpleObjectProperty<>(Color.WHITE);
     
     private final BooleanProperty onService = new SimpleBooleanProperty();
    
@@ -98,7 +108,29 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             light.translateYProperty().bind(camera.translateYProperty());
             light.translateZProperty().bind(camera.translateZProperty());
             
-            root = new Group();
+            //==========================================================
+            // Need a scene control panel to allow alterations to properties
+            
+            sceneLight1 = new PointLight();
+            sceneLight1.setTranslateX(-500);
+            
+            sceneLight2 = new PointLight();
+            sceneLight2.setTranslateX(500);
+            
+            sceneLight1.colorProperty().bind(light1Color);
+            sceneLight2.colorProperty().bind(light2Color);
+            
+            light1Group = new Group(sceneLight1);
+            light2Group = new Group(sceneLight2);
+            
+            lightingGroup = new Group(light1Group, light2Group);
+            //==========================================================
+            
+            root = new Group(lightingGroup);
+            
+            sceneLight1.getScope().add(root);
+            sceneLight2.getScope().add(root);
+            
             subScene = new SubScene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
             subScene.setFill(Color.TRANSPARENT);//Color.web("#0d0d0d"));        
             subScene.setCamera(camera);

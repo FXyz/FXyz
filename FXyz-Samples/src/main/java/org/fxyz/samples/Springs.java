@@ -23,7 +23,7 @@ public class Springs extends TexturedMeshSample {
 //        spring.setDrawMode(DrawMode.LINE);
         model.setCullFace(CullFace.NONE);
         model.setSectionType(SectionType.TRIANGLE);
-
+        
 //    // NONE
 //        spring.setTextureModeNone(Color.ROYALBLUE);
         // IMAGE

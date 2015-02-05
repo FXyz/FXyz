@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.texture;
+package org.fxyz.tools;
 
 import java.util.Random;
 import javafx.beans.property.BooleanProperty;

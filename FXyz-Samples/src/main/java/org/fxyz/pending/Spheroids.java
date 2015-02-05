@@ -26,7 +26,7 @@ import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.shapes.primitives.SpheroidMesh;
-import org.fxyz.texture.NormalMap;
+import org.fxyz.tools.NormalMap;
 
 /**
  *
