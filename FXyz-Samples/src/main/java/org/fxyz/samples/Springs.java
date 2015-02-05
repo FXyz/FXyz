@@ -14,16 +14,20 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
  * @author jpereda
  */
 public class Springs extends TexturedMeshSample {
-    public static void main(String[] args){Springs.launch(args);}
-    
+
+    public static void main(String[] args) {
+        Springs.launch(args);
+    }
+
     @Override
-    protected void createMesh(){
+    protected void createMesh() {
+
         model = new SpringMesh(50d, 10d, 20d, 2 * 20d * 2d * Math.PI,
                 1000, 60, 0, 0);
 //        spring.setDrawMode(DrawMode.LINE);
         model.setCullFace(CullFace.NONE);
         model.setSectionType(SectionType.TRIANGLE);
-        
+
 //    // NONE
 //        spring.setTextureModeNone(Color.ROYALBLUE);
         // IMAGE
@@ -34,19 +38,17 @@ public class Springs extends TexturedMeshSample {
 //        spring.setTextureModeVertices1D(256*256,t->t);
         // DENSITY
         model.setTextureModeVertices3D(256 * 256, p -> (double) p.magnitude());
-    // FACES
+            // FACES
 //        spring.setTextureModeFaces(256*256);
 
         model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
 
-
     }
-    
-    
+
     @Override
     protected void addMeshAndListeners() {
     }
-    
+
     @Override
     protected Node buildControlPanel() {
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
@@ -65,12 +67,11 @@ public class Springs extends TexturedMeshSample {
                         this.textureType, this.colors,
                         this.sectionType, this.useDiffMap,
                         this.material.diffuseMapProperty(),
-                        this.pattScale, this.densMax,
-                        this.dens, this.func
+                        this.pattScale, this.dens, this.func
                 )
         );
-        
+
         return this.controlPanel;
     }
-    
+
 }
