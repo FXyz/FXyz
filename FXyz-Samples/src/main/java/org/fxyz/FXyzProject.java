@@ -20,7 +20,8 @@ import javafx.scene.layout.VBox;
 public class FXyzProject implements FXSamplerProject{
 
     static{
-        Application.setUserAgentStylesheet(FXyzSample.class.getResource("styles/modenaDark.css").toExternalForm());
+        //Application.setUserAgentStylesheet(FXyzSample.class.getResource("styles/modenaDark.css").toExternalForm());
+        Application.setUserAgentStylesheet(FXyzProject.class.getResource("styles/modenaGlass.css").toExternalForm());
     }
 
     

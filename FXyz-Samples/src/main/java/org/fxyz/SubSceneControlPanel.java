@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Point3D;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
@@ -62,17 +63,30 @@ public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
     private ToggleButton yAxisL2;
     @FXML
     private ToggleButton zAxisL2;
+    @FXML
+    private Slider distL1;
+    @FXML
+    private Slider distL2;
+    @FXML
+    private CheckBox l1On;
+    @FXML
+    private CheckBox l2On;
 
     private final ObservableList<Integer> angL1 = FXCollections.observableArrayList();
     private final ObservableList<Integer> angL2 = FXCollections.observableArrayList();
 
     public SubSceneControlPanel(final Property<Boolean> show,
+            final Property<Boolean> lt1On, final Property<Boolean> lt2On,
             final Property<Color> c1, final Property<Color> c2,
+            final Property<Number> d1, final Property<Number> d2,
             final Property<Number> r1, final Property<Number> r2,
             final Property<Point3D> ra1, final Property<Point3D> ra2
     ) {
         super("SubSceneControlPanel.fxml", show);
 
+        colorL1.getStyleClass().addAll("colorSlider", "lighting-slider");
+        colorL2.getStyleClass().addAll("colorSlider", "lighting-slider");
+        
         loadAngles();
         
         light1Rotate.setValue(0);
@@ -144,6 +158,16 @@ public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
                 zAxisL2.isSelected() ? 1 : 0
             ));
         });
+        
+        distL1.valueProperty().addListener(e->{
+            d1.setValue(distL1.getValue());
+        });
+        distL2.valueProperty().addListener(e->{
+            d2.setValue(-distL2.getValue());
+        });
+        
+        lt1On.bind(l1On.selectedProperty());
+        lt2On.bind(l2On.selectedProperty());
     }
 
     private void loadAngles() {
