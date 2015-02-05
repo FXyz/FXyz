@@ -109,9 +109,9 @@ public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
 
         colorL2.valueProperty().addListener(e -> {
             if(colorL2.getValue() < 10){
-                c1.setValue(Color.WHITE);
+                c2.setValue(Color.WHITE);
             }else{
-                c1.setValue(Color.hsb(360 * (1d - colorL2.getValue() / 1530d), 1, 1));
+                c2.setValue(Color.hsb(360 * (1d - colorL2.getValue() / 1530d), 1, 1));
             }
         });
 

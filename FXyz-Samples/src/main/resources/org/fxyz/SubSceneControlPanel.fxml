@@ -27,7 +27,7 @@
                      <children>
                         <Label text="Light Distance :" />
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Slider fx:id="distL1" blockIncrement="0.5" focusTraversable="false" max="2500.0" maxWidth="-Infinity" min="500.0" minWidth="-Infinity" prefWidth="75.0" value="500.0" />
+                        <Slider fx:id="distL1" blockIncrement="0.5" focusTraversable="false" max="2500.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" value="500.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER">
@@ -90,14 +90,14 @@
                      <children>
                         <Label text="Light Distance :" />
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Slider fx:id="distL2" blockIncrement="0.5" focusTraversable="false" max="2500.0" maxWidth="-Infinity" min="500.0" minWidth="-Infinity" prefWidth="75.0" value="500.0" />
+                        <Slider fx:id="distL2" blockIncrement="0.5" focusTraversable="false" max="2500.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" value="500.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT">
                      <children>
                         <Label text="Light Color :" />
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Slider fx:id="colorL2" blockIncrement="1.0" focusTraversable="false" max="1530.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0"  />
+                        <Slider fx:id="colorL2" blockIncrement="1.0" focusTraversable="false" max="1530.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
                      </children>
                   </HBox>
                   <HBox spacing="10.0">
