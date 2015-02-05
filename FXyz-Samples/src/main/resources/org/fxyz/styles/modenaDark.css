@@ -3187,8 +3187,7 @@ is being used to size a border should also be in pixels.
     -fx-fill: null;
     -fx-stroke: #120120;
 }
-.colorSlider .thumb {
-    
+.colorSlider .thumb {    
     -fx-background-color: transparent;
     -fx-border-color: linear-gradient(to bottom, white 20%, black 21%, black 79%, white 80%);
     -fx-border-width: 0.5px;
@@ -3203,4 +3202,41 @@ is being used to size a border should also be in pixels.
     -fx-background-position: center;
     -fx-background-repeat: stretch;
     -fx-background-size: stretch, contain;
+}
+
+.scene-control-panel{    
+    -fx-background-radius:10;
+    -fx-background-color:rgba(0,0,0,0.25);
+    
+    -fx-border-style: solid;
+    -fx-boder-radius: 10;
+    -fx-border-color: rgba(0,255,255,0.85);
+}
+
+.radius-spinner{
+    -fxx-arrow-position: split;
+    -fxx-value-alignment: center;
+    -fx-background-radius: 10 10 0 0;
+    -fx-background-insets: 0;
+}
+
+.segmented-button-bar{
+}
+
+.segmented-button-bar .button , .toggle-button {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+ 
+.segmented-button-bar .toggle-button:selected{
+    -fx-effect: innershadow(gaussian , rgba(0,255,255,0.5) ,5 ,0.2 ,0 ,-1 );
+}
+.first-button {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0 0 0 10;
+}
+ 
+.last-button {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0 0 10 0;
 }
