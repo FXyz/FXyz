@@ -85,10 +85,10 @@ public final class ControlFactory {
 
     public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p, 
             final Property<Number> clrs, final Property<Boolean> uDiffMap, final Property<Image> imgP,
-            final Property<Number> pScale, final Property<Function<Point3D,Number>> densFunc, 
-            final Property<Function<Number,Number>> funcFunc) {
+            final Property<Number> pScale, final Property<Number> dens, 
+            final Property<Function<Point3D,Number>> densFunc, final Property<Function<Number,Number>> funcFunc) {
         return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()), 
-                clrs, uDiffMap, imgP, pScale, densFunc, funcFunc);
+                clrs, uDiffMap, imgP, pScale, dens, densFunc, funcFunc);
     }
 
     public static final ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
@@ -151,12 +151,13 @@ public final class ControlFactory {
             final Property<Boolean> uDiffMap, 
             final Property<Image> imgP,
             final Property<Number> pScale, 
+            final Property<Number> densScale,
             final Property<Function<Point3D,Number>> densFunc,
             final Property<Function<Number,Number>> funcFunc
     ) {
         
         final TextureTypeControl texType = buildTextureTypeControl(
-                ttp, cp, uDiffMap, imgP, pScale, densFunc, funcFunc);
+                ttp, cp, uDiffMap, imgP, pScale, densScale, densFunc, funcFunc);
 
         ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(

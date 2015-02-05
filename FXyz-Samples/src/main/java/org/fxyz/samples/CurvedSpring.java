@@ -64,7 +64,7 @@ public class CurvedSpring extends TexturedMeshSample {
                 ControlFactory.buildTextureMeshCategory(this.textureType, 
                         this.colors, this.sectionType, this.useDiffMap, 
                         this.material.diffuseMapProperty(), this.pattScale, 
-                        this.dens, this.func)
+                        this.densMax, this.dens, this.func)
         );
         
         return this.controlPanel;

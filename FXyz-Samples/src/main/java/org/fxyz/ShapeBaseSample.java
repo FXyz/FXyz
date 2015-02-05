@@ -12,8 +12,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -118,7 +116,10 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             
             sceneLight2 = new PointLight();
             sceneLight2.setTranslateX(500);
-                        
+            
+            sceneLight1.colorProperty().bind(light1Color);
+            sceneLight2.colorProperty().bind(light2Color);
+            
             light1Group = new Group(sceneLight1);
             light2Group = new Group(sceneLight2);
             
@@ -139,7 +140,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             mainPane = new StackPane();
             mainPane.setPrefSize(sceneWidth, sceneHeight);
             mainPane.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
-            mainPane.setMinSize(sceneWidth, sceneHeight);
+            mainPane.setMinSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
             mainPane.getStyleClass().add("sub-scene-container");
             mainPane.getChildren().add(subScene);
             mainPane.setPickOnBounds(false);
@@ -258,18 +259,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 time = System.currentTimeMillis();
                 service.start();
 //            }
-        }       
-        SubSceneControlPanel sceneControls = new SubSceneControlPanel(
-                mainPane.visibleProperty(),
-                sceneLight1.colorProperty(), sceneLight2.colorProperty(),
-                light1Group.rotateProperty(),light2Group.rotateProperty(),
-                light1Group.rotationAxisProperty(), light1Group.rotationAxisProperty()
-        );
-        
-        StackPane.setAlignment(sceneControls, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(sceneControls, new Insets(10,10,10,10));
-        
-        mainPane.getChildren().add(sceneControls);
+        }        
         return mainPane;
     }
 
