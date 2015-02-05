@@ -96,7 +96,7 @@ public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
         
         light2Rotate.setValue(0);
         light2Rotate.valueProperty().addListener(e->{
-            r1.setValue(light2Rotate.getValue());
+            r2.setValue(light2Rotate.getValue());
         });
 
         colorL1.valueProperty().addListener(e -> {
@@ -171,7 +171,7 @@ public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
     }
 
     private void loadAngles() {
-        for (int i = 0; i < 360; i++) {
+        for (int i = 0; i < 360; i+=3) {
             angL1.add(i);
             angL2.add(i);
         }

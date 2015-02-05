@@ -104,7 +104,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             PointLight light = new PointLight(Color.GAINSBORO);
             AmbientLight amb = new AmbientLight(Color.WHITE);
             amb.getScope().add(cameraTransform);
-            cameraTransform.getChildren().addAll(light,amb);
+            cameraTransform.getChildren().addAll(light);
             
             light.translateXProperty().bind(camera.translateXProperty());
             light.translateYProperty().bind(camera.translateYProperty());
