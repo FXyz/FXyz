@@ -114,11 +114,11 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             // Need a scene control panel to allow alterations to properties
             
             sceneLight1 = new PointLight();
-            sceneLight1.setTranslateX(-500);
+            sceneLight1.setTranslateX(500);
             
             sceneLight2 = new PointLight();
-            sceneLight2.setTranslateX(500);
-                        
+            sceneLight2.setTranslateX(-500);
+                                    
             light1Group = new Group(sceneLight1);
             light2Group = new Group(sceneLight2);
             
@@ -261,9 +261,21 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         }       
         SubSceneControlPanel sceneControls = new SubSceneControlPanel(
                 mainPane.visibleProperty(),
-                sceneLight1.colorProperty(), sceneLight2.colorProperty(),
-                light1Group.rotateProperty(),light2Group.rotateProperty(),
-                light1Group.rotationAxisProperty(), light1Group.rotationAxisProperty()
+                
+                sceneLight1.lightOnProperty(),
+                sceneLight2.lightOnProperty(),
+                
+                sceneLight1.colorProperty(),                 
+                sceneLight2.colorProperty(),
+                
+                sceneLight1.translateXProperty(), 
+                sceneLight2.translateXProperty(),
+                
+                light1Group.rotateProperty(),
+                light2Group.rotateProperty(),
+                
+                light1Group.rotationAxisProperty(), 
+                light2Group.rotationAxisProperty()
         );
         
         StackPane.setAlignment(sceneControls, Pos.BOTTOM_RIGHT);
