@@ -25,8 +25,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
     protected ImagePreviewControl diffMapControl;
     protected FileLoadControl imgLoader;
     protected NumberSliderControl patternScaler;
-    protected ScriptDensityControl densFunct;
-    protected ScriptFunctionControl funcFunct;
+    protected ScriptFunction3DControl densFunct;
+    protected ScriptFunction1DControl funcFunct;
     
     private final BooleanBinding  useColorSlider, useImage, usePatternScaler , useDensScriptor, useFuncScriptor;
     
@@ -71,8 +71,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         diffMapControl = ControlFactory.buildImageToggle(udm, img, "Diffuse Map Image:");
         imgLoader = new FileLoadControl();
         patternScaler = ControlFactory.buildNumberSlider(pScale, 1, 100);
-        densFunct = ControlFactory.buildScriptDensityControl(densFunc);
-        funcFunct = ControlFactory.buildScriptFunctionControl(funcFunc);
+        densFunct = ControlFactory.buildScriptFunction3DControl(densFunc);
+        funcFunct = ControlFactory.buildScriptFunction1DControl(funcFunc);
     }
     
 }

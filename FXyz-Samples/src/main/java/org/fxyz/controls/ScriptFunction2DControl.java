@@ -16,13 +16,11 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -35,18 +33,18 @@ import org.fxyz.geometry.Point3D;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class ScriptFunctionControl extends ControlBase<Property<Function<Number,Number>>>{
+public class ScriptFunction2DControl extends ControlBase<Property<Function<Point2D,Number>>>{
 
-    private ObjectProperty<Function<Number,Number>> function = new SimpleObjectProperty<>();
+    private ObjectProperty<Function<Point2D,Number>> function = new SimpleObjectProperty<>();
     
     private BooleanProperty change=new SimpleBooleanProperty();
     private BooleanProperty error=new SimpleBooleanProperty();
     
-    public ScriptFunctionControl(Property<Function<Number,Number>> prop, final Collection<String> items, boolean subControl) {
-        super("ScriptFunctionControl.fxml", prop);
+    public ScriptFunction2DControl(Property<Function<Point2D,Number>> prop, final Collection<String> items, boolean subControl) {
+        super("ScriptFunction2DControl.fxml", prop);
         
-       Double x=1d;
-        res1.setText("x: {"+x+"}");
+        Point2D p=new Point2D(1,2);
+        res1.setText("p: {"+p.getX()+","+p.getY()+"}");
                     
         selection.getItems().setAll(items);
         selection.getItems().add("Enter a valid expression");
@@ -72,7 +70,7 @@ public class ScriptFunctionControl extends ControlBase<Property<Function<Number,
                     change.set(true);
                 }
                 controlledProperty.unbind();
-                controlledProperty.bindBidirectional(function);
+                controlledProperty.bind(function);
             }
         });
         
@@ -94,13 +92,13 @@ public class ScriptFunctionControl extends ControlBase<Property<Function<Number,
                     text=selection.getEditor().getText();
                 }
                 @SuppressWarnings("unchecked")
-                Function<Number,Number> f;
+                Function<Point2D,Number> f;
                 try {
-                    f = (Function<Number,Number>)engine.eval(
-                            String.format("new java.util.function.Function(%s)", "function(x) "+text));
+                    f = (Function<Point2D,Number>)engine.eval(
+                            String.format("new java.util.function.Function(%s)", "function(p) "+text));
                     // check if f is a valid function
                     try{
-                        res2.setText("val: "+String.format("%.3f", f.apply(x)));
+                        res2.setText("val: "+String.format("%.3f", f.apply(p)));
                         error.set(false);
                     } catch(Exception e){
                         res2.setText("val: error");
@@ -118,7 +116,7 @@ public class ScriptFunctionControl extends ControlBase<Property<Function<Number,
         
     }
     
-    public Property<Function<Number,Number>> functionProperty() { return function; }
+    public Property<Function<Point2D,Number>> functionProperty() { return function; }
             
     @FXML
     private Label res1;

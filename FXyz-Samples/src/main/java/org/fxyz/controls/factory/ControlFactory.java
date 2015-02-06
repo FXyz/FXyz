@@ -8,6 +8,7 @@ package org.fxyz.controls.factory;
 import java.util.Arrays;
 import java.util.function.Function;
 import javafx.beans.property.Property;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
@@ -20,8 +21,9 @@ import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.ImagePreviewControl;
 import org.fxyz.controls.NumberSliderControl;
-import org.fxyz.controls.ScriptDensityControl;
-import org.fxyz.controls.ScriptFunctionControl;
+import org.fxyz.controls.ScriptFunction3DControl;
+import org.fxyz.controls.ScriptFunction1DControl;
+import org.fxyz.controls.ScriptFunction2DControl;
 import org.fxyz.controls.SubSceneControlPanel;
 import org.fxyz.controls.TextureTypeControl;
 import org.fxyz.geometry.Point3D;
@@ -96,12 +98,16 @@ public final class ControlFactory {
         return new ComboBoxControl<>("Section Type", p, Arrays.asList(SectionType.values()), false);
     }
 
-    public static final ScriptDensityControl buildScriptDensityControl(final Property<Function<Point3D, Number>> p) {
-        return new ScriptDensityControl(p, Arrays.asList("Math.sin(p.x)", "p.y", "p.z", "p.x + p.y", "p.x + p.z", "p.f", "p.magnitude()"), false);
+    public static final ScriptFunction3DControl buildScriptFunction3DControl(final Property<Function<Point3D,Number>> p) {
+        return new ScriptFunction3DControl(p, Arrays.asList("Math.sin(p.x)", "p.y", "p.z", "p.x + p.y", "p.x + p.z", "p.f", "p.magnitude()"), false);
     }
 
-    public static final ScriptFunctionControl buildScriptFunctionControl(final Property<Function<Number, Number>> p) {
-        return new ScriptFunctionControl(p, Arrays.asList("Math.sin(x)", "x*x", "x+3", "Math.pow(Math.abs(x),1/2.5)"), false);
+    public static final ScriptFunction2DControl buildScriptFunction2DControl(final Property<Function<Point2D,Number>> p) {
+        return new ScriptFunction2DControl(p, Arrays.asList("Math.sin(p.magnitude())/p.magnitude()", "p.x", "p.y", "p.x*3+p.y*p.y", "p.magnitude()"), false);
+    }
+
+    public static final ScriptFunction1DControl buildScriptFunction1DControl(final Property<Function<Number,Number>> p) {
+        return new ScriptFunction1DControl(p, Arrays.asList("Math.sin(x)", "x*x", "x+3", "Math.pow(Math.abs(x),1/2.5)"), false);
     }
     /*==========================================================================
      Standard Controls for MeshView

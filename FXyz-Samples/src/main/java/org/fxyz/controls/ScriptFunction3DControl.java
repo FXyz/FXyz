@@ -35,15 +35,15 @@ import org.fxyz.geometry.Point3D;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class ScriptDensityControl extends ControlBase<Property<Function<Point3D,Number>>>{
+public class ScriptFunction3DControl extends ControlBase<Property<Function<Point3D,Number>>>{
 
     private ObjectProperty<Function<Point3D,Number>> function = new SimpleObjectProperty<>();
     
     private BooleanProperty change=new SimpleBooleanProperty();
     private BooleanProperty error=new SimpleBooleanProperty();
     
-    public ScriptDensityControl(Property<Function<Point3D,Number>> prop, final Collection<String> items, boolean subControl) {
-        super("ScriptDensityControl.fxml", prop);
+    public ScriptFunction3DControl(Property<Function<Point3D,Number>> prop, final Collection<String> items, boolean subControl) {
+        super("ScriptFunction3DControl.fxml", prop);
         
         Point3D p=new Point3D(1f,2f,3f);
         res1.setText("p: {"+p.x+","+p.y+","+p.z+"}");
