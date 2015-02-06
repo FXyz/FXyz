@@ -14,7 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import org.fxyz.FXyzSample;
+import org.fxyz.samples.FXyzSample;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.CylinderMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;

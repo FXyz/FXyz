@@ -27,7 +27,7 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.FXyzSample;
+import org.fxyz.samples.FXyzSample;
 import org.fxyz.scene.Axes;
 import org.fxyz.shapes.primitives.CurvedSpringMesh;
 import org.fxyz.shapes.primitives.KnotMesh;

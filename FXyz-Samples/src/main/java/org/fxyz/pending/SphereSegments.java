@@ -21,7 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.FXyzSample;
+import org.fxyz.samples.FXyzSample;
 import org.fxyz.shapes.SphereSegment;
 import org.fxyz.utils.CameraTransformer;
 

@@ -17,7 +17,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.fxyz.FXyzSample;
+import org.fxyz.samples.FXyzSample;
 import org.fxyz.shapes.composites.Histogram;
 import org.fxyz.utils.CameraTransformer;
 
