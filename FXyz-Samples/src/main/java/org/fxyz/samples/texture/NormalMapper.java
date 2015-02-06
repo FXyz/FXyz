@@ -8,7 +8,7 @@ package org.fxyz.samples.texture;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.fxyz.FXyzSample;
+import org.fxyz.samples.FXyzSample;
 
 /**
  *

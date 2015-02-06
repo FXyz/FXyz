@@ -1,6 +1,5 @@
 package org.fxyz.samples.shapes.texturedmeshes;
 
-import org.fxyz.samples.shapes.TexturedMeshSample;
 import java.util.Objects;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.DoubleProperty;
@@ -12,6 +11,7 @@ import javafx.scene.transform.Rotate;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
+import org.fxyz.samples.shapes.TexturedMeshSample;
 import org.fxyz.shapes.primitives.KnotMesh;
 
 /**
@@ -123,44 +123,7 @@ public class Knots extends TexturedMeshSample {
             }
         }
     };
-
-    private final DoubleProperty _x = new SimpleDoubleProperty(model, "X Offset") {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((KnotMesh)model).setxOffset(_x.doubleValue());
-            }
-        }
-    };
-    private final DoubleProperty _y = new SimpleDoubleProperty(model, "Y Offset") {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((KnotMesh)model).setyOffset(_y.doubleValue());
-            }
-        }
-    };
-    private final DoubleProperty _z = new SimpleDoubleProperty(model, "Z Offset") {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((KnotMesh)model).setzOffset(_z.doubleValue());
-            }
-        }
-    };
-    private final DoubleProperty _angle = new SimpleDoubleProperty(model, "Tube Angle Offset") {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((KnotMesh)model).setTubeStartAngleOffset(_angle.doubleValue());
-            }
-        }
-    };
-    
+   
     private final IntegerProperty wireDivs = new SimpleIntegerProperty(model, "Wire Divisions", 100) {
         @Override
         protected void invalidated() {

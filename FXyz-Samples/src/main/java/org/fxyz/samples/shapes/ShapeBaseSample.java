@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
-import org.fxyz.FXyzSample;
+import org.fxyz.samples.FXyzSample;
 import org.fxyz.controls.SubSceneControlPanel;
 import org.fxyz.utils.CameraTransformer;
 

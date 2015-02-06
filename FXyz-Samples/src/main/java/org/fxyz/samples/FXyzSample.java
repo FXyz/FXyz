@@ -1,4 +1,4 @@
-package org.fxyz;
+package org.fxyz.samples;
 
 import fxsampler.SampleBase;
 import javafx.scene.Node;
