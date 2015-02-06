@@ -52,7 +52,7 @@ public class SurfacePlot extends TexturedMeshSample {
         }
     };
 
-    private final IntegerProperty divisionsX = new SimpleIntegerProperty(model, "Divisions X", 10) {
+    private final IntegerProperty divisionsX = new SimpleIntegerProperty(model, "Divisions X", 50) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -62,7 +62,7 @@ public class SurfacePlot extends TexturedMeshSample {
         }
     };
     
-    private final IntegerProperty divisionsY = new SimpleIntegerProperty(model, "Divisions Y", 10) {
+    private final IntegerProperty divisionsY = new SimpleIntegerProperty(model, "Divisions Y", 50) {
         @Override
         protected void invalidated() {
             super.invalidated();
