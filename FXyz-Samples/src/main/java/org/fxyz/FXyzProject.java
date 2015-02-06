@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -21,7 +22,8 @@ public class FXyzProject implements FXSamplerProject{
 
     static{
         //Application.setUserAgentStylesheet(FXyzSample.class.getResource("styles/modenaDark.css").toExternalForm());
-        Application.setUserAgentStylesheet(FXyzProject.class.getResource("styles/modenaGlass.css").toExternalForm());
+        Application.setUserAgentStylesheet(FXyzProject.class.getResource("styles/cyanBlackGlass.css").toExternalForm());
+        
     }
 
     
@@ -55,6 +57,13 @@ public class FXyzProject implements FXSamplerProject{
         label.setStyle("-fx-font-size: 1.5em; -fx-padding: 20 0 0 5;");
         vBox.getChildren().addAll(pane, label);
         WelcomePage wPage = new WelcomePage("Welcome to FXyzLib!", vBox);
+        
+        pane.sceneProperty().addListener(l->{
+            if(pane.getScene() != null){
+                pane.getScene().setFill(Color.web("#0e0e0e"));
+            }
+        });
+        
         return wPage;
     }
     

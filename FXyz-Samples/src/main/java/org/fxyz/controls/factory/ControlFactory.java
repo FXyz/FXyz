@@ -22,6 +22,7 @@ import org.fxyz.controls.ImagePreviewControl;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.ScriptDensityControl;
 import org.fxyz.controls.ScriptFunctionControl;
+import org.fxyz.controls.SubSceneControlPanel;
 import org.fxyz.controls.TextureTypeControl;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
@@ -83,11 +84,11 @@ public final class ControlFactory {
         return new ComboBoxControl<>("Draw Mode: ", dmp, Arrays.asList(DrawMode.values()), false);
     }
 
-    public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p, 
+    public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p,
             final Property<Number> clrs, final Property<Boolean> uDiffMap, final Property<Image> imgP,
-            final Property<Number> pScale, final Property<Function<Point3D,Number>> densFunc, 
-            final Property<Function<Number,Number>> funcFunc) {
-        return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()), 
+            final Property<Number> pScale, final Property<Function<Point3D, Number>> densFunc,
+            final Property<Function<Number, Number>> funcFunc) {
+        return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()),
                 clrs, uDiffMap, imgP, pScale, densFunc, funcFunc);
     }
 
@@ -95,11 +96,11 @@ public final class ControlFactory {
         return new ComboBoxControl<>("Section Type", p, Arrays.asList(SectionType.values()), false);
     }
 
-    public static final ScriptDensityControl buildScriptDensityControl(final Property<Function<Point3D,Number>> p) {
+    public static final ScriptDensityControl buildScriptDensityControl(final Property<Function<Point3D, Number>> p) {
         return new ScriptDensityControl(p, Arrays.asList("Math.sin(p.x)", "p.y", "p.z", "p.x + p.y", "p.x + p.z", "p.f", "p.magnitude()"), false);
     }
 
-    public static final ScriptFunctionControl buildScriptFunctionControl(final Property<Function<Number,Number>> p) {
+    public static final ScriptFunctionControl buildScriptFunctionControl(final Property<Function<Number, Number>> p) {
         return new ScriptFunctionControl(p, Arrays.asList("Math.sin(x)", "x*x", "x+3", "Math.pow(Math.abs(x),1/2.5)"), false);
     }
     /*==========================================================================
@@ -109,6 +110,7 @@ public final class ControlFactory {
      builds the complete ControlCategory, shared by all MeshViews
      DrawMode, CullFace, DiffuseColor, SpecularColor
      */
+
     public static ControlCategory buildMeshViewCategory(final Property<Boolean> useMat, final Property<DrawMode> dmp, final Property<CullFace> cfp,
             final Property<Color> dcp, final Property<Color> scp) {
         ControlCategory mvc = new ControlCategory("Standard MeshView Properties");
@@ -148,22 +150,44 @@ public final class ControlFactory {
             final Property<TextureType> ttp,
             final Property<Number> cp,
             final Property<SectionType> stp,
-            final Property<Boolean> uDiffMap, 
+            final Property<Boolean> uDiffMap,
             final Property<Image> imgP,
-            final Property<Number> pScale, 
-            final Property<Function<Point3D,Number>> densFunc,
-            final Property<Function<Number,Number>> funcFunc
+            final Property<Number> pScale,
+            final Property<Function<Point3D, Number>> densFunc,
+            final Property<Function<Number, Number>> funcFunc
     ) {
-        
+
         final TextureTypeControl texType = buildTextureTypeControl(
                 ttp, cp, uDiffMap, imgP, pScale, densFunc, funcFunc);
 
-        ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
+        final ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(texType);
-        if(stp!=null){
-                mvc.addControl(buildSectionTypeControl(stp));
+        if (stp != null) {
+            mvc.addControl(buildSectionTypeControl(stp));
         }
-        
+
+        return mvc;
+    }
+
+    public static ControlCategory buildSceneAndLightCategory(
+            final Property<Boolean> show,
+            final Property<Boolean> lt1On, final Property<Boolean> lt2On,
+            final Property<Color> c1, final Property<Color> c2,
+            final Property<Number> d1, final Property<Number> d2,
+            final Property<Number> r1, final Property<Number> r2,
+            final Property<javafx.geometry.Point3D> ra1, final Property<javafx.geometry.Point3D> ra2
+    ) {
+        final SubSceneControlPanel lighting = new SubSceneControlPanel(
+                show,
+                lt1On, lt2On,
+                c1, c2,
+                d1, d2,
+                r1, r2,
+                ra1, ra2
+        );
+        final ControlCategory mvc = new ControlCategory("Scene Lighting");
+        mvc.addControls(lighting);
+
         return mvc;
     }
     /*

@@ -3,17 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.fxyz.samples.shapes;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -30,28 +25,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
+import org.fxyz.controls.ControlPanel;
+import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.samples.FXyzSample;
-import org.fxyz.controls.SubSceneControlPanel;
 import org.fxyz.utils.CameraTransformer;
 
 /**
- * + mainPane     resizable StackPane
- * ++ subScene    SubScene, with camera 
- * +++ root       Group
- * ++++ group     Group created in the subclass with the 3D Shape
- * 
+ * + mainPane resizable StackPane ++ subScene SubScene, with camera +++ root
+ * Group ++++ group Group created in the subclass with the 3D Shape
+ *
  * @author jpereda
- * @param <T> 
+ * @param <T>
  */
 public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     private final double sceneWidth = 800;
-    private final double sceneHeight = 600;    
+    private final double sceneHeight = 600;
     protected long lastEffect;
-    
+
     protected PointLight sceneLight1;
     protected PointLight sceneLight2;
-    
+
     private Group light1Group;
     private Group light2Group;
     private Group lightingGroup;
@@ -59,35 +53,32 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private Group root;
     protected Group group;
     protected StackPane mainPane;
-    
-    protected T model; 
-    
+
+    protected T model;
+
     protected PerspectiveCamera camera;
     private CameraTransformer cameraTransform;
     protected Rotate rotateY;
-    
+
     private Service<Void> service;
     private ProgressBar progressBar;
     private long time;
-        
-    protected Scene getScene(){
+
+    protected Scene getScene() {
         return subScene.getScene();
     }
 
     protected PhongMaterial material = new PhongMaterial();
-   
+
     protected abstract void createMesh();
+
     protected abstract void addMeshAndListeners();
-    
-    private final Property<Color> light1Color = new SimpleObjectProperty<>(Color.WHITE);
-    private final Property<Color> light2Color = new SimpleObjectProperty<>(Color.WHITE);
-    
+
     private final BooleanProperty onService = new SimpleBooleanProperty();
-   
-    
+
     @Override
-    public Node getSample() {        
-        if(!onService.get()){
+    public Node getSample() {
+        if (!onService.get()) {
             cameraTransform = new CameraTransformer();
             camera = new PerspectiveCamera(true);
             camera.setNearClip(0.1);
@@ -98,7 +89,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
             //setup camera transform for rotational support
             cameraTransform.setTranslate(0, 0, 0);
-            cameraTransform.getChildren().add(camera);            
+            cameraTransform.getChildren().add(camera);
             cameraTransform.ry.setAngle(-45.0);
             cameraTransform.rx.setAngle(-10.0);
 
@@ -107,31 +98,30 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             AmbientLight amb = new AmbientLight(Color.WHITE);
             amb.getScope().add(cameraTransform);
             cameraTransform.getChildren().addAll(light);
-            
+
             light.translateXProperty().bind(camera.translateXProperty());
             light.translateYProperty().bind(camera.translateYProperty());
             light.translateZProperty().bind(camera.translateZProperty());
-            
+
             //==========================================================
             // Need a scene control panel to allow alterations to properties
-            
             sceneLight1 = new PointLight();
             sceneLight1.setTranslateX(500);
-            
+
             sceneLight2 = new PointLight();
             sceneLight2.setTranslateX(-500);
-                                    
+
             light1Group = new Group(sceneLight1);
             light2Group = new Group(sceneLight2);
-            
+
             lightingGroup = new Group(light1Group, light2Group);
             //==========================================================
-            
+
             root = new Group(lightingGroup);
-            
+
             sceneLight1.getScope().add(root);
             sceneLight2.getScope().add(root);
-            
+
             subScene = new SubScene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
             subScene.setFill(Color.TRANSPARENT);//Color.web("#0d0d0d"));        
             subScene.setCamera(camera);
@@ -146,11 +136,11 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             mainPane.getChildren().add(subScene);
             mainPane.setPickOnBounds(false);
 
-            service = new Service<Void>(){
+            service = new Service<Void>() {
 
                 @Override
                 protected Task<Void> createTask() {
-                    return new Task<Void>(){
+                    return new Task<Void>() {
 
                         @Override
                         protected Void call() throws Exception {
@@ -163,9 +153,9 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
                 @Override
                 protected void failed() {
-                    super.failed(); 
+                    super.failed();
                     getException().printStackTrace(System.err);
-                }               
+                }
             };
 
             progressBar = new ProgressBar();
@@ -174,19 +164,29 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             mainPane.getChildren().add(progressBar);
 
             group = new Group();
-            group.getChildren().add(cameraTransform);        
+            group.getChildren().add(cameraTransform);
             root.getChildren().add(group);
 
-            service.setOnSucceeded(e->{
+            service.setOnSucceeded(e -> {
                 onService.set(false);
-                System.out.println("time: " + (System.currentTimeMillis() - time)); 
+                System.out.println("time: " + (System.currentTimeMillis() - time));
                 addMeshAndListeners();
-                mainPane.getChildren().remove(progressBar); 
-                
-                if(model instanceof Shape3D){
-                    material = (PhongMaterial)((Shape3D)model).getMaterial();
+                mainPane.getChildren().remove(progressBar);
+
+                if (model instanceof Shape3D) {
+                    material = (PhongMaterial) ((Shape3D) model).getMaterial();
                 }
                 group.getChildren().add(model);
+                if (controlPanel != null && ((ControlPanel) controlPanel).getPanes().filtered(t -> t.getText().contains("lighting")).isEmpty()) {
+                    ((ControlPanel) controlPanel).getPanes().add(0, ControlFactory.buildSceneAndLightCategory(
+                            mainPane.visibleProperty(),
+                            sceneLight1.lightOnProperty(), sceneLight2.lightOnProperty(),
+                            sceneLight1.colorProperty(), sceneLight2.colorProperty(),
+                            sceneLight1.translateXProperty(), sceneLight2.translateXProperty(),
+                            light1Group.rotateProperty(), light2Group.rotateProperty(),
+                            light1Group.rotationAxisProperty(), light1Group.rotationAxisProperty()
+                    ));
+                }
             });
 
             subScene.widthProperty().bind(mainPane.widthProperty());
@@ -255,45 +255,23 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             });
 
 //            if(service.getState().equals(State.READY)){
-                onService.set(true);
-                System.out.println("start");
-                time = System.currentTimeMillis();
-                service.start();
+            onService.set(true);
+            System.out.println("start");
+            time = System.currentTimeMillis();
+            service.start();
 //            }
-        }       
-        SubSceneControlPanel sceneControls = new SubSceneControlPanel(
-                mainPane.visibleProperty(),
-                
-                sceneLight1.lightOnProperty(),
-                sceneLight2.lightOnProperty(),
-                
-                sceneLight1.colorProperty(),                 
-                sceneLight2.colorProperty(),
-                
-                sceneLight1.translateXProperty(), 
-                sceneLight2.translateXProperty(),
-                
-                light1Group.rotateProperty(),
-                light2Group.rotateProperty(),
-                
-                light1Group.rotationAxisProperty(), 
-                light2Group.rotationAxisProperty()
-        );
-        
-        StackPane.setAlignment(sceneControls, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(sceneControls, new Insets(10,10,10,10));
-        
-        mainPane.getChildren().add(sceneControls);
+        }
+
+        //mainPane.sceneProperty().addListener(l -> {          });
+        //mainPane.getChildren().add(sceneControls);
         return mainPane;
     }
 
     @Override
     public Node getControlPanel() {
-        return buildControlPanel() != null ? buildControlPanel() : null;         
+        return buildControlPanel() != null ? buildControlPanel() : null;
     }
-    
-    
-    
+
     @Override
     public double getControlPanelDividerPosition() {
         return 0.75D;

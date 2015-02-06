@@ -10,24 +10,24 @@
 
 <!-- stylesheets="@styles/modenaDark.css" -->
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox spacing="5.0">
+      <VBox alignment="TOP_CENTER" spacing="5.0" StackPane.alignment="CENTER">
          <children>
-            <VBox fx:id="lighting1" alignment="CENTER" layoutX="84.0" layoutY="33.0" maxHeight="-Infinity" maxWidth="-Infinity" spacing="5.0" style="-fx-border-radius: 10;" styleClass="scene-control-panel">
+            <VBox fx:id="lighting1" alignment="CENTER" layoutX="84.0" layoutY="33.0" maxHeight="-Infinity" maxWidth="-Infinity" spacing="5.0">
                <children>
                   <HBox>
                      <children>
                         <Label fx:id="light1Label" text="Point Light 1 " AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                         <Pane HBox.hgrow="ALWAYS" />
-                        <CheckBox fx:id="l1On" focusTraversable="false" mnemonicParsing="false" styleClass="hollow-check-box" />
+                        <CheckBox fx:id="l1On" focusTraversable="false" mnemonicParsing="false" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER">
                      <children>
                         <Label text="Light Distance :" />
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Slider fx:id="distL1" blockIncrement="0.5" focusTraversable="false" max="10000.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" value="500.0" />
+                        <Slider fx:id="distL1" blockIncrement="100.0" focusTraversable="false" max="100000.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" value="500.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER">
@@ -55,9 +55,8 @@
                         </VBox>
                         <VBox fx:id="rotControlL1" alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="NEVER">
                            <children>
-                              <ListSpinner fx:id="light1Rotate" cyclic="true" editable="false" focusTraversable="false" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="75.0" styleClass="radius-spinner">
-                            
-                        </ListSpinner>
+                              <ListSpinner fx:id="light1Rotate" cache="true" cyclic="true" editable="false" focusTraversable="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
+                                
                               <HBox fx:id="rotAxisL1" alignment="CENTER" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="segmented-button-bar">
                                  <children>
                                     <ToggleButton id="first" focusTraversable="false" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="25.0" styleClass="first-button" text="X" fx:id="xAxisL1" />
@@ -66,9 +65,6 @@
                                  </children>
                               </HBox>
                            </children>
-                           <effect>
-                              <InnerShadow color="WHITE" height="10.0" radius="3.875" width="7.5" />
-                           </effect>
                         </VBox>
                      </children>
                   </HBox>
@@ -77,7 +73,7 @@
                   <Insets bottom="5.0" left="3.0" right="3.0" top="5.0" />
                </padding>
             </VBox>
-            <VBox fx:id="lighting2" alignment="CENTER" layoutX="84.0" layoutY="143.0" maxHeight="-Infinity" maxWidth="-Infinity" spacing="5.0" style="-fx-border-radius: 10;" styleClass="scene-control-panel">
+            <VBox fx:id="lighting2" alignment="CENTER" layoutX="84.0" layoutY="143.0" maxHeight="-Infinity" maxWidth="-Infinity" spacing="5.0">
                <children>
                   <HBox>
                      <children>
@@ -90,7 +86,7 @@
                      <children>
                         <Label text="Light Distance :" />
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Slider fx:id="distL2" blockIncrement="0.5" focusTraversable="false" max="10000.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" value="500.0" />
+                        <Slider fx:id="distL2" blockIncrement="100.0" focusTraversable="false" max="100000.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" value="500.0" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT">
@@ -118,11 +114,14 @@
                         </VBox>
                         <VBox fx:id="rotControlL2" alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="NEVER">
                            <children>
-                              <ListSpinner fx:id="light2Rotate" cyclic="true" editable="false" focusTraversable="false" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="75.0" styleClass="radius-spinner" />
+                              <ListSpinner fx:id="light2Rotate" cache="true" cyclic="true" editable="false" focusTraversable="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" />
                               <HBox fx:id="rotAxisL2" alignment="CENTER" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="segmented-button-bar">
                                  <children>
                                     <ToggleButton id="first" focusTraversable="false" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="25.0" styleClass="first-button" text="X" fx:id="xAxisL2" />
-                                    <ToggleButton id="central" fx:id="yAxisL2" focusTraversable="false" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="25.0" text="Y" />
+                                    <ToggleButton id="central" fx:id="yAxisL2" focusTraversable="false" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="25.0" text="Y">
+                                       <opaqueInsets>
+                                          <Insets left="-0.5" right="-0.5" />
+                                       </opaqueInsets></ToggleButton>
                                     <ToggleButton id="last" fx:id="zAxisL2" focusTraversable="false" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="25.0" styleClass="last-button" text="Z" />
                                  </children>
                               </HBox>
@@ -139,9 +138,9 @@
                </padding>
             </VBox>
          </children>
-      </HBox>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+      </VBox>
    </children>
-   <padding>
-      <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-   </padding>
 </fx:root>

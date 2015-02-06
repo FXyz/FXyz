@@ -31,6 +31,7 @@ public abstract class ControlBase<P extends Property> extends StackPane{
             Logger.getLogger(CheckBoxControl.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.controlledProperty = prop;
+        this.getStyleClass().add("fxyz-control");
     }
 
     private ControlBase() {

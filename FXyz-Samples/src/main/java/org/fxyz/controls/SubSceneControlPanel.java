@@ -18,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import jfxtras.scene.control.ListSpinner;
-import org.fxyz.controls.ControlBase;
 
 /**
  * FXML Controller class
@@ -83,7 +82,7 @@ public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
             final Property<Point3D> ra1, final Property<Point3D> ra2
     ) {
         super("SubSceneControlPanel.fxml", show);
-
+        this.setOnMouseEntered(me->{me.consume();});
         colorL1.getStyleClass().addAll("colorSlider", "lighting-slider");
         colorL2.getStyleClass().addAll("colorSlider", "lighting-slider");
         
@@ -159,12 +158,8 @@ public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
             ));
         });
         
-        distL1.valueProperty().addListener(e->{
-            d1.setValue(distL1.getValue());
-        });
-        distL2.valueProperty().addListener(e->{
-            d2.setValue(-distL2.getValue());
-        });
+        d1.bind(distL1.valueProperty());
+        d2.bind(distL2.valueProperty());
         
         lt1On.bind(l1On.selectedProperty());
         lt2On.bind(l2On.selectedProperty());
