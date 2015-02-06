@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.pending;
+package org.fxyz.samples.shapes.compound;
 
-import java.util.ArrayList;
-import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -20,59 +18,57 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.composites.ScatterPlotMesh;
+import org.fxyz.shapes.composites.Histogram;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
  * @author Sean
  */
-public class ScatterPlotMeshes extends FXyzSample {
+public class Histograms extends FXyzSample {
 
     @Override
     public Node getSample() {
-
-        final CameraTransformer cameraTransform = new CameraTransformer();
         PerspectiveCamera camera = new PerspectiveCamera(true);
+        CameraTransformer cameraTransform = new CameraTransformer();
         final double sceneWidth = 800;
         final double sceneHeight = 600;
         double cameraDistance = 5000;
-        ScatterPlotMesh scatterPlotMesh;
+        Histogram histogram;
 
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        
-        //setup camera transform for rotational support
+       //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-40);
-        cameraTransform.ry.setAngle(-45.0);
-        cameraTransform.rx.setAngle(-10.0);
+        camera.setTranslateZ(-30);
+//        cameraTransform.ry.setAngle(-45.0);
+//        cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
-        cameraTransform.getChildren().add(new AmbientLight(Color.WHITE));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(camera.getTranslateZ());
+        light.setTranslateZ(10 * camera.getTranslateZ());
         scene.setCamera(camera);
 
-        scatterPlotMesh = new ScatterPlotMesh(1000, 1, true);
-        sceneRoot.getChildren().addAll(scatterPlotMesh);
+        histogram = new Histogram(1000, 1, true);
+        sceneRoot.getChildren().addAll(histogram);
 
-        ArrayList<Double> dataX = new ArrayList<>();
-        ArrayList<Double> dataY = new ArrayList<>();
-        ArrayList<Double> dataZ = new ArrayList<>();
-        for (int i = -250; i < 250; i++) {
-            dataX.add(new Double(i));
-            dataY.add(new Double(Math.sin(i) * 50) + i);
-            dataZ.add(new Double(Math.cos(i) * 50) + i);
+        int size = 30;
+        float[][] arrayY = new float[2 * size][2 * size];
+        for (int i = -size; i < size; i++) {
+            for (int j = -size; j < size; j++) {
+                //Transcedental Gradient
+                double xterm = (Math.cos(Math.PI * i / size) * Math.cos(Math.PI * i / size));
+                double yterm = (Math.cos(Math.PI * j / size) * Math.cos(Math.PI * j / size));
+                arrayY[i + size][j + size] = (float) (10 * ((xterm + yterm) * (xterm + yterm)));
+            }
         }
-
-        scatterPlotMesh.setXYZData(dataX, dataY, dataZ);
+        histogram.setHeightData(arrayY, 1, 4, Color.SKYBLUE, false, true);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
@@ -134,7 +130,7 @@ public class ScatterPlotMeshes extends FXyzSample {
                 cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
-
+        
         StackPane sp = new StackPane();
         sp.setPrefSize(sceneWidth, sceneHeight);
         sp.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
@@ -168,4 +164,6 @@ public class ScatterPlotMeshes extends FXyzSample {
     protected Node buildControlPanel() {
         return null;
     }
+    
+    
 }

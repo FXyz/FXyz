@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.samples;
+package org.fxyz.samples.utilities;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
-import org.fxyz.ShapeBaseSample;
+import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.scene.Skybox;
 
 /**
@@ -20,12 +20,12 @@ public class SkyBoxing extends ShapeBaseSample {
 
     @Override
     protected void createMesh() {
-        final Image top = new Image(SkyBoxing.class.getResource("res/top.png").toExternalForm()),
-                bottom = new Image(SkyBoxing.class.getResource("res/bottom.png").toExternalForm()),
-                left = new Image(SkyBoxing.class.getResource("res/left.png").toExternalForm()),
-                right = new Image(SkyBoxing.class.getResource("res/right.png").toExternalForm()),
-                front = new Image(SkyBoxing.class.getResource("res/front.png").toExternalForm()),
-                back = new Image(SkyBoxing.class.getResource("res/back.png").toExternalForm());
+        final Image top = new Image(SkyBoxing.class.getResource("../res/top.png").toExternalForm()),
+                bottom = new Image(SkyBoxing.class.getResource("../res/bottom.png").toExternalForm()),
+                left = new Image(SkyBoxing.class.getResource("../res/left.png").toExternalForm()),
+                right = new Image(SkyBoxing.class.getResource("../res/right.png").toExternalForm()),
+                front = new Image(SkyBoxing.class.getResource("../res/front.png").toExternalForm()),
+                back = new Image(SkyBoxing.class.getResource("../res/back.png").toExternalForm());
 
 
         // Load Skybox AFTER camera is initialized

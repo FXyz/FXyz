@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.pending;
+package org.fxyz.samples.utilities;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +18,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
-import org.fxyz.ShapeBaseSample;
+import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.geometry.Ray;
 
 /**

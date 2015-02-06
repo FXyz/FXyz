@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.materials;
+package org.fxyz.samples.texture;
 
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;

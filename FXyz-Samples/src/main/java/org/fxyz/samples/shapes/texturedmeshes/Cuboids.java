@@ -1,5 +1,6 @@
-package org.fxyz.samples;
+package org.fxyz.samples.shapes.texturedmeshes;
 
+import org.fxyz.samples.shapes.TexturedMeshSample;
 import static javafx.application.Application.launch;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -7,7 +8,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import org.fxyz.TexturedMeshSample;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;

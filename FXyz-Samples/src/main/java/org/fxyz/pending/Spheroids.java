@@ -19,7 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-import org.fxyz.ShapeBaseSample;
+import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.controls.ComboBoxControl;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;

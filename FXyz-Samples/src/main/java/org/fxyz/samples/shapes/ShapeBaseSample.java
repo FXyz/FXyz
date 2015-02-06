@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.fxyz;
+package org.fxyz.samples.shapes;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
@@ -30,6 +30,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
+import org.fxyz.FXyzSample;
+import org.fxyz.controls.SubSceneControlPanel;
 import org.fxyz.utils.CameraTransformer;
 
 /**

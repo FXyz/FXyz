@@ -1,4 +1,4 @@
-package org.fxyz.samples;
+package org.fxyz.samples.shapes.texturedmeshes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +22,7 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import org.fxyz.ShapeBaseSample;
+import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.controls.CheckBoxControl;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;

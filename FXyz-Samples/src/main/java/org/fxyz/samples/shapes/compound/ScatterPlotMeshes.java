@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.pending;
+package org.fxyz.samples.shapes.compound;
 
 import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -21,29 +20,29 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.composites.ScatterPlot;
+import org.fxyz.shapes.composites.ScatterPlotMesh;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
  * @author Sean
  */
-public class ScatterPlotColors extends FXyzSample {
+public class ScatterPlotMeshes extends FXyzSample {
 
     @Override
     public Node getSample() {
 
+        final CameraTransformer cameraTransform = new CameraTransformer();
         PerspectiveCamera camera = new PerspectiveCamera(true);
         final double sceneWidth = 800;
         final double sceneHeight = 600;
         double cameraDistance = 5000;
-        ScatterPlot scatterPlot;
-        final CameraTransformer cameraTransform = new CameraTransformer();
+        ScatterPlotMesh scatterPlotMesh;
 
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-
+        
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
@@ -61,23 +60,19 @@ public class ScatterPlotColors extends FXyzSample {
         light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
 
-        scatterPlot = new ScatterPlot(1000, 1, true);
-        sceneRoot.getChildren().addAll(scatterPlot);
+        scatterPlotMesh = new ScatterPlotMesh(1000, 1, true);
+        sceneRoot.getChildren().addAll(scatterPlotMesh);
 
-        List<Double> dataX = new ArrayList<>();
-        List<Double> dataY = new ArrayList<>();
-        List<Double> dataZ = new ArrayList<>();
-        List<Color> colors = new ArrayList<>();
-        int k = 0;
+        ArrayList<Double> dataX = new ArrayList<>();
+        ArrayList<Double> dataY = new ArrayList<>();
+        ArrayList<Double> dataZ = new ArrayList<>();
         for (int i = -250; i < 250; i++) {
             dataX.add(new Double(i));
-            dataY.add(Math.sin(i) * 50 + i);
-            dataZ.add(Math.cos(i) * 50 + i);
-            colors.add(new Color(Math.abs(i) / 250D, Math.abs(dataY.get(k)) / 300D, Math.abs(dataZ.get(k) / 300D), 0.25));
-            k++;
+            dataY.add(new Double(Math.sin(i) * 50) + i);
+            dataZ.add(new Double(Math.cos(i) * 50) + i);
         }
 
-        scatterPlot.setXYZData(dataX, dataY, dataZ, colors);
+        scatterPlotMesh.setXYZData(dataX, dataY, dataZ);
 
         //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
@@ -168,9 +163,9 @@ public class ScatterPlotColors extends FXyzSample {
     public String getJavaDocURL() {
         return null;
     }
+    
     @Override
     protected Node buildControlPanel() {
         return null;
     }
-    
 }

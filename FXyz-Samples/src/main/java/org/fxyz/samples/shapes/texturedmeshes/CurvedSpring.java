@@ -1,54 +1,52 @@
-package org.fxyz.samples;
+package org.fxyz.samples.shapes.texturedmeshes;
 
+import org.fxyz.samples.shapes.TexturedMeshSample;
 import javafx.scene.Node;
 import javafx.scene.shape.CullFace;
 import javafx.scene.transform.Rotate;
-import org.fxyz.TexturedMeshSample;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.factory.ControlFactory;
-import org.fxyz.shapes.primitives.SpringMesh;
+import org.fxyz.shapes.primitives.CurvedSpringMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 
 /**
  *
  * @author jpereda
  */
-public class Springs extends TexturedMeshSample {
-
-    public static void main(String[] args) {
-        Springs.launch(args);
-    }
-
+public class CurvedSpring extends TexturedMeshSample {
+    public static void main(String[] args){CurvedSpring.launch(args);}
     @Override
-    protected void createMesh() {
-
-        model = new SpringMesh(50d, 10d, 20d, 2 * 20d * 2d * Math.PI,
+    public void createMesh() {        
+        model = new CurvedSpringMesh(6d, 2d, 0.4d, 25d, 12.5d * 2d * Math.PI,
                 1000, 60, 0, 0);
-//        spring.setDrawMode(DrawMode.LINE);
-        model.setCullFace(CullFace.NONE);
         model.setSectionType(SectionType.TRIANGLE);
+        model.setCullFace(CullFace.NONE);
+//        spring.setDrawMode(DrawMode.LINE);
 
-//    // NONE
-//        spring.setTextureModeNone(Color.ROYALBLUE);
-        // IMAGE
+        // NONE
+        //model.setTextureModeNone(Color.ROYALBLUE);
+    // IMAGE
 //        spring.setTextureModeImage(getClass().getResource("res/LaminateSteel.jpg").toExternalForm());
         // PATTERN
-//       spring.setTextureModePattern(5d);
+//       spring.setTextureModePattern(10d);
         // FUNCTION
-//        spring.setTextureModeVertices1D(256*256,t->t);
+        model.setTextureModeVertices1D(256*256,t->t);
         // DENSITY
-        model.setTextureModeVertices3D(256 * 256, p -> (double) p.magnitude());
-            // FACES
+//        spring.setTextureModeVertices3D(256*256,dens);
+        // FACES
 //        spring.setTextureModeFaces(256*256);
 
         model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
 
     }
 
+    
+    
+
     @Override
     protected void addMeshAndListeners() {
     }
-
+    
     @Override
     protected Node buildControlPanel() {
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
@@ -63,15 +61,12 @@ public class Springs extends TexturedMeshSample {
                         this.material.specularColorProperty()
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(
-                        this.textureType, this.colors,
-                        this.sectionType, this.useDiffMap,
-                        this.material.diffuseMapProperty(),
-                        this.pattScale, this.dens, this.func
-                )
+                ControlFactory.buildTextureMeshCategory(this.textureType, 
+                        this.colors, this.sectionType, this.useDiffMap, 
+                        this.material.diffuseMapProperty(), this.pattScale, 
+                        this.dens, this.func)
         );
-
+        
         return this.controlPanel;
     }
-
 }

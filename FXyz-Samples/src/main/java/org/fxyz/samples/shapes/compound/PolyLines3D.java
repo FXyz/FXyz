@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package org.fxyz.samples.shapes.compound;
 
-package org.fxyz.pending;
-
-import com.sun.javafx.Utils;
-import javafx.scene.AmbientLight;
+import java.util.ArrayList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -19,62 +17,60 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.CullFace;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSample;
-import org.fxyz.shapes.composites.SurfacePlot;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.composites.PolyLine3D;
 import org.fxyz.utils.CameraTransformer;
 
 /**
  *
  * @author Sean
  */
-public class SurfacePlots extends FXyzSample { 
+public class PolyLines3D extends FXyzSample {
 
     @Override
     public Node getSample() {
-        
-        SurfacePlot surfacePlot;  
+
         PerspectiveCamera camera = new PerspectiveCamera(true);
+        CameraTransformer cameraTransform = new CameraTransformer();
         final double sceneWidth = 800;
         final double sceneHeight = 600;
-        final CameraTransformer cameraTransform = new CameraTransformer();
-        
+        double cameraDistance = 5000;
+        PolyLine3D polyLine3D;
+
         Group sceneRoot = new Group();
         SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BLACK);
-        
-        int size = 10;
-        float [][] arrayY = new float[2*size][2*size];
-        //The Sombrero
-        for(int i=-size;i<size;i++) {
-            for(int j=-size;j<size;j++) {
-                double R = Math.sqrt((i * i)  + (j * j)) + 0.00000000000000001;
-                arrayY[i+size][j+size] = ((float) -(Math.sin(R)/R)) * 100;
-            }
-        }
-        surfacePlot = new SurfacePlot(arrayY, 10, Color.AQUA, false, false);
-        surfacePlot.meshView.setCullFace(CullFace.NONE);
-        sceneRoot.getChildren().addAll(surfacePlot);
-        
+        scene.setCamera(camera);
+
         //setup camera transform for rotational support
         cameraTransform.setTranslate(0, 0, 0);
         cameraTransform.getChildren().add(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
-        camera.setTranslateZ(-1000);
-        cameraTransform.ry.setAngle(-45.0);
-        cameraTransform.rx.setAngle(-10.0);
+        camera.setTranslateZ(-30);
+//        cameraTransform.ry.setAngle(-45.0);
+//        cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
-        cameraTransform.getChildren().add(new AmbientLight(Color.GAINSBORO));
         light.setTranslateX(camera.getTranslateX());
         light.setTranslateY(camera.getTranslateY());
-        light.setTranslateZ(camera.getTranslateZ());
+        light.setTranslateZ(10 * camera.getTranslateZ());
         scene.setCamera(camera);
-        
-        //First person shooter keyboard movement
+
+        ArrayList<Point3D> points = new ArrayList<>();
+        for (int i = -250; i < 250; i++) {
+            points.add(new Point3D(
+                    (float) i,
+                    (float) Math.sin(i) * 50 + i,
+                    (float) Math.cos(i) * 50 + i));
+        }
+        polyLine3D = new PolyLine3D(points, 3, Color.STEELBLUE);
+        sceneRoot.getChildren().addAll(polyLine3D);
+
+        //First person shooter keyboard movement 
         scene.setOnKeyPressed(event -> {
             double change = 10.0;
             //Add shift modifier to simulate "Running Speed"
@@ -90,14 +86,13 @@ public class SurfacePlots extends FXyzSample {
             if (keycode == KeyCode.S) {
                 camera.setTranslateZ(camera.getTranslateZ() - change);
             }
-            //Step 2d: Add Strafe controls
+            //Step 2d:  Add Strafe controls
             if (keycode == KeyCode.A) {
                 camera.setTranslateX(camera.getTranslateX() - change);
             }
             if (keycode == KeyCode.D) {
                 camera.setTranslateX(camera.getTranslateX() + change);
             }
-
         });
 
         scene.setOnMousePressed((MouseEvent me) -> {
@@ -124,19 +119,15 @@ public class SurfacePlots extends FXyzSample {
                 modifier = 50.0;
             }
             if (me.isPrimaryButtonDown()) {
-                cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + mouseDeltaX * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180); // +
-                cameraTransform.rx.setAngle(
-                        Utils.clamp(-90,
-                                (((cameraTransform.rx.getAngle() - mouseDeltaY * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180),
-                                90)); // - 
-
+                cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + mouseDeltaX * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // +
+                cameraTransform.rx.setAngle(((cameraTransform.rx.getAngle() - mouseDeltaY * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // -
             } else if (me.isSecondaryButtonDown()) {
                 double z = camera.getTranslateZ();
                 double newZ = z + mouseDeltaX * modifierFactor * modifier;
                 camera.setTranslateZ(newZ);
             } else if (me.isMiddleButtonDown()) {
-                cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3); // -
-                cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3); // -
+                cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3);  // -
+                cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
             }
         });
 
@@ -151,9 +142,9 @@ public class SurfacePlots extends FXyzSample {
         scene.widthProperty().bind(sp.widthProperty());
         scene.heightProperty().bind(sp.heightProperty());
         
-        return (sp);       
+        return (sp);
     }
-    
+
     @Override
     public String getSampleName() {
         return getClass().getSimpleName().concat(" Sample");
@@ -166,13 +157,11 @@ public class SurfacePlots extends FXyzSample {
 
     @Override
     public String getJavaDocURL() {
-        return "";
-    }   
+        return null;
+    }
     
     @Override
     protected Node buildControlPanel() {
         return null;
     }
-    
-    
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
-import org.fxyz.ShapeBaseSample;
+import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.NumberSliderControl;

@@ -1,8 +1,8 @@
-package org.fxyz.samples;
+package org.fxyz.samples.shapes.texturedmeshes;
 
+import org.fxyz.samples.shapes.TexturedMeshSample;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
-import org.fxyz.TexturedMeshSample;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.shapes.primitives.SegmentedTorusMesh;
