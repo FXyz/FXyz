@@ -44,7 +44,7 @@ public class ControlCategory  extends TitledPane{
         
         this.controlItems = FXCollections.observableArrayList();
         this.listView.setItems(controlItems);
-       
+        this.getStyleClass().add("fxyz-control");
     }    
     
     public ControlCategory(String title) {

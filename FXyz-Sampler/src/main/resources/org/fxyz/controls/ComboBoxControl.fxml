@@ -12,7 +12,7 @@
             <Label fx:id="title" focusTraversable="false" />
             <HBox fx:id="hbox" alignment="CENTER_LEFT" StackPane.alignment="CENTER_LEFT">
                <children>
-                  <ComboBox fx:id="selection" cache="true" cacheHint="SPEED" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pickOnBounds="false" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="selection" cache="true" cacheHint="SPEED" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pickOnBounds="false" styleClass="fxyz-control" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <VBox fx:id="subControls" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">

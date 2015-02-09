@@ -6,10 +6,10 @@
      *  These 4 items should be all you need to alter other than specific      *
      *  results.                                                               *
      **************************************************************************/    
-    -fx-base: rgba(0,0,0,0.85);
+    -fx-base: rgba(0,0,0,0.15);
     
-    -fx-background: rgba(0,0,0,0.55);
-    -fx-control-inner-background: rgba(0,0,0,0.15);
+    -fx-background: rgba(0,0,0,0.05);
+    -fx-control-inner-background: rgba(0,0,0,0.005);
     
     -fx-accent: #00ffffbe;
     -fx-hover-base: ladder(transparent,transparent 20%, transparent 35%, derive(-fx-accent,40%) 48%);
@@ -3235,4 +3235,12 @@
 }
 .ListSpinner .clicked { 
     -fx-background-color: -fx-focus-color;
+}
+
+.client-root{
+    -fx-background-color: transparent;
+    -fx-background-image: url("images/background-02.jpg");    
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
 }

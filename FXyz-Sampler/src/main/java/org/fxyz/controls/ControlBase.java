@@ -32,6 +32,7 @@ public abstract class ControlBase<P extends Property> extends StackPane{
         }
         this.controlledProperty = prop;
         this.setPrefSize(USE_PREF_SIZE, StackPane.BASELINE_OFFSET_SAME_AS_HEIGHT );
+        
         this.getStyleClass().add("fxyz-control");
         
     }

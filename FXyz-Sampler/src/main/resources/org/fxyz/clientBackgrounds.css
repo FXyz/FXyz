@@ -1,0 +1,40 @@
+
+
+
+
+/*
+    Still need to set this up ... 
+    Basically ceate a similar field for each background, 
+    then in code set styleclass to desired field
+*/
+
+.bead-spiral-background{    
+    -fx-background-image: url("images/background-01.jpg");    
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
+}
+.teal-stripes-background{    
+    -fx-background-image: url("images/background-02.jpg");    
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
+}
+.blue-fade-background{    
+    -fx-background-image: url("images/background-03.jpg");    
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
+}
+.comp-fade-background{    
+    -fx-background-image: url("images/background-04.jpg");    
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
+}
+.space-background{    
+    -fx-background-image: url("images/background-05.jpg");    
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
+}

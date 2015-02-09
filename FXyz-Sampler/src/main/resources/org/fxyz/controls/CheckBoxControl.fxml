@@ -7,7 +7,7 @@
 
 <fx:root maxWidth="1.7976931348623157E308" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER" StackPane.alignment="CENTER_LEFT">
+      <HBox alignment="CENTER_LEFT" StackPane.alignment="CENTER_LEFT">
          <children>
             <CheckBox fx:id="checkBox" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" mnemonicParsing="false" HBox.hgrow="ALWAYS">
                <padding>

@@ -1798,8 +1798,8 @@
 .titled-pane {
     -fx-text-fill: -fx-text-base-color;
 }
-.titled-pane:focused {
-    -fx-color: -fx-accent;
+.titled-pane:hover {
+    -fx-background-color: inherit;//
 }
 .titled-pane > .title {
     -fx-background-color:
@@ -1819,7 +1819,7 @@
 }*/
 /* focus purely on the arrow */
 .titled-pane:focused > .title > .arrow-button > .arrow {
-    -fx-background-color: -fx-focus-color, -fx-mark-color;
+    -fx-background-color: inherit;//-fx-focus-color, -fx-mark-color;
     -fx-background-insets: -1, 0;
     -fx-effect: dropshadow(two-pass-box , -fx-focus-color, 5, 0.2 , 0, 0);
 }
@@ -3114,14 +3114,17 @@
 /*==============================================================================
     fxyz specific
 */
+.client-root{
+    -fx-background-color: transparent;
+}
 
 .fxyz-control{
     -fx-background-color:
-        linear-gradient(from 0% 100% to 100% 100%,  #ffffff09 0%, transparent 100%),
-        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #ffffff06, transparent 50%);
+        linear-gradient(from 0% 100% to 100% 100%,  #ffffff19 0%, transparent 100%),
+        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #ffffff16, transparent 50%);
     -fx-border-color:
         radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
-    -fx-border-width:0.75px;
+    -fx-border-width:1px;
     -fx-background-insets: 0;
     
 }
