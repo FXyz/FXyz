@@ -1,0 +1,9 @@
+Cloth Mesh is still being developed..
+
+To Do: 
+Collision Detection, other nodes and with itself
+Finish Property invalidations
+Add a convienient way to add Pin positions
+Also A ForceFactory of some kind for things like Wind
+
+If you wish to help of Have a few tricks to share, comment or send a Pull request!

@@ -1,0 +1,12 @@
+This project is a Modified clone of ControlsFX-FXSampler.
+
+Due to the nature of our project, the original project 
+did not fit to our template as well as we would have liked.
+
+Thank you to the ControlsFX team for providing the framework
+that made this project possible.
+
+Other thanks go to:
+    ~DataFX   : http://www.javafxdata.org/
+    ~JFXtras  : http://fxexperience.com/controlsfx/
+    ~EasyBind : https://github.com/TomasMikula/EasyBind

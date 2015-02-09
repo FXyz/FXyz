@@ -1,0 +1,37 @@
+apply plugin: 'application'
+applicationDefaultJvmArgs = ["-Xms2g", "-Xmx2g", "-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true"]
+
+applicationName = 'FXyz-Samples'
+
+mainClassName = fxyz_sampler_mainClass
+
+configurations {
+    jdk
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.jdk
+    }
+}
+
+dependencies {
+    compile project(':FXyz-Sampler')
+    
+    try {
+        jdk files(jfxrtJar)
+    } catch (MissingPropertyException pne) {
+        // javafx plugin will provide in this case
+    }
+    
+}
+
+jar {
+    manifest {
+        attributes  'Implementation-Title':    'FXyzLibs',
+                    'Implementation-Version':   project.version,
+                    'Class-Path':               configurations.compile.collect { it.getName() }.join(' '),
+                    'Main-Class':               fxyz_sampler_mainClass
+    }
+    from sourceSets.main.allJava
+}

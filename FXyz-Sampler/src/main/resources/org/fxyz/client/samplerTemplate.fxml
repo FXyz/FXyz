@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<fx:root prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #303030;" stylesheets="@../smokeBlackGlass.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <BorderPane fx:id="rootBorderPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
+         <center>
+            <StackPane fx:id="contentPane">
+               <children>
+                  <VBox fx:id="centerOverlay">
+                     <children>
+                        <HBox fx:id="sceneTrackerOverlay" prefHeight="50.0" />
+                     </children></VBox>
+               </children>
+            </StackPane>
+         </center>
+         <left>
+            <VBox fx:id="leftSide" alignment="TOP_CENTER" prefWidth="200.0" spacing="3.0" BorderPane.alignment="CENTER_LEFT">
+               <children>
+                  <TextField fx:id="searchBar" focusTraversable="false" promptText="Search For Projects" />
+                  <TreeView fx:id="contentTree" focusTraversable="false" nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+            </VBox>
+         </left>
+         <right>
+            <VBox fx:id="rightSide" prefWidth="200.0" BorderPane.alignment="TOP_CENTER">
+               <children>
+                  <Accordion fx:id="sampleControls" focusTraversable="false" prefHeight="103.0" prefWidth="164.0" VBox.vgrow="ALWAYS">
+                     <panes>
+                        <TitledPane fx:id="removeMe" focusTraversable="false" prefHeight="200.0" prefWidth="200.0">
+                           <content>
+                              <ListView focusTraversable="false" prefHeight="200.0" prefWidth="200.0" />
+                           </content>
+                        </TitledPane>
+                     </panes>
+                  </Accordion>
+               </children>
+            </VBox>
+         </right>
+         <bottom>
+          <HBox id="HBox" fx:id="statusBar" alignment="CENTER_LEFT" spacing="5.0" BorderPane.alignment="CENTER">
+            <children>
+                  <HBox fx:id="footer" alignment="CENTER" spacing="3.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox fx:id="leftStatusContainer" alignment="CENTER_LEFT" prefWidth="200.0" HBox.hgrow="SOMETIMES">
+                           <children>
+                          <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status">
+                            <font>
+                              <Font size="11.0" />
+                            </font>
+                            <textFill>
+                              <Color blue="0.625" green="0.625" red="0.625" />
+                            </textFill>
+                          </Label>
+                           </children>
+                        </HBox>
+                        <ProgressBar fx:id="progressBar" focusTraversable="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="5.0" progress="0.41" HBox.hgrow="ALWAYS" />
+                        <HBox fx:id="rightStatusContainer" alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefWidth="200.0" HBox.hgrow="SOMETIMES">
+                           <children>
+                          <Label fx:id="rightStatusLabel" text="Right status" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+            </children>
+            <padding>
+              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+            </padding>
+          </HBox>
+         </bottom>
+         <top>
+            <HBox fx:id="header" prefHeight="30.0" BorderPane.alignment="CENTER" />
+         </top>
+      </BorderPane>
+   </children>
+</fx:root>

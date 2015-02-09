@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.*?>
+
+<fx:root styleClass="colorSlider" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox>
+         <children>
+             <HBox>
+                  <children>
+                     <Label fx:id="propName" text="Label" textFill="WHITE" HBox.hgrow="ALWAYS" />
+                     <StackPane fx:id="spacer" HBox.hgrow="ALWAYS" />
+                     <Label fx:id="valueLabel" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="50.0" textFill="WHITE" textOverrun="CLIP" HBox.hgrow="SOMETIMES" />
+                  </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
+                  <padding>
+                     <Insets left="5.0" right="5.0" />
+                  </padding>
+               </HBox>
+            <HBox>
+               <children>
+                  <Slider fx:id="valSlider" focusTraversable="false" styleClass="colorSlider" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</fx:root>

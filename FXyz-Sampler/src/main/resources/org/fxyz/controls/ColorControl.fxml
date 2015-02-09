@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" StackPane.alignment="CENTER_LEFT">
+         <children>
+            <Label fx:id="title" textFill="WHITE" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <ColorPicker fx:id="colors" editable="true" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefWidth="90.0" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</fx:root>
