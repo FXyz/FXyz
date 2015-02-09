@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-
-<fx:root minHeight="40.0" minWidth="150.0" style="-fx-background-color: rgba(0,0,0,0.43);" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
