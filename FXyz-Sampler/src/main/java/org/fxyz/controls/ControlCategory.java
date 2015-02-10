@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
@@ -44,6 +45,7 @@ public class ControlCategory  extends TitledPane{
         
         this.controlItems = FXCollections.observableArrayList();
         this.listView.setItems(controlItems);
+        
         this.getStyleClass().add("fxyz-control");
     }    
     
@@ -57,7 +59,10 @@ public class ControlCategory  extends TitledPane{
             @Override
             public ListCell<ControlBase> call(ListView<ControlBase> param) {
                 return new ListCell<ControlBase>(){
-
+                    {
+                        this.setFocusTraversable(false);
+                        this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                    }
                     @Override
                     public boolean isResizable() {
                         return false; //To change body of generated methods, choose Tools | Templates.
@@ -71,6 +76,7 @@ public class ControlCategory  extends TitledPane{
                     @Override
                     protected void updateItem(ControlBase item, boolean empty) {
                         if(item != null && !empty){
+                            
                             super.updateItem(item, empty);                            
                             super.setGraphic(item);                            
                         }

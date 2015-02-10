@@ -243,7 +243,7 @@
         linear-gradient(
         to right,
         transparent 0%,
-        derive(-fx-accent, -55%) 50%,
+        -fx-faint-focus-color 50%,
         transparent 100%
         );
 
@@ -251,7 +251,7 @@
         linear-gradient(
         to right,
         transparent 0%,
-        derive(-fx-accent, -85%) 50%,
+        -fx-faint-focus-color 50%,
         transparent 100%
         );
 
@@ -571,7 +571,7 @@
 }
 .scroll-pane:focused,
 .split-pane:focused,
-.list-view:focused,
+//.list-view:focused,
 .tree-view:focused,
 .table-view:focused,
 .tree-table-view:focused,
@@ -1462,8 +1462,8 @@
     -fx-padding: 0.0em 0.666667em 0.0em 0.666667em; /* 0 8 0 8 */
     -fx-spacing: 0.166667em; /* 2 */
     -fx-background-color:
-        linear-gradient(to bottom, derive(-fx-base,75%) 0%, -fx-outer-border 90%),
-        linear-gradient(to bottom, derive(-fx-base,46.9%) 2%, derive(-fx-base,-2.1%) 95%);
+        linear-gradient(to bottom, derive(-fx-base,75%) 0%, -fx-outer-border 90%);
+        //linear-gradient(to bottom, derive(-fx-base,46.9%) 2%, derive(-fx-base,-2.1%) 95%);
     -fx-background-insets: 0 0 0 0, 1 0 1 0;
     -fx-background-radius: 0, 0 ;
 }
@@ -1495,7 +1495,7 @@
 .menu-bar > .container > .menu-button:hover > .label,
 .menu-bar > .container > .menu-button:focused > .label,
 .menu-bar > .container > .menu-button:showing  > .label {
-    -fx-text-fill: -fx-text-background-color;
+    -fx-text-fill: -fx-text-base-color;
 }
 .menu-bar:show-mnemonics > .mnemonic-underline {
     -fx-stroke: -fx-text-fill;
@@ -1524,7 +1524,7 @@
 .menu-item:focused {
     -fx-background: -fx-selection-bar;
     -fx-background-color: -fx-background;
-    -fx-text-fill:  -fx-text-background-color;
+    -fx-text-fill:  -fx-text-base-color;
 }
 .menu-item:focused > .label {
     -fx-text-fill: -fx-focused-text-base-color;
@@ -1771,7 +1771,7 @@
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
 }
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
-    -fx-padding: 4 0 4 5;
+    //-fx-padding: 4 0 4 5;
     /* No alternate highlighting */
     -fx-background: -fx-control-inner-background;
 }
@@ -2193,7 +2193,8 @@
 
 * .cell:hover{
     -fx-background-color: -fx-selection-bar;
-    -fx-border-color: linear-gradient(to top, #FFFFFF66, transparent 1.5%)
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
 }
 * .cell:empty:hover{
     -fx-background-color: null;
@@ -2228,15 +2229,15 @@
 .tree-view > .virtual-flow > .scroll-bar:vertical,
 .table-view > .virtual-flow > .scroll-bar:vertical,
 .tree-table-view > .virtual-flow > .scroll-bar:vertical {
-    -fx-background-insets: 0, 0 0 0 1;
-    -fx-padding: -1 -1 -1 0;
+    //-fx-background-insets: 0, 0 0 0 1;
+    //-fx-padding: -1 -1 -1 0;
 }
 .list-view > .virtual-flow > .scroll-bar:horizontal,
 .tree-view > .virtual-flow > .scroll-bar:horizontal,
 .table-view > .virtual-flow > .scroll-bar:horizontal,
 .tree-table-view > .virtual-flow > .scroll-bar:horizontal {
-    -fx-background-insets: 0, 1 0 0 0;
-    -fx-padding: 0 -1 -1 -1;
+    //-fx-background-insets: 0, 1 0 0 0;
+    //-fx-padding: 0 -1 -1 -1;
 }
 .list-view > .virtual-flow > .corner,
 .tree-view > .virtual-flow > .corner,
@@ -2278,7 +2279,7 @@
 .table-view:focused:cell-selection > .virtual-flow > .clipped-container > .sheet > .table-row-cell > .table-cell:focused,
 .tree-table-view:focused:cell-selection > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell > .tree-table-cell:focused {
     -fx-background-color: -fx-background, -fx-cell-focus-inner-border, -fx-background;
-    -fx-background-insets: 0, 1, 2;
+    //-fx-background-insets: 0, 1, 2;
 }
 
 /*******************************************************************************
@@ -2290,8 +2291,10 @@
 .list-cell {
     -fx-padding: 0.25em 0.583em 0.25em 0.583em; /* 3 7 3 7 */
 }
-.list-cell:odd {
-    //-fx-background: -fx-control-inner-background;
+.list-cell:hover{
+    -fx-background: -fx-control-inner-background;
+    -fx-background-insets:0;
+    -fx-border-insets:0;
 }
 
 /*******************************************************************************
@@ -3126,17 +3129,35 @@
         radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
     -fx-border-width:1px;
     -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    
+}
+.fxyz-control:hover{
+    -fx-effect:innershadow(gaussian, #ffffff49, 10, 0.2,0,0);
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.fxyz-control-stack-pane{
+    -fx-background-color:
+        linear-gradient(from 0% 100% to 100% 100%,  #ffffff19 0%, transparent 100%),
+        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #ffffff16, transparent 50%);
+    -fx-border-color:
+        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
+    -fx-border-width:1px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;    
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect:dropshadow(gaussian, #ffffff09, 10, 0,0,0);
+}
+
+.fxyz-control-list-cell{
     
 }
 
-.fxyz-control > .stack-pane{
-    -fx-effect:innershadow(gaussian, #ffffff09, 10, 0,0,0);
-}
 
-.fxyz-control:hover{
-    -fx-color: -fx-hover-base;
-    -fx-effect:innershadow(gaussian, #ffffff49, 10, 0.2,0,0);
-}
+
 
 
 //==============================================================================
@@ -3199,13 +3220,6 @@
 }
 ///==============================================================================
 
-.sub-scene-container{
-    -fx-background-color: linear-gradient(to right, #2e2e2e33 0%, #66666633 50%, #2e2e2e33 100%),
-        radial-gradient(focus-angle 180deg, focus-distance 10%, center 50% 170%, radius 100%, reflect, -fx-base 0%, #66666633 40%, transparent 100%);
-    //-fx-background-image: url("../samples/sceneBackground.jpg");
-
-    -fx-border-color: linear-gradient(from 0% 50% to 100% 50%, rgba(0,0,0,0.9) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.9) 100%);
-}
 
 .ListSpinner { 
     -fx-background-color: null;

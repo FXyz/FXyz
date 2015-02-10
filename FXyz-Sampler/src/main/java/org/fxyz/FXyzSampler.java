@@ -36,7 +36,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.TreeItem;
@@ -82,7 +81,7 @@ public class FXyzSampler extends Application {
 //        primaryStage.getIcons().add(new Image("/org/controlsfx/samples/controlsfx-logo.png"));
         SimpleSamplerClient client = new SimpleSamplerClient(stage);           
         //Look at the clientBackgrounds.css file in resources for others
-        client.getStyleClass().add("space-background");
+        client.getStyleClass().add("blue-fade-background");
         
         Scene scene = new Scene(client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);        
         scene.setFill(Color.gray(0.6));
@@ -181,13 +180,7 @@ public class FXyzSampler extends Application {
 
         String template = getResource("/fxsampler/util/CssTemplate.html", null);
         return template.replace("<source/>", src);
-    }
-    
-    
-
-    private Node buildSampleTabContent(FXyzSample sample) {
-        return FXyzSampleBase.buildSample(sample, stage);
-    }    
+    }  
 
     
 }

@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<fx:root fx:id="titledPane" focusTraversable="false" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" styleClass="fxyz-control" text="Category For Section" type="TitledPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="titledPane" alignment="CENTER" focusTraversable="false" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" text="Category For Section" type="TitledPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       
    </content>
