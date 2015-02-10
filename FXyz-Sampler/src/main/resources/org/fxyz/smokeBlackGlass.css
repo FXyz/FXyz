@@ -3130,6 +3130,8 @@
     -fx-border-width:1px;
     -fx-background-insets: 0;
     -fx-border-insets: 0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
     
 }
 .fxyz-control:hover{
@@ -3152,8 +3154,18 @@
     -fx-effect:dropshadow(gaussian, #ffffff09, 10, 0,0,0);
 }
 
-.fxyz-control-list-cell{
-    
+.fxyz-welcome-label{
+    -fx-background-color:
+        linear-gradient(from 0% 100% to 100% 100%,  #00000019 0%, transparent 100%),
+        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #00000016, transparent 50%);
+    -fx-border-color:
+        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
+    -fx-border-width:1px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;    
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect:dropshadow(gaussian, #ffffff09, 10, 0,0,0); 
 }
 
 

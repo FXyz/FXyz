@@ -49,11 +49,11 @@ import javafx.stage.Stage;
 import org.fxyz.client.SimpleSamplerClient;
 import org.fxyz.model.Project;
 
-public class FXyzSampler extends Application {
+public class FXyzClient extends Application {
 
     public static final String 
-            BACKGROUNDS = FXyzSampler.class.getResource("clientBackgrounds.css").toExternalForm(),
-            GLASS_BLACK_SMOKE = FXyzSampler.class.getResource("smokeBlackGlass.css").toExternalForm();
+            BACKGROUNDS = FXyzClient.class.getResource("clientBackgrounds.css").toExternalForm(),
+            GLASS_BLACK_SMOKE = FXyzClient.class.getResource("smokeBlackGlass.css").toExternalForm();
             
     private Map<String, Project> projectsMap;
 
@@ -81,7 +81,7 @@ public class FXyzSampler extends Application {
 //        primaryStage.getIcons().add(new Image("/org/controlsfx/samples/controlsfx-logo.png"));
         SimpleSamplerClient client = new SimpleSamplerClient(stage);           
         //Look at the clientBackgrounds.css file in resources for others
-        client.getStyleClass().add("blue-fade-background");
+        client.getStyleClass().add("comp-fade-background");
         
         Scene scene = new Scene(client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);        
         scene.setFill(Color.gray(0.6));

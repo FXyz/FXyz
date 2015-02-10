@@ -51,11 +51,17 @@
                             </textFill>
                           </Label>
                            </children>
+                           <padding>
+                              <Insets left="3.0" />
+                           </padding>
                         </HBox>
                         <ProgressBar fx:id="progressBar" focusTraversable="false" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="5.0" progress="0.41" styleClass="fxyz-control" HBox.hgrow="ALWAYS" />
                         <HBox fx:id="rightStatusContainer" alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefWidth="200.0" HBox.hgrow="SOMETIMES">
                            <children>
-                          <Label fx:id="rightStatusLabel" text="Right status" />
+                          <Label fx:id="rightStatusLabel" text="Right status">
+                                 <padding>
+                                    <Insets right="3.0" />
+                                 </padding></Label>
                            </children>
                         </HBox>
                      </children>
@@ -73,7 +79,7 @@
                </BorderPane.margin></HBox>
          </top>
          <left>
-            <StackPane alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
+            <StackPane fx:id="menuPane" alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
                <children>
                   <VBox fx:id="leftSide" alignment="TOP_CENTER" prefWidth="200.0" spacing="3.0" BorderPane.alignment="CENTER_LEFT">
                      <children>
@@ -84,7 +90,7 @@
                         <Insets />
                      </BorderPane.margin>
                   </VBox>
-                  <Pane fx:id="leftSlideTrigger" maxWidth="-Infinity" minWidth="-Infinity" onMouseEntered="#showLeftSideIfHidden" prefWidth="25.0" StackPane.alignment="CENTER_LEFT" />
+                  <Pane fx:id="leftSlideTrigger" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="25.0" StackPane.alignment="CENTER_LEFT" />
                </children>
                <BorderPane.margin>
                   <Insets left="3.0" />
