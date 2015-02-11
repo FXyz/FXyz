@@ -35,18 +35,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.ParallelCamera;
-import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.fxyz.client.SimpleSliderClient;
+import org.fxyz.client.CustomWindow;
 import org.fxyz.model.Project;
 
 public class FXyzClient extends Application {
@@ -83,23 +78,24 @@ public class FXyzClient extends Application {
         //Look at the clientBackgrounds.css file in resources for others
         //client.getStyleClass().add("comp-fade-background");
         
-        SimpleSliderClient ssc = new SimpleSliderClient(stage, true);
-        ssc.getStyleClass().add("comp-fade-background");
+        //SimpleSliderClient ssc = new SimpleSliderClient(stage, true);
+        //ssc.getStyleClass().add("comp-fade-background");
         
-        Scene scene = new Scene(ssc);//client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);    
-        scene.setCamera(new ParallelCamera());
-        scene.setFill(Color.gray(0.6));
-        scene.getStylesheets().add(BACKGROUNDS);
+        //Scene scene = new Scene(ssc);//client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);    
+        //scene.setCamera(new ParallelCamera());
+        //scene.setFill(Color.gray(0.6));
+        //scene.getStylesheets().addAll(BACKGROUNDS,"images/customWindow.css");
         
-        stage.setScene(scene);
+        //stage.setScene(scene);
         // set width / height values to be 75% of users screen resolution
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        stage.setWidth(screenBounds.getWidth() * 0.75);
-        stage.setHeight(screenBounds.getHeight() * .75);
+        //Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        //stage.setWidth(screenBounds.getWidth() * 0.75);
+        //stage.setHeight(screenBounds.getHeight() * .75);
         //stage.setMinWidth(grid.getPrefWidth());
-        stage.setTitle("FXyz-Sampler!");
-        stage.show();
-        
+        //stage.setTitle("FXyz-Sampler!");
+        //stage.show();
+        CustomWindow window = new CustomWindow(stage);
+        //window.setContent(ssc);
     }
 
     

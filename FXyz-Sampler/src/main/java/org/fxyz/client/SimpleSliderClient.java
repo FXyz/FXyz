@@ -120,8 +120,14 @@ public class SimpleSliderClient extends AbstractPopoutClient{
             changeToWelcomePage(null);
         }        
         
-        super.setShowMenuPane(true);
-        super.setShowBottomPane(false);
+        setShowMenuPane(true);
+        setShowBottomPane(false);
+        
+        parentProperty().addListener(l->{
+            requestLayout();
+        });
+        
+        
     }
     
     protected final void buildProjectTree(String searchText) {
@@ -240,9 +246,12 @@ public class SimpleSliderClient extends AbstractPopoutClient{
     private void updateContent() {        
         center.getChildren().addAll(buildSampleTabContent(selectedSample));
         // below add labels / textflow if needed preferably befor controls  
+        
         Node controls = selectedSample.getControlPanel();
-        VBox.setVgrow(controls, Priority.ALWAYS);
-        right.getChildren().addAll(controls);
+        if(controls != null){
+            VBox.setVgrow(controls, Priority.ALWAYS);
+            right.getChildren().addAll(controls);
+        }
         
     }
 
