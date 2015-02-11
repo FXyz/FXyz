@@ -82,6 +82,17 @@ public class SegmentedTorus extends TexturedMeshSample {
         }
     };
 
+    private final IntegerProperty majRadCrop = new SimpleIntegerProperty(model, "Major Radius Crop") {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                ((SegmentedTorusMesh)model).setMajorRadiusCrop(majRadCrop.getValue());
+            }
+        }
+    };
+    
+    
     @Override
     public void createMesh() {
         model = new SegmentedTorusMesh(50, 42, 0, 100d, 25d);        
@@ -96,13 +107,15 @@ public class SegmentedTorus extends TexturedMeshSample {
     protected Node buildControlPanel() {
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         geomControls.addControls(
-                ControlFactory.buildNumberSlider(minorDivs, 3, 100),
-                ControlFactory.buildNumberSlider(majorDivs, 3, 100),
-                ControlFactory.buildNumberSlider(minRad, 1, 10),
-                ControlFactory.buildNumberSlider(majRad, 1, 10),
+                ControlFactory.buildNumberSlider(minorDivs, 8, 360),
+                ControlFactory.buildNumberSlider(majorDivs, 8, 360),
+                ControlFactory.buildNumberSlider(minRad, 1, 100),
+                ControlFactory.buildNumberSlider(majRad, 1, 100),
+                ControlFactory.buildNumberSlider(majRadCrop, 0, 50),
                 ControlFactory.buildNumberSlider(_x, -1, 1),
                 ControlFactory.buildNumberSlider(_y, -1, 1),
-                ControlFactory.buildNumberSlider(_z, 0.01, 10)
+                ControlFactory.buildNumberSlider(_z, 0.01, 100)
+                //ControlFactory.buildNumberSlider(_angle, 0.01, 359.89)                
         );
 
         this.controlPanel = ControlFactory.buildControlPanel(

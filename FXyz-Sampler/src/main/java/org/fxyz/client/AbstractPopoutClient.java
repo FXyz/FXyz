@@ -5,6 +5,10 @@
  */
 package org.fxyz.client;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -13,30 +17,98 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.AnchorPane;
 import static javafx.scene.layout.AnchorPane.setBottomAnchor;
 import static javafx.scene.layout.AnchorPane.setLeftAnchor;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class SlideOutController {
+public abstract class AbstractPopoutClient extends AnchorPane {
 
     @FXML
-    private StackPane topPane;
+    protected StackPane topPane;
+    @FXML
+    protected StackPane menuPane;
+    @FXML
+    protected HBox centerPane;
+    @FXML
+    protected StackPane center;
+    @FXML
+    protected StackPane right;
+    @FXML
+    protected StackPane bottomPane;
 
     @FXML
-    private StackPane menuPane;
-
+    protected Pane menuPaneTrigger;
     @FXML
-    private StackPane centerPane;
-
+    protected Pane bottomPaneTrigger;
     @FXML
-    private StackPane bottomPane;
+    protected Pane topPaneTrigger;
 
-    public SlideOutController() {
+    protected Stage stage;
+
+    private AbstractPopoutClient() {
+        try {
+            FXMLLoader ldr = getUILoader();
+            ldr.setController(this);
+            ldr.setRoot(this);
+            ldr.load();
+        } catch (IOException ex) {
+            Logger.getLogger(SimpleSamplerClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public AbstractPopoutClient(Stage stage, boolean popsEnabled) {
+        this();
+        if (popsEnabled) {
+            initialize();
+        }
+        this.stage = stage;
+    }
+
+    private void initialize() {
+        menuPaneLocation.addListener(it -> updateMenuPaneAnchors());
+        bottomPaneLocation.addListener(it -> updateBottomPaneAnchors());
+
+        showMenuPaneProperty().addListener(it -> animateMenuPane());
+        showBottomPaneProperty().addListener(it -> animateBottomPane());
+
+        menuPane.setOnMouseExited(evt -> {
+            if (menuPane.getOpacity() == 1) {
+                setShowMenuPane(false);
+                menuPaneTrigger.toFront();
+                menuPaneTrigger.setVisible(true);
+            }
+        });
+        menuPaneTrigger.setOnMouseEntered(e -> {
+            if (menuPane.getOpacity() != 1) {
+                setShowMenuPane(true);
+                menuPaneTrigger.toBack();
+                menuPaneTrigger.setVisible(false);
+            }
+        });
+        bottomPaneTrigger.setOnMouseEntered(e -> {
+            if (bottomPane.getOpacity() != 1) {
+                setShowBottomPane(true);
+                bottomPaneTrigger.toBack();
+                bottomPaneTrigger.setVisible(false);
+            }
+        });
+        bottomPane.setOnMouseClicked(evt -> {
+            if (bottomPane.getOpacity() == 1) {
+                setShowBottomPane(false);
+                bottomPaneTrigger.toFront();
+                bottomPaneTrigger.setVisible(true);
+            }            
+        });
     }
 
     private final BooleanProperty showMenuPane = new SimpleBooleanProperty(this, "showMenuPane", true);
@@ -79,23 +151,6 @@ public class SlideOutController {
      */
     public final BooleanProperty showBottomPaneProperty() {
         return showBottomPane;
-    }
-
-    public final void initialize() {
-        menuPaneLocation.addListener(it -> updateMenuPaneAnchors());
-        bottomPaneLocation.addListener(it -> updateBottomPaneAnchors());
-
-        showMenuPaneProperty().addListener(it -> animateMenuPane());
-        showBottomPaneProperty().addListener(it -> animateBottomPane());
-
-        menuPane.setOnMouseClicked(evt -> setShowMenuPane(false));
-
-        centerPane.setOnMouseClicked(evt -> {
-            setShowMenuPane(true);
-            setShowBottomPane(true);
-        });
-
-        bottomPane.setOnMouseClicked(evt -> setShowBottomPane(false));
     }
 
     /*
@@ -147,15 +202,17 @@ public class SlideOutController {
      * work-around.
      */
     private void slideMenuPane(double toX) {
-        KeyValue keyValue = new KeyValue(menuPaneLocation, toX);
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(300), keyValue);
+        KeyValue keyValue = new KeyValue(menuPaneLocation, toX, Interpolator.EASE_BOTH);
+        KeyValue visible = new KeyValue(menuPane.opacityProperty(), menuPane.getOpacity() == 1 ? 0 : 1);
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(600), keyValue, visible);
         Timeline timeline = new Timeline(keyFrame);
         timeline.play();
     }
 
     private void slideBottomPane(double toY) {
-        KeyValue keyValue = new KeyValue(bottomPaneLocation, toY);
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(300), keyValue);
+        KeyValue keyValue = new KeyValue(bottomPaneLocation, toY, Interpolator.EASE_BOTH);
+        KeyValue visible = new KeyValue(bottomPane.opacityProperty(), bottomPane.getOpacity() == 1 ? 0 : 1);
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(600), keyValue, visible);
         Timeline timeline = new Timeline(keyFrame);
         timeline.play();
     }
@@ -171,4 +228,37 @@ public class SlideOutController {
     private double getBottomPaneLocation() {
         return bottomPaneLocation.get();
     }
+
+    protected String getFXMLPath() {
+        return "Client_Slide_Outs.fxml";
+    }
+
+    private FXMLLoader getUILoader() {
+        return new FXMLLoader(getClass().getResource(getFXMLPath()));
+    }
+
+    public StackPane getTopPane() {
+        return topPane;
+    }
+
+    public StackPane getMenuPane() {
+        return menuPane;
+    }
+
+    public StackPane getCenter() {
+        return center;
+    }
+
+    public StackPane getRight() {
+        return right;
+    }
+
+    public StackPane getBottomPane() {
+        return bottomPane;
+    }
+
+    public Pane getBottomPaneTrigger() {
+        return bottomPaneTrigger;
+    }
+
 }

@@ -125,6 +125,7 @@ public class SimpleSamplerClient extends AbstractClientController {
         initCenterContentHeaderOverlay();
         initRightPanel();
         initFooter();
+        initialize();
     }
 
     /**
@@ -241,6 +242,7 @@ public class SimpleSamplerClient extends AbstractClientController {
      */
     @Override
     protected void initRightPanel() {
+        
     }
 
     /**
@@ -395,7 +397,7 @@ public class SimpleSamplerClient extends AbstractClientController {
         Node controls = selectedSample.getControlPanel();
         VBox.setVgrow(controls, Priority.ALWAYS);
         rightSide.getChildren().addAll(controls);
-
+        setShowMenuPane(false);
     }
 
     private Node buildSampleTabContent(FXyzSample sample) {
@@ -524,11 +526,13 @@ public class SimpleSamplerClient extends AbstractClientController {
         showMenuPaneProperty().addListener(it -> animateMenuPane());
         showBottomPaneProperty().addListener(it -> animateBottomPane());
 
-        menuPane.setOnMouseClicked(evt -> setShowMenuPane(false));
+        menuPane.setOnMouseExited(evt -> setShowMenuPane(false));
+        leftSlideTrigger.setOnMouseEntered(evt -> setShowMenuPane(true));
+        //menuPane.setOnMouseClicked(evt -> setShowMenuPane(false));
 
         contentPane.setOnMouseClicked(evt -> {
-            setShowMenuPane(true);
-            setShowBottomPane(true);
+            //setShowMenuPane(true);
+            //setShowBottomPane(true);
         });
 
         footer.setOnMouseClicked(evt -> setShowBottomPane(false));

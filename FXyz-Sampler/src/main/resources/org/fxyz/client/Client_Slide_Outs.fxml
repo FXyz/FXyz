@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
+
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
- 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.workbench.WorkbenchPresenter">
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1024.0" styleClass="client-root" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <StackPane fx:id="bottomPane" layoutX="-4.0" layoutY="356.0" prefHeight="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-      <StackPane fx:id="menuPane" layoutY="28.0" prefWidth="200.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="40.0" />
-      <StackPane fx:id="topPane" prefHeight="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <StackPane fx:id="centerPane" layoutX="72.0" layoutY="44.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+      <Pane fx:id="topPaneTrigger" layoutX="10.0" layoutY="658.0" minWidth="-Infinity" prefHeight="7.0" styleClass="fxyz-control-stack-pane" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Pane fx:id="bottomPaneTrigger" layoutX="10.0" layoutY="50.0" minWidth="-Infinity" prefHeight="7.0" styleClass="fxyz-control-stack-pane" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Pane fx:id="menuPaneTrigger" minWidth="-Infinity" prefWidth="14.0" styleClass="fxyz-control-stack-pane" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="40.0" />
+      <StackPane fx:id="bottomPane" layoutX="-4.0" layoutY="356.0" prefHeight="40.0" styleClass="fxyz-control-stack-pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <StackPane fx:id="menuPane" layoutY="28.0" prefWidth="200.0" styleClass="fxyz-control-stack-pane" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="40.0" />
+      <StackPane fx:id="topPane" prefHeight="40.0" styleClass="fxyz-control-stack-pane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <HBox fx:id="centerPane" alignment="CENTER" layoutX="200.0" layoutY="40.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <StackPane fx:id="center" layoutX="72.0" layoutY="44.0" styleClass="fxyz-control-stack-pane" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" HBox.hgrow="ALWAYS" />
+            <StackPane fx:id="right" layoutX="10.0" layoutY="10.0" styleClass="fxyz-control-stack-pane" HBox.hgrow="SOMETIMES" />
+         </children>
+      </HBox>
    </children>
-</AnchorPane>
+</fx:root>

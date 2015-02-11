@@ -68,7 +68,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             final Property<Function<Number,Number>> funcFunc
     ) {
         colorSlider = ControlFactory.buildColorSliderControl(colors, 0l, 1530l);
-        diffMapControl = ControlFactory.buildImageToggle(udm, img, "Diffuse Map Image:");
+        diffMapControl = ControlFactory.buildImageViewToggle(udm, img, "Diffuse Map Image:");
         imgLoader = new FileLoadControl();
         patternScaler = ControlFactory.buildNumberSlider(pScale, 1, 100);
         densFunct = ControlFactory.buildScriptFunction3DControl(densFunc);

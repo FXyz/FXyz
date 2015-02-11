@@ -24,6 +24,7 @@ import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.ScriptFunction1DControl;
 import org.fxyz.controls.ScriptFunction2DControl;
 import org.fxyz.controls.ScriptFunction3DControl;
+import org.fxyz.controls.SectionLabel;
 import org.fxyz.controls.SubSceneControlPanel;
 import org.fxyz.controls.TextureTypeControl;
 import org.fxyz.geometry.Point3D;
@@ -71,7 +72,7 @@ public final class ControlFactory {
         return new ColorPickControl(p, name);
     }
 
-    public static final ImagePreviewControl buildImageToggle(final Property<Boolean> prop, final Property<? extends Image> img, String name) {
+    public static final ImagePreviewControl buildImageViewToggle(final Property<Boolean> prop, final Property<? extends Image> img, String name) {
         return new ImagePreviewControl(prop, img, name);
     }
     /*==========================================================================
@@ -139,11 +140,10 @@ public final class ControlFactory {
             final Property<Image> im, final Property<Boolean> uim
     ) {
         ControlCategory mvc = new ControlCategory("Material Image Maps");
-        mvc.addControls(
-                buildImageToggle(udm, dm, "Use Diffuse Map"),
-                buildImageToggle(ubm, bm, "Use Bump Map"),
-                buildImageToggle(usm, sm, "Use Specular Map"),
-                buildImageToggle(uim, im, "Use Illumination Map")
+        mvc.addControls(buildImageViewToggle(udm, dm, "Use Diffuse Map"),
+                buildImageViewToggle(ubm, bm, "Use Bump Map"),
+                buildImageViewToggle(usm, sm, "Use Specular Map"),
+                buildImageViewToggle(uim, im, "Use Illumination Map")
         );
         return mvc;
     }
@@ -199,7 +199,7 @@ public final class ControlFactory {
                 ra2
         );
         final ControlCategory mvc = new ControlCategory("Scene Lighting");
-        mvc.addControls(lighting1, lighting2);
+        mvc.addControls(lighting1,new SectionLabel("Light 2"), lighting2);
 
         return mvc;
     }

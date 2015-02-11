@@ -18,6 +18,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 
 /**
@@ -28,9 +29,9 @@ import javafx.util.Callback;
 public class ControlCategory  extends TitledPane{
     
     @FXML
-    private ListView<ControlBase> listView;
+    private ListView<StackPane> listView;
     
-    private final ObservableList<ControlBase> controlItems;
+    private final ObservableList<StackPane> controlItems;
 
     private ControlCategory() {
         
@@ -54,11 +55,11 @@ public class ControlCategory  extends TitledPane{
         this.setText(title);
         this.setFocusTraversable(false);
         //EasyBind.listBind(controlItems, controls.getChildren());       
-        this.listView.setCellFactory(new Callback<ListView<ControlBase>,ListCell<ControlBase>>() {
+        this.listView.setCellFactory(new Callback<ListView<StackPane>,ListCell<StackPane>>() {
             
             @Override
-            public ListCell<ControlBase> call(ListView<ControlBase> param) {
-                return new ListCell<ControlBase>(){
+            public ListCell<StackPane> call(ListView<StackPane> param) {
+                return new ListCell<StackPane>(){
                     {
                         this.setFocusTraversable(false);
                         this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -74,7 +75,7 @@ public class ControlCategory  extends TitledPane{
                     }
                     
                     @Override
-                    protected void updateItem(ControlBase item, boolean empty) {
+                    protected void updateItem(StackPane item, boolean empty) {
                         if(item != null && !empty){
                             
                             super.updateItem(item, empty);                            
@@ -87,12 +88,12 @@ public class ControlCategory  extends TitledPane{
         });
     }
         
-    public void addControl(ControlBase n){
+    public void addControl(StackPane n){
         if(!controlItems.contains(n)){
             controlItems.add(n);
         }
     }
-    public void addControls(ControlBase ... ctrls){
+    public void addControls(StackPane ... ctrls){
         if(!controlItems.containsAll(Arrays.asList(ctrls))){
             controlItems.addAll(ctrls);
         }

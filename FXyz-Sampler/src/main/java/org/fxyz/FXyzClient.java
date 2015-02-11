@@ -36,8 +36,8 @@ import java.nio.file.Paths;
 import java.util.Map;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.ParallelCamera;
 import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
@@ -46,7 +46,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.fxyz.client.SimpleSamplerClient;
+import org.fxyz.client.SimpleSliderClient;
 import org.fxyz.model.Project;
 
 public class FXyzClient extends Application {
@@ -79,11 +79,15 @@ public class FXyzClient extends Application {
         Application.setUserAgentStylesheet(GLASS_BLACK_SMOKE);
         this.stage = stage;
 //        primaryStage.getIcons().add(new Image("/org/controlsfx/samples/controlsfx-logo.png"));
-        SimpleSamplerClient client = new SimpleSamplerClient(stage);           
+        //SimpleSamplerClient client = new SimpleSamplerClient(stage);           
         //Look at the clientBackgrounds.css file in resources for others
-        client.getStyleClass().add("comp-fade-background");
+        //client.getStyleClass().add("comp-fade-background");
         
-        Scene scene = new Scene(client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);        
+        SimpleSliderClient ssc = new SimpleSliderClient(stage, true);
+        ssc.getStyleClass().add("comp-fade-background");
+        
+        Scene scene = new Scene(ssc);//client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);    
+        scene.setCamera(new ParallelCamera());
         scene.setFill(Color.gray(0.6));
         scene.getStylesheets().add(BACKGROUNDS);
         
