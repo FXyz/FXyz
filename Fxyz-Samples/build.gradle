@@ -1,5 +1,5 @@
 apply plugin: 'application'
-applicationDefaultJvmArgs = ["-Xms2g", "-Xmx2g", "-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true"]
+applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true"]
 
 applicationName = 'FXyz-Samples'
 
@@ -16,7 +16,7 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':FXyz-Sampler')
+    compile project(':FXyz-Client')
     
     try {
         jdk files(jfxrtJar)
