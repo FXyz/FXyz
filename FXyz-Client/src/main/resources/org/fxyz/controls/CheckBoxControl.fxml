@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root maxWidth="1.7976931348623157E308" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" StackPane.alignment="CENTER_LEFT">
+         <children>
+            <CheckBox fx:id="checkBox" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" mnemonicParsing="false" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets right="-2.5" />
+               </padding>
+            </CheckBox>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </children>
+</fx:root>

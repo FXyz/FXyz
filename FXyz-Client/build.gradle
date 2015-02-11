@@ -1,0 +1,60 @@
+version = fxyz_sampler_version
+
+configurations {
+    //samples.extendsFrom mainRuntime
+    jdk
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.jdk
+    }
+}
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'org.fxyz.FXyzClient'
+}
+
+repositories{
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/' 
+    }    
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':FXyz-Core')
+    compile ('org.javafxdata:datafx-flow:8.0b5')
+    compile ('org.jfxtras:jfxtras-all:8.0-r3')
+    compile ('org.controlsfx:controlsfx:8.20.8')
+    compile ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')
+    
+    try {
+        jdk files(jfxrtJar)
+    } catch (MissingPropertyException pne) {
+        jdk files("${System.properties['java.home']}/lib/jfxrt.jar")
+        jdk files("${System.properties['java.home']}/lib/ext/jfxrt.jar")
+    }
+}
+
+javadoc {
+    exclude 'impl/*'
+    failOnError = false
+    classpath = project.sourceSets.main.runtimeClasspath + configurations.jdk
+    
+    options.windowTitle("FXSampler Project ${version}")
+    options.links("http://docs.oracle.com/javase/8/docs/api/");
+    options.links("http://docs.oracle.com/javase/8/javafx/api/");
+    options.addBooleanOption("Xdoclint:none").setValue(true);
+    options.addBooleanOption("javafx").setValue(true);
+    
+    // All doc-files are located in src/main/docs because Gradle's javadoc doesn't copy
+    // over the doc-files if they are embedded with the sources. I find this arrangement
+    // somewhat cleaner anyway (never was a fan of mixing javadoc files with the sources)
+    doLast {
+        copy {
+            from "src/main/docs"
+            into "$buildDir/docs/javadoc"
+        }
+    }
+}

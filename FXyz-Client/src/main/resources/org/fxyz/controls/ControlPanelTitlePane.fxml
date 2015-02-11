@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+<fx:root fx:id="titledPane" alignment="CENTER" focusTraversable="false" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" text="Category For Section" type="TitledPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      
+   </content>
+   <content>
+      <ListView fx:id="listView" focusTraversable="false" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" />
+   </content>
+</fx:root>
