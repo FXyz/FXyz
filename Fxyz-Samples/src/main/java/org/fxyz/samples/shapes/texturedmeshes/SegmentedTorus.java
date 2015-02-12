@@ -72,7 +72,7 @@ public class SegmentedTorus extends TexturedMeshSample {
             }
         }
     };
-    private final DoubleProperty _z = new SimpleDoubleProperty(model, "Z Offset") {
+    private final DoubleProperty _z = new SimpleDoubleProperty(model, "Z Offset",1d) {
         @Override
         protected void invalidated() {
             super.invalidated();
