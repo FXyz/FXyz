@@ -65,12 +65,14 @@ public class SimpleWindowFrame extends AnchorPane {
     private Button maximize;
     @FXML
     private Button exit;
-
+    
     @FXML
     private StackPane rootContentPane;
 
     @FXML
     private Pane southEastResize;
+    @FXML
+    private Pane pinRelease;
 
     private final Stage stage;
     private double mX, mY, mOX, mOY, mDX, mDY, dragOffsetX, dragOffsetY;
@@ -104,6 +106,9 @@ public class SimpleWindowFrame extends AnchorPane {
             }
         });
         exit.setOnAction(a -> Platform.exit());
+        
+        pinRelease.toBack();
+        
     }
 
     public void setRootContent(Node node) {
@@ -205,6 +210,48 @@ public class SimpleWindowFrame extends AnchorPane {
 
     }
 
+    public HBox getHeaderBar() {
+        return headerBar;
+    }
+
+    public Label getAppTitle() {
+        return appTitle;
+    }
+
+    public ImageView getIconView() {
+        return iconView;
+    }
+
+    public Pane getHeaderSpacer() {
+        return headerSpacer;
+    }
+
+    public Button getMinimize() {
+        return minimize;
+    }
+
+    public Button getMaximize() {
+        return maximize;
+    }
+
+    public Button getExit() {
+        return exit;
+    }
+
+    public StackPane getRootContentPane() {
+        return rootContentPane;
+    }
+
+    public Pane getSouthEastResize() {
+        return southEastResize;
+    }
+
+    public Pane getPinRelease() {
+        return pinRelease;
+    }
+
+    
+    
     //==========================================================================
     public final Window getOwner() {
         return stage.getOwner();

@@ -49,6 +49,7 @@
             </StackPane>
             <StackPane fx:id="rootContentPane" layoutX="8.0" layoutY="25.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="25.0" />
             <Pane fx:id="southEastResize" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: transparent; -fx-background-radius: 10; -fx-border-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Pane fx:id="pinRelease" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="25.0" />
          </children>
       </AnchorPane>
    </children>

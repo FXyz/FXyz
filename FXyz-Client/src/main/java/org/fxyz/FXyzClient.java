@@ -42,6 +42,8 @@ import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -82,6 +84,9 @@ public class FXyzClient extends Application {
 
     private VBox leftSideContent, rightSideContent;
     private StackPane centerContent;
+    
+    private HiddenSidesClient client;
+    private SimpleWindowFrame frame;
 
     @Override
     public void start(final Stage s) throws Exception {
@@ -94,16 +99,20 @@ public class FXyzClient extends Application {
         buildProjectTree(null);
 
         leftSideContent = new VBox();
+        leftSideContent.setAlignment(Pos.TOP_CENTER);
+        leftSideContent.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
         leftSideContent.setSpacing(3);
         leftSideContent.setPadding(new Insets(3));
         leftSideContent.getStyleClass().add("fxyz-control");
+        
         rightSideContent = new VBox();
         rightSideContent.getStyleClass().add("fxyz-control");
+        
         centerContent = new StackPane();
         centerContent.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
         
         searchBar = new TextField();
-        searchBar.setPrefSize(USE_PREF_SIZE, Double.MAX_VALUE);
+        searchBar.setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);
         searchBar.textProperty().addListener((Observable o) -> {
             buildProjectTree(searchBar.getText());
         });
@@ -112,8 +121,6 @@ public class FXyzClient extends Application {
         contentTree.getStyleClass().add("fxyz-control");
         contentTree.setShowRoot(false);
         contentTree.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
-        contentTree.setMinWidth(USE_PREF_SIZE);
-        contentTree.setMaxWidth(USE_PREF_SIZE);
         contentTree.setCellFactory(new Callback<TreeView<FXyzSample>, TreeCell<FXyzSample>>() {
             @Override
             public TreeCell<FXyzSample> call(TreeView<FXyzSample> param) {
@@ -153,16 +160,22 @@ public class FXyzClient extends Application {
         leftSideContent.getChildren().addAll(searchBar,contentTree);       
         VBox.setVgrow(contentTree, Priority.ALWAYS);
 
-        HiddenSidesClient client = new HiddenSidesClient();
+        client = new HiddenSidesClient();
         client.setContent(centerContent);
         client.setLeft(leftSideContent);
         client.setRight(rightSideContent);
         client.setTriggerDistance(15);
         
-        SimpleWindowFrame frame = new SimpleWindowFrame(stage, 1280, 800);
+        frame = new SimpleWindowFrame(stage, 1280, 800);
         frame.setIconImage(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
         frame.setText("Fxyz-SamplerApp ver: 0.0.1a");
         frame.setRootContent(client);
+        frame.getPinRelease().setOnMouseEntered(e->{
+            if(client.getPinnedSide() != null){
+                client.setPinnedSide(null);
+                frame.getPinRelease().toBack();
+            }
+        });
         
         List<TreeItem<FXyzSample>> projects = contentTree.getRoot().getChildren();
         if (!projects.isEmpty()) {
@@ -316,10 +329,18 @@ public class FXyzClient extends Application {
 
     private void updateContent() {
         centerContent.getChildren().addAll(buildSampleContent(selectedSample));
+        centerContent.toBack();
         // below add labels / textflow if needed preferably befor controls  
-        Node controls = selectedSample.getControlPanel();
-        VBox.setVgrow(controls, Priority.ALWAYS);
-        rightSideContent.getChildren().addAll(controls);
+        Node controls = selectedSample.getControlPanel();        
+        if(controls != null){
+            VBox.setVgrow(controls, Priority.ALWAYS);
+            rightSideContent.getChildren().addAll(controls);     
+            client.setPinnedSide(Side.RIGHT);
+            frame.getPinRelease().toFront();
+            System.out.println(client.getRight().getOnMouseReleased());
+        }else{
+            frame.getPinRelease().toBack();
+        }
     }
 
     private Node buildSampleContent(FXyzSample sample) {
