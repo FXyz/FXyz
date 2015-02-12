@@ -105,7 +105,7 @@ public class FXyzClient extends Application {
         
         SimpleWindowFrame frame = new SimpleWindowFrame(stage, 400,300);
         frame.setIconImage(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
-        frame.setText("Fxyz-SamplerApp");
+        frame.setText("Fxyz-SamplerApp ver: 0.0.1a");
         frame.setRootContent(client);
                
         Scene scene = new Scene(frame);

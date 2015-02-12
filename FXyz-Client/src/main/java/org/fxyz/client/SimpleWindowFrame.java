@@ -88,6 +88,7 @@ public class SimpleWindowFrame extends AnchorPane {
         }
 
         this.stage = stage;
+        
         this.stageMinWidth = minWidth;
         this.stageMinHeight = minHeight;
 
@@ -186,15 +187,15 @@ public class SimpleWindowFrame extends AnchorPane {
         southEastResize.setOnMouseEntered(e -> e.consume());
         southEastResize.setOnMouseExited(e -> e.consume());
         southEastResize.setOnMousePressed((e) -> {
-            dragOffsetX = (stage.getX() + getWidth() - e.getScreenX());
-            dragOffsetY = (stage.getY() + getHeight() - e.getScreenY());
+            dragOffsetX = (getTranslateX() + getWidth() - e.getScreenX());
+            dragOffsetY = (getTranslateY() + getHeight() - e.getScreenY());
             //e.consume();
         });
         southEastResize.setOnMouseDragged((e) -> {
             double x = e.getScreenX() + dragOffsetX,
                     y = e.getScreenY() + dragOffsetY;
-            double w = x - stage.getX();
-            double h = y - stage.getY();
+            double w = x - getTranslateX();
+            double h = y - getTranslateY();
 
             setPrefWidth(Math.max(stageMinWidth, w));
             setPrefHeight(Math.max(stageMinHeight, h));
