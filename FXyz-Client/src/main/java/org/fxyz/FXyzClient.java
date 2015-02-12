@@ -33,97 +33,302 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import javafx.application.Application;
-import javafx.scene.ParallelCamera;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import org.fxyz.client.HiddenSidesClient;
 import org.fxyz.client.SimpleWindowFrame;
+import org.fxyz.model.EmptySample;
 import org.fxyz.model.Project;
+import org.fxyz.model.SampleTree;
+import org.fxyz.model.WelcomePage;
+import org.fxyz.util.SampleScanner;
 
 public class FXyzClient extends Application {
 
-    public static final String 
-            BACKGROUNDS = FXyzClient.class.getResource("clientBackgrounds.css").toExternalForm(),
+    public static final String BACKGROUNDS = FXyzClient.class.getResource("clientBackgrounds.css").toExternalForm(),
             GLASS_BLACK_SMOKE = FXyzClient.class.getResource("smokeBlackGlass.css").toExternalForm();
             //CUSTOM_WINDOW = FXyzClient.class.getResource("images/customWindow.css").toExternalForm();
-            
+
     private Map<String, Project> projectsMap;
-
     private Stage stage;
-    
-    private HBox rootContainer;
-    private VBox leftContainer; 
-    private StackPane centerContainer;
-    private VBox rightContainer;
-    
-
     private FXyzSample selectedSample;
-
-    private TreeView<FXyzSample> samplesTreeView;
+    private TextField searchBar;
+    private TreeView<FXyzSample> contentTree;
     private TreeItem<FXyzSample> root;
 
-    public static void main(String[] args) {
-        launch(args);        
-    }
+    private VBox leftSideContent, rightSideContent;
+    private StackPane centerContent;
 
     @Override
-    public void start(final Stage stage) throws Exception {
+    public void start(final Stage s) throws Exception {
+        
         Application.setUserAgentStylesheet(GLASS_BLACK_SMOKE);
-        this.stage = stage;        
+        stage = s;
         stage.getIcons().add(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
-        /*/SimpleSamplerClient client = new SimpleSamplerClient(stage);  
         
-        //Look at the clientBackgrounds.css file in resources for others
-        //client.getStyleClass().add("comp-fade-background");
+        projectsMap = new SampleScanner().discoverSamples();
+        buildProjectTree(null);
+
+        leftSideContent = new VBox();
+        leftSideContent.setSpacing(3);
+        leftSideContent.setPadding(new Insets(3));
+        leftSideContent.getStyleClass().add("fxyz-control");
+        rightSideContent = new VBox();
+        rightSideContent.getStyleClass().add("fxyz-control");
+        centerContent = new StackPane();
+        centerContent.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
         
-        SimpleSliderClient ssc = new SimpleSliderClient(stage, true);
-        ssc.getStyleClass().add("blue-fade-background");
-        
-        Scene scene = new Scene(ssc, 1200, 800);//client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);    
-        scene.setCamera(new ParallelCamera());
-        scene.setFill(null);
-        scene.getStylesheets().addAll(BACKGROUNDS);
-        
-        stage.setScene(scene);
-        stage.show();
-        */
+        searchBar = new TextField();
+        searchBar.setPrefSize(USE_PREF_SIZE, Double.MAX_VALUE);
+        searchBar.textProperty().addListener((Observable o) -> {
+            buildProjectTree(searchBar.getText());
+        });
+
+        contentTree = new TreeView<>(root);
+        contentTree.getStyleClass().add("fxyz-control");
+        contentTree.setShowRoot(false);
+        contentTree.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
+        contentTree.setMinWidth(USE_PREF_SIZE);
+        contentTree.setMaxWidth(USE_PREF_SIZE);
+        contentTree.setCellFactory(new Callback<TreeView<FXyzSample>, TreeCell<FXyzSample>>() {
+            @Override
+            public TreeCell<FXyzSample> call(TreeView<FXyzSample> param) {
+                return new TreeCell<FXyzSample>() {
+                    @Override
+                    protected void updateItem(FXyzSample item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setText("");
+                        } else {
+                            setText(item.getSampleName());
+                        }
+                    }
+                };
+            }
+        });
+        contentTree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<FXyzSample>>() {
+            @Override
+            public void changed(ObservableValue<? extends TreeItem<FXyzSample>> observable, TreeItem<FXyzSample> oldValue, TreeItem<FXyzSample> newSample) {
+
+                if (newSample == null) {
+                    return;
+                } else if (newSample.getValue() instanceof EmptySample) {
+                    FXyzSample selectedSample = newSample.getValue();
+                    Project selectedProject = projectsMap.get(selectedSample.getSampleName());
+                    System.out.println(selectedProject);
+                    if (selectedProject != null) {
+                        changeToWelcomePage(selectedProject.getWelcomePage());
+                    }
+                    return;
+                }
+                selectedSample = newSample.getValue();
+                changeContent();
+            }
+        });
+        leftSideContent.getChildren().addAll(searchBar,contentTree);       
+        VBox.setVgrow(contentTree, Priority.ALWAYS);
+
         HiddenSidesClient client = new HiddenSidesClient();
-        client.setContent(new Rectangle(400,300, Color.AQUA));
-        client.setLeft(new Rectangle(100,300, Color.BLUE));
+        client.setContent(centerContent);
+        client.setLeft(leftSideContent);
+        client.setRight(rightSideContent);
         client.setTriggerDistance(15);
         
-        SimpleWindowFrame frame = new SimpleWindowFrame(stage, 400,300);
+        SimpleWindowFrame frame = new SimpleWindowFrame(stage, 1280, 800);
         frame.setIconImage(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
         frame.setText("Fxyz-SamplerApp ver: 0.0.1a");
         frame.setRootContent(client);
-               
-        Scene scene = new Scene(frame);
+        
+        List<TreeItem<FXyzSample>> projects = contentTree.getRoot().getChildren();
+        if (!projects.isEmpty()) {
+            TreeItem<FXyzSample> firstProject = projects.get(0);
+            contentTree.getSelectionModel().select(firstProject);
+        } else {
+            changeToWelcomePage(null);
+        }
+
+        Scene scene = new Scene(frame, 1280, 800);
         scene.setFill(Color.TRANSPARENT);
-        scene.setCamera(new ParallelCamera());
-        
+
         this.stage.setScene(scene);
-        this.stage.initStyle(StageStyle.TRANSPARENT);        
+        this.stage.initStyle(StageStyle.TRANSPARENT);
         this.stage.show();
-        
-        //CustomWindow window = new CustomWindow(stage);
+
+        System.err.println(contentTree.getRoot().getChildren());
     }
 
-    
+    /*/SimpleSamplerClient client = new SimpleSamplerClient(stage);  
+        
+     //Look at the clientBackgrounds.css file in resources for others
+     //client.getStyleClass().add("comp-fade-background");
+        
+     SimpleSliderClient ssc = new SimpleSliderClient(stage, true);
+     ssc.getStyleClass().add("blue-fade-background");
+        
+     Scene scene = new Scene(ssc, 1200, 800);//client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);    
+     scene.setCamera(new ParallelCamera());
+     scene.setFill(null);
+     scene.getStylesheets().addAll(BACKGROUNDS);
+        
+     stage.setScene(scene);
+     stage.show();
+     */
     /*==========================================================================
-    *                           Source Code Methods
-    ==========================================================================*/
+     Load all Items into TreeView
+     */
+    protected final void buildProjectTree(String searchText) {
+        // rebuild the whole tree (it isn't memory intensive - we only scan
+        // classes once at startup)
+        root = new TreeItem<>(new EmptySample("FXyz-Samples"));
+        root.setExpanded(true);
 
+        for (String projectName : projectsMap.keySet()) {
+            final Project project = projectsMap.get(projectName);
+            if (project == null) {
+                System.err.println("null: " + project);
+                continue;
+            }
+
+            // now work through the project sample tree building the rest
+            SampleTree.TreeNode n = project.getSampleTree().getRoot();
+            root.getChildren().add(n.createTreeItem());
+        }
+
+        // with this newly built and full tree, we filter based on the search text
+        if (searchText != null) {
+            pruneSampleTree(root, searchText);
+
+            // FIXME weird bug in TreeView I think
+            contentTree.setRoot(null);
+            contentTree.setRoot(root);
+        }
+
+        // and finally we sort the display a little
+        sort(root, (o1, o2) -> o1.getValue().getSampleName().compareTo(o2.getValue().getSampleName()));
+    }
+
+    private void sort(TreeItem<FXyzSample> node, Comparator<TreeItem<FXyzSample>> comparator) {
+        node.getChildren().sort(comparator);
+        for (TreeItem<FXyzSample> child : node.getChildren()) {
+            sort(child, comparator);
+        }
+    }
+
+    // true == keep, false == delete
+    private boolean pruneSampleTree(TreeItem<FXyzSample> treeItem, String searchText) {
+        // we go all the way down to the leaf nodes, and check if they match
+        // the search text. If they do, they stay. If they don't, we remove them.
+        // As we pop back up we check if the branch nodes still have children,
+        // and if not we remove them too
+        if (searchText == null) {
+            return true;
+        }
+
+        if (treeItem.isLeaf()) {
+            // check for match. Return true if we match (to keep), and false
+            // to delete
+            return treeItem.getValue().getSampleName().toUpperCase().contains(searchText.toUpperCase());
+        } else {
+            // go down the tree...
+            List<TreeItem<FXyzSample>> toRemove = new ArrayList<>();
+
+            treeItem.getChildren().stream().forEach((child) -> {
+                boolean keep = pruneSampleTree(child, searchText);
+                if (!keep) {
+                    toRemove.add(child);
+                }
+            });
+
+            // remove the unrelated tree items
+            treeItem.getChildren().removeAll(toRemove);
+
+            // return true if there are children to this branch, false otherwise
+            // (by returning false we say that we should delete this now-empty branch)
+            return !treeItem.getChildren().isEmpty();
+        }
+    }
+
+    public String getSearchString() {
+        return searchBar.getText();
+    }
+
+    private void changeToWelcomePage(WelcomePage wPage) {
+        //change to index above 0 -> 0 will be content header overlay
+        centerContent.getChildren().clear();
+        if (null == wPage) {
+            wPage = getDefaultWelcomePage();
+        }
+        centerContent.getChildren().addAll(wPage.getContent());
+    }
+
+    private WelcomePage getDefaultWelcomePage() {
+        // line 1
+        Label welcomeLabel1 = new Label("Welcome to FXSampler!");
+        welcomeLabel1.setStyle("-fx-font-size: 2em; -fx-padding: 0 0 0 5;");
+
+        // line 2
+        Label welcomeLabel2 = new Label(
+                "Explore the available UI controls and other interesting projects "
+                + "by clicking on the options to the left.");
+        welcomeLabel2.setStyle("-fx-font-size: 1.25em; -fx-padding: 0 0 0 5;");
+
+        WelcomePage wPage = new WelcomePage("Welcome!", new VBox(5, welcomeLabel1, welcomeLabel2));
+        return wPage;
+    }
+
+    protected void changeContent() {
+        if (selectedSample == null) {
+            return;
+        }
+
+        rightSideContent.getChildren().clear();
+        if (!centerContent.getChildren().isEmpty()) {
+            centerContent.getChildren().clear();
+        }
+
+        updateContent();
+    }
+
+    private void updateContent() {
+        centerContent.getChildren().addAll(buildSampleContent(selectedSample));
+        // below add labels / textflow if needed preferably befor controls  
+        Node controls = selectedSample.getControlPanel();
+        VBox.setVgrow(controls, Priority.ALWAYS);
+        rightSideContent.getChildren().addAll(controls);
+    }
+
+    private Node buildSampleContent(FXyzSample sample) {
+        return FXyzSampleBase.buildSample(sample, stage);
+    }
+
+    /*==========================================================================
+     *                           Source Code Methods
+     ==========================================================================*/
     private String getResource(String resourceName, Class<?> baseClass) {
         Class<?> clz = baseClass == null ? getClass() : baseClass;
         return getResource(clz.getResourceAsStream(resourceName));
@@ -201,7 +406,9 @@ public class FXyzClient extends Application {
 
         String template = getResource("/fxsampler/util/CssTemplate.html", null);
         return template.replace("<source/>", src);
-    }  
+    }
 
-    
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
