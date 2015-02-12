@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<fx:root style="-fx-background-color: transparent;" styleClass="client-root" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="700.0" prefWidth="1000.0" styleClass="fxyz-control-window-frame" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <HBox fx:id="headerBar" alignment="CENTER" layoutX="183.0" layoutY="111.0" prefHeight="25.0" style="-fx-background-radius: 0 50 50 0;" styleClass="fxyz-control-header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label fx:id="appTitle" focusTraversable="false" text="Label">
+                           <graphic>
+                              <ImageView fx:id="iconView" fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <Pane fx:id="headerSpacer" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <HBox fx:id="headerButtons" alignment="CENTER" spacing="3.0" HBox.hgrow="NEVER">
+                     <children>
+                        <Button fx:id="minimize" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="17.0" prefWidth="17.0" style="-fx-background-radius: 100; -fx-border-radius: 100;" />
+                        <Button fx:id="maximize" focusTraversable="false" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="17.0" prefWidth="17.0" style="-fx-background-radius: 100; -fx-border-radius: 100;" />
+                        <Button fx:id="exit" focusTraversable="false" layoutX="27.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="17.0" prefWidth="17.0" style="-fx-background-radius: 100; -fx-border-radius: 100;" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+               <effect>
+                  <DropShadow color="WHITE" height="5.0" radius="2.0" width="5.0" />
+               </effect>
+            </HBox>
+            <StackPane layoutX="15.0" layoutY="35.0" styleClass="fxyz-control-window-inner-frame" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="25.0">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </StackPane>
+            <StackPane fx:id="rootContentPane" layoutX="8.0" layoutY="25.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="25.0" />
+            <Pane fx:id="southEastResize" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: transparent; -fx-background-radius: 10; -fx-border-radius: 10;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</fx:root>

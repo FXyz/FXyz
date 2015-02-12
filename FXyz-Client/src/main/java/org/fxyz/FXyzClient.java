@@ -35,13 +35,20 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 import javafx.application.Application;
+import javafx.scene.ParallelCamera;
+import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import org.fxyz.client.CustomWindow;
+import javafx.stage.StageStyle;
+import org.fxyz.client.HiddenSidesClient;
+import org.fxyz.client.SimpleWindowFrame;
 import org.fxyz.model.Project;
 
 public class FXyzClient extends Application {
@@ -73,30 +80,43 @@ public class FXyzClient extends Application {
     @Override
     public void start(final Stage stage) throws Exception {
         Application.setUserAgentStylesheet(GLASS_BLACK_SMOKE);
-        this.stage = stage;
-//        primaryStage.getIcons().add(new Image("/org/controlsfx/samples/controlsfx-logo.png"));
-        //SimpleSamplerClient client = new SimpleSamplerClient(stage);           
+        this.stage = stage;        
+        stage.getIcons().add(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
+        /*/SimpleSamplerClient client = new SimpleSamplerClient(stage);  
+        
         //Look at the clientBackgrounds.css file in resources for others
         //client.getStyleClass().add("comp-fade-background");
         
-        //SimpleSliderClient ssc = new SimpleSliderClient(stage, true);
-        //ssc.getStyleClass().add("blue-fade-background");
+        SimpleSliderClient ssc = new SimpleSliderClient(stage, true);
+        ssc.getStyleClass().add("blue-fade-background");
         
-        //Scene scene = new Scene(ssc, 1200, 800);//client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);    
-        //scene.setCamera(new ParallelCamera());
-        //scene.setFill(null);
-        //scene.getStylesheets().addAll(BACKGROUNDS);
+        Scene scene = new Scene(ssc, 1200, 800);//client, client.getPrefWidth(), client.getPrefHeight(), true, SceneAntialiasing.BALANCED);    
+        scene.setCamera(new ParallelCamera());
+        scene.setFill(null);
+        scene.getStylesheets().addAll(BACKGROUNDS);
         
-        //stage.setScene(scene);
-        // set width / height values to be 75% of users screen resolution
-        //Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        //stage.setWidth(screenBounds.getWidth() * 0.75);
-        //stage.setHeight(screenBounds.getHeight() * .75);
-        //stage.setMinWidth(grid.getPrefWidth());
-        //stage.setTitle("FXyz-Sampler!");
-        //stage.show();
-        CustomWindow window = new CustomWindow(stage);
-        //window.setContent(ssc);
+        stage.setScene(scene);
+        stage.show();
+        */
+        HiddenSidesClient client = new HiddenSidesClient();
+        client.setContent(new Rectangle(400,300, Color.AQUA));
+        client.setLeft(new Rectangle(100,300, Color.BLUE));
+        client.setTriggerDistance(15);
+        
+        SimpleWindowFrame frame = new SimpleWindowFrame(stage, 400,300);
+        frame.setIconImage(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
+        frame.setText("Fxyz-SamplerApp");
+        frame.setRootContent(client);
+               
+        Scene scene = new Scene(frame);
+        scene.setFill(Color.TRANSPARENT);
+        scene.setCamera(new ParallelCamera());
+        
+        this.stage.setScene(scene);
+        this.stage.initStyle(StageStyle.TRANSPARENT);        
+        this.stage.show();
+        
+        //CustomWindow window = new CustomWindow(stage);
     }
 
     

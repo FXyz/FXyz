@@ -22,7 +22,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import static org.fxyz.FXyzClient.BACKGROUNDS;
@@ -106,8 +105,8 @@ public class CustomWindow extends AnchorPane{
         assert stage != null;
         this.stage = stage;
         this.scene = new Scene(this, 1200,800, false, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.TRANSPARENT);
-        this.getStyleClass().add("subScene-container");
+        scene.setFill(null);
+        //this.getStyleClass().add("subScene-container");
         scene.setOnMousePressed(e->{
             mOX = mX;
             mOY = mY;
@@ -119,7 +118,7 @@ public class CustomWindow extends AnchorPane{
         });
         scene.getStylesheets().addAll(BACKGROUNDS);
         SimpleSliderClient ssc = new SimpleSliderClient(stage, true);
-        ssc.getStyleClass().add("comp-fade-background");
+        //ssc.getStyleClass().add("comp-fade-background");
         setContent(ssc);
         
         stage.setScene(scene);
@@ -168,9 +167,12 @@ public class CustomWindow extends AnchorPane{
             stage.setY(e.getScreenY() - mY);
         });
         // window resizing
+        resize.setOnMouseEntered(e->e.consume());
+        resize.setOnMouseExited(e->e.consume());
         resize.setOnMousePressed((e) -> {
             dragOffsetX = (stage.getX() + stage.getWidth() - e.getScreenX());
             dragOffsetY = (stage.getY() + stage.getHeight() - e.getScreenY());
+            e.consume();
         });
         resize.setOnMouseDragged((e) -> {
             double x = e.getScreenX() + dragOffsetX,
@@ -179,6 +181,7 @@ public class CustomWindow extends AnchorPane{
             double h = y - stage.getY();
             stage.setWidth(Math.max(stageMinWidth, w));
             stage.setHeight(Math.max(stageMinHeight, h));
+            e.consume();
         });
         
     }

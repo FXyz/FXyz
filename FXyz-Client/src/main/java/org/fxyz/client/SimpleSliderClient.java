@@ -36,27 +36,27 @@ import org.fxyz.util.SampleScanner;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class SimpleSliderClient extends AbstractPopoutClient{
+public class SimpleSliderClient extends AbstractPopoutClient {
 
     private TreeItem<FXyzSample> root;
     private final Map<String, Project> projectsMap;
     private FXyzSample selectedSample;
     private TreeView<FXyzSample> contentTree;
     private TextField searchBar;
-    
+
     public SimpleSliderClient(Stage stage, boolean popsEnabled) {
         super(stage, popsEnabled);
         this.projectsMap = new SampleScanner().discoverSamples();
         buildProjectTree(null);
-        
+
         VBox treeMenu = new VBox();
         treeMenu.setFillWidth(true);
         treeMenu.setSpacing(3);
         treeMenu.setPadding(new Insets(3));
-        
+
         contentTree = new TreeView<>(root);
         contentTree.setFocusTraversable(false);
-        
+
         searchBar = new TextField();
         searchBar.setFocusTraversable(false);
         searchBar.setMaxWidth(USE_COMPUTED_SIZE);
@@ -64,13 +64,13 @@ public class SimpleSliderClient extends AbstractPopoutClient{
         searchBar.textProperty().addListener((Observable o) -> {
             buildProjectTree(searchBar.getText());
         });
-        
+
         treeMenu.getChildren().addAll(searchBar, contentTree);
         VBox.setVgrow(contentTree, Priority.ALWAYS);
-        
+
         menuPane.getChildren().add(treeMenu);
         menuPane.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
-                
+
         contentTree.setShowRoot(false);
         contentTree.getStyleClass().add("samples-tree");
         contentTree.setMinWidth(USE_PREF_SIZE);
@@ -111,25 +111,25 @@ public class SimpleSliderClient extends AbstractPopoutClient{
                 changeContent();
             }
         });
-        
+
         List<TreeItem<FXyzSample>> projects = contentTree.getRoot().getChildren();
         if (!projects.isEmpty()) {
             TreeItem<FXyzSample> firstProject = projects.get(0);
             contentTree.getSelectionModel().select(firstProject);
         } else {
             changeToWelcomePage(null);
-        }        
-        
-        setShowMenuPane(true);
-        setShowBottomPane(false);
-        
-        parentProperty().addListener(l->{
-            requestLayout();
+        }
+
+        parentProperty().addListener(l -> {
+            if (getParent() != null) {
+                getParent().requestLayout();
+            }
         });
-        
-        
+
+        setShowMenuPane(false);
+        setShowBottomPane(false);
     }
-    
+
     protected final void buildProjectTree(String searchText) {
         // rebuild the whole tree (it isn't memory intensive - we only scan
         // classes once at startup)
@@ -237,22 +237,22 @@ public class SimpleSliderClient extends AbstractPopoutClient{
         right.getChildren().clear();
         if (!center.getChildren().isEmpty()) {
             center.getChildren().clear();
-            
+
         }
 
         updateContent();
     }
 
-    private void updateContent() {        
+    private void updateContent() {
         center.getChildren().addAll(buildSampleTabContent(selectedSample));
         // below add labels / textflow if needed preferably befor controls  
-        
+
         Node controls = selectedSample.getControlPanel();
-        if(controls != null){
+        if (controls != null) {
             VBox.setVgrow(controls, Priority.ALWAYS);
             right.getChildren().addAll(controls);
         }
-        
+
     }
 
     private Node buildSampleTabContent(FXyzSample sample) {
@@ -266,5 +266,5 @@ public class SimpleSliderClient extends AbstractPopoutClient{
     public FXyzSample getSelectedSample() {
         return selectedSample;
     }
-    
+
 }

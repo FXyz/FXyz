@@ -1,5 +1,5 @@
 apply plugin: 'application'
-applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true"]
+applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true", "-Djavafx.animation.fullspeed=true"]
 
 applicationName = 'FXyz-Samples'
 

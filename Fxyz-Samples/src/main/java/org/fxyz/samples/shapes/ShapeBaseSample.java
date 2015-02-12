@@ -132,7 +132,6 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             mainPane.setPrefSize(sceneWidth, sceneHeight);
             mainPane.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
             mainPane.setMinSize(sceneWidth, sceneHeight);
-            mainPane.getStyleClass().add("sub-scene-container");
             mainPane.getChildren().add(subScene);
             mainPane.setPickOnBounds(false);
 

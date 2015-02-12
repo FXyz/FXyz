@@ -12,20 +12,12 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<fx:root id="AnchorPane" fx:id="justForShadow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="956.0" style="-fx-background-color: transparent;" stylesheets="@../images/customWindow.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root id="AnchorPane" fx:id="justForShadow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="624.0" prefWidth="956.0" stylesheets="@../images/customWindow.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <AnchorPane fx:id="frame" prefHeight="572.0" prefWidth="772.0" styleClass="frame" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
             <children>
-                <StackPane fx:id="contentPane" layoutX="8.5" layoutY="32.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="931.0" styleClass="inner-frame" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="32.0" HBox.hgrow="SOMETIMES">
-                      
-                          <effect>
-                        <DropShadow color="WHITE" height="12.1" radius="5.55" width="12.1" />
-                    </effect>
-                </StackPane>
+                <StackPane fx:id="contentPane" layoutX="8.5" layoutY="32.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="931.0" styleClass="inner-frame" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="32.0" HBox.hgrow="SOMETIMES" />
             </children>
-            <effect>
-                <DropShadow blurType="GAUSSIAN" height="17.904761904761905" radius="8.452380952380953" spread="0.21428571428571427" width="17.904761904761905" />
-            </effect>
         </AnchorPane>
         <StackPane fx:id="resize" alignment="TOP_LEFT" blendMode="SOFT_LIGHT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="5.0" prefWidth="5.0" AnchorPane.bottomAnchor="7.5" AnchorPane.rightAnchor="7.5">
             <children>
