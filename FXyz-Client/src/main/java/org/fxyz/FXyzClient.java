@@ -52,6 +52,7 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -82,8 +83,9 @@ public class FXyzClient extends Application {
     private TreeView<FXyzSample> contentTree;
     private TreeItem<FXyzSample> root;
 
-    private VBox leftSideContent, rightSideContent;
+    private VBox leftSideContent, contentControls;
     private StackPane centerContent;
+    private HBox contentPane;
     
     private HiddenSidesClient client;
     private SimpleWindowFrame frame;
@@ -105,16 +107,26 @@ public class FXyzClient extends Application {
         leftSideContent.setPadding(new Insets(3));
         leftSideContent.getStyleClass().add("fxyz-control");
         
-        rightSideContent = new VBox();
-        rightSideContent.getStyleClass().add("fxyz-control");
-        
+        contentControls = new VBox();
+        contentControls.getStyleClass().add("fxyz-control");
+        contentControls.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
+               
         centerContent = new StackPane();
         centerContent.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
         
         searchBar = new TextField();
+        searchBar.setFocusTraversable(false);
         searchBar.setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);
         searchBar.textProperty().addListener((Observable o) -> {
             buildProjectTree(searchBar.getText());
+        });
+        searchBar.setOnMouseEntered(e->{
+            if(client.getPinnedSide() == null){
+                client.setPinnedSide(Side.LEFT);
+            }
+        });
+        searchBar.setOnAction(a->{
+            client.setPinnedSide(null);
         });
 
         contentTree = new TreeView<>(root);
@@ -157,26 +169,20 @@ public class FXyzClient extends Application {
                 changeContent();
             }
         });
+        contentTree.setFocusTraversable(false);
         leftSideContent.getChildren().addAll(searchBar,contentTree);       
         VBox.setVgrow(contentTree, Priority.ALWAYS);
 
         client = new HiddenSidesClient();
         client.setContent(centerContent);
         client.setLeft(leftSideContent);
-        client.setRight(rightSideContent);
-        client.setTriggerDistance(15);
+        client.setTriggerDistance(20);
         
         frame = new SimpleWindowFrame(stage, 1280, 800);
         frame.setIconImage(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
         frame.setText("Fxyz-SamplerApp ver: 0.0.1a");
         frame.setRootContent(client);
-        frame.getPinRelease().setOnMouseEntered(e->{
-            if(client.getPinnedSide() != null){
-                client.setPinnedSide(null);
-                frame.getPinRelease().toBack();
-            }
-        });
-        
+                
         List<TreeItem<FXyzSample>> projects = contentTree.getRoot().getChildren();
         if (!projects.isEmpty()) {
             TreeItem<FXyzSample> firstProject = projects.get(0);
@@ -185,7 +191,7 @@ public class FXyzClient extends Application {
             changeToWelcomePage(null);
         }
 
-        Scene scene = new Scene(frame, 1280, 800);
+        Scene scene = new Scene(frame, 1200, 768);
         scene.setFill(Color.TRANSPARENT);
 
         this.stage.setScene(scene);
@@ -319,7 +325,8 @@ public class FXyzClient extends Application {
             return;
         }
 
-        rightSideContent.getChildren().clear();
+        contentControls.getChildren().clear();
+        
         if (!centerContent.getChildren().isEmpty()) {
             centerContent.getChildren().clear();
         }
@@ -328,19 +335,23 @@ public class FXyzClient extends Application {
     }
 
     private void updateContent() {
-        centerContent.getChildren().addAll(buildSampleContent(selectedSample));
-        centerContent.toBack();
-        // below add labels / textflow if needed preferably befor controls  
-        Node controls = selectedSample.getControlPanel();        
+        HBox cPane = new HBox();
+        cPane.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
+        
+        Node content = buildSampleContent(selectedSample);
+        HBox.setHgrow(content, Priority.ALWAYS);
+        
+        Node controls = selectedSample.getControlPanel();
         if(controls != null){
+            contentControls.getChildren().add(controls);
             VBox.setVgrow(controls, Priority.ALWAYS);
-            rightSideContent.getChildren().addAll(controls);     
-            client.setPinnedSide(Side.RIGHT);
-            frame.getPinRelease().toFront();
-            System.out.println(client.getRight().getOnMouseReleased());
-        }else{
-            frame.getPinRelease().toBack();
         }
+        
+        cPane.getChildren().addAll(content, contentControls);
+        centerContent.getChildren().addAll(cPane);
+        
+        centerContent.toBack();
+        
     }
 
     private Node buildSampleContent(FXyzSample sample) {

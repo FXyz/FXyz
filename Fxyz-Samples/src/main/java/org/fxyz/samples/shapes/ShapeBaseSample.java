@@ -125,6 +125,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             subScene = new SubScene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
             subScene.setFill(Color.TRANSPARENT);//Color.web("#0d0d0d"));        
             subScene.setCamera(camera);
+            subScene.setFocusTraversable(false);
 
             rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
 

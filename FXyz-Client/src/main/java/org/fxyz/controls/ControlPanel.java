@@ -26,6 +26,7 @@ public class ControlPanel extends StackPane{
         this();
         this.accordion.getPanes().add(cat);
         this.getChildren().add(accordion);
+        this.getStyleClass().clear();
     }
 
     public final TitledPane getExpandedPane() {

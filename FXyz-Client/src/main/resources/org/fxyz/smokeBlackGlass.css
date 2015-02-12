@@ -1809,7 +1809,7 @@
         ),
         -fx-inner-border, -fx-body-color;
     -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 3 3 0 0, 2 2 0 0, 1 1 0 0;
+    -fx-background-radius: 50 0 0 50;
     -fx-padding: 0.3333em 0.75em 0.3333em 0.75em; /* 4 9 4 9 */
 }
 /* alternative focus using the ring around the entire title area */
@@ -3156,7 +3156,7 @@
 .fxyz-control-window-inner-frame{
     -fx-background-color:transparent;
     -fx-border-color:
-        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
+        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, white, transparent);
     -fx-border-width:0.75px;
     -fx-background-insets: 0;
     -fx-border-insets: 0;    
@@ -3188,6 +3188,21 @@
     -fx-border-radius: 0 10 10 10;
     -fx-background-radius: 0 10 10 10;
 }
+
+.fxyz-control-category{
+    -fx-background-color:
+        linear-gradient(from 0% 100% to 100% 100%,  #ffffff19 0%, transparent 100%),
+        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #ffffff16, transparent 50%);
+    -fx-border-color:
+        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
+    -fx-border-width:1px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;    
+    -fx-border-radius: 50 0 0 50;
+    -fx-background-radius: 50 0 0 50;
+    -fx-effect:dropshadow(gaussian, #ffffff09, 10, 0,0,0);
+}
+
 .fxyz-control-section-label{
     -fx-background-color:
         linear-gradient(from 0% 100% to 100% 100%,  #ffffff19 0%, transparent 100%),

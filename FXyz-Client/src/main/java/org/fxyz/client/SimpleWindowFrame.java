@@ -71,8 +71,6 @@ public class SimpleWindowFrame extends AnchorPane {
 
     @FXML
     private Pane southEastResize;
-    @FXML
-    private Pane pinRelease;
 
     private final Stage stage;
     private double mX, mY, mOX, mOY, mDX, mDY, dragOffsetX, dragOffsetY;
@@ -107,8 +105,9 @@ public class SimpleWindowFrame extends AnchorPane {
         });
         exit.setOnAction(a -> Platform.exit());
         
-        pinRelease.toBack();
         
+        //setTranslateX(stage.getX());
+        //setTranslateY(stage.getY());
     }
 
     public void setRootContent(Node node) {
@@ -184,18 +183,18 @@ public class SimpleWindowFrame extends AnchorPane {
                 });
             }
         });
-        headerSpacer.setOnMouseDragged((e) -> {
+        headerBar.setOnMouseDragged((e) -> {
             stage.setX(e.getScreenX() - mX);
             stage.setY(e.getScreenY() - mY);
         });
         // window resizing
-        southEastResize.setOnMouseEntered(e -> e.consume());
+        /*southEastResize.setOnMouseEntered(e -> e.consume());
         southEastResize.setOnMouseExited(e -> e.consume());
         southEastResize.setOnMousePressed((e) -> {
             dragOffsetX = (getTranslateX() + getWidth() - e.getScreenX());
             dragOffsetY = (getTranslateY() + getHeight() - e.getScreenY());
             //e.consume();
-        });
+        });        
         southEastResize.setOnMouseDragged((e) -> {
             double x = e.getScreenX() + dragOffsetX,
                     y = e.getScreenY() + dragOffsetY;
@@ -206,7 +205,7 @@ public class SimpleWindowFrame extends AnchorPane {
             setPrefHeight(Math.max(stageMinHeight, h));
             Platform.runLater(() -> stage.sizeToScene());
             //e.consume();
-        });
+        });*/
 
     }
 
@@ -244,10 +243,6 @@ public class SimpleWindowFrame extends AnchorPane {
 
     public Pane getSouthEastResize() {
         return southEastResize;
-    }
-
-    public Pane getPinRelease() {
-        return pinRelease;
     }
 
     
