@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.fxyz.util;
+package org.fxyz.ExtrasAndTests;
 
 import org.fxyz.*;
 import java.io.BufferedReader;
@@ -67,6 +67,7 @@ import org.fxyz.model.EmptySample;
 import org.fxyz.model.Project;
 import org.fxyz.model.SampleTree.TreeNode;
 import org.fxyz.model.WelcomePage;
+import org.fxyz.util.SampleScanner;
 import org.fxyz.util.SampleScanner;
 
 public class FXyzSampler_backup extends Application {

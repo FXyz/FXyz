@@ -18,7 +18,7 @@
                <children>
                   <HBox maxWidth="1.7976931348623157E308" pickOnBounds="false">
                      <children>
-                        <Label fx:id="light1Label" focusTraversable="false" pickOnBounds="false" text="Point Light 1 " AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                        <Label fx:id="light1Label" focusTraversable="false" pickOnBounds="false" text="Lighting On : " AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                         <Pane pickOnBounds="false" HBox.hgrow="ALWAYS" />
                         <CheckBox fx:id="l1On" focusTraversable="false" mnemonicParsing="false" pickOnBounds="false" />
                      </children>

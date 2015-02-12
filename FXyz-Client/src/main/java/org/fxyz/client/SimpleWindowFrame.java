@@ -5,6 +5,7 @@
  */
 package org.fxyz.client;
 
+import org.fxyz.ExtrasAndTests.CustomWindow;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

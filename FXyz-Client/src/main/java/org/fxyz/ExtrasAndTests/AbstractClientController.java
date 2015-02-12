@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.client;
+package org.fxyz.ExtrasAndTests;
 
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;

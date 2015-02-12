@@ -11,7 +11,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<fx:root style="-fx-background-color: transparent;" styleClass="client-root" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root style="-fx-background-color: transparent;" stylesheets="@../smokeBlackGlassSimpleFrame.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="700.0" prefWidth="1000.0" styleClass="fxyz-control-window-frame" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -27,12 +27,15 @@
                      </children>
                   </HBox>
                   <Pane fx:id="headerSpacer" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <HBox fx:id="headerButtons" alignment="CENTER" spacing="3.0" HBox.hgrow="NEVER">
+                  <HBox fx:id="headerButtons" alignment="CENTER" HBox.hgrow="NEVER">
                      <children>
-                        <Button fx:id="minimize" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="17.0" prefWidth="17.0" style="-fx-background-radius: 100; -fx-border-radius: 100;" />
-                        <Button fx:id="maximize" focusTraversable="false" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="17.0" prefWidth="17.0" style="-fx-background-radius: 100; -fx-border-radius: 100;" />
-                        <Button fx:id="exit" focusTraversable="false" layoutX="27.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="17.0" prefWidth="17.0" style="-fx-background-radius: 100; -fx-border-radius: 100;" />
+                        <Button fx:id="minimize" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="minimizeButton" />
+                        <Button fx:id="maximize" focusTraversable="false" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="maximizeButton" />
+                        <Button fx:id="exit" focusTraversable="false" layoutX="27.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="exitButton" />
                      </children>
+                     <effect>
+                        <DropShadow color="WHITE" height="5.0" offsetY="2.0" radius="2.0" width="5.0" />
+                     </effect>
                   </HBox>
                </children>
                <padding>
@@ -50,6 +53,6 @@
             <StackPane fx:id="rootContentPane" layoutX="8.0" layoutY="25.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="25.0" />
          </children>
       </AnchorPane>
-      <Pane fx:id="southEastResize" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: rgba(255,255,255,0.12);" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Pane fx:id="southEastResize" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
    </children>
 </fx:root>

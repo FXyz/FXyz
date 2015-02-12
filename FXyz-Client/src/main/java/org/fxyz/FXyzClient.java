@@ -72,8 +72,10 @@ import org.fxyz.util.SampleScanner;
 
 public class FXyzClient extends Application {
 
-    public static final String BACKGROUNDS = FXyzClient.class.getResource("clientBackgrounds.css").toExternalForm(),
-            GLASS_BLACK_SMOKE = FXyzClient.class.getResource("smokeBlackGlass.css").toExternalForm();
+    public static final String 
+            BACKGROUNDS = FXyzClient.class.getResource("clientBackgrounds.css").toExternalForm(),
+            BLACK_GLASS_BASE = FXyzClient.class.getResource("smokeBlackGlassBase.css").toExternalForm(),
+            BLACK_GLASS_CONTROLS = FXyzClient.class.getResource("smokeBlackGlassControls.css").toExternalForm();
             //CUSTOM_WINDOW = FXyzClient.class.getResource("images/customWindow.css").toExternalForm();
 
     private Map<String, Project> projectsMap;
@@ -93,7 +95,6 @@ public class FXyzClient extends Application {
     @Override
     public void start(final Stage s) throws Exception {
         
-        Application.setUserAgentStylesheet(GLASS_BLACK_SMOKE);
         stage = s;
         stage.getIcons().add(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
         
@@ -180,7 +181,7 @@ public class FXyzClient extends Application {
         
         frame = new SimpleWindowFrame(stage, 1280, 800);
         frame.setIconImage(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
-        frame.setText("Fxyz-SamplerApp ver: 0.0.1a");
+        frame.setText("Fxyz-SamplerApp <ver: 0.0.1a>");
         frame.setRootContent(client);
                 
         List<TreeItem<FXyzSample>> projects = contentTree.getRoot().getChildren();
@@ -193,6 +194,7 @@ public class FXyzClient extends Application {
 
         Scene scene = new Scene(frame, 1200, 768);
         scene.setFill(Color.TRANSPARENT);
+        scene.getStylesheets().addAll(BLACK_GLASS_BASE, BLACK_GLASS_CONTROLS);
 
         this.stage.setScene(scene);
         this.stage.initStyle(StageStyle.TRANSPARENT);
@@ -215,8 +217,9 @@ public class FXyzClient extends Application {
      scene.getStylesheets().addAll(BACKGROUNDS);
         
      stage.setScene(scene);
-     stage.show();
+     stage.show();    
      */
+    
     /*==========================================================================
      Load all Items into TreeView
      */
