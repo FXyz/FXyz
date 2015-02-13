@@ -39,7 +39,7 @@ import org.fxyz.geometry.Face3;
  * @author José Pereda Llamas
  * Created on 22-dic-2014 - 21:51:51
  */
-public class CylinderMesh extends TexturedMesh {
+public class PrismMesh extends TexturedMesh {
 
     private final static int DEFAULT_DIVISIONS = 20;
     private final static double DEFAULT_RADIUS = 1;
@@ -47,25 +47,21 @@ public class CylinderMesh extends TexturedMesh {
     
     private final static int DEFAULT_LEVEL = 1;
     
-    public CylinderMesh(){
+    public PrismMesh(){
         this(DEFAULT_RADIUS, DEFAULT_HEIGHT, DEFAULT_LEVEL,null,null);
     }
-    public CylinderMesh(double radius, double height){
+    public PrismMesh(double radius, double height){
         this(radius, height, DEFAULT_LEVEL,null,null);
     }
     
-    public CylinderMesh(double radius, double height, int level){
+    public PrismMesh(double radius, double height, int level){
         this(radius,height,level,null,null);
     }
-    public CylinderMesh(double radius, double height, int level, Point3D pIni, Point3D pEnd){
-        setAxisOrigin(pIni);
-        setAxisEnd(pEnd);
+    public PrismMesh(double radius, double height, int level, Point3D pIni, Point3D pEnd){
+        setAxisOrigin(pIni==null?new Point3D(0,(float)height/2f,0):pIni);
+        setAxisEnd(pEnd==null?new Point3D(0,-(float)height/2f,0):pEnd);
         setRadius(radius);
-        if(pEnd!=null && pIni!=null){
-            setHeight(pEnd.substract(pIni).magnitude());
-        } else {
-            setHeight(height);        
-        }
+        setHeight(getAxisEnd().substract(getAxisOrigin()).magnitude());
         setLevel(level);
         
         updateMesh();
@@ -399,12 +395,18 @@ public class CylinderMesh extends TexturedMesh {
         numVertices=listVertices.size();
         numFaces=listFaces.size();
         
-        List<Face3> textures1 = IntStream.range(0, faces0.length/6)
+        List<Face3> textures1;
+        if(level==0){
+            textures1= IntStream.range(0, faces0.length/6)
                     .mapToObj(i -> new Face3(faces0[6*i+1], faces0[6*i+3], faces0[6*i+5]))
                     .collect(Collectors.toList());
+        } else {
+            textures1 = listTextures.stream().map(t->t).collect(Collectors.toList());
+        }
 
         index.set(texCoord1.size());
         listTextures.clear();
+        AtomicInteger kk=new AtomicInteger();
         textures1.forEach(face->{
             int v1=face.p0;
             int v2=face.p1;
@@ -423,7 +425,7 @@ public class CylinderMesh extends TexturedMesh {
             }
         });
         map.clear();
-
+        
         texCoord0=texCoord1.stream().flatMapToDouble(p->DoubleStream.of(p.getX(),p.getY()))
                 .collect(()->new FloatCollector(texCoord1.size()*2), FloatCollector::add, FloatCollector::join).toArray();
         numTexCoords=texCoord0.length/2;

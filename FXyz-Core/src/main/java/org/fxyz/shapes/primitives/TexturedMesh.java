@@ -410,7 +410,7 @@ public abstract class TexturedMesh extends MeshView {
     
     protected TriangleMesh createMesh(){
         TriangleMesh triangleMesh = new TriangleMesh();
-                triangleMesh.getPoints().setAll(helper.updateVertices(listVertices));
+        triangleMesh.getPoints().setAll(helper.updateVertices(listVertices));
         switch(textureType.get()){
             case NONE:
                 triangleMesh.getTexCoords().setAll(textureCoords);

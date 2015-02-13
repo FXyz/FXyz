@@ -233,10 +233,15 @@ public class IcosahedronMesh extends TexturedMesh {
         numVertices=listVertices.size();
         numFaces=listFaces.size();
         
-        List<Face3> textures1 = IntStream.range(0, faces0.length/6)
+        List<Face3> textures1;
+        if(level==0){
+            textures1= IntStream.range(0, faces0.length/6)
                     .mapToObj(i -> new Face3(faces0[6*i+1], faces0[6*i+3], faces0[6*i+5]))
                     .collect(Collectors.toList());
-
+        } else {
+            textures1 = listTextures.stream().map(t->t).collect(Collectors.toList());
+        }
+        
         index.set(texCoord1.size());
         listTextures.clear();
         textures1.forEach(face->{
