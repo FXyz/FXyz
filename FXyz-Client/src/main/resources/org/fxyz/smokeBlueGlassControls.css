@@ -1,0 +1,495 @@
+
+
+
+
+
+/*******************************************************************************
+ *                                                                             *
+ * FXyz Controls                                                               *
+ *                                                                             *
+ ******************************************************************************/
+
+.fxyz-control{
+    -fx-background-color:
+        linear-gradient(from 0% 100% to 100% 100%,  #ffffff19 0%, transparent 100%),
+        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #ffffff16, transparent 50%);
+    -fx-border-color:
+        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
+    -fx-border-width:1px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-border-radius: 7;
+    -fx-background-radius: 7;
+    
+}
+
+.fxyz-control:hover{
+    -fx-effect:innershadow(gaussian, #ffffff49, 10, 0.2,0,0);
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.fxyz-control-category{
+    -fx-background-color:
+        linear-gradient(from 0% 100% to 100% 100%,  #ffffff19 0%, transparent 100%),
+        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #ffffff16, transparent 50%);
+    -fx-border-color:
+        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
+    -fx-border-width:1px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;    
+    -fx-border-radius: 50 0 0 50;
+    -fx-background-radius: 50 0 0 50;
+    -fx-effect:dropshadow(gaussian, #ffffff09, 10, 0,0,0);
+}
+
+.fxyz-control-section-label{
+    -fx-background-color:
+        linear-gradient(from 0% 100% to 100% 100%,  #ffffff19 0%, transparent 100%),
+        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #ffffff16, transparent 50%);
+    -fx-border-color:
+        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
+    -fx-border-width:1px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;    
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-effect:dropshadow(gaussian, #ffffff09, 10, 0,0,0);     
+}
+.fxyz-search-box{
+    -fx-prompt-text-fill:#ffffff;    
+}
+.fxyz-welcome-label{
+    -fx-background-color:
+        linear-gradient(from 0% 100% to 100% 100%,  #00000019 0%, transparent 100%),
+        radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #00000016, transparent 50%);
+    -fx-border-color:
+        radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, -fx-accent, transparent);
+    -fx-border-width:1px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;    
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-effect:dropshadow(gaussian, #ffffff09, 10, 0,0,0); 
+}
+
+.colorSlider {
+    -fx-effect: dropshadow(two-pass-box , rgba(0, 0, 0, 0.3), 5, 0.0 , 0, 2);
+}
+.colorSlider .axis {
+    -fx-tick-label-fill:black;
+    -fx-tick-length: 3px;
+}
+.colorSlider .axis .axis-tick-mark,
+.colorSlider .axis .axis-minor-tick-mark {
+    -fx-fill: null;
+    -fx-stroke: #120120;
+}
+.colorSlider .thumb {
+    -fx-background-color: transparent;
+    -fx-border-color: white; //linear-gradient(to bottom, white 20%, black 21%, black 79%, white 80%);
+    -fx-border-width: 1.5px;
+    -fx-background-insets: 5 0 0 0;
+    -fx-padding: 6 2 6 2;
+}
+//==========================
+.lighting-slider > .track {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-image:  url("images/palette_1530.png");
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
+}
+//==
+.texture-slider > .track{
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-image:  url("images/palette_1530.png");
+    -fx-background-position: center;
+    -fx-background-repeat: stretch;
+    -fx-background-size: stretch, contain;
+
+}
+
+.ListSpinner { 
+    -fx-background-color: null;
+    -fx-border-color: null;
+    -fxx-arrow-position: split;
+    -fxx-value-alignment: center;
+    -fx-background-radius: 10 10 0 0;
+    -fx-background-insets: 0 0 5 0;
+    //-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+    //-fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    //-fx-background-radius: 5, 5, 4, 3;
+    -fx-padding: 0.266667em 0.233333em 0.25em 0.233333em;
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.ListSpinner:hover {
+    -fx-color: -fx-hover-base;
+}
+
+.ListSpinner:focused { 
+    -fx-color: -fx-base;
+    -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+    //-fx-background-insets: -1.4, 0, 1, 2;
+    -fx-background-radius: 6.4, 5, 4, 3;	
+}
+
+//==============================================================================
+//                  Standard controls we need to alter
+//==============================================================================
+.label {
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.accordion:focused:focus:selected:hover{
+    -fx-background-color:null;    
+}
+.accordion > .titled-pane > .title {
+    -fx-background-color:
+        linear-gradient(to bottom,
+        derive(-fx-color,-15%) 95%,
+        derive(-fx-color,-25%) 100%
+        ),
+        -fx-inner-border,
+        -fx-body-color;
+    -fx-background-insets: -1 0 0 0, 0 1 1 1, 1 2 2 2;
+    -fx-background-radius: 0, 0, 0;
+}
+.accordion > .first-titled-pane > .title {
+    -fx-background-insets: 0, 1, 2;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * List and Cells                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+* .cell:hover{
+    -fx-background-color: -fx-selection-bar;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+* .cell:empty:hover{
+    -fx-background-color: null;
+    -fx-border-color: null;
+}
+.cell > .choice-box {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.0em 0.5em 0.0em 0.0em; /* 0 6 0 0 */
+    -fx-alignment: CENTER_LEFT;
+    -fx-content-display: LEFT;
+}
+.cell > .choice-box > .label {
+    -fx-padding: 0em 0.333333em 0.0em 0.333333; /* 2 4 3 6 */
+}
+.cell:focused:selected > .choice-box > .label {
+    -fx-text-fill: white;
+}
+.cell:focused:selected > .choice-box > .open-button > .arrow {
+    -fx-background-color: -fx-mark-highlight-color, white;
+}
+/* standard cell */
+.list-cell,
+.tree-cell {
+    -fx-text-fill: #FFFFFFdd;
+}
+
+.list-cell {
+    -fx-padding: 0.25em 0.583em 0.25em 0.583em; /* 3 7 3 7 */
+}
+.list-cell:hover{
+    -fx-background: -fx-control-inner-background;
+    -fx-background-insets:0;
+    -fx-border-insets:0;
+}
+
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.tree-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-cell:filled:selected{
+    -fx-background: -fx-selection-bar;
+    -fx-table-cell-border-color: derive(-fx-selection-bar, 20%);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ComboBox                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+.combo-box{}
+.combo-box > .list-cell {}
+.combo-box-popup > .list-view {
+    -fx-background-color:
+        rgba(0,0,0,0.5),
+        linear-gradient(to bottom,
+        derive(-fx-color,-17%),
+        derive(-fx-color,-30%)
+        ),
+        -fx-control-inner-background;
+    -fx-background-insets: 0, 1;
+    -fx-border-color: linear-gradient(to bottom,  transparent 30%, #ffffff66 55%, #ffffffdd 100%);
+    -fx-border-width:0.75px;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
+}
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    //-fx-padding: 4 0 4 5;
+    /* No alternate highlighting */
+    -fx-background: -fx-control-inner-background;
+}
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background: -fx-faint-focus-color, #ffffff33;
+    -fx-background-color: -fx-selection-bar;
+}
+.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
+.combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
+    -fx-background: -fx-selection-bar;
+    -fx-background-color: -fx-background, -fx-cell-focus-inner-border, -fx-background;
+    -fx-background-insets: 0, 1, 2;
+}
+.combo-box-popup > .list-view > .placeholder > .label {
+    -fx-text-fill: derive(-fx-control-inner-background,-30%);
+}
+
+.list-view{
+    
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Slider                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+.slider .thumb {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 1.5px;
+    -fx-background-insets: 5 0 0 0;
+    -fx-padding: 6 2 6 2;
+    -fx-border-color: white, -fx-accent;
+    -fx-shape: "M4,2 L-4,2 L0,-2 Z";
+    //-fx-effect: dropshadow(gaussian , rgba(0, 0, 0, 0.1), 5, 0.0 , 0, 2);
+}
+.slider:pressed .thumb {
+    //-fx-background-radius: 0em; /* makes sure this remains circular */
+    //-fx-background-color: null;
+}
+.slider:focused .thumb {
+    //-fx-background-radius: 0em; /* makes sure this remains circular */
+    //-fx-background-color: null;
+}
+.slider .track {
+    -fx-background-color: 
+        -fx-shadow-highlight-color,
+        linear-gradient(to bottom, -fx-accent, -fx-box-border),
+        linear-gradient(to bottom, 
+        derive(-fx-color, -7%),
+        -fx-accent,
+        derive(-fx-color, -9%)
+        );
+    /* -fx-shadow-highlight-color,
+     linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+     linear-gradient(to bottom, 
+     derive(-fx-control-inner-background, -9%),
+     derive(-fx-control-inner-background, 0%),
+     derive(-fx-control-inner-background, -5%),
+     derive(-fx-control-inner-background, -12%)
+     );*/
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+    -fx-background-radius: 0.25em, 0.25em, 0.166667em; /* 3 3 2 */
+    -fx-padding: 0.25em; /* 3 */
+}
+.slider:vertical .track {
+    -fx-background-color: 
+        -fx-shadow-highlight-color,
+        -fx-text-box-border,
+        linear-gradient(to right, 
+        derive(-fx-control-inner-background, -9%),
+        -fx-control-inner-background,
+        derive(-fx-control-inner-background, -9%)
+        );
+}
+.slider .axis {
+    -fx-tick-label-fill: derive(-fx-text-base-color, 30%);
+    -fx-tick-length: 5px;
+    -fx-minor-tick-length: 3px;
+    -fx-border-color: null;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ProgressBar                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar {
+    -fx-indeterminate-bar-length: 60;
+    -fx-indeterminate-bar-escape: true;
+    -fx-indeterminate-bar-flip: true;
+    -fx-indeterminate-bar-animation-time: 2;
+}
+.progress-bar > .bar {
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-accent, -7%), derive(-fx-accent, 0%), derive(-fx-accent, -3%), derive(-fx-accent, -9%) );
+    -fx-background-insets: 3 3 4 3;
+    /*-fx-background-radius: 0.583em; *//* 7 */
+    -fx-background-radius: 2;
+    -fx-padding: 0.75em;
+}
+.progress-bar:indeterminate > .bar {
+    -fx-background-color: linear-gradient(to left, transparent, -fx-accent);
+}
+.progress-bar > .track {
+    -fx-background-color: 
+        -fx-shadow-highlight-color,
+        linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+        linear-gradient(to bottom, 
+        derive(-fx-control-inner-background, -7%),
+        derive(-fx-control-inner-background, 0%),
+        derive(-fx-control-inner-background, -3%),
+        derive(-fx-control-inner-background, -9%)
+        );
+    -fx-background-insets: 0, 0 0 1 0, 1 1 2 1;
+    -fx-background-radius: 4, 3, 2; /* 10, 9, 8 */
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * TitledPane                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+.titled-pane {
+    -fx-text-fill: -fx-text-base-color;
+}
+.titled-pane:hover {
+    -fx-background-color: inherit;//
+}
+.titled-pane > .title {
+    -fx-background-color:
+        linear-gradient(to bottom,
+        derive(-fx-color,-15%) 95%,
+        derive(-fx-color,-25%) 100%
+        ),
+        -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 50 0 0 50;
+    -fx-padding: 0.3333em 0.75em 0.3333em 0.75em; /* 4 9 4 9 */
+}
+/* alternative focus using the ring around the entire title area */
+/*.titled-pane:focused > .title {
+    -fx-background-color: -fx-faint-focus-color, -fx-focus-color, -fx-inner-border, -fx-body-color; 
+    -fx-background-insets: 0, 0.7, 2, 3;    
+}*/
+/* focus purely on the arrow */
+.titled-pane:focused > .title > .arrow-button > .arrow {
+    -fx-background-color: inherit;//-fx-focus-color, -fx-mark-color;
+    -fx-background-insets: -1, 0;
+    -fx-effect: dropshadow(two-pass-box , -fx-focus-color, 5, 0.2 , 0, 0);
+}
+.titled-pane > .title > .arrow-button {
+    -fx-background-color: null;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.0em 0.583em 0.0em 0.0em; /* 0 7 0 0 */
+}
+.titled-pane > .title > .arrow-button > .arrow {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-padding: 0.25em 0.3125em 0.25em 0.3125em; /* 3 3.75 3 3.75 */
+    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+}
+.titled-pane > .title:hover {
+    -fx-color: -fx-hover-base;
+}
+/* alternative content using a border and a grad to transparent background - why should TitledPane content have a colour? */
+.titled-pane > *.content {
+    -fx-border-color: -fx-box-border;
+    -fx-border-insets: -1 0 0 0;
+    -fx-background-color: null;//linear-gradient(from 0px 0px to 0px 5px, derive(-fx-background, -6%), -fx-background);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * TreeView and TreeCell                                                       *
+ *                                                                             *
+ ******************************************************************************/
+.tree-view{
+    -fx-background-color: -fx-selection-bar;
+}
+.tree-cell {
+    -fx-padding: 0.25em; /* 3 */
+    -fx-indent: 1em;
+}
+.tree-cell .label {
+    -fx-padding: 0.0em 0.0em 0.0em 0.25em; /* 0 0 0 3 */
+}
+.tree-cell > .tree-disclosure-node,
+.tree-table-row-cell > .tree-disclosure-node {
+    -fx-padding: 4 6 4 8;
+    -fx-background-color: transparent;
+}
+.tree-cell > .tree-disclosure-node > .arrow,
+.tree-table-row-cell > .tree-disclosure-node > .arrow {
+    -fx-background-color: -fx-accent;
+    -fx-padding: 0.333333em 0.229em 0.333333em 0.229em; /* 4 */
+    -fx-shape: "M 0 -3.5 L 4 0 L 0 3.5 z";
+}
+.tree-cell:expanded > .tree-disclosure-node > .arrow,
+.tree-table-row-cell:expanded > .tree-disclosure-node > .arrow {
+    -fx-rotate: 90;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Tooltip                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.tooltip {
+    -fx-background: rgba(30,30,30);
+    -fx-text-fill: white;
+    -fx-background-color: rgba(30,30,30,0.8);
+    -fx-background-radius: 6px;
+    -fx-background-insets: 0;
+    -fx-padding: 0.667em 0.75em 0.667em 0.75em; /* 10px */
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 3 );
+    -fx-font-size: 0.85em;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ToggleButton                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+.toggle-button:selected {
+    -fx-background-color:-fx-focus-color, -fx-box-border, -fx-background;
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+}
+.toggle-button:selected:focused {
+    -fx-background-color:
+        -fx-focus-color,
+        linear-gradient(to bottom,
+        derive(-fx-color, -22%) 0%,
+        derive(-fx-color, -13%) 20%,
+        derive(-fx-color, -11%) 50%),
+        -fx-faint-focus-color,
+        linear-gradient(to bottom,
+        derive(-fx-color, -22%) 0%,
+        derive(-fx-color, -13%) 20%,
+        derive(-fx-color, -11%) 50%);
+    -fx-background-insets: -0.2, 1, -1.4, 2.6;
+    -fx-background-radius: 3, 2, 4, 0;
+}
+
+
+
+
+
+
+
+
