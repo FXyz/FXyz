@@ -29,7 +29,7 @@ import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.BezierMesh;
-import org.fxyz.shapes.primitives.CylinderMesh;
+import org.fxyz.shapes.primitives.PrismMesh;
 import org.fxyz.shapes.primitives.helper.BezierHelper;
 import org.fxyz.shapes.primitives.helper.InterpolateBezier;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
@@ -40,10 +40,10 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
  */
 public class BezierMeshes extends ShapeBaseSample {
 
-    public static void main(String[] args){launch(args);}
+    public static void main(String[] args){
+        launch(args);
+    }
     
-    long lastEffect;
-
     private final BooleanProperty showKnots = new SimpleBooleanProperty(this, "Show Knots");
     private final BooleanProperty showControlPoints = new SimpleBooleanProperty(this, "Show Control Points");
 
@@ -124,17 +124,17 @@ public class BezierMeshes extends ShapeBaseSample {
                 Point3D k1 = spline.getPoints().get(1);
                 Point3D k2 = spline.getPoints().get(2);
                 Point3D k3 = spline.getPoints().get(3);
-                CylinderMesh c = new CylinderMesh(0.03d, 1d, 1, k0, k1);
+                PrismMesh c = new PrismMesh(0.03d, 1d, 1, k0, k1);
                 c.setTextureModeNone(Color.GREEN);
                 c.setId("Control");
                 group.getChildren().add(c);
 
-                c = new CylinderMesh(0.03d, 1d, 1, k1, k2);
+                c = new PrismMesh(0.03d, 1d, 1, k1, k2);
                 c.setTextureModeNone(Color.GREEN);
                 c.setId("Control");
                 group.getChildren().add(c);
 
-                c = new CylinderMesh(0.03d, 1d, 1, k2, k3);
+                c = new PrismMesh(0.03d, 1d, 1, k2, k3);
                 c.setTextureModeNone(Color.GREEN);
                 c.setId("Control");
                 group.getChildren().add(c);
