@@ -94,7 +94,7 @@ public class BezierMeshes extends ShapeBaseSample {
             return bezier;
         }).collect(Collectors.toList());
     }
-
+    
     @Override
     protected void addMeshAndListeners() {
         Group bez = new Group();
