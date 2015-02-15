@@ -1,6 +1,9 @@
 package org.fxyz.samples.shapes.texturedmeshes;
 
+import com.sun.javafx.geom.Vec3d;
 import static javafx.application.Application.launch;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -11,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Translate;
 import org.fxyz.controls.CheckBoxControl;
 import org.fxyz.controls.ControlCategory;
@@ -65,23 +69,31 @@ public class Prisms extends TexturedMeshSample{
         model.setTextureModeNone(Color.ROYALBLUE);
     }
 
-
     @Override
     protected void addMeshAndListeners() {
         showKnots.addListener((obs, b, b1) ->{
             if (showKnots.get()) {
                 Point3D k0 = ((PrismMesh)model).getAxisOrigin();
                 Point3D k3 = ((PrismMesh)model).getAxisEnd();
-                Sphere s = new Sphere(0.2d);
+                final Sphere s = new Sphere(0.2d);
                 s.setId("knot");
                 s.getTransforms().add(new Translate(k0.x, k0.y, k0.z));
-                s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
+                s.setMaterial(new PhongMaterial(Color.ROSYBROWN));
                 group.getChildren().add(s);
-                s = new Sphere(0.2d);
-                s.setId("knot");
-                s.getTransforms().add(new Translate(k3.x, k3.y, k3.z));
-                s.setMaterial(new PhongMaterial(Color.GREENYELLOW));
-                group.getChildren().add(s);
+                final Sphere s2 = new Sphere(0.2d);
+                s2.setId("knot");
+                s2.getTransforms().add(new Translate(k3.x, k3.y, k3.z));
+                s2.setMaterial(new PhongMaterial(Color.GREENYELLOW));
+                group.getChildren().add(s2);
+                s.getTransforms().addListener((Observable observable) -> {
+                    javafx.geometry.Point3D newK0=s.localToParent(new javafx.geometry.Point3D(0, 0, 0));
+                    ((PrismMesh)model).setAxisOrigin(new Point3D((float)newK0.getX(),(float)newK0.getY(),(float)newK0.getZ()));
+                });
+                s2.getTransforms().addListener((Observable observable) -> {
+                    javafx.geometry.Point3D newK3=s2.localToParent(new javafx.geometry.Point3D(0, 0, 0));
+                    ((PrismMesh)model).setAxisEnd(new Point3D((float)newK3.getX(),(float)newK3.getY(),(float)newK3.getZ()));
+                });
+                
             } else {
                 group.getChildren().removeIf(s -> s.getId() != null && s.getId().equals("knot"));
             }
