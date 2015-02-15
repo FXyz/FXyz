@@ -7,7 +7,9 @@ package org.fxyz.samples.shapes;
 
 import com.sun.javafx.geom.Vec3d;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point3D;
@@ -26,6 +28,8 @@ import javafx.scene.input.PickResult;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.CullFace;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
@@ -81,7 +85,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     private final BooleanProperty onService = new SimpleBooleanProperty();
 
-    private volatile boolean isPicking=false;
+    private volatile boolean isPicking = false;
     private Vec3d vecIni, vecPos;
     private double distance;
     private Sphere s;
@@ -186,7 +190,11 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 if (model instanceof Shape3D) {
                     material = (PhongMaterial) ((Shape3D) model).getMaterial();
                 }
-                group.getChildren().add(model);
+                if (model != null) {
+                    group.getChildren().add(model);
+                } else {
+                    throw new UnsupportedOperationException("Model returned Null ... ");
+                }
                 if (controlPanel != null && ((ControlPanel) controlPanel).getPanes().filtered(t -> t.getText().contains("lighting")).isEmpty()) {
                     ((ControlPanel) controlPanel).getPanes().add(0, ControlFactory.buildSceneAndLightCategory(
                             mainPane.visibleProperty(),
@@ -226,7 +234,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 if (keycode == KeyCode.D) {
                     camera.setTranslateX(camera.getTranslateX() + change);
                 }
-                
+
             });
 
             subScene.setOnMousePressed((MouseEvent me) -> {
@@ -235,11 +243,11 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 mouseOldX = me.getSceneX();
                 mouseOldY = me.getSceneY();
                 PickResult pr = me.getPickResult();
-                if(pr!=null && pr.getIntersectedNode() != null && pr.getIntersectedNode() instanceof Sphere){
-                    distance=pr.getIntersectedDistance();
+                if (pr != null && pr.getIntersectedNode() != null && pr.getIntersectedNode() instanceof Sphere) {
+                    distance = pr.getIntersectedDistance();
                     s = (Sphere) pr.getIntersectedNode();
-                    isPicking=true;
-                    vecIni = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(),subScene.getHeight());
+                    isPicking = true;
+                    vecIni = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
                 }
             });
             subScene.setOnMouseDragged((MouseEvent me) -> {
@@ -249,14 +257,14 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 mousePosY = me.getSceneY();
                 mouseDeltaX = (mousePosX - mouseOldX);
                 mouseDeltaY = (mousePosY - mouseOldY);
-                if(isPicking){
-                    double modifier = (me.isControlDown()?0.01:me.isAltDown()?1.0:0.1)*(30d/camera.getFieldOfView());
-                    modifier *=(30d/camera.getFieldOfView());
-                    vecPos = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(),subScene.getHeight());
-                    Point3D p=new Point3D(distance*(vecPos.x-vecIni.x),
-                                distance*(vecPos.y-vecIni.y),distance*(vecPos.z-vecIni.z));
-                    s.getTransforms().add(new Translate(modifier*p.getX(),modifier*p.getY(),modifier*p.getZ()));
-                    vecIni=vecPos;
+                if (isPicking) {
+                    double modifier = (me.isControlDown() ? 0.01 : me.isAltDown() ? 1.0 : 0.1) * (30d / camera.getFieldOfView());
+                    modifier *= (30d / camera.getFieldOfView());
+                    vecPos = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
+                    Point3D p = new Point3D(distance * (vecPos.x - vecIni.x),
+                            distance * (vecPos.y - vecIni.y), distance * (vecPos.z - vecIni.z));
+                    s.getTransforms().add(new Translate(modifier * p.getX(), modifier * p.getY(), modifier * p.getZ()));
+                    vecIni = vecPos;
 
                 } else {
 
@@ -282,9 +290,9 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                     }
                 }
             });
-            subScene.setOnMouseReleased((MouseEvent me)->{
-                if(isPicking){
-                    isPicking=false;
+            subScene.setOnMouseReleased((MouseEvent me) -> {
+                if (isPicking) {
+                    isPicking = false;
                 }
             });
 
@@ -294,11 +302,11 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             service.start();
         }
 
-        mainPane.sceneProperty().addListener(i->{
-            if(mainPane.getScene()!=null){
-                mainPane.getScene().addEventHandler(MouseEvent.MOUSE_PRESSED, e->{
-                    if(e.getPickResult()!= null){
-                        System.out.println(e.getPickResult().getIntersectedNode() + " : " +e.getPickResult().getIntersectedNode().getTypeSelector());
+        mainPane.sceneProperty().addListener(i -> {
+            if (mainPane.getScene() != null) {
+                mainPane.getScene().addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+                    if (e.getPickResult() != null) {
+                        System.out.println(e.getPickResult().getIntersectedNode() + " : " + e.getPickResult().getIntersectedNode().getTypeSelector());
                     }
                 });
             }
@@ -327,19 +335,51 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         }
         throw new IllegalArgumentException("Parent " + parent + " doesn't contain node with id " + id);
     }
-    
+
+    protected final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                if (model instanceof Shape3D) {
+                    ((Shape3D) model).setDrawMode(drawMode.getValue());
+                }else if(model instanceof Group){
+                    ((Group)model).getChildren().filtered(t-> t instanceof Shape3D)
+                            .forEach(s->{
+                                ((Shape3D)s).setDrawMode(drawMode.getValue());
+                            });
+                }
+            }
+        }
+    };
+    protected final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                if (model instanceof Shape3D) {
+                    ((Shape3D) model).setCullFace(culling.getValue());
+                }else if(model instanceof Group){
+                    ((Group)model).getChildren().filtered(t-> t instanceof Shape3D)
+                            .forEach(s->{
+                                ((Shape3D)s).setCullFace(culling.getValue());
+                            });
+                }
+            }
+        }
+    };
+
     /*
      From fx83dfeatures.Camera3D
      http://hg.openjdk.java.net/openjfx/8u-dev/rt/file/f4e58490d406/apps/toys/FX8-3DFeatures/src/fx83dfeatures/Camera3D.java
-    */
+     */
     /*
      * returns 3D direction from the Camera position to the mouse
      * in the Scene space 
      */
-    
     public Vec3d unProjectDirection(double sceneX, double sceneY, double sWidth, double sHeight) {
         double tanHFov = Math.tan(Math.toRadians(camera.getFieldOfView()) * 0.5f);
-        Vec3d vMouse = new Vec3d(2*sceneX/sWidth-1, 2*sceneY/sWidth-sHeight/sWidth, 1);
+        Vec3d vMouse = new Vec3d(2 * sceneX / sWidth - 1, 2 * sceneY / sWidth - sHeight / sWidth, 1);
         vMouse.x *= tanHFov;
         vMouse.y *= tanHFov;
 
@@ -347,7 +387,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         result.normalize();
         return result;
     }
-    
+
     public Vec3d localToScene(Vec3d pt, Vec3d result) {
         Point3D res = camera.localToParentTransformProperty().get().transform(pt.x, pt.y, pt.z);
         if (camera.getParent() != null) {
@@ -356,7 +396,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         result.set(res.getX(), res.getY(), res.getZ());
         return result;
     }
-    
+
     public Vec3d localToSceneDirection(Vec3d dir, Vec3d result) {
         localToScene(dir, result);
         result.sub(localToScene(new Vec3d(0, 0, 0), new Vec3d()));

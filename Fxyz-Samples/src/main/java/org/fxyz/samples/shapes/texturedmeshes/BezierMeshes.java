@@ -7,40 +7,72 @@ import java.util.stream.Collectors;
 import static javafx.application.Application.launch;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import org.fxyz.controls.CheckBoxControl;
 import org.fxyz.controls.ControlCategory;
+import org.fxyz.controls.ControlPanel;
+import org.fxyz.controls.LightingControls;
 import org.fxyz.controls.NumberSliderControl;
+import org.fxyz.controls.SectionLabel;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.Point3D;
-import org.fxyz.samples.shapes.TexturedMeshSample;
+import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.shapes.primitives.BezierMesh;
 import org.fxyz.shapes.primitives.PrismMesh;
+import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.BezierHelper;
 import org.fxyz.shapes.primitives.helper.InterpolateBezier;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *
  * @author jpereda
  */
-public class BezierMeshes extends TexturedMeshSample {
+public class BezierMeshes extends ShapeBaseSample {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         launch(args);
     }
-    
+
     private final BooleanProperty showKnots = new SimpleBooleanProperty(this, "Show Knots");
     private final BooleanProperty showControlPoints = new SimpleBooleanProperty(this, "Show Control Points");
 
     private final DoubleProperty wireRad = new SimpleDoubleProperty(this, "Wire Radius");
+    protected final ObjectProperty<Color> colorBinding = new SimpleObjectProperty<Color>(Color.BROWN) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && ((TexturedMesh) t).getTextureType().equals(TextureType.NONE))).isEmpty()) {
+                ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
+                        .forEach(s -> {
+                            ((PhongMaterial) ((Shape3D) s).getMaterial()).setDiffuseColor(getValue());
+                        });
+            }
+        }
+    };
+    protected final IntegerProperty colors = new SimpleIntegerProperty(model, "Color :", 700) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+
+            if (model != null) {
+                colorBinding.set(Color.hsb(360 * (1d - get() / 1530d), 1, 1));
+            }
+        }
+    };
 
     private List<BezierMesh> beziers;
     private List<BezierHelper> splines;
@@ -70,8 +102,8 @@ public class BezierMeshes extends TexturedMeshSample {
         beziers.forEach(bezier -> {
             bezier.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
         });
-        //model = bez;
-        Function<Point3D,Double> dens = p -> (double) p.f;
+        model = bez;
+        Function<Point3D, Double> dens = p -> (double) p.f;
         wireRad.addListener(i -> {
             beziers.forEach(bm -> {
                 bm.setWireRadius(wireRad.doubleValue());
@@ -147,20 +179,43 @@ public class BezierMeshes extends TexturedMeshSample {
 
     @Override
     protected Node buildControlPanel() {
-        
+
         CheckBoxControl chkKnots = ControlFactory.buildCheckBoxControl(showKnots);
         CheckBoxControl chkPnts = ControlFactory.buildCheckBoxControl(showControlPoints);
-        
+
         NumberSliderControl radSlider = ControlFactory.buildNumberSlider(wireRad, 0.1D, 0.5D);
         radSlider.getSlider().setMinorTickCount(4);
         radSlider.getSlider().setMajorTickUnit(0.5);
         radSlider.getSlider().setBlockIncrement(0.1d);
         radSlider.getSlider().setSnapToTicks(true);
-        
-        ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        geomControls.addControls(chkKnots, chkPnts, radSlider);        
 
-        this.controlPanel = ControlFactory.buildControlPanel(
+        ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
+        geomControls.addControls(chkKnots, chkPnts, radSlider);
+
+        ControlPanel panel = ControlFactory.buildRootControlPanel();
+        panel.addToRoot(
+                new SectionLabel("Scene And Lighting"),
+                new SectionLabel("Light 1"),
+                new LightingControls(
+                        group.visibleProperty(),
+                        sceneLight1.lightOnProperty(),
+                        sceneLight1.colorProperty(),
+                        sceneLight1.translateXProperty(),
+                        sceneLight1.rotateProperty(),
+                        sceneLight1.rotationAxisProperty()
+                ),
+                new SectionLabel("Light 2"),
+                new LightingControls(
+                        group.visibleProperty(),
+                        sceneLight2.lightOnProperty(),
+                        sceneLight2.colorProperty(),
+                        sceneLight2.translateXProperty(),
+                        sceneLight2.rotateProperty(),
+                        sceneLight2.rotationAxisProperty()
+                )
+                
+        );
+        /*this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
                         this.drawMode,
                         this.culling,
@@ -168,13 +223,12 @@ public class BezierMeshes extends TexturedMeshSample {
                         this.material.specularColorProperty()
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
-                        null, this.useDiffMap, this.material.diffuseMapProperty(), 
-                        this.pattScale, this.dens, this.func)
-        );
-              
+                //ControlFactory.buildTextureMeshCategory(this.textureType, this.colors,
+                        //null, this.useDiffMap, this.material.diffuseMapProperty(),
+                        //this.pattScale, this.dens, this.func)
+        );*/
 
-        return controlPanel;
+        return panel;
     }
 
 }
