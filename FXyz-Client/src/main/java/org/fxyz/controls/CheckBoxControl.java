@@ -29,4 +29,8 @@ public class CheckBoxControl extends ControlBase<Property<Boolean>>{
         checkBox.setText(!controlledProperty.getName().isEmpty() ? controlledProperty.getName() : "Empty Name");
     }
     
+    public void setSelected(boolean value){
+        checkBox.setSelected(value);
+    }
+    
 }
