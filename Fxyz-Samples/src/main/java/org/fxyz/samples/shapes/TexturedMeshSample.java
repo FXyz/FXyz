@@ -20,8 +20,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.CullFace;
-import javafx.scene.shape.DrawMode;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
@@ -32,24 +30,7 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
  */
 public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
 
-    protected final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setDrawMode(drawMode.getValue());
-            }
-        }
-    };
-    protected final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                model.setCullFace(culling.getValue());
-            }
-        }
-    };
+    
     //specific
     protected final Property<TriangleMeshHelper.SectionType> sectionType = new SimpleObjectProperty<TriangleMeshHelper.SectionType>(model, "secType", TriangleMeshHelper.SectionType.CIRCLE) {
         @Override

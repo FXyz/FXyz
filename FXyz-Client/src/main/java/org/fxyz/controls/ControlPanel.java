@@ -16,17 +16,21 @@ import javafx.scene.layout.StackPane;
  */
 public class ControlPanel extends StackPane{
 
-    private ControlPanel() {
+    public ControlPanel() {
         this.accordion = new ControlBasePane();
+        this.rootCategory = new ControlCategory("");
+        this.accordion.getPanes().add(rootCategory);
+        this.getChildren().add(accordion);
     }
     
+    private final ControlCategory rootCategory;
     private final ControlBasePane accordion;
 
     public ControlPanel(ControlCategory cat) {
         this();
+        this.accordion.getPanes().clear();
         this.accordion.getPanes().add(cat);
-        this.getChildren().add(accordion);
-        this.getStyleClass().clear();
+        
     }
 
     public final TitledPane getExpandedPane() {
@@ -43,7 +47,14 @@ public class ControlPanel extends StackPane{
 
     public final ObservableList<TitledPane> getPanes() {
         return accordion.getPanes();
+        
     }
-   
     
+    public final void addToRoot(StackPane control){
+        this.rootCategory.addControl(control);
+    }
+    
+    public final void addToRoot(StackPane ... control){
+        this.rootCategory.addControls(control);
+    }
 }

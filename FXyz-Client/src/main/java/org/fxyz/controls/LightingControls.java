@@ -24,7 +24,7 @@ import jfxtras.scene.control.ListSpinner;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
+public class LightingControls extends ControlBase<Property<Boolean>> {
 
     @FXML
     private VBox lighting1;
@@ -51,7 +51,7 @@ public class SubSceneControlPanel extends ControlBase<Property<Boolean>> {
 
     private final ObservableList<Integer> angL1 = FXCollections.observableArrayList();
 
-    public SubSceneControlPanel(final Property<Boolean> show,
+    public LightingControls(final Property<Boolean> show,
             final Property<Boolean> lt1On,
             final Property<Color> c1, 
             final Property<Number> d1, 

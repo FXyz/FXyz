@@ -20,12 +20,12 @@ import org.fxyz.controls.ComboBoxControl;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.ImagePreviewControl;
+import org.fxyz.controls.LightingControls;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.ScriptFunction1DControl;
 import org.fxyz.controls.ScriptFunction2DControl;
 import org.fxyz.controls.ScriptFunction3DControl;
 import org.fxyz.controls.SectionLabel;
-import org.fxyz.controls.SubSceneControlPanel;
 import org.fxyz.controls.TextureTypeControl;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
@@ -37,6 +37,9 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
  */
 public final class ControlFactory {
 
+    public static final ControlPanel buildRootControlPanel(){
+        return new ControlPanel();
+    }
     public static final ControlPanel buildControlPanel(final ControlCategory titlePane) {
         return new ControlPanel(titlePane);
     }
@@ -122,10 +125,9 @@ public final class ControlFactory {
             final Property<Color> dcp, final Property<Color> scp) {
         ControlCategory mvc = new ControlCategory("Standard MeshView Properties");
         mvc.addControls(
+                new SectionLabel("MeshView Properties"),
                 buildDrawModeControl(dmp),
-                buildCullFaceControl(cfp),
-                buildColorControl(dcp, "Diffuse Color: "),
-                buildColorControl(scp, "Specular Color: ")
+                buildCullFaceControl(cfp)
         );
         return mvc;
     }
@@ -140,7 +142,9 @@ public final class ControlFactory {
             final Property<Image> im, final Property<Boolean> uim
     ) {
         ControlCategory mvc = new ControlCategory("Material Image Maps");
-        mvc.addControls(buildImageViewToggle(udm, dm, "Use Diffuse Map"),
+        mvc.addControls(
+                new SectionLabel("Material Image Maps"),
+                buildImageViewToggle(udm, dm, "Use Diffuse Map"),
                 buildImageViewToggle(ubm, bm, "Use Bump Map"),
                 buildImageViewToggle(usm, sm, "Use Specular Map"),
                 buildImageViewToggle(uim, im, "Use Illumination Map")
@@ -166,9 +170,12 @@ public final class ControlFactory {
                 ttp, cp, uDiffMap, imgP, pScale, densFunc, funcFunc);
 
         final ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
-        mvc.addControls(texType);
+        mvc.addControls(
+                new SectionLabel("Textured Mesh Properties"),
+                texType
+        );
         if (stp != null) {
-            mvc.addControl(buildSectionTypeControl(stp));
+            mvc.addControls(buildSectionTypeControl(stp));
         }
 
         return mvc;
@@ -182,7 +189,7 @@ public final class ControlFactory {
             final Property<Number> r1, final Property<Number> r2,
             final Property<javafx.geometry.Point3D> ra1, final Property<javafx.geometry.Point3D> ra2
     ) {
-        final SubSceneControlPanel lighting1 = new SubSceneControlPanel(
+        final LightingControls lighting1 = new LightingControls(
                 show,
                 lt1On,
                 c1,
@@ -190,7 +197,7 @@ public final class ControlFactory {
                 r1,
                 ra1
         );
-        final SubSceneControlPanel lighting2= new SubSceneControlPanel(
+        final LightingControls lighting2= new LightingControls(
                 show,
                 lt2On,
                 c2,
@@ -199,7 +206,7 @@ public final class ControlFactory {
                 ra2
         );
         final ControlCategory mvc = new ControlCategory("Scene Lighting");
-        mvc.addControls(lighting1,new SectionLabel("Light 2"), lighting2);
+        mvc.addControls(new SectionLabel("Light 1"),lighting1,new SectionLabel("Light 2"), lighting2);
 
         return mvc;
     }
