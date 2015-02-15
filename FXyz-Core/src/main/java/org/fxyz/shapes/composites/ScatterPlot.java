@@ -13,7 +13,6 @@ import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
@@ -23,7 +22,7 @@ import org.fxyz.collections.ListOfOne;
 /**
  *
  * @author Sean
- * @description Provides a simple but configurable Group object whose children
+ * Provides a simple but configurable Group object whose children
  * are each nodes rendered in 3D space.  The data structure allows for each
  * of the three axes to be independently changed there by affording the user to
  * create variations on the view dynamically.

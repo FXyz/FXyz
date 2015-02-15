@@ -22,7 +22,12 @@
 .exitButton:hover{
     -fx-graphic: url(images/window-close-over.png);
 }
-
+.fxyz-control-arrow-button{
+    -fx-base: #3d3d3d;
+    -fx-shape: "M4,-4 L0,0 L4,4 Z";
+    -fx-scale-shape: false;
+    -fx-padding: 8;
+}
 .fxyz-control-window-inner-frame{
     -fx-background-color:transparent;
     -fx-border-color:
@@ -49,7 +54,7 @@
 }
 .fxyz-control-window-frame{
     -fx-background-color:
-        linear-gradient(from 0% 100% to 100% 100%,  #00000099, #000000dd, #00000099),
+        linear-gradient(from 0% 100% to 100% 100%,  #00000099, #3d3d3ddd, #00000099),
         radial-gradient(focus-angle 0deg, focus-distance 2%, center 50% 100%, radius 200%, #ffffff16, transparent 50%);
     -fx-border-color:
         radial-gradient(focus-angle 180deg, focus-distance 100%, center 0% 50%, radius 20%, reflect, #000000ee, transparent);
@@ -58,5 +63,5 @@
     -fx-border-insets: 0;    
     -fx-border-radius: 0 15 10 10;
     -fx-background-radius: 0 15 10 10;
-    -fx-effect:dropshadow(gaussian, #000000, 5, 0.15, 0,3);
+    -fx-effect:dropshadow(gaussian, #ffffff, 5, 0.25, 0,3);
 }

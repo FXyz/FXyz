@@ -6,7 +6,6 @@
 
 package org.fxyz.shapes.primitives.helper;
 
-import org.fxyz.shapes.primitives.helper.BezierHelper;
 import java.util.ArrayList;
 import java.util.List;
 import org.fxyz.geometry.Point3D;
@@ -19,7 +18,7 @@ import org.fxyz.geometry.Point3D;
  *  Conditions if spline is closed (knot[0]==knot[N]:
  * - C2 in all the inner knots (2 ecuations x N-2 knots)
 
-*  Tridiagonal linear system -> Thomas algorithm
+*  Tridiagonal linear system -  Thomas algorithm
  *  See: http://www.particleincell.com/blog/2012/bezier-splines/
  * 
  * @author jpereda

@@ -46,6 +46,8 @@ import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -128,10 +130,15 @@ public class FXyzClient extends Application {
                 client.setPinnedSide(Side.LEFT);
             }
         });
-        searchBar.setOnAction(a->{
+        HBox.setHgrow(searchBar, Priority.ALWAYS);
+        
+        final Button ab = new Button();
+        ab.setAlignment(Pos.CENTER);
+        ab.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        ab.setOnAction(e->{
             client.setPinnedSide(null);
         });
-
+        
         contentTree = new TreeView<>(root);
         contentTree.getStyleClass().add("fxyz-control");
         contentTree.setShowRoot(false);
@@ -173,12 +180,13 @@ public class FXyzClient extends Application {
             }
         });
         contentTree.setFocusTraversable(false);
-        leftSideContent.getChildren().addAll(searchBar,contentTree);       
+        leftSideContent.getChildren().addAll(new HBox(searchBar, ab),contentTree);       
         VBox.setVgrow(contentTree, Priority.ALWAYS);
 
         client = new HiddenSidesClient();
         client.setContent(centerContent);
         client.setLeft(leftSideContent);
+        //client.setTop(new HeaderMenu());
         client.setTriggerDistance(20);
         
         frame = new SimpleWindowFrame(stage, 1280, 800);
@@ -196,7 +204,7 @@ public class FXyzClient extends Application {
 
         Scene scene = new Scene(frame, 1200, 768);
         scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().addAll(BLUE_GLASS_BASE, BLUE_GLASS_CONTROLS);
+        scene.getStylesheets().addAll(BLACK_GLASS_BASE, BLACK_GLASS_CONTROLS);
 
         this.stage.setScene(scene);
         this.stage.initStyle(StageStyle.TRANSPARENT);

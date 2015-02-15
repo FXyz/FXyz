@@ -1,9 +1,10 @@
+import org.gradle.api.artifacts.*
 apply plugin: 'application'
-applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true", "-Djavafx.animation.fullspeed=true"]
-
 applicationName = 'FXyz-Samples'
 
 mainClassName = fxyz_sampler_mainClass
+
+applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true", "-Djavafx.animation.fullspeed=true"]
 
 configurations {
     jdk
@@ -18,6 +19,8 @@ sourceSets {
 dependencies {
     compile project(':FXyz-Client')
     
+    //compile group + ':' + fxyz_sampler_name +':'  + fxyz_sampler_version
+    //compile group + ':' + fxyz_name + ':' + version
     try {
         jdk files(jfxrtJar)
     } catch (MissingPropertyException pne) {
@@ -28,7 +31,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes  'Implementation-Title':    'FXyzLibs',
+        attributes  'Implementation-Title':    'FXyz-Samples',
                     'Implementation-Version':   project.version,
                     'Class-Path':               configurations.compile.collect { it.getName() }.join(' '),
                     'Main-Class':               fxyz_sampler_mainClass

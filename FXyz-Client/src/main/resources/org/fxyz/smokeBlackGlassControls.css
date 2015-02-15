@@ -197,7 +197,7 @@
 /* standard cell */
 .list-cell,
 .tree-cell {
-    -fx-text-fill: #FFFFFFdd;
+    -fx-text-fill: #FFFFFF;
 }
 
 .list-cell {

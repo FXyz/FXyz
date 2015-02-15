@@ -12,7 +12,7 @@ import javafx.scene.shape.TriangleMesh;
 /**
  *
  * @author Birdasaur
- * @adapted Dub's CapsuleMesh example
+ * adapted Dub's CapsuleMesh example
  */
 public class ConeMesh extends MeshView{
     /*

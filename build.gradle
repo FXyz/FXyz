@@ -1,39 +1,69 @@
-import org.gradle.api.artifacts.*
-apply plugin: 'java'
-apply plugin: 'base' // To add "clean" task to the root project.
 
 subprojects {
-    apply from: rootProject.file('common.gradle')
-}
-
-Properties cfg = new Properties()
-cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
+    apply plugin: 'java'
+    apply plugin: 'maven'
     
-ext {
-      artifact_suffix          = cfg.artifact_suffix
-      specification_title      = cfg.fxyz_specification_title  //'Java 8u20'
-      specification_version    = cfg.fxyz_specification_version //'8.20.7'
-      fxyz_name                = 'FXyzLibs'
-      fxyz_sampler_name        = 'FXyz-Sampler'
-      fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
-      fxyz_sampler_mainClass   = 'org.fxyz.FXyzClient'
-}
+    Properties cfg = new Properties()
+    cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
 
-// TASKS========================================================================
-task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
-    title = 'All modules'
-    destinationDir = new File(project.buildDir, 'merged-javadoc')
-
-    // Note: The closures below are executed lazily.
-    source {
-       subprojects*.sourceSets*.main*.allSource
+    ext {
+        artifact_suffix          = cfg.artifact_suffix
+        specification_title      = cfg.fxyz_specification_title  //'Java 8u20'
+        specification_version    = cfg.fxyz_specification_version //'8.20.7'
+        fxyz_name                = 'FXyzLibs'
+        fxyz_sampler_name        = 'FXyz-Sampler'
+        fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
+        fxyz_sampler_mainClass   = 'org.fxyz.FXyzClient'
     }
-    classpath.from {
-        subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
+    
+    group = 'org.fxyz'
+    version = specification_version + artifact_suffix
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/' 
+        }
+    }
+
+    dependencies {
+        testCompile 'junit:junit:[4,)'
+    }
+
+    test {
+        testLogging {
+            // Show that tests are run in the command-line output
+            events 'started', 'passed'
+        }
+    }
+
+    task wrapper(type: Wrapper) {
+        gradleVersion = '2.0'
+    }
+
+    compileJava {  
+        options.encoding = "UTF-8"
+    }
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.java
+        from sourceSets.main.resources
+        classifier = 'sources'
+    }
+
+    task javadocJar(type: Jar) {
+        dependsOn javadoc
+        from javadoc.destinationDir
+        classifier = 'javadoc'
+    }
+
+    artifacts {
+        archives sourceJar
+        archives javadocJar
     }
 }
 
-task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '2.1'
-}
 

@@ -8,7 +8,6 @@ package org.fxyz.scene.paint;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.stream.DoubleStream;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -24,7 +23,7 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author @jpereda
+ * @author jpereda
  */
 public class Patterns {
     

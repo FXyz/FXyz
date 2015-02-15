@@ -24,7 +24,7 @@ import org.fxyz.shapes.Cone;
 /**
  *
  * @author Birdasaur
- * @adapted Dub's Capsule Test merged with my original Cone Test
+ * adapted Dub's Capsule Test merged with my original Cone Test
  */
 public class Cones{// extends FXyzSample {
     

@@ -10,8 +10,8 @@ package org.fxyz.tools;
  *  management / creation / editing utility.
  * 
  *  Basic concept: 
- *      Supply a diffuseMap: ->
- *          collect: ->
+ *      Supply a diffuseMap: -
+ *          collect: -
  *              bump(normal)Map, specularMap, illuminationMap
  * 
  *              

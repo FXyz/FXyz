@@ -14,7 +14,7 @@ import java.util.Arrays;
  * General use:
  * .collect(FloatCollector::new, FloatCollector::add, FloatCollector::join)
  * Known initial size:
- * .collect(()->new FloatCollector(size), FloatCollector::add, FloatCollector::join)
+ * .collect(()- new FloatCollector(size), FloatCollector::add, FloatCollector::join)
  * 
  * Generates a FloatCollector, use FloatCollector.toArray() to get the float[]
  * 

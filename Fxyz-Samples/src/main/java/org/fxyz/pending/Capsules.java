@@ -10,19 +10,21 @@ import java.util.Collections;
 import java.util.List;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Camera;
 import javafx.scene.Node;
-import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
+import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.shapes.primitives.CapsuleMesh;
+import org.fxyz.utils.CameraAdapter;
 
 /**
  *
  * @author Dub
  */
-public class Capsules extends ShapeBaseSample{
+public class Capsules extends ShapeBaseSample implements CameraAdapter{
         
     
     private final List<CapsuleMesh> objectAsList = Collections.singletonList(new CapsuleMesh());
@@ -32,7 +34,8 @@ public class Capsules extends ShapeBaseSample{
    
     @Override
     protected void createMesh() {
-        //CapsuleMesh cm = objectAsList.get(0);           
+        //CapsuleMesh cm = objectAsList.get(0);  
+        
     }
 
     @Override
@@ -71,6 +74,11 @@ public class Capsules extends ShapeBaseSample{
     @Override
     protected Node buildControlPanel() {
         return null;
+    }
+
+    @Override
+    public Camera getCamera() {
+        return camera;
     }
     
 }

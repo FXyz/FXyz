@@ -18,7 +18,7 @@ import org.fxyz.shapes.primitives.ConeMesh;
 /**
  *
  * @author Birdasaur
- * @adapted Dub's Capsule class served as an example framework to adapt 
+ * adapted Dub's Capsule class served as an example framework to adapt 
  * my existing Cone code.
  */
 public class Cone extends ShapeContainer<ConeMesh>{

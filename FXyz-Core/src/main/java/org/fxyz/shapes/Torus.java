@@ -7,22 +7,17 @@ package org.fxyz.shapes;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.scene.AmbientLight;
-import javafx.scene.DepthTest;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.TriangleMesh;
 import org.fxyz.shapes.containers.ShapeContainer;
 import org.fxyz.shapes.primitives.TorusMesh;
 
 /**
  *
  * @author JDub https://github.com/jdub1581
- * @refactored by Sean refactored again by jdub
+ * refactored by Sean refactored again by jdub
  */
 public class Torus extends ShapeContainer<TorusMesh> {
 

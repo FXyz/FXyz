@@ -33,19 +33,19 @@ import org.fxyz.shapes.primitives.KnotMesh;
  *
  * TextureType.COLORED_VERTICES_3D: We provide a maximum number of colors (using
  * the HSB palette, maximum is 1530 (6x255), that should be our default), and a
- * density function of the type p->f(p.x,p.y,p.z) - setTextureModeVertices3D(int
- * colors, DensityFunction<Point3D> dens) : I'm not sure how you will approach
+ * density function of the type p- f(p.x,p.y,p.z) - setTextureModeVertices3D(int
+ * colors, DensityFunction(Point3D) dens) : I'm not sure how you will approach
  * this as we need the user to enter a valid function. Max(f) and Min(f) are
  * used to scale the funcion in the range of colors of the palette. -
- * setTextureModeVertices3D(int colors, DensityFunction<Point3D> dens, double
+ * setTextureModeVertices3D(int colors, DensityFunction(Point3D) dens, double
  * min, double max): Max and min are used to scale the function.
  *
  * TextureType.COLORED_VERTICES_1D: We provide a maximum number of colors (using
  * the HSB palette, maximum is 1530 (6x255), that should be our default), and a
- * density function of the type x->f(x) - setTextureModeVertices1D(int colors,
- * DensityFunction<Double> function) :The user has to enter a valid function.
+ * density function of the type x- f(x) - setTextureModeVertices1D(int colors,
+ * DensityFunction(Double) function) :The user has to enter a valid function.
  * Max(f) and Min(f) are used to scale the funcion in the range of colors of the
- * palette. - setTextureModeVertices1D(int colors, DensityFunction<Double>
+ * palette. - setTextureModeVertices1D(int colors, DensityFunction(Double)
  * function, double min, double max): Max and min are used to scale the
  * function.
  *

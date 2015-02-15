@@ -5,7 +5,7 @@ import java.util.stream.DoubleStream;
 /**
  *
  * @author Sean
- * @Description Just a useful data structure for X,Y,Z triplets.
+ * Just a useful data structure for X,Y,Z triplets.
 
  */
 public class Point3D {
