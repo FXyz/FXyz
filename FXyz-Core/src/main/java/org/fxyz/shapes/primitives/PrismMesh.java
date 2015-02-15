@@ -207,6 +207,7 @@ public class PrismMesh extends TexturedMesh {
         }
         
         if(level==0){
+            a = new Affine();
             int div=DEFAULT_DIVISIONS>3?DEFAULT_DIVISIONS:3;
             if(getSectionType()!=TriangleMeshHelper.SectionType.CIRCLE){
                 div=getSectionType().getSides()*((int)(div/getSectionType().getSides())+1);
