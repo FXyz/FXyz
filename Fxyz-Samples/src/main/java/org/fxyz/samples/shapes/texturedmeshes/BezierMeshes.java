@@ -62,7 +62,7 @@ public class BezierMeshes extends TexturedMeshSample {
             return bezier;
         }).collect(Collectors.toList());
     }
-
+    
     @Override
     protected void addMeshAndListeners() {
         Group bez = new Group();

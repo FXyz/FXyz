@@ -81,7 +81,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     private final BooleanProperty onService = new SimpleBooleanProperty();
 
-    private volatile boolean isPicking=false;
+    private BooleanProperty isPicking=new SimpleBooleanProperty();
+    
     private Vec3d vecIni, vecPos;
     private double distance;
     private Sphere s;
@@ -235,10 +236,12 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 mouseOldX = me.getSceneX();
                 mouseOldY = me.getSceneY();
                 PickResult pr = me.getPickResult();
-                if(pr!=null && pr.getIntersectedNode() != null && pr.getIntersectedNode() instanceof Sphere){
+                if(pr!=null && pr.getIntersectedNode() != null && 
+                   pr.getIntersectedNode() instanceof Sphere && 
+                   pr.getIntersectedNode().getId().equals("knot")){
                     distance=pr.getIntersectedDistance();
                     s = (Sphere) pr.getIntersectedNode();
-                    isPicking=true;
+                    isPicking.set(true);
                     vecIni = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(),subScene.getHeight());
                 }
             });
@@ -249,7 +252,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 mousePosY = me.getSceneY();
                 mouseDeltaX = (mousePosX - mouseOldX);
                 mouseDeltaY = (mousePosY - mouseOldY);
-                if(isPicking){
+                if(isPicking.get()){
                     double modifier = (me.isControlDown()?0.01:me.isAltDown()?1.0:0.1)*(30d/camera.getFieldOfView());
                     modifier *=(30d/camera.getFieldOfView());
                     vecPos = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(),subScene.getHeight());
@@ -283,8 +286,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 }
             });
             subScene.setOnMouseReleased((MouseEvent me)->{
-                if(isPicking){
-                    isPicking=false;
+                if(isPicking.get()){
+                    isPicking.set(false);
                 }
             });
 
@@ -307,6 +310,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         //mainPane.getChildren().add(sceneControls);
         return mainPane;
     }
+    
+    protected BooleanProperty pickingProperty() { return isPicking; }
 
     @Override
     public Node getControlPanel() {
