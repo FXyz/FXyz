@@ -61,7 +61,6 @@ public class PrismMesh extends TexturedMesh {
         setAxisOrigin(pIni==null?new Point3D(0,(float)height/2f,0):pIni);
         setAxisEnd(pEnd==null?new Point3D(0,-(float)height/2f,0):pEnd);
         setRadius(radius);
-        setHeight(getAxisEnd().substract(getAxisOrigin()).magnitude());
         setLevel(level);
         
         updateMesh();
@@ -141,8 +140,8 @@ public class PrismMesh extends TexturedMesh {
     private final ObjectProperty<Point3D> axisOrigin = new SimpleObjectProperty<Point3D>(){
         @Override
         protected void invalidated() {
-            if(mesh!=null){
-                updateMesh();
+            if(getAxisOrigin()!=null && getAxisEnd()!=null){
+                setHeight(getAxisEnd().substract(getAxisOrigin()).magnitude());
             }
         }
     };
@@ -161,8 +160,8 @@ public class PrismMesh extends TexturedMesh {
     private final ObjectProperty<Point3D> axisEnd = new SimpleObjectProperty<Point3D>(){
         @Override
         protected void invalidated() {
-            if(mesh!=null){
-                updateMesh();
+            if(getAxisOrigin()!=null && getAxisEnd()!=null){
+                setHeight(getAxisEnd().substract(getAxisOrigin()).magnitude());
             }
         }
     };
