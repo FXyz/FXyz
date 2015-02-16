@@ -76,7 +76,7 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
                 front = new Image(SkyBoxing.class.getResource("../res/front.png").toExternalForm()),
                 back = new Image(SkyBoxing.class.getResource("../res/back.png").toExternalForm());
         
-        Skybox skyBox = new Skybox(
+        final Skybox skyBox = new Skybox(
                 top,
                 bottom,
                 left,
@@ -87,8 +87,8 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
                 camera
         );
 
-        //Make a bunch of semi random Torusesessses(toroids?) and stuff : from torustest
-        Group torusGroup = new Group();
+        //Make a bunch of semi random Tori and stuff : from torustest
+        final Group torusGroup = new Group();
         for (int i = 0; i < 10; i++) {
             Random r = new Random();
             //A lot of magic numbers in here that just artificially constrain the math
