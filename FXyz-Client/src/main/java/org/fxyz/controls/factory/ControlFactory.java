@@ -37,7 +37,7 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
  */
 public final class ControlFactory {
 
-    public static final ControlPanel buildRootControlPanel(){
+    public static final ControlPanel buildSingleListControlPanel(){
         return new ControlPanel();
     }
     public static final ControlPanel buildControlPanel(final ControlCategory titlePane) {
@@ -213,5 +213,11 @@ public final class ControlFactory {
     /*
      Build a Category for the four Image maps available to PhongMaterial
      */
+    
+    static class PropertyParser{
+        static void parseProperties(Property ... props){
+            //Arrays.stream(props);
+        }
+    }
 
 }

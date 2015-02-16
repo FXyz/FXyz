@@ -1,26 +1,26 @@
 .minimizeButton{
     -fx-background-color: transparent;
     -fx-background-radius: 100;
-    -fx-graphic: url(images/window-min.png);
+    -fx-graphic: url(../images/window-min.png);
 }
 .minimizeButton:hover{
-    -fx-graphic: url(images/window-min-over.png);
+    -fx-graphic: url(../images/window-min-over.png);
 }
 .maximizeButton{
     -fx-background-color: transparent;
     -fx-background-radius: 100;
-    -fx-graphic: url(images/window-expand.png);
+    -fx-graphic: url(../images/window-expand.png);
 }
 .maximizeButton:hover{
-    -fx-graphic: url(images/window-expand-over.png);
+    -fx-graphic: url(../images/window-expand-over.png);
 }
 .exitButton{
     -fx-background-color: transparent;
     -fx-background-radius: 100;
-    -fx-graphic: url(images/window-close.png);
+    -fx-graphic: url(../images/window-close.png);
 }
 .exitButton:hover{
-    -fx-graphic: url(images/window-close-over.png);
+    -fx-graphic: url(../images/window-close-over.png);
 }
 .fxyz-control-arrow-button{
     -fx-base: #3d3d3d;
@@ -64,4 +64,7 @@
     -fx-border-radius: 0 15 10 10;
     -fx-background-radius: 0 15 10 10;
     -fx-effect:dropshadow(gaussian, #ffffff, 5, 0.25, 0,3);
+}
+.fxyz-control-window-icon{
+    -fx-image:url("../images/logo2.png");
 }

@@ -91,7 +91,7 @@
      * -fx-text-inner-color for text on top of -fx-control-inner-color
      * -fx-selection-bar-text for text on top of -fx-selection-bar
      */
-    -fx-text-fill: -fx-text-background-color;
+    -fx-text-fill: -fx-text-base-color;
 
     /* A little darker than -fx-color and used to draw boxes around objects such
      * as progress bars, scroll bars, scroll panes, trees, tables, and lists.

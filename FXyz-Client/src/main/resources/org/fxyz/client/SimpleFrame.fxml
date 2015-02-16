@@ -11,7 +11,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<fx:root style="-fx-background-color: transparent;" stylesheets="@../smokeBlackGlassSimpleFrame.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root style="-fx-background-color: transparent;" stylesheets="@smokeBlackGlassSimpleFrame.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="700.0" prefWidth="1000.0" styleClass="fxyz-control-window-frame" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -21,7 +21,7 @@
                      <children>
                         <Label fx:id="appTitle" focusTraversable="false" text="Label">
                            <graphic>
-                              <ImageView fx:id="iconView" fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" />
+                              <ImageView fx:id="iconView" fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="fxyz-control-window-icon" />
                            </graphic>
                         </Label>
                      </children>

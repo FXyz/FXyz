@@ -15,7 +15,7 @@ sourceSets {
 }
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'org.fxyz.FXyzClient'
+    ext.mainClass = 'org.fxyz.client.FXyzClient'
 }
 
 repositories{
@@ -27,7 +27,7 @@ repositories{
 
 dependencies {
     compile project(':FXyz-Core')
-    compile ('org.javafxdata:datafx-flow:8.0b5')
+    //compile ('org.javafxdata:datafx-flow:8.0b5')
     compile ('org.jfxtras:jfxtras-all:8.0-r3')
     compile ('org.controlsfx:controlsfx:8.20.8')
     compile ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')

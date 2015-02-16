@@ -333,7 +333,7 @@ public class BezierMeshes extends ShapeBaseSample {
         radSlider.getSlider().setBlockIncrement(0.1d);
         radSlider.getSlider().setSnapToTicks(true);
 
-        ControlPanel panel = ControlFactory.buildRootControlPanel();
+        ControlPanel panel = ControlFactory.buildSingleListControlPanel();
         panel.addToRoot(
                 new SectionLabel("Scene And Lighting"),
                 new LightingControls(

@@ -197,7 +197,7 @@
 /* standard cell */
 .list-cell,
 .tree-cell {
-    -fx-text-fill: #FFFFFF;
+    -fx-text-fill: white;
 }
 
 .list-cell {
@@ -251,7 +251,7 @@
     -fx-background-insets: 0, 1, 2;
 }
 .combo-box-popup > .list-view > .placeholder > .label {
-    -fx-text-fill: derive(-fx-control-inner-background,-30%);
+    -fx-text-fill: white;
 }
 
 .list-view{
@@ -366,9 +366,7 @@
 .titled-pane {
     -fx-text-fill: -fx-text-base-color;
 }
-.titled-pane:hover {
-    -fx-background-color: inherit;//
-}
+
 .titled-pane > .title {
     -fx-background-color:
         linear-gradient(to bottom,

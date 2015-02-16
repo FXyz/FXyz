@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.fxyz;
+package org.fxyz.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,7 +53,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
@@ -64,8 +63,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import org.fxyz.client.HiddenSidesClient;
-import org.fxyz.client.SimpleWindowFrame;
+import org.fxyz.FXyzSample;
+import org.fxyz.FXyzSampleBase;
 import org.fxyz.model.EmptySample;
 import org.fxyz.model.Project;
 import org.fxyz.model.SampleTree;
@@ -77,9 +76,9 @@ public class FXyzClient extends Application {
     public static final String 
             BACKGROUNDS = FXyzClient.class.getResource("clientBackgrounds.css").toExternalForm(),
             BLACK_GLASS_BASE = FXyzClient.class.getResource("smokeBlackGlassBase.css").toExternalForm(),
-            BLACK_GLASS_CONTROLS = FXyzClient.class.getResource("smokeBlackGlassControls.css").toExternalForm(),
-            BLUE_GLASS_BASE = FXyzClient.class.getResource("smokeBlueGlassBase.css").toExternalForm(),
-            BLUE_GLASS_CONTROLS = FXyzClient.class.getResource("smokeBlueGlassControls.css").toExternalForm();
+            BLACK_GLASS_CONTROLS = FXyzClient.class.getResource("smokeBlackGlassControls.css").toExternalForm();
+            //BLUE_GLASS_BASE = FXyzClient.class.getResource("/smokeBlueGlassBase.css").toExternalForm(),
+            //BLUE_GLASS_CONTROLS = FXyzClient.class.getResource("/smokeBlueGlassControls.css").toExternalForm();
             //CUSTOM_WINDOW = FXyzClient.class.getResource("images/customWindow.css").toExternalForm();
 
     private Map<String, Project> projectsMap;
@@ -100,7 +99,7 @@ public class FXyzClient extends Application {
     public void start(final Stage s) throws Exception {
         
         stage = s;
-        stage.getIcons().add(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
+        //stage.getIcons().add(new Image(FXyzClient.class.getResource("../images/logo2.png").toExternalForm()));
         
         projectsMap = new SampleScanner().discoverSamples();
         buildProjectTree(null);
@@ -186,11 +185,9 @@ public class FXyzClient extends Application {
         client = new HiddenSidesClient();
         client.setContent(centerContent);
         client.setLeft(leftSideContent);
-        //client.setTop(new HeaderMenu());
         client.setTriggerDistance(20);
         
         frame = new SimpleWindowFrame(stage, 1280, 800);
-        frame.setIconImage(new Image(getClass().getResource("images/logo2.png").toExternalForm()));
         frame.setText("Fxyz-SamplerApp <ver: 0.0.1a>");
         frame.setRootContent(client);
                 
