@@ -17,10 +17,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import org.fxyz.controls.ControlPanel;
-import org.fxyz.controls.LightingControls;
+import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.NumberSliderControl;
-import org.fxyz.controls.SectionLabel;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.samples.shapes.GroupOfTexturedMeshSample;
@@ -175,41 +173,26 @@ public class BezierMeshes extends GroupOfTexturedMeshSample {
         lCropSlider.getSlider().setMajorTickUnit(0.5);
         lCropSlider.getSlider().setBlockIncrement(1);
 
-        
-        ControlPanel panel = ControlFactory.buildSingleListControlPanel();
-        panel.addToRoot(
-                new SectionLabel("Scene And Lighting"),
-                new LightingControls(
-                        group.visibleProperty(),
-                        sceneLight1.lightOnProperty(),
-                        sceneLight1.colorProperty(),
-                        sceneLight1.translateXProperty(),
-                        sceneLight1.rotateProperty(),
-                        sceneLight1.rotationAxisProperty()
-                ),
-                new SectionLabel("Light 2"),
-                new LightingControls(
-                        group.visibleProperty(),
-                        sceneLight2.lightOnProperty(),
-                        sceneLight2.colorProperty(),
-                        sceneLight2.translateXProperty(),
-                        sceneLight2.rotateProperty(),
-                        sceneLight2.rotationAxisProperty()
-                ),
-                new SectionLabel("MeshView Properties"),
-                ControlFactory.buildDrawModeControl(drawMode),
-                ControlFactory.buildCullFaceControl(culling),
-                new SectionLabel("Geometry Properties"),
-                ControlFactory.buildCheckBoxControl(showKnots),
+        ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
+        geomControls.addControls(ControlFactory.buildCheckBoxControl(showKnots),
                 ControlFactory.buildCheckBoxControl(showControlPoints),
-                radSlider,rDivSlider,rCropSlider,tDivSlider,lCropSlider,
-                
-                new SectionLabel("TexturedMesh Properties"),
-                ControlFactory.buildTextureTypeControl(textureType, colors, useDiffMap, material.diffuseMapProperty(), pattScale, dens, func),
-                ControlFactory.buildSectionTypeControl(sectionType)
+                radSlider,rDivSlider,rCropSlider,tDivSlider,lCropSlider);
+        this.controlPanel = ControlFactory.buildControlPanel(
+                ControlFactory.buildMeshViewCategory(
+                        this.drawMode,
+                        this.culling,
+                        this.material.diffuseColorProperty(),
+                        this.material.specularColorProperty()
+                ),
+                geomControls,
+                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
+                        null, this.useDiffMap, this.material.diffuseMapProperty(), 
+                        this.pattScale, this.dens, this.func)
         );
-
-        return panel;
+        
+        return this.controlPanel;
+        
+        
     }
 
 }
