@@ -77,8 +77,8 @@ public class BezierMeshes extends GroupOfTexturedMeshSample {
         wireRad.addListener(i -> beziers.forEach(bm -> bm.setWireRadius(wireRad.doubleValue())));
         tDivs.addListener(i -> beziers.forEach(bm -> bm.setLengthDivisions(tDivs.intValue())));
         rDivs.addListener(i -> beziers.forEach(bm -> bm.setWireDivisions(rDivs.intValue())));
-        lengthCrop.addListener(i -> beziers.forEach(bm -> bm.setLengthCrop(lengthCrop.intValue())));
-        wireCrop.addListener(i -> beziers.forEach(bm -> bm.setWireCrop(wireCrop.intValue())));
+        lengthCrop.addListener(i -> beziers.forEach(bm -> bm.setLengthCrop((int)Math.min(lengthCrop.intValue(),tDivs.intValue()/2))));
+        wireCrop.addListener(i -> beziers.forEach(bm -> bm.setWireCrop((int)Math.min(wireCrop.intValue(),rDivs.intValue()/2))));
         
         showKnots.addListener((obs, b, b1) -> splines.forEach(spline -> {
             if (showKnots.get()) {
@@ -186,7 +186,7 @@ public class BezierMeshes extends GroupOfTexturedMeshSample {
                 ),
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
-                        null, this.useDiffMap, this.material.diffuseMapProperty(), 
+                        this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), 
                         this.pattScale, this.dens, this.func)
         );
         
