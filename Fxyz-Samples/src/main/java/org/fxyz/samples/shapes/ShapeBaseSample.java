@@ -59,7 +59,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private Group light2Group;
     private Group lightingGroup;
     protected SubScene subScene;
-    private Group root;
+    protected Group root;
     protected Group group;
     protected StackPane mainPane;
 
