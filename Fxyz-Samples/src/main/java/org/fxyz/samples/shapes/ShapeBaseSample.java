@@ -192,7 +192,9 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                     material = (PhongMaterial) ((Shape3D) model).getMaterial();
                 } else {
                     if (model!=null && model instanceof Group) {
-                        material = (PhongMaterial) ((Shape3D) ((Group)model).getChildren().filtered(t-> t instanceof Shape3D).get(0)).getMaterial();
+                        if(!((Group)model).getChildren().filtered(isShape-> isShape instanceof Shape3D).isEmpty()){
+                            material = (PhongMaterial) ((Shape3D) ((Group)model).getChildren().filtered(t-> t instanceof Shape3D).get(0)).getMaterial();
+                        }
                     }
                 }
                 
