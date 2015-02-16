@@ -12,7 +12,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
@@ -26,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import org.fxyz.controls.CameraViewControl;
 import org.fxyz.controls.ComboBoxControl;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.SectionLabel;
@@ -50,18 +50,18 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         launch(args);
     }
     //**************************************************************************
-
+    private final BooleanProperty useCameraView = new SimpleBooleanProperty(this, "cameraViewEnabled", true);
     private final BooleanProperty active = new SimpleBooleanProperty(this, "Billboarding Active"); //Flag for toggling behavior
-    private final ObjectProperty<BillboardMode> mode = new SimpleObjectProperty<BillboardMode>(this, "BillBoard Mode", BillboardMode.SPHERICAL){
+    private final ObjectProperty<BillboardMode> mode = new SimpleObjectProperty<BillboardMode>(this, "BillBoard Mode", BillboardMode.SPHERICAL) {
 
         @Override
         protected void invalidated() {
-            if(model != null){
+            if (model != null) {
                 model.setBillboardMode(getValue());
                 System.out.println("mode changed");
             }
         }
-        
+
     };
     protected CameraView cameraView;
 
@@ -75,7 +75,7 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
                 right = new Image(SkyBoxing.class.getResource("../res/right.png").toExternalForm()),
                 front = new Image(SkyBoxing.class.getResource("../res/front.png").toExternalForm()),
                 back = new Image(SkyBoxing.class.getResource("../res/back.png").toExternalForm());
-        
+
         final Skybox skyBox = new Skybox(
                 top,
                 bottom,
@@ -129,7 +129,7 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         group.getChildren().add(torusGroup);
 
     }
-
+    /*
     private void createCameraView() {
         cameraView = new CameraView(subScene);
         cameraView.setFitWidth(250);
@@ -138,15 +138,15 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         cameraView.setFocusTraversable(true);
         cameraView.getCamera().setTranslateZ(-2500);
         cameraView.getCamera().setTranslateX(500);
-        
+
         StackPane.setAlignment(cameraView, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(cameraView, new Insets(20));
-        
+
         mainPane.getChildren().add(cameraView);
-        
+
         cameraView.startViewing();
     }
-
+    */
     private void initFirstPersonControls(SubScene scene) {
         //make sure Subscene handles KeyEvents
         scene.setOnMouseEntered(e -> {
@@ -184,17 +184,29 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
     protected void createMesh() {
         model = new BillBoard(camera);
         model.setBillboardMode(mode.get());
-        
+
         Platform.runLater(() -> {
-            createCameraView();
+            //createCameraView();
             appendSubScene();
         });
+        
         
     }
 
     @Override
     protected void addMeshAndListeners() {
         model.activeProperty().bind(active);
+        
+        model.parentProperty().addListener(l->{
+            if(model.getParent() != null){
+                final CameraViewControl camView = new CameraViewControl(useCameraView, subScene, mainPane);
+                camView.visibleProperty().bind(useCameraView);
+        
+                StackPane.setAlignment(camView, Pos.BOTTOM_RIGHT);                
+            }
+        });
+        
+        
     }
 
     @Override
@@ -203,9 +215,11 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         panel.addToRoot(
                 new SectionLabel("BillBoarding Properties"),
                 ControlFactory.buildCheckBoxControl(active),
-                new ComboBoxControl<>("Billboarding Mode", mode, Arrays.asList(BillboardMode.values()), false)
+                new ComboBoxControl<>("Billboarding Mode", mode, Arrays.asList(BillboardMode.values()), false),
+                new SectionLabel("CameraView"),
+                ControlFactory.buildCheckBoxControl(useCameraView)
         );
-        
+
         return panel;
     }
 
@@ -216,6 +230,7 @@ class BillBoard extends BillboardNode<ImageView> {
 
     private final Node other;
     private final ImageView view;
+
     public BillBoard(Node other) {
         super();
         this.other = other;

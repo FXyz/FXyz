@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-color: #ffffff19;" styleClass="fxyz-control" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox fx:id="container" alignment="CENTER" spacing="3.0" StackPane.alignment="CENTER">
+         <children>
+            <Label fx:id="label" text="External CameraView" />
+            
+            <CheckBox fx:id="controlsEnabled" mnemonicParsing="false" text="Enable Camera Controls" textFill="WHITE" />
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+   </padding>
+</fx:root>

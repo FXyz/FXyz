@@ -77,7 +77,7 @@
      * a background filled with the -fx-background color.
      */
     -fx-text-background-color: ladder(
-        -fx-background,
+        -fx-text-base-color,
         -fx-light-text-color 45%,
         -fx-mid-text-color  46%,
         -fx-dark-text-color   60%
@@ -91,7 +91,7 @@
      * -fx-text-inner-color for text on top of -fx-control-inner-color
      * -fx-selection-bar-text for text on top of -fx-selection-bar
      */
-    -fx-text-fill: -fx-text-base-color;
+    -fx-text-fill: white;
 
     /* A little darker than -fx-color and used to draw boxes around objects such
      * as progress bars, scroll bars, scroll panes, trees, tables, and lists.
@@ -196,7 +196,7 @@
      * backgrounds filled with -fx-base, -fx-color, and -fx-body-color.
      */
     -fx-text-base-color: ladder(
-        -fx-color,
+        black,
         -fx-light-text-color 45%,
         -fx-dark-text-color  46%,
         -fx-dark-text-color  59%,

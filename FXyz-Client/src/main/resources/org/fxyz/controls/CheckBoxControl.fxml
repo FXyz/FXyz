@@ -9,7 +9,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="150.0" StackPane.alignment="CENTER_LEFT">
          <children>
-            <CheckBox fx:id="checkBox" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="165.0" HBox.hgrow="ALWAYS">
+            <CheckBox fx:id="checkBox" alignment="CENTER" focusTraversable="false" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="165.0" textFill="WHITE" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets right="-2.5" />
                </padding>
