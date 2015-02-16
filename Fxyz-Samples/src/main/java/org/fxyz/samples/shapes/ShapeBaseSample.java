@@ -59,7 +59,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private Group light2Group;
     private Group lightingGroup;
     protected SubScene subScene;
-    protected Group root;
+    private Group root;
     protected Group group;
     protected StackPane mainPane;
 
@@ -85,7 +85,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     private final BooleanProperty onService = new SimpleBooleanProperty();
 
-    private BooleanProperty isPicking=new SimpleBooleanProperty();
+    private final BooleanProperty isPicking=new SimpleBooleanProperty();
     
     private Vec3d vecIni, vecPos;
     private double distance;
@@ -188,14 +188,20 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 addMeshAndListeners();
                 mainPane.getChildren().remove(progressBar);
 
-                if (model instanceof Shape3D) {
+                if (model !=null && model instanceof Shape3D) {
                     material = (PhongMaterial) ((Shape3D) model).getMaterial();
+                } else {
+                    if (model!=null && model instanceof Group) {
+                        material = (PhongMaterial) ((Shape3D) ((Group)model).getChildren().filtered(t-> t instanceof Shape3D).get(0)).getMaterial();
+                    }
                 }
+                
                 if (model != null) {
                     group.getChildren().add(model);
                 } else {
                     throw new UnsupportedOperationException("Model returned Null ... ");
                 }
+                
                 if (controlPanel != null && ((ControlPanel) controlPanel).getPanes().filtered(t -> t.getText().contains("lighting")).isEmpty()) {
                     ((ControlPanel) controlPanel).getPanes().add(0, ControlFactory.buildSceneAndLightCategory(
                             mainPane.visibleProperty(),
