@@ -138,12 +138,12 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         cameraView.setFocusTraversable(true);
         cameraView.getCamera().setTranslateZ(-2500);
         cameraView.getCamera().setTranslateX(500);
-
+        
         StackPane.setAlignment(cameraView, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(cameraView, new Insets(10));
-
+        StackPane.setMargin(cameraView, new Insets(20));
+        
         mainPane.getChildren().add(cameraView);
-
+        
         cameraView.startViewing();
     }
 

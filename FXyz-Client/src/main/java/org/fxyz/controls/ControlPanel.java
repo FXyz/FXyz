@@ -20,7 +20,7 @@ public class ControlPanel extends StackPane{
         this.accordion = new ControlBasePane();
         this.rootCategory = new ControlCategory("");
         this.accordion.getPanes().add(rootCategory);
-        this.rootCategory.setExpanded(true);
+        this.accordion.setExpandedPane(rootCategory);
         this.getChildren().add(accordion);
     }
     
