@@ -73,9 +73,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private ProgressBar progressBar;
     private long time;
 
-    protected Scene getScene() {
-        return subScene.getScene();
-    }
+    protected Scene getScene() { return subScene.getScene(); }
 
     protected PhongMaterial material = new PhongMaterial();
 
@@ -91,6 +89,30 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private double distance;
     private Sphere s;
 
+    public ShapeBaseSample(){
+        drawMode.addListener((obs,b,b1)->{
+            if (model != null) {
+                if (model instanceof Shape3D) {
+                    ((Shape3D) model).setDrawMode(drawMode.getValue());
+                }else if(model instanceof Group){
+                    ((Group)model).getChildren().filtered(Shape3D.class::isInstance)
+                            .forEach(s->((Shape3D)s).setDrawMode(drawMode.getValue()));
+                }
+            }
+        });
+        
+        culling.addListener((obs,b,b1)->{
+            if (model != null) {
+                if (model instanceof Shape3D) {
+                    ((Shape3D) model).setCullFace(culling.getValue());
+                }else if(model instanceof Group){
+                    ((Group)model).getChildren().filtered(Shape3D.class::isInstance)
+                            .forEach(s->((Shape3D)s).setCullFace(culling.getValue()));
+                }
+            }
+        });
+    }
+    
     @Override
     public Node getSample() {
         if (!onService.get()) {
@@ -349,38 +371,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         throw new IllegalArgumentException("Parent " + parent + " doesn't contain node with id " + id);
     }
 
-    protected final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                if (model instanceof Shape3D) {
-                    ((Shape3D) model).setDrawMode(drawMode.getValue());
-                }else if(model instanceof Group){
-                    ((Group)model).getChildren().filtered(t-> t instanceof Shape3D)
-                            .forEach(s->{
-                                ((Shape3D)s).setDrawMode(drawMode.getValue());
-                            });
-                }
-            }
-        }
-    };
-    protected final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                if (model instanceof Shape3D) {
-                    ((Shape3D) model).setCullFace(culling.getValue());
-                }else if(model instanceof Group){
-                    ((Group)model).getChildren().filtered(t-> t instanceof Shape3D)
-                            .forEach(s->{
-                                ((Shape3D)s).setCullFace(culling.getValue());
-                            });
-                }
-            }
-        }
-    };
+    protected final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {};
+    protected final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {};
 
     /*
      From fx83dfeatures.Camera3D

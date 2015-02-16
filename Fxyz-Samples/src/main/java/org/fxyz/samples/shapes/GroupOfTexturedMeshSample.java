@@ -34,34 +34,34 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
     public GroupOfTexturedMeshSample(){
         sectionType.addListener((obs,s0,s1)->{
             if (model != null) {
-                model.getChildren().filtered(TexturedMesh.class::isInstance)
-                    .forEach(s->{
-                        ((TexturedMesh)s).setSectionType(sectionType.getValue());
-                    });
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
+                    .forEach(s->s.setSectionType(sectionType.getValue()));
             }
         });
         textureType.addListener((obs,t0,t1)->{
             if (model != null) {
-                model.getChildren().filtered(TexturedMesh.class::isInstance)
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
                     .forEach(s->{
                         switch(t1){
                             case NONE:
-                                ((TexturedMesh) s).setTextureModeNone(colorBinding.get());
+                                s.setTextureModeNone(colorBinding.get());
                                 break;
                             case IMAGE:
-                                ((TexturedMesh) s).setTextureModeImage(diffMapPath.get());
+                                s.setTextureModeImage(diffMapPath.get());
                                 break;
                             case PATTERN:
-                                ((TexturedMesh) s).setTextureModePattern(pattScale.getValue());
+                                s.setTextureModePattern(pattScale.getValue());
                                 break;
                             case COLORED_VERTICES_1D:
-                                ((TexturedMesh) s).setTextureModeVertices1D(1540, func.getValue());
+                                s.setTextureModeVertices1D(1540, func.getValue());
                                 break;
                             case COLORED_VERTICES_3D:
-                                ((TexturedMesh) s).setTextureModeVertices3D(1600, dens.getValue());
+                                s.setTextureModeVertices3D(1600, dens.getValue());
                                 break;
                             case COLORED_FACES:
-                                ((TexturedMesh) s).setTextureModeFaces(1550);
+                                s.setTextureModeFaces(1550);
                                 break;
                         }
                     });
@@ -70,40 +70,64 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
         
         colorBinding.addListener((obs,c0,c1)->{
             if (model != null){
-                model.getChildren().filtered(TexturedMesh.class::isInstance)
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
                     .forEach(s->{
-                        if(((TexturedMesh) s).getTextureType().equals(TriangleMeshHelper.TextureType.NONE)) {
-                            ((TexturedMesh)s).setDiffuseColor(c1);
+                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.NONE)) {
+                            s.setDiffuseColor(c1);
                         }
                     });
             }
         });
         pattScale.addListener((obs,p0,p1)->{
             if (model != null){
-                model.getChildren().filtered(TexturedMesh.class::isInstance)
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
                     .forEach(s->{
-                        if(((TexturedMesh) s).getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
-                            ((TexturedMesh)s).setPatternScale(p1.doubleValue());
+                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
+                            s.setPatternScale(p1.doubleValue());
                         }
                     });
             }
         });
         dens.addListener((obs,f0,f1)->{
             if (model != null){
-                model.getChildren().filtered(TexturedMesh.class::isInstance)
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
                     .forEach(s->{
-                        if(((TexturedMesh) s).getTextureType().equals(TriangleMeshHelper.TextureType.COLORED_VERTICES_3D)) {
-                            ((TexturedMesh)s).setDensity(f1);
+                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.COLORED_VERTICES_3D)) {
+                            s.setDensity(f1);
                         }
                     });
             }
         });
         func.addListener((obs,f0,f1)->{
             if (model != null){
-                model.getChildren().filtered(TexturedMesh.class::isInstance)
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
                     .forEach(s->{
-                        if(((TexturedMesh) s).getTextureType().equals(TriangleMeshHelper.TextureType.COLORED_VERTICES_1D)) {
-                            ((TexturedMesh)s).setFunction(f1);
+                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.COLORED_VERTICES_1D)) {
+                            s.setFunction(f1);
+                        }
+                    });
+            }
+        });
+        useDiffMap.addListener((obs,b0,b1)->{
+            if (model != null){
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
+                    .forEach(s->{
+                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.IMAGE)) {
+//                            if (diffMapPath.get().isEmpty()) {
+                                //load default
+                                diffMapPath.set(getClass().getResource("/org/fxyz/samples/res/LaminateSteel.jpg").toExternalForm());
+//                            } else {
+//                                try { // should be given the string from filechooser
+//                                    material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
+//                                } catch (Exception e) {
+//                                    e.printStackTrace(System.err);
+//                                }
+//                            }
                         }
                     });
             }
@@ -127,30 +151,8 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
     /*
      TriangleMeshHelper.TextureType.IMAGE 
     */
-    protected final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", "");
-    protected final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null){
-                model.getChildren().filtered(TexturedMesh.class::isInstance)
-                    .forEach(s->{
-                        if(((TexturedMesh) s).getTextureType().equals(TriangleMeshHelper.TextureType.IMAGE)) {
-                            if (diffMapPath.get().isEmpty()) {
-                                //load default
-                                material.setDiffuseMap((new Image(getClass().getResource("samples/res/LaminateSteel.jpg").toExternalForm())));
-                            } else {
-                                try { // should be given the string from filechooser
-                                    material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
-                                } catch (Exception e) {
-                                    e.printStackTrace(System.err);
-                                }
-                            }
-                        }
-                    });
-            }
-        }
-    };
+    protected final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", getClass().getResource("/org/fxyz/samples/res/LaminateSteel.jpg").toExternalForm());
+    protected final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {};
     
     /*
      TriangleMeshHelper.TextureType.PATTERN 
