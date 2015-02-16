@@ -1,7 +1,5 @@
 package org.fxyz.samples.shapes.texturedmeshes;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -9,21 +7,12 @@ import java.util.stream.Collectors;
 import static javafx.application.Application.launch;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -33,20 +22,17 @@ import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.SectionLabel;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.Point3D;
-import org.fxyz.samples.shapes.ShapeBaseSample;
+import org.fxyz.samples.shapes.GroupOfTexturedMeshSample;
 import org.fxyz.shapes.primitives.BezierMesh;
 import org.fxyz.shapes.primitives.PrismMesh;
-import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.BezierHelper;
 import org.fxyz.shapes.primitives.helper.InterpolateBezier;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *
  * @author jpereda
  */
-public class BezierMeshes extends ShapeBaseSample {
+public class BezierMeshes extends GroupOfTexturedMeshSample {
 
     public static void main(String[] args) {
         launch(args);
@@ -56,170 +42,6 @@ public class BezierMeshes extends ShapeBaseSample {
     private final BooleanProperty showControlPoints = new SimpleBooleanProperty(this, "Show Control Points");
 
     private final DoubleProperty wireRad = new SimpleDoubleProperty(this, "Wire Radius");
-    protected final ObjectProperty<Color> colorBinding = new SimpleObjectProperty<Color>(Color.BROWN) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && ((TexturedMesh) t).getTextureType().equals(TextureType.NONE))).isEmpty()) {
-                ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                        .forEach(s -> {
-                            ((PhongMaterial) ((Shape3D) s).getMaterial()).setDiffuseColor(getValue());
-                        });
-            }
-        }
-    };
-    protected final IntegerProperty colors = new SimpleIntegerProperty(model, "Color :", 700) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-
-            if (model != null) {
-                colorBinding.set(Color.hsb(360 * (1d - get() / 1530d), 1, 1));
-            }
-        }
-    };
-
-    protected final Property<TriangleMeshHelper.TextureType> textureType = new SimpleObjectProperty<TriangleMeshHelper.TextureType>(model, "texType", TriangleMeshHelper.TextureType.NONE) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                switch (getValue()) {
-                    case NONE:
-                        if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && 
-                                ((TexturedMesh) t).getTextureType().equals(TextureType.NONE))).isEmpty()) {
-                            ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                                    .forEach(s -> {
-                                        ((TexturedMesh) s).setTextureModeNone(colorBinding.get());
-                                    });
-                        }
-
-                        break;
-                    case IMAGE:
-                        break;/*
-                     if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && ((TexturedMesh) t).getTextureType().equals(TextureType.NONE))).isEmpty()) {
-                     ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                     .forEach(s -> {
-                     ((TexturedMesh) model).setTextureModeImage(diffMapPath.get());
-                     });
-                     }
-                     break;*/
-
-                    case PATTERN:
-                        if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && 
-                                ((TexturedMesh) t).getTextureType().equals(TextureType.NONE))).isEmpty()) {
-                            ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                                    .forEach(s -> {
-                                        ((TexturedMesh) s).setTextureModePattern(pattScale.getValue());
-                                    });
-                        }
-                        break;
-                    case COLORED_VERTICES_1D:
-                        if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && 
-                                ((TexturedMesh) t).getTextureType().equals(TextureType.NONE))).isEmpty()) {
-                            ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                                    .forEach(s -> {
-                                        ((TexturedMesh) s).setTextureModeVertices1D(1540, func.getValue());
-                                    });
-                        }
-                        break;
-                    case COLORED_VERTICES_3D:
-                        if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && 
-                                ((TexturedMesh) t).getTextureType().equals(TextureType.NONE))).isEmpty()) {
-                            ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                                    .forEach(s -> {
-                                        ((TexturedMesh) s).setTextureModeVertices3D(1600, dens.getValue());
-                                    });
-                        }
-                        break;
-                    case COLORED_FACES:
-                        if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && 
-                                ((TexturedMesh) t).getTextureType().equals(TextureType.NONE))).isEmpty()) {
-                            ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                                    .forEach(s -> {
-                                        ((TexturedMesh) s).setTextureModeFaces(1550);
-                                    });
-                        }
-
-                        break;
-                }
-            }
-        }
-    };
-
-    /*
-     TriangleMeshHelper.TextureType.PATTERN 
-     */
-    protected final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 2.0d) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && 
-                    ((TexturedMesh) t).getTextureType().equals(TextureType.PATTERN))).isEmpty()) {
-                ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                        .forEach(s -> {
-                            ((TexturedMesh) s).setPatternScale(pattScale.doubleValue());
-                        });
-            }
-        }
-    };
-
-    /*
-     TriangleMeshHelper.TextureType.COLORED_VERTICES_3D 
-     */
-    protected final DoubleProperty densMax = new SimpleDoubleProperty(this, "Density Scale: ");
-    protected final Property<Function<Point3D, Number>> dens = new SimpleObjectProperty<Function<Point3D, Number>>(p -> p.x * p.y * p.z) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && 
-                    ((TexturedMesh) t).getTextureType().equals(TextureType.COLORED_VERTICES_3D))).isEmpty()) {
-                ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                        .forEach(s -> {
-                            ((TexturedMesh) s).setDensity(dens.getValue());
-                        });
-            }
-        }
-    };
-    /*
-     TriangleMeshHelper.TextureType.COLORED_VERTICES_1D 
-     */
-    protected final Property<Function<Number, Number>> func = new SimpleObjectProperty<Function<Number, Number>>(t -> t) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null && !(((Group) model).getChildren().filtered(t -> t instanceof TexturedMesh && 
-                    ((TexturedMesh) t).getTextureType().equals(TextureType.COLORED_VERTICES_1D))).isEmpty()) {
-                ((Group) model).getChildren().filtered(t -> t instanceof Shape3D)
-                        .forEach(s -> {
-                            ((TexturedMesh) s).setFunction(func.getValue());
-                        });
-            }
-        }
-    };
-    
-    /*
-     TriangleMeshHelper.TextureType.IMAGE 
-    */
-    protected final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", "");
-    protected final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null && textureType.getValue().equals(TriangleMeshHelper.TextureType.IMAGE)) {
-                if (diffMapPath.get().isEmpty()) {
-                    //load default
-                    material.setDiffuseMap((new Image(getClass().getResource("samples/res/LaminateSteel.jpg").toExternalForm())));
-                } else {
-                    try { // should be given the string from filechooser
-                        material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                    }
-                }
-            }
-        }
-    };
 
     private List<BezierMesh> beziers;
     private List<BezierHelper> splines;
@@ -227,6 +49,7 @@ public class BezierMeshes extends ShapeBaseSample {
     @Override
     protected void createMesh() {
         System.err.println(showKnots.getClass().getSimpleName());
+        model = new Group();
         List<Point3D> knots = Arrays.asList(new Point3D(3f, 0f, 0f), new Point3D(0.77171f, 1.68981f, 0.989821f),
                 new Point3D(-0.681387f, 0.786363f, -0.281733f), new Point3D(-2.31757f, -0.680501f, -0.909632f),
                 new Point3D(-0.404353f, -2.81233f, 0.540641f), new Point3D(1.1316f, -0.727237f, 0.75575f),
@@ -244,21 +67,15 @@ public class BezierMeshes extends ShapeBaseSample {
 
     @Override
     protected void addMeshAndListeners() {
-        Group bez = new Group();
-        bez.getChildren().addAll(beziers);
+        model.getChildren().addAll(beziers);
+        System.out.println("model "+model.getChildren().size());
         beziers.forEach(bezier -> {
             bezier.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
         });
-        model = bez;
         Function<Point3D, Double> dens = p -> (double) p.f;
         wireRad.addListener(i -> {
             beziers.forEach(bm -> {
                 bm.setWireRadius(wireRad.doubleValue());
-            });
-        });
-        colors.addListener(i -> {
-            beziers.forEach(bm -> {
-                bm.setColors(colors.intValue());
             });
         });
         showKnots.addListener((obs, b, b1) -> splines.forEach(spline -> {
@@ -326,7 +143,7 @@ public class BezierMeshes extends ShapeBaseSample {
 
     @Override
     protected Node buildControlPanel() {
-
+        System.out.println("build");
         NumberSliderControl radSlider = ControlFactory.buildNumberSlider(wireRad, 0.1D, 0.5D);
         radSlider.getSlider().setMinorTickCount(4);
         radSlider.getSlider().setMajorTickUnit(0.5);
@@ -362,7 +179,8 @@ public class BezierMeshes extends ShapeBaseSample {
                 radSlider,
                 
                 new SectionLabel("TexturedMesh Properties"),
-                ControlFactory.buildTextureTypeControl(textureType, colors, useDiffMap, material.diffuseMapProperty(), pattScale, dens, func)
+                ControlFactory.buildTextureTypeControl(textureType, colors, useDiffMap, material.diffuseMapProperty(), pattScale, dens, func),
+                ControlFactory.buildSectionTypeControl(sectionType)
         );
 
         return panel;
