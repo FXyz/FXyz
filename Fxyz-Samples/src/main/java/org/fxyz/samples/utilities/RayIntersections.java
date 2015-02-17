@@ -40,6 +40,10 @@ import org.fxyz.utils.CameraTransformer;
  */
 public class RayIntersections extends FXyzSample {
 
+    public static void main(String[] args){
+        launch(args);
+    }
+    
     @Override
     public Node getSample() {
 

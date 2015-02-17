@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-<fx:root styleClass="colorSlider" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="1.7976931348623157E308" styleClass="colorSlider" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox>
          <children>

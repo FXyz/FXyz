@@ -10,7 +10,7 @@
 
 <!-- stylesheets="@styles/modenaDark.css" -->
 
-<fx:root maxWidth="1.7976931348623157E308" pickOnBounds="false" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="1.7976931348623157E308" pickOnBounds="false" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" pickOnBounds="false" spacing="5.0" StackPane.alignment="CENTER">
          <children>

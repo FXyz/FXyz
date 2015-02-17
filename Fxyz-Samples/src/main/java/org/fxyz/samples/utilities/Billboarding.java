@@ -70,12 +70,12 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         camera.setTranslateZ(-2000);
         initFirstPersonControls(subScene);
 
-        final Image top = new Image(SkyBoxing.class.getResource("../res/top.png").toExternalForm()),
-                bottom = new Image(SkyBoxing.class.getResource("../res/bottom.png").toExternalForm()),
-                left = new Image(SkyBoxing.class.getResource("../res/left.png").toExternalForm()),
-                right = new Image(SkyBoxing.class.getResource("../res/right.png").toExternalForm()),
-                front = new Image(SkyBoxing.class.getResource("../res/front.png").toExternalForm()),
-                back = new Image(SkyBoxing.class.getResource("../res/back.png").toExternalForm());
+        final Image top = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/top.png").toExternalForm()),
+                bottom = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/bottom.png").toExternalForm()),
+                left = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/left.png").toExternalForm()),
+                right = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/right.png").toExternalForm()),
+                front = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/front.png").toExternalForm()),
+                back = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/back.png").toExternalForm());
 
         final Skybox skyBox = new Skybox(
                 top,

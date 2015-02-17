@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.samples.utilities;
+package org.fxyz.pending;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

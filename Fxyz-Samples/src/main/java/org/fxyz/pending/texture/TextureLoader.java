@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.fxyz.samples.texture;
+package org.fxyz.pending.texture;
 
 import java.io.IOException;
 import javafx.scene.image.Image;

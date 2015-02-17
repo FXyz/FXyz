@@ -22,16 +22,11 @@ repositories {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
 }
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.gradle.api.artifacts.*
 apply plugin: 'application'
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'shadow'
-apply plugin: 'signing'
-
 
 applicationName = 'FXyz-Samples'
-
 mainClassName = fxyz_sampler_mainClass
 ext.mainClass = mainClassName
 applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true", "-Djavafx.animation.fullspeed=true"]
@@ -46,14 +41,12 @@ sourceSets {
     }
 }
 
-
-
+javafx{
+        
+}
 
 dependencies {
     compile project(':FXyz-Client')
-    //classpath 'com.github.jengelman.gradle.plugins:shadow:0.8'
-    //compile group + ':' + fxyz_sampler_name +':'  + fxyz_sampler_version
-    //compile group + ':' + fxyz_name + ':' + version
     try {
         jdk files(jfxrtJar)
     } catch (MissingPropertyException pne) {
@@ -71,15 +64,5 @@ jar {
     }
     from sourceSets.main.allJava
 }
-shadowJar {
-  transform(ServiceFileTransformer) {
-    path = 'META-INF/services/org.fxyz.*'
-  }
-}
-shadow{}
 
-/* sign all generated jars
-signing {
- sign configurations.archives
- sign *.shadowJar
-}*/
+shadow{}
