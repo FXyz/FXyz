@@ -1,3 +1,5 @@
+
+
 buildscript {
     repositories {
         mavenLocal()
@@ -22,6 +24,7 @@ repositories {
     }
 }
 
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 version = fxyz_sampler_version
 apply plugin: 'shadow'
 
@@ -88,7 +91,12 @@ javadoc {
 shadow {
 }
 shadowJar {
-    mergeServiceFiles('META-INF/services/org.fxyz.*')
+    mergeServiceFiles {
+        include 'META-INF/services/org.fxyz.*'
+    }
+    //transform(ServiceFileTransformer) {
+    //path = 'META-INF/services/org.fxyz.*'
+    //}
 }
 // sign all generated jars
 //signing {

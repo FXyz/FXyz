@@ -22,11 +22,13 @@ repositories {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
 }
-
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.gradle.api.artifacts.*
 apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'shadow'
+apply plugin: 'signing'
+
 
 applicationName = 'FXyz-Samples'
 
@@ -70,8 +72,14 @@ jar {
     from sourceSets.main.allJava
 }
 shadowJar {
-  //transform(ServiceFileTransformer) {
-    //path = 'META-INF/services/org.fxyz.*'
-  //}
+  transform(ServiceFileTransformer) {
+    path = 'META-INF/services/org.fxyz.*'
+  }
 }
 shadow{}
+
+/* sign all generated jars
+signing {
+ sign configurations.archives
+ sign *.shadowJar
+}*/
