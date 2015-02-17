@@ -1,7 +1,29 @@
-
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+        maven {
+            name 'JCenter - for Gradle Shadow'
+            url 'http://jcenter.bintray.com/'
+        }
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:0.8'
+    }
+}
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
 
 version = fxyz_sampler_version
-
+apply plugin: 'shadow'
 
 configurations {
     //samples.extendsFrom mainRuntime
@@ -60,4 +82,21 @@ javadoc {
             into "$buildDir/docs/javadoc"
         }
     }
+}
+// merge everything into one jar
+// https://github.com/johnrengelman/shadow
+shadow {
+}
+shadowJar {
+    mergeServiceFiles('META-INF/services/org.fxyz.*')
+}
+// sign all generated jars
+//signing {
+//sign configurations.archives
+// sign shadow.shadowJar
+//}
+// determine the artifacts to be uploaded
+artifacts {
+    // add the by shadow generated jar to the artifacts
+    archives shadowJar
 }

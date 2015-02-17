@@ -1,7 +1,17 @@
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+    }
+}
+
+apply plugin: 'java' // or 'groovy'. Must be explicitly applied
+apply plugin: 'com.github.johnrengelman.shadow'
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
+    apply plugin: 'com.github.johnrengelman.shadow'
     
     Properties cfg = new Properties()
     cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
@@ -23,13 +33,19 @@ subprojects {
     targetCompatibility = '1.8'
 
     repositories {
+        jcenter()
         mavenCentral()
         maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots/' 
         }
+        maven {
+            name 'JCenter - for Gradle Shadow'
+            url 'http://jcenter.bintray.com/'
+        }
     }
-
-    dependencies {
+    
+    
+    dependencies {        
         testCompile 'junit:junit:[4,)'
     }
 

@@ -1,6 +1,6 @@
 include "FXyz-Core", "FXyz-Client", "FXyz-Samples"
 
-
+rootProject.name = "FXyz-Samples"
 /*rootProject.name = 'FXyzLibs'
 
 // Find the directories containing a "build.gradle" file in the root directory
