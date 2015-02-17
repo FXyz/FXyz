@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
@@ -37,6 +38,8 @@ import javafx.scene.transform.Translate;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.samples.FXyzSample;
+import org.fxyz.samples.utilities.SkyBoxing;
+import org.fxyz.scene.Skybox;
 import org.fxyz.utils.CameraTransformer;
 
 /**
@@ -73,7 +76,9 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private ProgressBar progressBar;
     private long time;
 
-    protected Scene getScene() { return subScene.getScene(); }
+    protected Scene getScene() {
+        return subScene.getScene();
+    }
 
     protected PhongMaterial material = new PhongMaterial();
 
@@ -82,37 +87,55 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     protected abstract void addMeshAndListeners();
 
     private final BooleanProperty onService = new SimpleBooleanProperty();
+    private final BooleanProperty useSkybox = new SimpleBooleanProperty(this, "SkyBox Enabled", true);
+    private final BooleanProperty isPicking = new SimpleBooleanProperty();
 
-    private final BooleanProperty isPicking=new SimpleBooleanProperty();
-    
     private Vec3d vecIni, vecPos;
     private double distance;
     private Sphere s;
 
-    public ShapeBaseSample(){
-        drawMode.addListener((obs,b,b1)->{
+    protected final Image top = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/top.png").toExternalForm()),
+            bottom = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/bottom.png").toExternalForm()),
+            left = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/left.png").toExternalForm()),
+            right = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/right.png").toExternalForm()),
+            front = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/front.png").toExternalForm()),
+            back = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/back.png").toExternalForm());
+
+    protected final Skybox skyBox = new Skybox(
+            top,
+            bottom,
+            left,
+            right,
+            front,
+            back,
+            100000,
+            camera
+    );
+
+    public ShapeBaseSample() {
+        drawMode.addListener((obs, b, b1) -> {
             if (model != null) {
                 if (model instanceof Shape3D) {
                     ((Shape3D) model).setDrawMode(drawMode.getValue());
-                }else if(model instanceof Group){
-                    ((Group)model).getChildren().filtered(Shape3D.class::isInstance)
-                            .forEach(s->((Shape3D)s).setDrawMode(drawMode.getValue()));
+                } else if (model instanceof Group) {
+                    ((Group) model).getChildren().filtered(Shape3D.class::isInstance)
+                            .forEach(s -> ((Shape3D) s).setDrawMode(drawMode.getValue()));
                 }
             }
         });
-        
-        culling.addListener((obs,b,b1)->{
+
+        culling.addListener((obs, b, b1) -> {
             if (model != null) {
                 if (model instanceof Shape3D) {
                     ((Shape3D) model).setCullFace(culling.getValue());
-                }else if(model instanceof Group){
-                    ((Group)model).getChildren().filtered(Shape3D.class::isInstance)
-                            .forEach(s->((Shape3D)s).setCullFace(culling.getValue()));
+                } else if (model instanceof Group) {
+                    ((Group) model).getChildren().filtered(Shape3D.class::isInstance)
+                            .forEach(s -> ((Shape3D) s).setCullFace(culling.getValue()));
                 }
             }
         });
     }
-    
+
     @Override
     public Node getSample() {
         if (!onService.get()) {
@@ -210,25 +233,25 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 addMeshAndListeners();
                 mainPane.getChildren().remove(progressBar);
 
-                if (model !=null && model instanceof Shape3D) {
+                if (model != null && model instanceof Shape3D) {
                     material = (PhongMaterial) ((Shape3D) model).getMaterial();
                 } else {
-                    if (model!=null && model instanceof Group) {
-                        if(!((Group)model).getChildren().filtered(isShape-> isShape instanceof Shape3D).isEmpty()){
-                            material = (PhongMaterial) ((Shape3D) ((Group)model).getChildren().filtered(t-> t instanceof Shape3D).get(0)).getMaterial();
+                    if (model != null && model instanceof Group) {
+                        if (!((Group) model).getChildren().filtered(isShape -> isShape instanceof Shape3D).isEmpty()) {
+                            material = (PhongMaterial) ((Shape3D) ((Group) model).getChildren().filtered(t -> t instanceof Shape3D).get(0)).getMaterial();
                         }
                     }
                 }
-                
+
                 if (model != null) {
                     group.getChildren().add(model);
                 } else {
                     throw new UnsupportedOperationException("Model returned Null ... ");
                 }
-                
+
                 if (controlPanel != null && ((ControlPanel) controlPanel).getPanes().filtered(t -> t.getText().contains("lighting")).isEmpty()) {
                     ((ControlPanel) controlPanel).getPanes().add(0, ControlFactory.buildSceneAndLightCategory(
-                            mainPane.visibleProperty(),
+                            useSkybox,
                             sceneLight1.lightOnProperty(), sceneLight2.lightOnProperty(),
                             sceneLight1.colorProperty(), sceneLight2.colorProperty(),
                             sceneLight1.translateXProperty(), sceneLight2.translateXProperty(),
@@ -237,7 +260,9 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                     ));
                 }
             });
-
+            skyBox.visibleProperty().bind(useSkybox);
+            root.getChildren().add(0,skyBox);
+            
             subScene.widthProperty().bind(mainPane.widthProperty());
             subScene.heightProperty().bind(mainPane.heightProperty());
 
@@ -274,13 +299,13 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 mouseOldX = me.getSceneX();
                 mouseOldY = me.getSceneY();
                 PickResult pr = me.getPickResult();
-                if(pr!=null && pr.getIntersectedNode() != null && 
-                   pr.getIntersectedNode() instanceof Sphere && 
-                   pr.getIntersectedNode().getId().equals("knot")){
-                    distance=pr.getIntersectedDistance();
+                if (pr != null && pr.getIntersectedNode() != null
+                        && pr.getIntersectedNode() instanceof Sphere
+                        && pr.getIntersectedNode().getId().equals("knot")) {
+                    distance = pr.getIntersectedDistance();
                     s = (Sphere) pr.getIntersectedNode();
                     isPicking.set(true);
-                    vecIni = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(),subScene.getHeight());
+                    vecIni = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
                 }
             });
             subScene.setOnMouseDragged((MouseEvent me) -> {
@@ -290,14 +315,14 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 mousePosY = me.getSceneY();
                 mouseDeltaX = (mousePosX - mouseOldX);
                 mouseDeltaY = (mousePosY - mouseOldY);
-                if(isPicking.get()){
-                    double modifier = (me.isControlDown()?0.01:me.isAltDown()?1.0:0.1)*(30d/camera.getFieldOfView());
-                    modifier *=(30d/camera.getFieldOfView());
-                    vecPos = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(),subScene.getHeight());
-                    Point3D p=new Point3D(distance*(vecPos.x-vecIni.x),
-                                distance*(vecPos.y-vecIni.y),distance*(vecPos.z-vecIni.z));
-                    s.getTransforms().add(new Translate(modifier*p.getX(),modifier*p.getY(),modifier*p.getZ()));
-                    vecIni=vecPos;
+                if (isPicking.get()) {
+                    double modifier = (me.isControlDown() ? 0.01 : me.isAltDown() ? 1.0 : 0.1) * (30d / camera.getFieldOfView());
+                    modifier *= (30d / camera.getFieldOfView());
+                    vecPos = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
+                    Point3D p = new Point3D(distance * (vecPos.x - vecIni.x),
+                            distance * (vecPos.y - vecIni.y), distance * (vecPos.z - vecIni.z));
+                    s.getTransforms().add(new Translate(modifier * p.getX(), modifier * p.getY(), modifier * p.getZ()));
+                    vecIni = vecPos;
 
                 } else {
 
@@ -323,8 +348,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                     }
                 }
             });
-            subScene.setOnMouseReleased((MouseEvent me)->{
-                if(isPicking.get()){
+            subScene.setOnMouseReleased((MouseEvent me) -> {
+                if (isPicking.get()) {
                     isPicking.set(false);
                 }
             });
@@ -348,8 +373,10 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         //mainPane.getChildren().add(sceneControls);
         return mainPane;
     }
-    
-    protected BooleanProperty pickingProperty() { return isPicking; }
+
+    protected BooleanProperty pickingProperty() {
+        return isPicking;
+    }
 
     @Override
     public Node getControlPanel() {
@@ -371,8 +398,10 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         throw new IllegalArgumentException("Parent " + parent + " doesn't contain node with id " + id);
     }
 
-    protected final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {};
-    protected final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {};
+    protected final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {
+    };
+    protected final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {
+    };
 
     /*
      From fx83dfeatures.Camera3D

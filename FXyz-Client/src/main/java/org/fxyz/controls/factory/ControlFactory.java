@@ -206,7 +206,11 @@ public final class ControlFactory {
                 ra2
         );
         final ControlCategory mvc = new ControlCategory("Scene Lighting");
-        mvc.addControls(new SectionLabel("Light 1"),lighting1,new SectionLabel("Light 2"), lighting2);
+        mvc.addControls(new SectionLabel("Light 1"),
+                lighting1,
+                new SectionLabel("Light 2"),
+                lighting2,
+                new CheckBoxControl(show));
 
         return mvc;
     }
