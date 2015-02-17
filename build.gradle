@@ -5,6 +5,10 @@ buildscript {
     }
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
 apply plugin: 'java' // or 'groovy'. Must be explicitly applied
 apply plugin: 'com.github.johnrengelman.shadow'
 //apply from: 'javafx.plugin'

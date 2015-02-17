@@ -29,7 +29,7 @@ apply plugin: 'shadow'
 applicationName = 'FXyz-Samples'
 mainClassName = fxyz_sampler_mainClass
 ext.mainClass = mainClassName
-applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC", "-Dprism.verbose=true", "-Djavafx.animation.fullspeed=true"]
+applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC"]
 
 configurations {
     jdk
