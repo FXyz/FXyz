@@ -1,8 +1,8 @@
 package org.fxyz.model;
 
+import org.fxyz.FXyzSample;
 import javafx.scene.Node;
 import javafx.stage.Stage;
-import org.fxyz.FXyzSample;
 
 public class EmptySample implements FXyzSample {
     private final String name;

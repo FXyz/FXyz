@@ -1,9 +1,9 @@
 package org.fxyz.model;
 
+import org.fxyz.FXyzSample;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.TreeItem;
-import org.fxyz.FXyzSample;
 
 public class SampleTree {
 

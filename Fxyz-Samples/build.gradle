@@ -41,9 +41,9 @@ sourceSets {
     }
 }
 
-javafx{
+//javafx{
         
-}
+///}
 
 dependencies {
     compile project(':FXyz-Client')

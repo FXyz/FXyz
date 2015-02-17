@@ -25,7 +25,8 @@
  */
 package org.fxyz.ExtrasAndTests;
 
-import org.fxyz.*;
+import org.fxyz.FXyzSampleBase;
+import org.fxyz.FXyzSample;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
