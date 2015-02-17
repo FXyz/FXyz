@@ -50,7 +50,8 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         launch(args);
     }
     //**************************************************************************
-    private final BooleanProperty useCameraView = new SimpleBooleanProperty(this, "cameraViewEnabled", true);
+    private final BooleanProperty useSkybox = new SimpleBooleanProperty(this, "SkyBox Enabled", true);
+    private final BooleanProperty useCameraView = new SimpleBooleanProperty(this, "CameraView Enabled", true);
     private final BooleanProperty active = new SimpleBooleanProperty(this, "Billboarding Active"); //Flag for toggling behavior
     private final ObjectProperty<BillboardMode> mode = new SimpleObjectProperty<BillboardMode>(this, "BillBoard Mode", BillboardMode.SPHERICAL) {
 
@@ -126,6 +127,7 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         }
         root.getChildren().add(0, skyBox);
 
+        skyBox.visibleProperty().bind(useSkybox);
         group.getChildren().add(torusGroup);
 
     }
@@ -213,6 +215,8 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
     protected Node buildControlPanel() {
         ControlPanel panel = ControlFactory.buildSingleListControlPanel();
         panel.addToRoot(
+                new SectionLabel("Skybox"),
+                ControlFactory.buildCheckBoxControl(useSkybox),
                 new SectionLabel("BillBoarding Properties"),
                 ControlFactory.buildCheckBoxControl(active),
                 new ComboBoxControl<>("Billboarding Mode", mode, Arrays.asList(BillboardMode.values()), false),
