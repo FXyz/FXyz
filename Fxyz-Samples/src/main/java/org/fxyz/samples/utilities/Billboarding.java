@@ -34,7 +34,6 @@ import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.scene.BillboardNode;
 import org.fxyz.scene.BillboardNode.BillboardMode;
 import org.fxyz.scene.CameraView;
-import org.fxyz.scene.Skybox;
 import org.fxyz.shapes.primitives.TorusMesh;
 
 /**
@@ -50,7 +49,6 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         launch(args);
     }
     //**************************************************************************
-    private final BooleanProperty useSkybox = new SimpleBooleanProperty(this, "SkyBox Enabled", true);
     private final BooleanProperty useCameraView = new SimpleBooleanProperty(this, "CameraView Enabled", true);
     private final BooleanProperty active = new SimpleBooleanProperty(this, "Billboarding Active"); //Flag for toggling behavior
     private final ObjectProperty<BillboardMode> mode = new SimpleObjectProperty<BillboardMode>(this, "BillBoard Mode", BillboardMode.SPHERICAL) {
@@ -70,23 +68,6 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
         camera.setTranslateZ(-2000);
         initFirstPersonControls(subScene);
 
-        final Image top = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/top.png").toExternalForm()),
-                bottom = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/bottom.png").toExternalForm()),
-                left = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/left.png").toExternalForm()),
-                right = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/right.png").toExternalForm()),
-                front = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/front.png").toExternalForm()),
-                back = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/back.png").toExternalForm());
-
-        final Skybox skyBox = new Skybox(
-                top,
-                bottom,
-                left,
-                right,
-                front,
-                back,
-                100000,
-                camera
-        );
 
         //Make a bunch of semi random Tori and stuff : from torustest
         final Group torusGroup = new Group();
@@ -125,9 +106,6 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
             //torus.getTransforms().add(translate);
             torusGroup.getChildren().add(torus);
         }
-        root.getChildren().add(0, skyBox);
-
-        skyBox.visibleProperty().bind(useSkybox);
         group.getChildren().add(torusGroup);
 
     }
@@ -215,13 +193,12 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
     protected Node buildControlPanel() {
         ControlPanel panel = ControlFactory.buildSingleListControlPanel();
         panel.addToRoot(
-                new SectionLabel("Skybox"),
-                ControlFactory.buildCheckBoxControl(useSkybox),
                 new SectionLabel("BillBoarding Properties"),
                 ControlFactory.buildCheckBoxControl(active),
                 new ComboBoxControl<>("Billboarding Mode", mode, Arrays.asList(BillboardMode.values()), false),
                 new SectionLabel("CameraView"),
-                ControlFactory.buildCheckBoxControl(useCameraView)
+                ControlFactory.buildCheckBoxControl(useCameraView),
+                ControlFactory.buildCheckBoxControl(useSkybox)
         );
 
         return panel;

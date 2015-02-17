@@ -87,7 +87,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     protected abstract void addMeshAndListeners();
 
     private final BooleanProperty onService = new SimpleBooleanProperty();
-    private final BooleanProperty useSkybox = new SimpleBooleanProperty(this, "SkyBox Enabled", true);
+    protected final BooleanProperty useSkybox = new SimpleBooleanProperty(this, "SkyBox Enabled", false);
     private final BooleanProperty isPicking = new SimpleBooleanProperty();
 
     private Vec3d vecIni, vecPos;

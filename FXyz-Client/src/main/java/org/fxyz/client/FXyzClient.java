@@ -317,7 +317,7 @@ public class FXyzClient extends Application {
 
     private WelcomePage getDefaultWelcomePage() {
         // line 1
-        Label welcomeLabel1 = new Label("Welcome to FXSampler!");
+        Label welcomeLabel1 = new Label("Welcome to FXyz-Sampler!");
         welcomeLabel1.setStyle("-fx-font-size: 2em; -fx-padding: 0 0 0 5;");
 
         // line 2
