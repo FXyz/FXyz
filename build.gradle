@@ -11,12 +11,13 @@ task wrapper(type: Wrapper) {
 
 apply plugin: 'java' // or 'groovy'. Must be explicitly applied
 apply plugin: 'com.github.johnrengelman.shadow'
-//apply from: 'javafx.plugin'
+
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
-    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'com.github.johnrengelman.shadow'     
+    
     
     Properties cfg = new Properties()
     cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))

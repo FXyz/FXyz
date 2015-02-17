@@ -1,4 +1,5 @@
-
+apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
+repairHeaders.licenseHeaderText = new File(rootDir,'fxyz-license.txt')
 
 buildscript {
     repositories {

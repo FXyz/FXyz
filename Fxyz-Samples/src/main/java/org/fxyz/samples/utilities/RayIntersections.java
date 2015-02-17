@@ -1,3 +1,32 @@
+/**
+* RayIntersections.java
+*
+* Copyright (c) 2013-2015, F(X)yz
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+* * Redistributions of source code must retain the above copyright
+* notice, this list of conditions and the following disclaimer.
+* * Redistributions in binary form must reproduce the above copyright
+* notice, this list of conditions and the following disclaimer in the
+* documentation and/or other materials provided with the distribution.
+* * Neither the name of the organization nor the
+* names of its contributors may be used to endorse or promote products
+* derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 package org.fxyz.samples.utilities;
 
 import java.util.Arrays;
@@ -157,8 +186,8 @@ public class RayIntersections extends FXyzSample {
         AtomicInteger counter = new AtomicInteger();
         IntStream.range(0, 6).forEach(i -> {
             // ray[t]= ori+t.dir; t/ray[t]=P in plane
-            // plane P·N+d=0->(ori+t*dir)·N+d=0->t=-(ori.N+d)/(dir.N)
-            // P=P(x,y,z), N={a,b,c}, d=-a·x0-b·y0-c·z0
+            // plane PÂ·N+d=0->(ori+t*dir)Â·N+d=0->t=-(ori.N+d)/(dir.N)
+            // P=P(x,y,z), N={a,b,c}, d=-aÂ·x0-bÂ·y0-cÂ·z0
             double d = -normals.get(i).dotProduct(positions.get(i));
             double t = -(gloOriginInLoc.dotProduct(normals.get(i)) + d) / (gloDirection.dotProduct(normals.get(i)));
             Point3D locInter = gloOriginInLoc.add(gloDirection.multiply(t));

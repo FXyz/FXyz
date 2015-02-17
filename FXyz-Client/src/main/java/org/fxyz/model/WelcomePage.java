@@ -1,5 +1,7 @@
 /**
- * Copyright (c) 2014, ControlsFX
+ * Copyright (c) 2013, ControlsFX
+ * Copyright (c) 2015, F(X)yz
+ * 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
