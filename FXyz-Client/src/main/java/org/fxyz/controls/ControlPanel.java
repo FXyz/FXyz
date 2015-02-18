@@ -31,21 +31,26 @@ package org.fxyz.controls;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 /**
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class ControlPanel extends StackPane{
+public class ControlPanel extends VBox{
 
     public ControlPanel() {
         this.accordion = new ControlBasePane();
+        VBox.setVgrow(accordion, Priority.ALWAYS);
         this.rootCategory = new ControlCategory("");
         this.accordion.getPanes().add(rootCategory);
         this.accordion.setExpandedPane(rootCategory);
         this.getChildren().add(accordion);
+        this.setAlignment(Pos.CENTER);
     }
     
     private final ControlCategory rootCategory;

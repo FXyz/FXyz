@@ -37,6 +37,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Point3D;
+import javafx.geometry.Side;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -45,12 +46,14 @@ import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -59,6 +62,8 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
+import org.controlsfx.control.HiddenSidesPane;
 import org.fxyz.client.ModelInfoTracker;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.factory.ControlFactory;
@@ -82,16 +87,19 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     protected PointLight sceneLight1;
     protected PointLight sceneLight2;
-
     private Group light1Group;
     private Group light2Group;
     private Group lightingGroup;
+    
     protected SubScene subScene;
     protected Group root;
     protected Group group;
     protected StackPane mainPane;
+    protected HiddenSidesPane hiddenSides;
 
     protected T model;
+    protected ModelInfoTracker modelInfo;
+    protected PhongMaterial material = new PhongMaterial();
 
     protected PerspectiveCamera camera;
     private CameraTransformer cameraTransform;
@@ -101,16 +109,13 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private ProgressBar progressBar;
     private long time;
     
-    protected ModelInfoTracker modelInfo;
-
+    protected Button exportButton;
+    
     protected Scene getScene() {
         return subScene.getScene();
     }
-
-    protected PhongMaterial material = new PhongMaterial();
-
+    
     protected abstract void createMesh();
-
     protected abstract void addMeshAndListeners();
 
     private final BooleanProperty onService = new SimpleBooleanProperty();
@@ -161,6 +166,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 }
             }
         });
+        hiddenSides = new HiddenSidesPane();
     }
 
     @Override
@@ -285,6 +291,14 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                             light1Group.rotateProperty(), light2Group.rotateProperty(),
                             light1Group.rotationAxisProperty(), light1Group.rotationAxisProperty()
                     ));
+                    exportButton = new Button("Export Mesh");  
+                    exportButton.setFocusTraversable(false);
+                    //HBox expContainer = new HBox(exportButton);
+                    //expContainer.setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);
+                    //HBox.setHgrow(exportButton, Priority.ALWAYS);
+                    
+                    ((VBox)controlPanel).getChildren().add(exportButton);
+                    ((ControlPanel) controlPanel).getPanes().get(0).setExpanded(true);
                 }
             });
             skyBox.visibleProperty().bind(useSkybox);
@@ -386,19 +400,18 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             time = System.currentTimeMillis();
             service.start();
         }
-
-        mainPane.sceneProperty().addListener(i -> {
-            if (mainPane.getScene() != null) {
-                mainPane.getScene().addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-                    if (e.getPickResult() != null) {
-                        System.out.println(e.getPickResult().getIntersectedNode() + " : " + e.getPickResult().getIntersectedNode().getTypeSelector());
-                    }
-                });
-            }
-        });
+        
+        modelInfo = new ModelInfoTracker(hiddenSides);
+        
+        hiddenSides.setContent(mainPane);
+        hiddenSides.setBottom(modelInfo);
+        hiddenSides.setTriggerDistance(20);    
+        hiddenSides.setAnimationDelay(Duration.ONE);
+        hiddenSides.setPinnedSide(Side.BOTTOM);
+        
         //mainPane.sceneProperty().addListener(l -> {          });
         //mainPane.getChildren().add(sceneControls);
-        return mainPane;
+        return hiddenSides;
     }
 
     protected BooleanProperty pickingProperty() {

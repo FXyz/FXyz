@@ -10,10 +10,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import org.controlsfx.control.HiddenSidesPane;
 import org.fxyz.ExtrasAndTests.CustomWindow;
 
 /**
@@ -45,7 +47,8 @@ public class ModelInfoTracker extends StackPane {
     @FXML
     private Label faces;
 
-    public ModelInfoTracker() {
+    private HiddenSidesPane parentPane;
+    public ModelInfoTracker(HiddenSidesPane parent) {
         try {
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource("ModelInfo.fxml"));
             loader.setController(ModelInfoTracker.this);
@@ -55,6 +58,17 @@ public class ModelInfoTracker extends StackPane {
         } catch (IOException ex) {
             Logger.getLogger(CustomWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.parentPane = parent;
+        hideStatus.setFocusTraversable(false);
+        hideStatus.setOnAction(e->{
+            parentPane.setPinnedSide(null);
+        });
+        
+        this.setOnMouseEntered(e->{
+            if(parentPane.getPinnedSide() != Side.BOTTOM){
+                parentPane.setPinnedSide(Side.BOTTOM);
+            }
+        });
     }
     
     public Label getSampleTitle() {

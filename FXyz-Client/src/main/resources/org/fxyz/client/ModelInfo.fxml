@@ -6,8 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1024.0" styleClass="fxyz-control-stack-pane" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1024.0" styleClass="fxyz-control" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" StackPane.alignment="CENTER">
          <children>
@@ -20,7 +19,7 @@
                      </font>
                   </Label>
                   <Pane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="hideStatus" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" styleClass="footer-hide" text="Hide" HBox.hgrow="NEVER" />
+                  <Button fx:id="hideStatus" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="footer-hide" text="Hide" HBox.hgrow="NEVER" />
                </children>
             </HBox>
             <HBox fx:id="content" alignment="CENTER_LEFT" maxHeight="-Infinity" spacing="10.0">

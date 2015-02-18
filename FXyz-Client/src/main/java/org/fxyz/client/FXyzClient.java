@@ -371,7 +371,6 @@ public class FXyzClient extends Application {
         
         cPane.getChildren().addAll(content, contentControls);
         centerContent.getChildren().addAll(cPane);
-        contentControls.getChildren().add(new Button("Export"){{setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);}});
         centerContent.toBack();
         
     }
