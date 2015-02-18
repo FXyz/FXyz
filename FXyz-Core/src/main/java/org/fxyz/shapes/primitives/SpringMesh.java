@@ -81,7 +81,7 @@ public class SpringMesh extends TexturedMesh {
         setWireRadius(wireRadius);
         setPitch(pitch);
         setLength(length);
-        factor=length/pitch;
+        factor=2*Math.PI;
         setLengthDivisions(rDivs);
         setWireDivisions(tDivs);
         setLengthCrop(lengthCrop);
@@ -151,7 +151,7 @@ public class SpringMesh extends TexturedMesh {
 
         @Override protected void invalidated() {
             if(mesh!=null){
-                setPitch(length.get()/factor);
+//                setPitch(length.get()/factor);
                 updateMesh();
             }
         }
@@ -173,7 +173,7 @@ public class SpringMesh extends TexturedMesh {
 
         @Override protected void invalidated() {
             if(mesh!=null){
-                setLength(pitch.get()*factor);
+//                setLength(pitch.get()*factor);
                 updateMesh();
             }
         }
