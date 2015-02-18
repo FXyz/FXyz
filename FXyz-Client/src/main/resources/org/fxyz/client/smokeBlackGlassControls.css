@@ -112,6 +112,16 @@
 
 }
 
+.footer-hide{
+    -fx-background-color: transparent;
+    -fx-background-radius: 100;
+    -fx-graphic: url(../images/window-min.png);
+}
+.footer-hide:hover{
+    -fx-graphic: url(../images/window-min-over.png);
+}
+
+
 .ListSpinner { 
     -fx-background-color: null;
     -fx-border-color: null;

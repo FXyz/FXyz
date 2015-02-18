@@ -59,6 +59,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import org.fxyz.client.ModelInfoTracker;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.samples.FXyzSample;
@@ -99,6 +100,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private Service<Void> service;
     private ProgressBar progressBar;
     private long time;
+    
+    protected ModelInfoTracker modelInfo;
 
     protected Scene getScene() {
         return subScene.getScene();

@@ -85,7 +85,14 @@ public class FXyzClient extends Application {
             //BLUE_GLASS_BASE = FXyzClient.class.getResource("/smokeBlueGlassBase.css").toExternalForm(),
             //BLUE_GLASS_CONTROLS = FXyzClient.class.getResource("/smokeBlueGlassControls.css").toExternalForm();
             //CUSTOM_WINDOW = FXyzClient.class.getResource("images/customWindow.css").toExternalForm();
+    private static FXyzClient rootClientInstance;
 
+    public FXyzClient() {
+        rootClientInstance = FXyzClient.this;
+    }
+    
+    
+    
     private Map<String, Project> projectsMap;
     private Stage stage;
     private FXyzSample selectedSample;
@@ -364,7 +371,7 @@ public class FXyzClient extends Application {
         
         cPane.getChildren().addAll(content, contentControls);
         centerContent.getChildren().addAll(cPane);
-        
+        contentControls.getChildren().add(new Button("Export"){{setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);}});
         centerContent.toBack();
         
     }
@@ -454,6 +461,12 @@ public class FXyzClient extends Application {
         String template = getResource("/fxsampler/util/CssTemplate.html", null);
         return template.replace("<source/>", src);
     }
+
+    public static FXyzClient getRootClientInstance() {
+        return rootClientInstance;
+    }
+    
+    
 
     public static void main(String[] args) {
         launch(args);

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1024.0" styleClass="fxyz-control-stack-pane" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+   <children>
+      <VBox alignment="CENTER" StackPane.alignment="CENTER">
+         <children>
+            <HBox fx:id="headerArea">
+               <children>
+                  <Pane maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="sampleTitle" text="Sample Title" HBox.hgrow="NEVER">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Pane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="hideStatus" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" styleClass="footer-hide" text="Hide" HBox.hgrow="NEVER" />
+               </children>
+            </HBox>
+            <HBox fx:id="content" alignment="CENTER_LEFT" maxHeight="-Infinity" spacing="10.0">
+               <children>
+                  <HBox>
+                     <children>
+                        <Label layoutX="10.0" layoutY="10.0" text="Nodes:  " />
+                        <Label fx:id="nodeCount" text="1024" />
+                     </children>
+                  </HBox>
+                  <Pane maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <Label layoutX="10.0" layoutY="10.0" text="Time to Build:  " />
+                        <Label fx:id="timeToBuild" layoutX="231.0" layoutY="10.0" text="300ms" />
+                     </children>
+                  </HBox>
+                  <Pane layoutX="90.0" layoutY="19.0" maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <Label layoutX="38.0" layoutY="10.0" text="Dimensions { " />
+                        <HBox spacing="5.0">
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <Label text="W: " />
+                                    <Label fx:id="width" layoutX="235.0" layoutY="10.0" text="100" />
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label layoutX="263.0" layoutY="10.0" text="H: " />
+                                    <Label fx:id="height" layoutX="78.0" layoutY="10.0" text="100" />
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label layoutX="162.0" layoutY="10.0" text="D: " />
+                                    <Label fx:id="depth" layoutX="190.0" layoutY="10.0" text="100" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <Label layoutX="10.0" layoutY="10.0" text=" }" />
+                     </children>
+                  </HBox>
+                  <Pane layoutX="407.0" layoutY="19.0" maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER" spacing="5.0">
+                     <children>
+                        <Label layoutX="66.0" layoutY="10.0" text="Mesh Data { " />
+                        <HBox>
+                           <children>
+                              <Label layoutX="446.0" layoutY="10.0" text="Points:  " />
+                              <Label fx:id="points" layoutX="516.0" layoutY="10.0" text="400" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label layoutX="75.0" layoutY="10.0" text="Faces: " />
+                              <Label fx:id="faces" layoutX="205.0" layoutY="10.0" text="150" />
+                           </children>
+                        </HBox>
+                        <Label layoutX="10.0" layoutY="10.0" text=" } " />
+                     </children>
+                  </HBox>
+                  <Pane layoutX="686.0" layoutY="19.0" maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+   </padding>
+</fx:root>

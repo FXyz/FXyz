@@ -150,7 +150,7 @@
 .accordion > .titled-pane > .title {
     -fx-background-color:
         linear-gradient(to bottom,
-        derive(-fx-color,-15%) 95%,
+        derive(-fx-background,-15%) 95%,
         derive(-fx-color,-25%) 100%
         ),
         -fx-inner-border,
