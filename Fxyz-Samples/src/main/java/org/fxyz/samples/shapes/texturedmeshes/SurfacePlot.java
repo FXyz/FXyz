@@ -53,7 +53,7 @@ public class SurfacePlot extends TexturedMeshSample {
     
     //private static final Image image = new Image(SurfacePlot.class.getResourceAsStream(".../res/top.png"));
     private final ObjectProperty<Function<Point2D, Number>> function2D = 
-            new SimpleObjectProperty<Function<Point2D, Number>>(model,"Function F(P(x,y))",p->p.magnitude()){
+            new SimpleObjectProperty<Function<Point2D, Number>>(model,"Function F(P(x,y))",p->Math.sin(p.magnitude())/p.magnitude()){
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -62,7 +62,7 @@ public class SurfacePlot extends TexturedMeshSample {
             }
         }
     };
-    private final DoubleProperty rangeX = new SimpleDoubleProperty(model, "Range X", 10) {
+    private final DoubleProperty rangeX = new SimpleDoubleProperty(model, "Range X", 20) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -72,7 +72,7 @@ public class SurfacePlot extends TexturedMeshSample {
         }
     };
 
-    private final DoubleProperty rangeY = new SimpleDoubleProperty(model, "Range Y", 10) {
+    private final DoubleProperty rangeY = new SimpleDoubleProperty(model, "Range Y", 20) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -82,7 +82,7 @@ public class SurfacePlot extends TexturedMeshSample {
         }
     };
 
-    private final IntegerProperty divisionsX = new SimpleIntegerProperty(model, "Divisions X", 50) {
+    private final IntegerProperty divisionsX = new SimpleIntegerProperty(model, "Divisions X", 100) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -92,7 +92,7 @@ public class SurfacePlot extends TexturedMeshSample {
         }
     };
     
-    private final IntegerProperty divisionsY = new SimpleIntegerProperty(model, "Divisions Y", 50) {
+    private final IntegerProperty divisionsY = new SimpleIntegerProperty(model, "Divisions Y", 100) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -115,7 +115,7 @@ public class SurfacePlot extends TexturedMeshSample {
     
     @Override
     public void createMesh() {
-        model = new SurfacePlotMesh();        
+        model = new SurfacePlotMesh(function2D.get(),rangeX.get(),rangeY.get(),divisionsX.get(),divisionsY.get(),scale.get());        
         model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
         model.sceneProperty().addListener(e->{
             if(model.getScene()!= null){
