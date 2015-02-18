@@ -153,7 +153,7 @@ public class Knots extends TexturedMeshSample {
         }
     };
    
-    private final IntegerProperty wireDivs = new SimpleIntegerProperty(model, "Wire Divisions", 100) {
+    private final IntegerProperty wireDivs = new SimpleIntegerProperty(model, "Wire Divisions", 50) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -162,7 +162,7 @@ public class Knots extends TexturedMeshSample {
             }
         }
     };
-    private final IntegerProperty lenDivs = new SimpleIntegerProperty(model, "Length Divisions", 500) {
+    private final IntegerProperty lenDivs = new SimpleIntegerProperty(model, "Length Divisions", 200) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -176,7 +176,7 @@ public class Knots extends TexturedMeshSample {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((KnotMesh)model).setWireCrop(wireCrop.get());
+                ((KnotMesh)model).setWireCrop(Math.min(wireCrop.get(),wireDivs.get()/2));
             }
         }
     };
@@ -185,7 +185,7 @@ public class Knots extends TexturedMeshSample {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((KnotMesh)model).setLengthCrop(lenCrop.get());
+                ((KnotMesh)model).setLengthCrop(Math.min(lenCrop.get(),lenDivs.get()/2));
             }
         }
 
@@ -200,8 +200,8 @@ public class Knots extends TexturedMeshSample {
                 this.wireRad.get(),
                 this._p.get(),
                 this._q.get(),
-                this.wireDivs.get(),
                 this.lenDivs.get(),
+                this.wireDivs.get(),
                 this.lenCrop.get(),
                 this.wireCrop.get()
         );
@@ -230,58 +230,58 @@ public class Knots extends TexturedMeshSample {
     @Override
     protected Node buildControlPanel() {
         NumberSliderControl majRadSlider = ControlFactory.buildNumberSlider(this.majRad, .01D, 200D);
-        majRadSlider.getSlider().setMinorTickCount(10);
-        majRadSlider.getSlider().setMajorTickUnit(0.5);
-        majRadSlider.getSlider().setBlockIncrement(0.01d);
+        majRadSlider.getSlider().setMinorTickCount(4);
+        majRadSlider.getSlider().setMajorTickUnit(25);
+        majRadSlider.getSlider().setBlockIncrement(1d);
 
         NumberSliderControl minRadSlider = ControlFactory.buildNumberSlider(this.minRad, .01D, 200D);
-        minRadSlider.getSlider().setMinorTickCount(10);
-        minRadSlider.getSlider().setMajorTickUnit(0.5);
-        minRadSlider.getSlider().setBlockIncrement(0.01d);
+        minRadSlider.getSlider().setMinorTickCount(4);
+        minRadSlider.getSlider().setMajorTickUnit(25);
+        minRadSlider.getSlider().setBlockIncrement(1d);
 
         NumberSliderControl tRadSlider = ControlFactory.buildNumberSlider(this.wireRad, 0.01D, 25D);
-        tRadSlider.getSlider().setMinorTickCount(1);
-        tRadSlider.getSlider().setMajorTickUnit(0.1);
-        tRadSlider.getSlider().setBlockIncrement(0.01d);
+        tRadSlider.getSlider().setMinorTickCount(4);
+        tRadSlider.getSlider().setMajorTickUnit(5);
+        tRadSlider.getSlider().setBlockIncrement(1d);
 
-        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(this.wireDivs, 2, 100);
-        wDivSlider.getSlider().setMinorTickCount(25);
-        wDivSlider.getSlider().setMajorTickUnit(99);
+        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(this.wireDivs, 2, 200);
+        wDivSlider.getSlider().setMinorTickCount(4);
+        wDivSlider.getSlider().setMajorTickUnit(50);
         wDivSlider.getSlider().setBlockIncrement(1);
         wDivSlider.getSlider().setSnapToTicks(true);
 
         NumberSliderControl mCropSlider = ControlFactory.buildNumberSlider(this.wireCrop, 0l, 98);
-        mCropSlider.getSlider().setMinorTickCount(48);
-        mCropSlider.getSlider().setMajorTickUnit(49);
+        mCropSlider.getSlider().setMinorTickCount(4);
+        mCropSlider.getSlider().setMajorTickUnit(50);
         mCropSlider.getSlider().setBlockIncrement(1);
         mCropSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(this.lenDivs, 4l, 250);
-        lDivSlider.getSlider().setMinorTickCount(50);
-        lDivSlider.getSlider().setMajorTickUnit(250);
-        lDivSlider.getSlider().setBlockIncrement(1);
+        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(this.lenDivs, 4l, 1000);
+        lDivSlider.getSlider().setMinorTickCount(4);
+        lDivSlider.getSlider().setMajorTickUnit(100);
+        lDivSlider.getSlider().setBlockIncrement(10);
+        lDivSlider.getSlider().setSnapToTicks(true);
 
         NumberSliderControl lCropSlider = ControlFactory.buildNumberSlider(this.lenCrop, 0l, 200);
-        lCropSlider.getSlider().setMinorTickCount(0);
-        lCropSlider.getSlider().setMajorTickUnit(0.5);
+        lCropSlider.getSlider().setMinorTickCount(4);
+        lCropSlider.getSlider().setMajorTickUnit(25);
         lCropSlider.getSlider().setBlockIncrement(1);
 
         NumberSliderControl pSlider = ControlFactory.buildNumberSlider(this._p, 0.01d, 10.0D);
-        pSlider.getSlider().setMinorTickCount(99);
-        pSlider.getSlider().setMajorTickUnit(100);
-        pSlider.getSlider().setBlockIncrement(0.001);
+        pSlider.getSlider().setMinorTickCount(4);
+        pSlider.getSlider().setMajorTickUnit(5);
+        pSlider.getSlider().setBlockIncrement(1);
 
         NumberSliderControl qSlider = ControlFactory.buildNumberSlider(this._q, 0.01d, 50.0D);
-        qSlider.getSlider().setMinorTickCount(49);
-        qSlider.getSlider().setMajorTickUnit(50);
-        qSlider.getSlider().setBlockIncrement(0.001);
+        qSlider.getSlider().setMinorTickCount(4);
+        qSlider.getSlider().setMajorTickUnit(5);
+        qSlider.getSlider().setBlockIncrement(1);
 
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         geomControls.addControls(
-                majRadSlider, minRadSlider,
-                tRadSlider, wDivSlider, mCropSlider,
-                lDivSlider, lCropSlider,
-                pSlider, qSlider
+                majRadSlider, minRadSlider, tRadSlider, 
+                pSlider, qSlider,
+                lDivSlider, lCropSlider, wDivSlider, mCropSlider
         );
 
         this.controlPanel = ControlFactory.buildControlPanel(
