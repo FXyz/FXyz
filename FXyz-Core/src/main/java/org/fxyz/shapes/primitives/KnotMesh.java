@@ -78,15 +78,15 @@ public class KnotMesh extends TexturedMesh {
     }
 
     public KnotMesh(double majorRadius, double minorRadius, double wireRadius, double p, double q, 
-                      int rDivs, int tDivs, int lengthCrop, int wireCrop) {
+                      int lengthDivisions, int wireDivisions, int lengthCrop, int wireCrop) {
         
         setMajorRadius(majorRadius);
         setMinorRadius(minorRadius);
         setWireRadius(wireRadius);
         setP(p);
         setQ(q);
-        setLengthDivisions(rDivs);
-        setWireDivisions(tDivs);
+        setLengthDivisions(lengthDivisions);
+        setWireDivisions(wireDivisions);
         setLengthCrop(lengthCrop);
         setWireCrop(wireCrop);
         
@@ -99,7 +99,7 @@ public class KnotMesh extends TexturedMesh {
     @Override
     protected final void updateMesh(){   
         setMesh(null);
-        mesh=createSpring((float) getMajorRadius(), (float) getMinorRadius(), (float) getWireRadius(), (float) getP(), (float) getQ(), (float) getLength(),
+        mesh=createKnot((float) getMajorRadius(), (float) getMinorRadius(), (float) getWireRadius(), (float) getP(), (float) getQ(), (float) getLength(),
             getLengthDivisions(), getWireDivisions(), getLengthCrop(), getWireCrop(),
             (float) getTubeStartAngleOffset(), (float)getxOffset(),(float)getyOffset(), (float)getzOffset());
         setMesh(mesh);
@@ -401,7 +401,7 @@ public class KnotMesh extends TexturedMesh {
         return zOffset;
     }
     
-    private TriangleMesh createSpring(float majorRadius, float minorRadius, float wireRadius, float p, float q, float length, 
+    private TriangleMesh createKnot(float majorRadius, float minorRadius, float wireRadius, float p, float q, float length, 
             int subDivLength, int subDivWire, int cropLength, int cropWire,
             float startAngle, float xOffset, float yOffset, float zOffset) {
  
@@ -409,9 +409,7 @@ public class KnotMesh extends TexturedMesh {
         listTextures.clear();
         listFaces.clear();
         
-        int numDivLength = subDivLength + 1-2*cropLength;
         int numDivWire = subDivWire + 1-2*cropWire;
-        float pointX, pointY, pointZ;
         double a=wireRadius;
         
         knot = new KnotHelper(majorRadius, minorRadius, p, q);
@@ -461,26 +459,6 @@ public class KnotMesh extends TexturedMesh {
             }
         }
         
-        
-//        for (int u = cropWire; u < subDivWire-cropWire; u++) { // -Pi - +Pi
-//            for (int t = cropLength; t < subDivLength-cropLength; t++) { // 0 - length
-//                int p00 = (u-cropWire) * numDivLength + (t-cropLength);
-//                int p01 = p00 + 1;
-//                if(cropLength==0 && t==subDivLength-1){
-//                    p01-=subDivLength;
-//                }
-//                int p10 = p00 + numDivLength;
-//                if(cropWire==0 && u==subDivWire-1){
-//                    p10-=subDivWire*numDivLength;
-//                }
-//                int p11 = p10 + 1;
-//                if(cropLength==0 && t==subDivLength-1){
-//                    p11-=subDivLength;
-//                }
-//                listFaces.add(new Point3D(p00,p10,p11));
-//                listFaces.add(new Point3D(p11,p01,p00));            
-//            }
-//        }
         return createMesh();
     }
     
