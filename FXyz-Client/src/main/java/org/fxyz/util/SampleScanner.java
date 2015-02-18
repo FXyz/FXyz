@@ -162,18 +162,19 @@ public class SampleScanner {
             
             // Only "file" and "jar" URLs are recognized, other schemes will be ignored.
             String protocol = url.getProtocol().toLowerCase();
-            if ("file".equals(protocol)) {
-                dirs.add(new File(url.getFile()));
-            } else if ("jar".equals(protocol)) {
-                String fileName = new URL(url.getFile()).getFile();
-                
-                // JAR URL specs must contain the string "!/" which separates the name
-                // of the JAR file from the path of the resource contained in it, even
-                // if the path is empty.
-                int sep = fileName.indexOf("!/");
-                if (sep > 0) {
-                    jars.add(new File(fileName.substring(0, sep)));
-                }
+            if (null != protocol) switch (protocol) {
+                case "file":
+                    dirs.add(new File(url.getFile()));
+                    break;
+                case "jar":
+                    String fileName = new URL(url.getFile()).getFile();
+                    // JAR URL specs must contain the string "!/" which separates the name
+                    // of the JAR file from the path of the resource contained in it, even
+                    // if the path is empty.
+                    int sep = fileName.indexOf("!/");
+                    if (sep > 0) {
+                        jars.add(new File(fileName.substring(0, sep)));
+                    }   break;
             }
         }
 

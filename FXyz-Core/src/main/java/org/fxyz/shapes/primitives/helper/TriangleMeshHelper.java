@@ -43,6 +43,7 @@ import org.fxyz.geometry.Face3;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Palette;
 import org.fxyz.scene.paint.Patterns;
+import org.fxyz.scene.paint.Patterns.CarbonPatterns;
 import org.fxyz.tools.NormalMap;
 
 /**
@@ -131,6 +132,9 @@ public class TriangleMeshHelper {
     public final void createPattern(){
         createPattern(DEFAULT_WIDTH,DEFAULT_HEIGHT,DEFAULT_SAVE_PATTERN);
     }
+    public final void createCarbonPattern(CarbonPatterns cp){
+        createCarbonPattern(cp,DEFAULT_WIDTH,DEFAULT_HEIGHT,DEFAULT_SAVE_PATTERN);
+    }
     public void createPattern(boolean save){
         createPattern(DEFAULT_WIDTH,DEFAULT_HEIGHT,save);
     }
@@ -140,13 +144,24 @@ public class TriangleMeshHelper {
         patterns=new Patterns(width,height);
         patterns.createPattern(save);
     }
+    public void createCarbonPattern(CarbonPatterns cp, int width, int height, boolean save){
+        this.patternWidth=width;
+        this.patternHeight=height;
+        patterns=new Patterns(width,height);
+        patterns.createPattern(cp, save);
+    }
     public Image getPatternImage() {
         if(patterns==null){
             createPattern();
         }
         return patterns.getPatternImage();
     }
-    
+    public Image getPatternImage(CarbonPatterns cp) {
+        if(patterns==null){
+            createCarbonPattern(cp);
+        }
+        return patterns.getPatternImage();
+    }
     public Material getMaterialWithPattern(){
         PhongMaterial mat = new PhongMaterial();
         Image img = getPatternImage();

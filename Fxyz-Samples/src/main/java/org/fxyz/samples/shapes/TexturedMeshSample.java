@@ -45,6 +45,7 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.fxyz.geometry.Point3D;
+import org.fxyz.scene.paint.Patterns.CarbonPatterns;
 import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 
@@ -135,6 +136,16 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                         e.printStackTrace(System.err);
                     }
                 }
+            }
+        }
+    };
+    
+    protected final ObjectProperty<CarbonPatterns> patterns = new SimpleObjectProperty<CarbonPatterns>(){
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
+                model.setPatternScale(pattScale.doubleValue());
             }
         }
     };
