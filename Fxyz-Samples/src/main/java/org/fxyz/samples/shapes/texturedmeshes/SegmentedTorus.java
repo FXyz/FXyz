@@ -124,7 +124,8 @@ public class SegmentedTorus extends TexturedMeshSample {
     
     @Override
     public void createMesh() {
-        model = new SegmentedTorusMesh(50, 42, 0, 100d, 25d);        
+//        model = new SegmentedTorusMesh(50, 42, 0, 100d, 25d);        
+        model = new SegmentedTorusMesh(majorDivs.get(), minorDivs.get(), majRadCrop.get(), majRad.get(), minRad.get());        
         model.getTransforms().addAll(new Rotate(0, Rotate.X_AXIS), rotateY);
     }
     
@@ -136,10 +137,10 @@ public class SegmentedTorus extends TexturedMeshSample {
     protected Node buildControlPanel() {
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         geomControls.addControls(
-                ControlFactory.buildNumberSlider(minorDivs, 8, 360),
-                ControlFactory.buildNumberSlider(majorDivs, 8, 360),
-                ControlFactory.buildNumberSlider(minRad, 1, 100),
                 ControlFactory.buildNumberSlider(majRad, 1, 100),
+                ControlFactory.buildNumberSlider(minRad, 1, 100),
+                ControlFactory.buildNumberSlider(majorDivs, 8, 360),
+                ControlFactory.buildNumberSlider(minorDivs, 8, 360),
                 ControlFactory.buildNumberSlider(majRadCrop, 0, 50),
                 ControlFactory.buildNumberSlider(_x, -1, 1),
                 ControlFactory.buildNumberSlider(_y, -1, 1),
