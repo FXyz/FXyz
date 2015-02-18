@@ -78,6 +78,7 @@ public class ScriptFunction2DControl extends ControlBase<Property<Function<Point
         }
         selection.getEditor().setEditable(false);
         selection.getStyleClass().add("noEditable-textField");
+        selection.getSelectionModel().select(0);
         selection.getSelectionModel().selectedIndexProperty().addListener((obs,n,n1)->{
             if(n1!=null){
                 selection.getStyleClass().remove("noEditable-textField");
@@ -135,7 +136,7 @@ public class ScriptFunction2DControl extends ControlBase<Property<Function<Point
             }
         });
         
-        selection.getSelectionModel().select(0);
+        
         
         
     }
