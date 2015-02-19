@@ -46,11 +46,6 @@ public class NormalMapper extends FXyzSample{
     }
 
     @Override
-    public String getSampleName() {
-        return getClass().getSimpleName();
-    }
-
-    @Override
     public Node getPanel(Stage stage) {
         return getSample();
     }

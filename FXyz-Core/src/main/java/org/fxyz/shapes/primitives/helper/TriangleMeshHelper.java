@@ -166,7 +166,7 @@ public class TriangleMeshHelper {
         PhongMaterial mat = new PhongMaterial();
         Image img = getPatternImage();
         mat.setDiffuseMap(img);
-        mat.setBumpMap(new NormalMap(27,9,false,img));
+        //mat.setBumpMap(new NormalMap(27,9,false,img));
         return mat;
     }
     

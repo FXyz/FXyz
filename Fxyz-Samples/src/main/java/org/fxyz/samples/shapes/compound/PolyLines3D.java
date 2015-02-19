@@ -42,8 +42,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.fxyz.samples.FXyzSample;
 import org.fxyz.geometry.Point3D;
+import org.fxyz.samples.FXyzSample;
 import org.fxyz.shapes.composites.PolyLine3D;
 import org.fxyz.utils.CameraTransformer;
 
@@ -167,11 +167,6 @@ public class PolyLines3D extends FXyzSample {
         scene.heightProperty().bind(sp.heightProperty());
         
         return (sp);
-    }
-
-    @Override
-    public String getSampleName() {
-        return getClass().getSimpleName().concat(" Sample");
     }
 
     @Override

@@ -1,35 +1,33 @@
 /**
-* ShapeBaseSample.java
-*
-* Copyright (c) 2013-2015, F(X)yz
-* All rights reserved.
-*
+ * ShapeBaseSample.java
+ * 
+* Copyright (c) 2013-2015, F(X)yz All rights reserved.
+ * 
 * Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-* * Redistributions of source code must retain the above copyright
-* notice, this list of conditions and the following disclaimer.
-* * Redistributions in binary form must reproduce the above copyright
-* notice, this list of conditions and the following disclaimer in the
-* documentation and/or other materials provided with the distribution.
-* * Neither the name of the organization nor the
-* names of its contributors may be used to endorse or promote products
-* derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
+ * modification, are permitted provided that the following conditions are met: *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. * Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
+ * the following disclaimer in the documentation and/or other materials provided
+ * with the distribution. * Neither the name of the organization nor the names
+ * of its contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ * 
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.fxyz.samples.shapes;
 
 import com.sun.javafx.geom.Vec3d;
+import java.util.concurrent.CountDownLatch;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -48,10 +46,10 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -68,8 +66,8 @@ import org.fxyz.client.ModelInfoTracker;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.samples.FXyzSample;
-import org.fxyz.samples.utilities.SkyBoxing;
 import org.fxyz.scene.Skybox;
+import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.utils.CameraTransformer;
 
 /**
@@ -81,6 +79,10 @@ import org.fxyz.utils.CameraTransformer;
  */
 public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
+    protected abstract void createMesh();
+
+    protected abstract void addMeshAndListeners();
+
     private final double sceneWidth = 600;
     private final double sceneHeight = 600;
     protected long lastEffect;
@@ -90,68 +92,61 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private Group light1Group;
     private Group light2Group;
     private Group lightingGroup;
-    
+
+    protected PerspectiveCamera camera;
+    private CameraTransformer cameraTransform;
+    protected Rotate rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
     protected SubScene subScene;
     protected Group root;
     protected Group group;
     protected StackPane mainPane;
-    protected HiddenSidesPane hiddenSides;
+    protected HiddenSidesPane parentPane;
 
     protected T model;
     protected ModelInfoTracker modelInfo;
     protected PhongMaterial material = new PhongMaterial();
-
-    protected PerspectiveCamera camera;
-    private CameraTransformer cameraTransform;
-    protected Rotate rotateY;
+    protected Button exportButton;
 
     private Service<Void> service;
     private ProgressBar progressBar;
     private long time;
-    
-    protected Button exportButton;
-    
-    protected Scene getScene() {
-        return subScene.getScene();
-    }
-    
-    protected abstract void createMesh();
-    protected abstract void addMeshAndListeners();
 
     private final BooleanProperty onService = new SimpleBooleanProperty();
     protected final BooleanProperty useSkybox = new SimpleBooleanProperty(this, "SkyBox Enabled", false);
-    private final BooleanProperty isPicking = new SimpleBooleanProperty();
+    private final BooleanProperty isPicking = new SimpleBooleanProperty(this, "isPicking");
+    protected final Property<DrawMode> drawMode = new SimpleObjectProperty<>(model, "drawMode", DrawMode.FILL);
+    protected final Property<CullFace> culling = new SimpleObjectProperty<>(model, "culling", CullFace.BACK);
+
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     private Vec3d vecIni, vecPos;
     private double distance;
     private Sphere s;
 
-    protected final Image top = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/top.png").toExternalForm()),
-            bottom = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/bottom.png").toExternalForm()),
-            left = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/left.png").toExternalForm()),
-            right = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/right.png").toExternalForm()),
-            front = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/front.png").toExternalForm()),
-            back = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/back.png").toExternalForm());
-
-    protected final Skybox skyBox = new Skybox(
-            top,
-            bottom,
-            left,
-            right,
-            front,
-            back,
-            100000,
-            camera
-    );
-
     public ShapeBaseSample() {
+        initSample();
+    }
+
+    private void initSample() {
+        buildCamera();
+        buildRootNode();
+        buildSkybox();
+        buildModelContainer();
+        buildSubScene();
+        buildSubScenePane();
+        buildParentPane();
+
+        createListeners();
+    }
+
+    private void createListeners() {
         drawMode.addListener((obs, b, b1) -> {
             if (model != null) {
                 if (model instanceof Shape3D) {
                     ((Shape3D) model).setDrawMode(drawMode.getValue());
                 } else if (model instanceof Group) {
                     ((Group) model).getChildren().filtered(Shape3D.class::isInstance)
-                            .forEach(s -> ((Shape3D) s).setDrawMode(drawMode.getValue()));
+                            .forEach(shape -> ((Shape3D) shape).setDrawMode(drawMode.getValue()));
                 }
             }
         });
@@ -162,107 +157,223 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                     ((Shape3D) model).setCullFace(culling.getValue());
                 } else if (model instanceof Group) {
                     ((Group) model).getChildren().filtered(Shape3D.class::isInstance)
-                            .forEach(s -> ((Shape3D) s).setCullFace(culling.getValue()));
+                            .forEach(shape -> ((Shape3D) shape).setCullFace(culling.getValue()));
                 }
             }
         });
-        hiddenSides = new HiddenSidesPane();
     }
 
-    @Override
-    public Node getSample() {
-        if (!onService.get()) {
-            cameraTransform = new CameraTransformer();
-            camera = new PerspectiveCamera(true);
-            camera.setNearClip(0.1);
-            camera.setFarClip(100000.0);
-            camera.setTranslateZ(-50);
-            camera.setVerticalFieldOfView(false);
-            camera.setFieldOfView(42);
+    private void buildSkybox() {
+        skyBox = new Skybox(
+                top,
+                bottom,
+                left,
+                right,
+                front,
+                back,
+                100000,
+                camera
+        );
+        skyBox.visibleProperty().bind(useSkybox);
+        root.getChildren().add(0, skyBox);
+    }
 
-            //setup camera transform for rotational support
-            cameraTransform.setTranslate(0, 0, 0);
-            cameraTransform.getChildren().add(camera);
-            cameraTransform.ry.setAngle(-45.0);
-            cameraTransform.rx.setAngle(-10.0);
+    private void buildCamera() {
+        cameraTransform = new CameraTransformer();
+        camera = new PerspectiveCamera(true);
+        camera.setNearClip(0.1);
+        camera.setFarClip(100000.0);
+        camera.setTranslateZ(-50);
+        camera.setVerticalFieldOfView(false);
+        camera.setFieldOfView(42);
 
-            //add a Point Light for better viewing of the grid coordinate system
-            PointLight light = new PointLight(Color.GAINSBORO);
-            AmbientLight amb = new AmbientLight(Color.WHITE);
-            amb.getScope().add(cameraTransform);
-            cameraTransform.getChildren().addAll(light);
+        //setup camera transform for rotational support
+        cameraTransform.setTranslate(0, 0, 0);
+        cameraTransform.getChildren().add(camera);
+        cameraTransform.ry.setAngle(-45.0);
+        cameraTransform.rx.setAngle(-10.0);
 
-            light.translateXProperty().bind(camera.translateXProperty());
-            light.translateYProperty().bind(camera.translateYProperty());
-            light.translateZProperty().bind(camera.translateZProperty());
+        //add a Point Light for better viewing of the grid coordinate system
+        final PointLight light = new PointLight(Color.GAINSBORO);
+        final AmbientLight amb = new AmbientLight(Color.WHITE);
+        amb.getScope().add(cameraTransform);
+        cameraTransform.getChildren().addAll(light);
 
-            //==========================================================
-            // Need a scene control panel to allow alterations to properties
-            sceneLight1 = new PointLight();
-            sceneLight1.setTranslateX(500);
+        light.translateXProperty().bind(camera.translateXProperty());
+        light.translateYProperty().bind(camera.translateYProperty());
+        light.translateZProperty().bind(camera.translateZProperty());
+    }
 
-            sceneLight2 = new PointLight();
-            sceneLight2.setTranslateX(-500);
+    private void buildSubScenePane() {
+        mainPane = new StackPane();
+        mainPane.setPrefSize(sceneWidth, sceneHeight);
+        mainPane.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
+        mainPane.setMinSize(sceneWidth, sceneHeight);
+        mainPane.getChildren().add(subScene);
+        mainPane.setPickOnBounds(false);
+        subScene.widthProperty().bind(mainPane.widthProperty());
+        subScene.heightProperty().bind(mainPane.heightProperty());
+    }
 
-            light1Group = new Group(sceneLight1);
-            light2Group = new Group(sceneLight2);
+    private void buildRootNode() {
+        //==========================================================
+        // Need a scene control panel to allow alterations to properties
+        sceneLight1 = new PointLight();
+        sceneLight1.setTranslateX(500);
 
-            lightingGroup = new Group(light1Group, light2Group);
-            //==========================================================
+        sceneLight2 = new PointLight();
+        sceneLight2.setTranslateX(-500);
 
-            root = new Group(lightingGroup);
+        light1Group = new Group(sceneLight1);
+        light2Group = new Group(sceneLight2);
 
-            sceneLight1.getScope().add(root);
-            sceneLight2.getScope().add(root);
+        lightingGroup = new Group(light1Group, light2Group);
+        //==========================================================
 
-            subScene = new SubScene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
-            subScene.setFill(Color.TRANSPARENT);//Color.web("#0d0d0d"));        
-            subScene.setCamera(camera);
-            subScene.setFocusTraversable(false);
+        root = new Group(lightingGroup);
 
-            rotateY = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+        sceneLight1.getScope().add(root);
+        sceneLight2.getScope().add(root);
+    }
 
-            mainPane = new StackPane();
-            mainPane.setPrefSize(sceneWidth, sceneHeight);
-            mainPane.setMaxSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
-            mainPane.setMinSize(sceneWidth, sceneHeight);
-            mainPane.getChildren().add(subScene);
-            mainPane.setPickOnBounds(false);
+    private void buildModelContainer() {
+        group = new Group();
+        group.getChildren().add(cameraTransform);
+        root.getChildren().add(group);
+    }
 
-            service = new Service<Void>() {
+    private void buildSubScene() {
 
-                @Override
-                protected Task<Void> createTask() {
-                    return new Task<Void>() {
+        subScene = new SubScene(root, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
+        subScene.setFill(Color.TRANSPARENT);//Color.web("#0d0d0d"));        
+        subScene.setCamera(camera);
+        subScene.setFocusTraversable(false);
 
-                        @Override
-                        protected Void call() throws Exception {
-                            createMesh();
-                            return null;
-                        }
+        //First person shooter keyboard movement 
+        subScene.setOnKeyPressed(event -> {
 
-                    };
+            double change = 10.0;
+            //Add shift modifier to simulate "Running Speed"
+            if (event.isShiftDown()) {
+                change = 50.0;
+            }
+            //What key did the user press?
+            KeyCode keycode = event.getCode();
+            //Step 2c: Add Zoom controls
+            if (keycode == KeyCode.W) {
+                camera.setTranslateZ(camera.getTranslateZ() + change);
+            }
+            if (keycode == KeyCode.S) {
+                camera.setTranslateZ(camera.getTranslateZ() - change);
+            }
+            //Step 2d:  Add Strafe controls
+            if (keycode == KeyCode.A) {
+                camera.setTranslateX(camera.getTranslateX() - change);
+            }
+            if (keycode == KeyCode.D) {
+                camera.setTranslateX(camera.getTranslateX() + change);
+            }
+
+        });
+
+        subScene.setOnMousePressed((MouseEvent me) -> {
+            mousePosX = me.getSceneX();
+            mousePosY = me.getSceneY();
+            mouseOldX = me.getSceneX();
+            mouseOldY = me.getSceneY();
+            PickResult pr = me.getPickResult();
+            if (pr != null && pr.getIntersectedNode() != null
+                    && pr.getIntersectedNode() instanceof Sphere
+                    && pr.getIntersectedNode().getId().equals("knot")) {
+                distance = pr.getIntersectedDistance();
+                s = (Sphere) pr.getIntersectedNode();
+                isPicking.set(true);
+                vecIni = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
+            }
+        });
+        subScene.setOnMouseDragged((MouseEvent me) -> {
+            mouseOldX = mousePosX;
+            mouseOldY = mousePosY;
+            mousePosX = me.getSceneX();
+            mousePosY = me.getSceneY();
+            mouseDeltaX = (mousePosX - mouseOldX);
+            mouseDeltaY = (mousePosY - mouseOldY);
+            if (isPicking.get()) {
+                double modifier = (me.isControlDown() ? 0.01 : me.isAltDown() ? 1.0 : 0.1) * (30d / camera.getFieldOfView());
+                modifier *= (30d / camera.getFieldOfView());
+                vecPos = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
+                Point3D p = new Point3D(distance * (vecPos.x - vecIni.x),
+                        distance * (vecPos.y - vecIni.y), distance * (vecPos.z - vecIni.z));
+                s.getTransforms().add(new Translate(modifier * p.getX(), modifier * p.getY(), modifier * p.getZ()));
+                vecIni = vecPos;
+
+            } else {
+
+                double modifier = 10.0;
+                double modifierFactor = 0.1;
+
+                if (me.isControlDown()) {
+                    modifier = 0.1;
                 }
-
-                @Override
-                protected void failed() {
-                    super.failed();
-                    getException().printStackTrace(System.err);
+                if (me.isShiftDown()) {
+                    modifier = 50.0;
                 }
-            };
+                if (me.isPrimaryButtonDown()) {
+                    cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + mouseDeltaX * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // +
+                    cameraTransform.rx.setAngle(((cameraTransform.rx.getAngle() - mouseDeltaY * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // -
+                } else if (me.isSecondaryButtonDown()) {
+                    double z = camera.getTranslateZ();
+                    double newZ = z + mouseDeltaX * modifierFactor * modifier;
+                    camera.setTranslateZ(newZ);
+                } else if (me.isMiddleButtonDown()) {
+                    cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3);  // -
+                    cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
+                }
+            }
+        });
+        subScene.setOnMouseReleased((MouseEvent me) -> {
+            if (isPicking.get()) {
+                isPicking.set(false);
+            }
+        });
 
-            progressBar = new ProgressBar();
-            progressBar.prefWidthProperty().bind(mainPane.widthProperty().divide(2d));
-            progressBar.setProgress(-1);
-            mainPane.getChildren().add(progressBar);
+    }
 
-            group = new Group();
-            group.getChildren().add(cameraTransform);
-            root.getChildren().add(group);
+    private void buildParentPane() {
+        parentPane = new HiddenSidesPane();
+        modelInfo = new ModelInfoTracker(parentPane);
 
-            service.setOnSucceeded(e -> {
-                onService.set(false);
-                System.out.println("time: " + (System.currentTimeMillis() - time));
+        parentPane.setContent(mainPane);
+        parentPane.setBottom(modelInfo);
+        parentPane.setTriggerDistance(20);
+        parentPane.setAnimationDelay(Duration.ONE);
+        parentPane.setPinnedSide(Side.BOTTOM);
+    }
+
+    private void loadSample() {
+        service = new Service<Void>() {
+
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+
+                    @Override
+                    protected Void call() throws Exception {
+                        createMesh();
+                        return null;
+                    }
+
+                };
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                getException().printStackTrace(System.err);
+            }
+
+            @Override
+            protected void succeeded() {
                 addMeshAndListeners();
                 mainPane.getChildren().remove(progressBar);
 
@@ -291,127 +402,57 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                             light1Group.rotateProperty(), light2Group.rotateProperty(),
                             light1Group.rotationAxisProperty(), light1Group.rotationAxisProperty()
                     ));
-                    exportButton = new Button("Export Mesh");  
+                    exportButton = new Button("Export Mesh");
                     exportButton.setFocusTraversable(false);
+                    exportButton.visibleProperty().addListener(l -> {
+                        if (exportButton.isVisible()) {
+                            if (exportButton.getParent() != null) {
+                                exportButton.setMinWidth(((VBox) exportButton.getParent()).getPrefWidth());
+                            }
+                        }
+                    });
                     //HBox expContainer = new HBox(exportButton);
                     //expContainer.setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);
                     //HBox.setHgrow(exportButton, Priority.ALWAYS);
-                    
-                    ((VBox)controlPanel).getChildren().add(exportButton);
+
+                    ((VBox) controlPanel).getChildren().add(exportButton);
                     ((ControlPanel) controlPanel).getPanes().get(0).setExpanded(true);
-                }
-            });
-            skyBox.visibleProperty().bind(useSkybox);
-            root.getChildren().add(0,skyBox);
-            
-            subScene.widthProperty().bind(mainPane.widthProperty());
-            subScene.heightProperty().bind(mainPane.heightProperty());
 
-            //First person shooter keyboard movement 
-            subScene.setOnKeyPressed(event -> {
-
-                double change = 10.0;
-                //Add shift modifier to simulate "Running Speed"
-                if (event.isShiftDown()) {
-                    change = 50.0;
-                }
-                //What key did the user press?
-                KeyCode keycode = event.getCode();
-                //Step 2c: Add Zoom controls
-                if (keycode == KeyCode.W) {
-                    camera.setTranslateZ(camera.getTranslateZ() + change);
-                }
-                if (keycode == KeyCode.S) {
-                    camera.setTranslateZ(camera.getTranslateZ() - change);
-                }
-                //Step 2d:  Add Strafe controls
-                if (keycode == KeyCode.A) {
-                    camera.setTranslateX(camera.getTranslateX() - change);
-                }
-                if (keycode == KeyCode.D) {
-                    camera.setTranslateX(camera.getTranslateX() + change);
-                }
-
-            });
-
-            subScene.setOnMousePressed((MouseEvent me) -> {
-                mousePosX = me.getSceneX();
-                mousePosY = me.getSceneY();
-                mouseOldX = me.getSceneX();
-                mouseOldY = me.getSceneY();
-                PickResult pr = me.getPickResult();
-                if (pr != null && pr.getIntersectedNode() != null
-                        && pr.getIntersectedNode() instanceof Sphere
-                        && pr.getIntersectedNode().getId().equals("knot")) {
-                    distance = pr.getIntersectedDistance();
-                    s = (Sphere) pr.getIntersectedNode();
-                    isPicking.set(true);
-                    vecIni = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
-                }
-            });
-            subScene.setOnMouseDragged((MouseEvent me) -> {
-                mouseOldX = mousePosX;
-                mouseOldY = mousePosY;
-                mousePosX = me.getSceneX();
-                mousePosY = me.getSceneY();
-                mouseDeltaX = (mousePosX - mouseOldX);
-                mouseDeltaY = (mousePosY - mouseOldY);
-                if (isPicking.get()) {
-                    double modifier = (me.isControlDown() ? 0.01 : me.isAltDown() ? 1.0 : 0.1) * (30d / camera.getFieldOfView());
-                    modifier *= (30d / camera.getFieldOfView());
-                    vecPos = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
-                    Point3D p = new Point3D(distance * (vecPos.x - vecIni.x),
-                            distance * (vecPos.y - vecIni.y), distance * (vecPos.z - vecIni.z));
-                    s.getTransforms().add(new Translate(modifier * p.getX(), modifier * p.getY(), modifier * p.getZ()));
-                    vecIni = vecPos;
-
-                } else {
-
-                    double modifier = 10.0;
-                    double modifierFactor = 0.1;
-
-                    if (me.isControlDown()) {
-                        modifier = 0.1;
+                    // setup model information
+                    modelInfo.getTimeToBuild().setText(String.valueOf(System.currentTimeMillis() - time));
+                    if (model instanceof Group) {
+                        modelInfo.getNodeCount().setText(String.valueOf(((Group) model).getChildren().filtered(t -> t instanceof Shape3D).size()));
+                        modelInfo.getPoints().setText("");
+                        modelInfo.getFaces().setText("");
+                    } else if (model instanceof Shape3D) {
+                        modelInfo.getNodeCount().setText("1");
+                        modelInfo.getPoints().textProperty().bind(((TexturedMesh) model).vertCountBinding());
+                        modelInfo.getFaces().textProperty().bind(((TexturedMesh) model).faceCountBinding());
+                        modelInfo.getBoundsWidth().textProperty().bind(((TexturedMesh) model).widthStringBinding());
+                        modelInfo.getBoundsHeight().textProperty().bind(((TexturedMesh) model).heightStringBinding());
+                        modelInfo.getBoundsDepth().textProperty().bind(((TexturedMesh) model).depthStringBinding());
                     }
-                    if (me.isShiftDown()) {
-                        modifier = 50.0;
-                    }
-                    if (me.isPrimaryButtonDown()) {
-                        cameraTransform.ry.setAngle(((cameraTransform.ry.getAngle() + mouseDeltaX * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // +
-                        cameraTransform.rx.setAngle(((cameraTransform.rx.getAngle() - mouseDeltaY * modifierFactor * modifier * 2.0) % 360 + 540) % 360 - 180);  // -
-                    } else if (me.isSecondaryButtonDown()) {
-                        double z = camera.getTranslateZ();
-                        double newZ = z + mouseDeltaX * modifierFactor * modifier;
-                        camera.setTranslateZ(newZ);
-                    } else if (me.isMiddleButtonDown()) {
-                        cameraTransform.t.setX(cameraTransform.t.getX() + mouseDeltaX * modifierFactor * modifier * 0.3);  // -
-                        cameraTransform.t.setY(cameraTransform.t.getY() + mouseDeltaY * modifierFactor * modifier * 0.3);  // -
-                    }
-                }
-            });
-            subScene.setOnMouseReleased((MouseEvent me) -> {
-                if (isPicking.get()) {
-                    isPicking.set(false);
-                }
-            });
 
-            onService.set(true);
-            System.out.println("start");
-            time = System.currentTimeMillis();
-            service.start();
-        }
+                    modelInfo.getSampleTitle().setText(getSampleName());
+
+                }
+            }
+        };
+        service.setExecutor(serviceExecutor);
+        time = System.currentTimeMillis();
+        service.start();
+    }
+
+    @Override
+    public Node getSample() {
+        loadSample();
         
-        modelInfo = new ModelInfoTracker(hiddenSides);
-        
-        hiddenSides.setContent(mainPane);
-        hiddenSides.setBottom(modelInfo);
-        hiddenSides.setTriggerDistance(20);    
-        hiddenSides.setAnimationDelay(Duration.ONE);
-        hiddenSides.setPinnedSide(Side.BOTTOM);
-        
-        //mainPane.sceneProperty().addListener(l -> {          });
-        //mainPane.getChildren().add(sceneControls);
-        return hiddenSides;
+        progressBar = new ProgressBar();
+        progressBar.setPrefSize(mainPane.getPrefWidth() * 0.5, USE_PREF_SIZE);
+        progressBar.setProgress(-1);
+        mainPane.getChildren().add(progressBar);
+
+        return parentPane;
     }
 
     protected BooleanProperty pickingProperty() {
@@ -438,10 +479,9 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         throw new IllegalArgumentException("Parent " + parent + " doesn't contain node with id " + id);
     }
 
-    protected final Property<DrawMode> drawMode = new SimpleObjectProperty<DrawMode>(model, "drawMode", DrawMode.FILL) {
-    };
-    protected final Property<CullFace> culling = new SimpleObjectProperty<CullFace>(model, "culling", CullFace.BACK) {
-    };
+    protected Scene getScene() {
+        return subScene.getScene();
+    }
 
     /*
      From fx83dfeatures.Camera3D

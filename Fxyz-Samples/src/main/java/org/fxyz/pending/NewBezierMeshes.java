@@ -53,8 +53,8 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.geometry.Point3D;
+import org.fxyz.samples.shapes.ShapeBaseSample;
 import org.fxyz.shapes.primitives.BezierMesh;
 import org.fxyz.shapes.primitives.helper.BezierHelper;
 import org.fxyz.shapes.primitives.helper.InterpolateBezier;
@@ -244,10 +244,6 @@ public class NewBezierMeshes extends ShapeBaseSample {
         //timerEffect.start();
     }
 
-    @Override
-    public String getSampleName() {
-        return getClass().getSimpleName().concat(" Sample");
-    }
 
     @Override
     public Node getControlPanel() {

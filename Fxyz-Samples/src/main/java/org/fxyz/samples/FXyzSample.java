@@ -29,12 +29,31 @@
 
 package org.fxyz.samples;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.fxyz.FXyzSampleBase;
+import org.fxyz.samples.utilities.SkyBoxing;
+import org.fxyz.scene.Skybox;
 
 public abstract class FXyzSample extends FXyzSampleBase {
 
+    
+    protected final ThreadFactory threadFactory;
+    public static ExecutorService serviceExecutor;
+    
+    protected final Image top = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/top.png").toExternalForm()),
+            bottom = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/bottom.png").toExternalForm()),
+            left = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/left.png").toExternalForm()),
+            right = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/right.png").toExternalForm()),
+            front = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/front.png").toExternalForm()),
+            back = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/back.png").toExternalForm());
+
+    protected Skybox skyBox;
+    
     protected double mousePosX;
     protected double mousePosY;
     protected double mouseOldX;
@@ -43,6 +62,13 @@ public abstract class FXyzSample extends FXyzSampleBase {
     protected double mouseDeltaY;
     
     protected Node controlPanel;
+    
+    public FXyzSample(){
+        threadFactory = new SampleThreadFactory(getSampleName());
+        if(serviceExecutor == null){
+            serviceExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), threadFactory);
+        }
+    }
     
     @Override
     public String getProjectName() {
@@ -62,7 +88,7 @@ public abstract class FXyzSample extends FXyzSampleBase {
     }
     
     @Override
-    public String getSampleName() {
+    public final String getSampleName() {
         String name = getClass().toGenericString();
         return name.substring(name.lastIndexOf(".") + 1, name.length());
     }
@@ -89,5 +115,27 @@ public abstract class FXyzSample extends FXyzSampleBase {
     public Node getControlPanel() {
         return controlPanel;       
     }
+
+    public static ExecutorService getServiceExecutor() {
+        return serviceExecutor;
+    }
+            
+    static class SampleThreadFactory implements ThreadFactory{
+        final String name;
+        public SampleThreadFactory(String name) {
+            this.name = name;
+        }
+        
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            t.setName(name);
+            t.setPriority(Thread.NORM_PRIORITY + 1);
+            return t;
+        }    
+    }
+    
+    
     
 }

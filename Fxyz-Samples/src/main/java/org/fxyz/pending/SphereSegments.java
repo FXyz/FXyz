@@ -213,10 +213,6 @@ public class SphereSegments extends FXyzSample {
         return (sp);
     }
 
-    @Override
-    public String getSampleName() {
-        return getClass().getSimpleName().concat(" Sample");
-    }
 
     @Override
     public Node getPanel(Stage stage) {

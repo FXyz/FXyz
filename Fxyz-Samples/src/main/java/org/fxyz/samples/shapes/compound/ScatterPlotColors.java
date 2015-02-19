@@ -179,11 +179,6 @@ public class ScatterPlotColors extends FXyzSample {
     }
 
     @Override
-    public String getSampleName() {
-        return getClass().getSimpleName().concat(" Sample");
-    }
-
-    @Override
     public Node getPanel(Stage stage) {
         return getSample();
     }
