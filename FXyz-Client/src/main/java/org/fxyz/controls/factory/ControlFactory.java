@@ -118,7 +118,7 @@ public final class ControlFactory {
 
     public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p,
             final Property<Number> clrs, final Property<Boolean> uDiffMap, final Property<Image> imgP,
-            final Property<Patterns.CarbonPatterns> patt, final Property<Number> pScale, final Property<Function<Point3D, Number>> densFunc,
+            final Property<CarbonPatterns> patt, final Property<Number> pScale, final Property<Function<Point3D, Number>> densFunc,
             final Property<Function<Number, Number>> funcFunc) {
         return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()),
                 clrs, uDiffMap, imgP, patt, pScale, densFunc, funcFunc);
