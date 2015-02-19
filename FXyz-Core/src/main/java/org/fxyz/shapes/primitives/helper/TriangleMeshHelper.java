@@ -111,7 +111,7 @@ public class TriangleMeshHelper {
                 density=DEFAULT_DENSITY_FUNCTION;        
                 break;
             case PATTERN: 
-                createPattern();
+                createCarbonPattern();
                 break;
         }
     }
@@ -121,7 +121,8 @@ public class TriangleMeshHelper {
     /*
     Patterns
     */
-    public static final double DEFAULT_PATTERN_SCALE = 0d;
+    public static final double DEFAULT_PATTERN_SCALE = 1d;
+    public static final CarbonPatterns DEFAULT_CARBON_PATTERN = CarbonPatterns.DARK_CARBON;
     public static final int DEFAULT_WIDTH =  12;
     public static final int DEFAULT_HEIGHT = 12;
     public final static boolean DEFAULT_SAVE_PATTERN = false;
@@ -129,20 +130,14 @@ public class TriangleMeshHelper {
     private int patternWidth;
     private int patternHeight;
     
-    public final void createPattern(){
-        createPattern(DEFAULT_WIDTH,DEFAULT_HEIGHT,DEFAULT_SAVE_PATTERN);
+    public final void createCarbonPattern(){
+        createCarbonPattern(DEFAULT_CARBON_PATTERN,DEFAULT_WIDTH,DEFAULT_HEIGHT,DEFAULT_SAVE_PATTERN);
     }
     public final void createCarbonPattern(CarbonPatterns cp){
         createCarbonPattern(cp,DEFAULT_WIDTH,DEFAULT_HEIGHT,DEFAULT_SAVE_PATTERN);
     }
-    public void createPattern(boolean save){
-        createPattern(DEFAULT_WIDTH,DEFAULT_HEIGHT,save);
-    }
-    public void createPattern(int width, int height, boolean save){
-        this.patternWidth=width;
-        this.patternHeight=height;
-        patterns=new Patterns(width,height);
-        patterns.createPattern(save);
+    public void createCarbonPattern(boolean save){
+        createCarbonPattern(DEFAULT_CARBON_PATTERN,DEFAULT_WIDTH,DEFAULT_HEIGHT,save);
     }
     public void createCarbonPattern(CarbonPatterns cp, int width, int height, boolean save){
         this.patternWidth=width;
@@ -151,23 +146,14 @@ public class TriangleMeshHelper {
         patterns.createPattern(cp, save);
     }
     public Image getPatternImage() {
-        if(patterns==null){
-            createPattern();
-        }
-        return patterns.getPatternImage();
+        return getPatternImage(DEFAULT_CARBON_PATTERN);
     }
     public Image getPatternImage(CarbonPatterns cp) {
-        if(patterns==null){
-            createCarbonPattern(cp);
-        }
+        createCarbonPattern(cp);
         return patterns.getPatternImage();
     }
     public Material getMaterialWithPattern(){
-        PhongMaterial mat = new PhongMaterial();
-        Image img = getPatternImage();
-        mat.setDiffuseMap(img);
-        //mat.setBumpMap(new NormalMap(27,9,false,img));
-        return mat;
+        return getMaterialWithPattern(DEFAULT_CARBON_PATTERN);
     }
     public Material getMaterialWithPattern(CarbonPatterns cp){
         PhongMaterial mat = new PhongMaterial();
@@ -295,14 +281,14 @@ public class TriangleMeshHelper {
     }
     
     public void updateExtremesByFunction(List<Point3D> points){
-        max=points.parallelStream().mapToDouble(p->function.apply(new Double(p.f)).doubleValue()).max().orElse(1.0);
-        min=points.parallelStream().mapToDouble(p->function.apply(new Double(p.f)).doubleValue()).min().orElse(0.0);
+        max=points.parallelStream().mapToDouble(p->function.apply((double) p.f).doubleValue()).max().orElse(1.0);
+        min=points.parallelStream().mapToDouble(p->function.apply((double) p.f).doubleValue()).min().orElse(0.0);
         max=(float)Math.round(max*1e6)/1e6;
         min=(float)Math.round(min*1e6)/1e6;
         if(max==min){
             max=1.0+min;
         }
-        System.out.println("Min: "+min+", max: "+max);  
+//        System.out.println("Min: "+min+", max: "+max);  
     }
     /*
     image
@@ -413,8 +399,8 @@ public class TriangleMeshHelper {
         if(faces.size()>textures.size()){
             return null;
         }
-        AtomicInteger count=new AtomicInteger();
-        return faces.stream().map(f->f.getFace(textures.get(count.getAndIncrement()))).flatMapToInt(i->i).toArray();
+        return IntStream.range(0,faces.size())
+                .boxed().map(i->faces.get(i).getFace(textures.get(i))).flatMapToInt(i->i).toArray();
     }
     
     public int[] updateFacesWithDensityMap(List<Point3D> points, List<Face3> faces){
@@ -438,8 +424,9 @@ public class TriangleMeshHelper {
     }
     
     public int[] updateFacesWithFaces(List<Face3> faces){
-        AtomicInteger count=new AtomicInteger();
-        return faces.stream().map(f->f.getFace(mapFaces(count.getAndIncrement(),faces.size()))).flatMapToInt(i->i).toArray();
+        return IntStream.range(0,faces.size())
+                .boxed().map(i->faces.get(i).getFace(mapFaces(i,faces.size())))
+                .flatMapToInt(i->i).toArray();
     }
     /*
     utils

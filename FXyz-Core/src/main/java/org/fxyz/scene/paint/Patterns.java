@@ -64,15 +64,7 @@ public class Patterns {
     }
 
     public Image createPattern(boolean save) {
-        ImagePattern pattern = createCarbonPattern();
-        Rectangle rectangle = new Rectangle(width, height);
-        rectangle.setFill(pattern);
-        rectangle.setStrokeWidth(0);
-        imgPattern = rectangle.snapshot(new SnapshotParameters(), null);
-        if (save) {
-            saveImage();
-        }
-        return imgPattern;
+        return createPattern(CarbonPatterns.DARK_CARBON, save);
     }
 
     public Image createPattern(CarbonPatterns cp, boolean save) {
@@ -242,8 +234,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(38, 38, 38)),
-                new Stop(1, Color.rgb(30, 30, 30))));
+                new Stop(0, Color.rgb(138, 138, 138)),
+                new Stop(1, Color.rgb(130, 130, 130))));
         CTX.fill();
 
         CTX.beginPath();
@@ -253,8 +245,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.416666 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(42, 42, 42)),
-                new Stop(1, Color.rgb(30, 30, 30))));
+                new Stop(0, Color.rgb(142, 142, 142)),
+                new Stop(1, Color.rgb(130, 130, 130))));
         CTX.fill();
 
         CTX.beginPath();
@@ -264,8 +256,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(38, 38, 38)),
-                new Stop(1, Color.rgb(30, 30, 30))));
+                new Stop(0, Color.rgb(138, 138, 138)),
+                new Stop(1, Color.rgb(130, 130, 130))));
         CTX.fill();
 
         CTX.beginPath();
@@ -275,8 +267,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.416666 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(42, 42, 42)),
-                new Stop(1, Color.rgb(30, 30, 30))));
+                new Stop(0, Color.rgb(142, 142, 142)),
+                new Stop(1, Color.rgb(130, 130, 130))));
         CTX.fill();
 
         CTX.beginPath();
@@ -286,8 +278,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(52, 52, 52)),
-                new Stop(1, Color.rgb(46, 46, 46))));
+                new Stop(0, Color.rgb(152, 152, 152)),
+                new Stop(1, Color.rgb(146, 146, 146))));
         CTX.fill();
 
         CTX.beginPath();
@@ -297,8 +289,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.416666 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(60, 60, 60)),
-                new Stop(1, Color.rgb(52, 52, 52))));
+                new Stop(0, Color.rgb(160, 160, 160)),
+                new Stop(1, Color.rgb(152, 152, 152))));
         CTX.fill();
 
         CTX.beginPath();
@@ -308,8 +300,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(52, 52, 52)),
-                new Stop(1, Color.rgb(46, 46, 46))));
+                new Stop(0, Color.rgb(152, 152, 152)),
+                new Stop(1, Color.rgb(146, 146, 146))));
         CTX.fill();
 
         CTX.beginPath();
@@ -319,8 +311,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.416666 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(60, 60, 60)),
-                new Stop(1, Color.rgb(52, 52, 52))));
+                new Stop(0, Color.rgb(160, 160, 160)),
+                new Stop(1, Color.rgb(152, 152, 152))));
         CTX.fill();
 
         final Image PATTERN_IMAGE = CANVAS.snapshot(new SnapshotParameters(), null);

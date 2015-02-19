@@ -38,7 +38,6 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
 import org.fxyz.geometry.Face3;
-import org.fxyz.geometry.Point3D;
 import org.fxyz.shapes.primitives.helper.CurvedSpringHelper;
 
 /**
@@ -77,15 +76,15 @@ public class CurvedSpringMesh extends TexturedMesh {
     }
 
     public CurvedSpringMesh(double majorRadius, double minorRadius, double wireRadius, double pitch, double length, 
-                      int rDivs, int tDivs, int lengthCrop, int wireCrop) {
+                      int lengthDivisions, int wireDivisions, int lengthCrop, int wireCrop) {
         
         setMajorRadius(majorRadius);
         setMinorRadius(minorRadius);
         setWireRadius(wireRadius);
         setPitch(pitch);
         setLength(length);
-        setLengthDivisions(rDivs);
-        setWireDivisions(tDivs);
+        setLengthDivisions(lengthDivisions);
+        setWireDivisions(wireDivisions);
         setLengthCrop(lengthCrop);
         setWireCrop(wireCrop);
         
@@ -388,9 +387,7 @@ public class CurvedSpringMesh extends TexturedMesh {
         listTextures.clear();
         listFaces.clear();
         
-        int numDivLength = subDivLength + 1-2*cropLength;
         int numDivWire = subDivWire + 1-2*cropWire;
-        float pointX, pointY, pointZ;
         double arc=length/pitch;
         double a=wireRadius;
         

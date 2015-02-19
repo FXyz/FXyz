@@ -45,7 +45,6 @@ import javafx.util.Callback;
 import org.fxyz.geometry.Face3;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Patterns.CarbonPatterns;
-import static org.fxyz.scene.paint.Patterns.CarbonPatterns.DARK_CARBON;
 import org.fxyz.shapes.primitives.helper.MeshHelper;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLORS;
@@ -85,33 +84,14 @@ public abstract class TexturedMesh extends MeshView {
     protected TexturedMesh() {
         sectionType.set(SectionType.CIRCLE);
         textureType.set(TextureType.NONE);
+        carbonPatterns.set(CarbonPatterns.DARK_CARBON);
         textureType.addListener((ob, o, o1) -> {
             if (mesh != null) {
-                updateTexture();
-                updateTextureOnFaces();
+//                updateTexture();
+//                updateTextureOnFaces();
             }
         });
     }
-    
-    private final ObjectProperty<CarbonPatterns> carbonPatterns = new SimpleObjectProperty<CarbonPatterns>(DARK_CARBON){
-        @Override
-        protected void invalidated() {
-            if (mesh != null) {
-                setMaterial(helper.getMaterialWithPattern(get()));
-            }
-        }
-    };
-    public final CarbonPatterns getCarbonPattern(){
-        return carbonPatterns.get();
-    }
-    public final void setCarbonPattern(CarbonPatterns cp){
-        carbonPatterns.set(cp);
-    }
-
-    public ObjectProperty<CarbonPatterns> getCarbonPatterns() {
-        return carbonPatterns;
-    }
-    
     
     private final ObjectProperty<SectionType> sectionType = new SimpleObjectProperty<SectionType>() {
 
@@ -136,7 +116,16 @@ public abstract class TexturedMesh extends MeshView {
         return sectionType;
     }
 
-    private final ObjectProperty<TextureType> textureType = new SimpleObjectProperty<TextureType>();
+    private final ObjectProperty<TextureType> textureType = new SimpleObjectProperty<TextureType>(){
+        @Override
+        protected void invalidated() {
+            if(mesh!=null){
+//                updateMesh();
+                updateTexture();
+                updateTextureOnFaces();
+            }
+        }
+    };
 
     public void setTextureModeNone() {
         setTextureModeNone(Color.WHITE);
@@ -158,31 +147,36 @@ public abstract class TexturedMesh extends MeshView {
         }
     }
 
-    public void setTextureModePattern(double scale) {
+    public void setTextureModePattern(CarbonPatterns pattern, double scale) {
         helper.setTextureType(TextureType.PATTERN);
+        carbonPatterns.set(pattern);
+        setMaterial(helper.getMaterialWithPattern(pattern));
         patternScale.set(scale);
-        
-        setMaterial(helper.getMaterialWithPattern(carbonPatterns.get()));
         setTextureType(helper.getTextureType());
     }
 
     public void setTextureModeVertices3D(int colors, Function<Point3D, Number> dens) {
         helper.setTextureType(TextureType.COLORED_VERTICES_3D);
         setColors(colors);
-        setDensity(dens);
+        createPalette(getColors());
+        setDensity(dens); 
+        helper.setDensity(dens);
         setTextureType(helper.getTextureType());
     }
 
     public void setTextureModeVertices1D(int colors, Function<Number, Number> function) {
         helper.setTextureType(TextureType.COLORED_VERTICES_1D);
         setColors(colors);
-        setFunction(function);
+        createPalette(getColors());
+        setFunction(function); 
+        helper.setFunction(function);
         setTextureType(helper.getTextureType());
     }
 
     public void setTextureModeFaces(int colors) {
         helper.setTextureType(TextureType.COLORED_FACES);
         setColors(colors);
+        createPalette(getColors());
         setTextureType(helper.getTextureType());
     }
 
@@ -219,6 +213,23 @@ public abstract class TexturedMesh extends MeshView {
         return patternScale;
     }
 
+    private final ObjectProperty<CarbonPatterns> carbonPatterns = new SimpleObjectProperty<CarbonPatterns>(CarbonPatterns.DARK_CARBON){
+        @Override
+        protected void invalidated() {
+            setMaterial(helper.getMaterialWithPattern(get()));
+        }
+    };
+    public final CarbonPatterns getCarbonPattern(){
+        return carbonPatterns.get();
+    }
+    public final void setCarbonPattern(CarbonPatterns cp){
+        carbonPatterns.set(cp);
+    }
+
+    public ObjectProperty<CarbonPatterns> getCarbonPatterns() {
+        return carbonPatterns;
+    }
+    
     private final ObjectProperty<Color> diffuseColor = new SimpleObjectProperty<Color>(DEFAULT_DIFFUSE_COLOR) {
 
         @Override
@@ -244,8 +255,8 @@ public abstract class TexturedMesh extends MeshView {
         @Override
         protected void invalidated() {
             createPalette(getColors());
-            updateTexture();
-            updateTextureOnFaces();
+//            updateTexture();
+//            updateTextureOnFaces();
         }
     };
 

@@ -88,7 +88,6 @@ public class IcosahedronMesh extends TexturedMesh {
         @Override
         protected void invalidated() {
             if(mesh!=null){
-                System.out.println("d: "+get());
                 updateMesh();
                 //updateVertices(f1.floatValue()/f0.floatValue());
             }
