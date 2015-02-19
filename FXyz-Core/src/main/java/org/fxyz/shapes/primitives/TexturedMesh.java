@@ -44,6 +44,8 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.util.Callback;
 import org.fxyz.geometry.Face3;
 import org.fxyz.geometry.Point3D;
+import org.fxyz.scene.paint.Patterns.CarbonPatterns;
+import static org.fxyz.scene.paint.Patterns.CarbonPatterns.DARK_CARBON;
 import org.fxyz.shapes.primitives.helper.MeshHelper;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLORS;
@@ -90,6 +92,27 @@ public abstract class TexturedMesh extends MeshView {
             }
         });
     }
+    
+    private final ObjectProperty<CarbonPatterns> carbonPatterns = new SimpleObjectProperty<CarbonPatterns>(DARK_CARBON){
+        @Override
+        protected void invalidated() {
+            if (mesh != null) {
+                setMaterial(helper.getMaterialWithPattern(get()));
+            }
+        }
+    };
+    public final CarbonPatterns getCarbonPattern(){
+        return carbonPatterns.get();
+    }
+    public final void setCarbonPattern(CarbonPatterns cp){
+        carbonPatterns.set(cp);
+    }
+
+    public ObjectProperty<CarbonPatterns> getCarbonPatterns() {
+        return carbonPatterns;
+    }
+    
+    
     private final ObjectProperty<SectionType> sectionType = new SimpleObjectProperty<SectionType>() {
 
         @Override
@@ -138,7 +161,8 @@ public abstract class TexturedMesh extends MeshView {
     public void setTextureModePattern(double scale) {
         helper.setTextureType(TextureType.PATTERN);
         patternScale.set(scale);
-        setMaterial(helper.getMaterialWithPattern());
+        
+        setMaterial(helper.getMaterialWithPattern(carbonPatterns.get()));
         setTextureType(helper.getTextureType());
     }
 

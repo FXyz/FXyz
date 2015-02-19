@@ -29,11 +29,9 @@
 
 package org.fxyz.samples.shapes.texturedmeshes;
 
-import com.sun.javafx.geom.Vec3d;
 import java.util.List;
 import java.util.stream.Collectors;
 import static javafx.application.Application.launch;
-import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -46,7 +44,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Affine;
 import javafx.scene.transform.Translate;
 import org.fxyz.controls.CheckBoxControl;
 import org.fxyz.controls.ControlCategory;
@@ -224,7 +221,7 @@ public class Prisms extends TexturedMeshSample{
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
                         this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), 
-                        this.pattScale, this.dens, this.func)
+                        this.patterns, this.pattScale, this.dens, this.func)
         );
         
         return this.controlPanel;

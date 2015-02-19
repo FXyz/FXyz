@@ -296,7 +296,7 @@ public class Knots extends TexturedMeshSample {
                         this.textureType, this.colors,
                         this.sectionType, this.useDiffMap,
                         this.material.diffuseMapProperty(), 
-                        this.pattScale, this.dens, this.func
+                        this.patterns, this.pattScale, this.dens, this.func
                 )
         );
 

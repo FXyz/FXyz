@@ -169,6 +169,13 @@ public class TriangleMeshHelper {
         //mat.setBumpMap(new NormalMap(27,9,false,img));
         return mat;
     }
+    public Material getMaterialWithPattern(CarbonPatterns cp){
+        PhongMaterial mat = new PhongMaterial();
+        Image img = getPatternImage(cp);  
+        mat.setDiffuseMap(img);
+        //mat.setBumpMap(new NormalMap(27,9,false,img));
+        return mat;
+    }
     
     /*
     Colors, palette

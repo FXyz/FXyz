@@ -220,7 +220,7 @@ public class CurvedSpring extends TexturedMeshSample {
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType, 
                         this.colors, this.sectionType, this.useDiffMap, 
-                        this.material.diffuseMapProperty(), this.pattScale, 
+                        this.material.diffuseMapProperty(), this.patterns, this.pattScale, 
                         this.dens, this.func)
         );
         

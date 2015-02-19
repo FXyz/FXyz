@@ -37,6 +37,7 @@ import javafx.scene.image.Image;
 import org.fxmisc.easybind.EasyBind;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.Point3D;
+import org.fxyz.scene.paint.Patterns.CarbonPatterns;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
@@ -49,27 +50,31 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
     protected ImagePreviewControl diffMapControl;
     protected FileLoadControl imgLoader;
     protected NumberSliderControl patternScaler;
+    protected ComboBoxControl patternChooser;
     protected ScriptFunction3DControl densFunct;
     protected ScriptFunction1DControl funcFunct;
     
-    private final BooleanBinding  useColorSlider, useImage, usePatternScaler , useDensScriptor, useFuncScriptor;
+    private final BooleanBinding  useColorSlider, useImage, usePatternScaler , useDensScriptor, useFuncScriptor, usePatternChooser;
     
     public TextureTypeControl(String lbl, Property<TextureType> type, Collection<TextureType> items,
             final Property<Number> colors,
             final Property<Boolean> udm,
             final Property<Image> dmp,
+            final Property<CarbonPatterns> patt,
             final Property<Number> pScale,
             final Property<Function<Point3D,Number>> densFunc,
             final Property<Function<Number,Number>> funcFunc
     ) {
         super(lbl, type, items, true);
-        buildSubControls(colors, udm, dmp, pScale, densFunc, funcFunc);
+        buildSubControls(colors, udm, dmp, pScale, patt, densFunc, funcFunc);
         this.useColorSlider = selection.valueProperty().isEqualTo(TextureType.NONE);
         this.useImage = selection.valueProperty().isEqualTo(TextureType.IMAGE);
         this.usePatternScaler = selection.valueProperty().isEqualTo(TextureType.PATTERN);   
         this.useDensScriptor = selection.valueProperty().isEqualTo(TextureType.COLORED_VERTICES_3D);
         this.useFuncScriptor = selection.valueProperty().isEqualTo(TextureType.COLORED_VERTICES_1D);
+        this.usePatternChooser = selection.valueProperty().isEqualTo(TextureType.PATTERN);
                 
+        EasyBind.includeWhen(subControls.getChildren(), patternChooser, usePatternChooser);
         EasyBind.includeWhen(subControls.getChildren(), colorSlider, useColorSlider);
         EasyBind.includeWhen(subControls.getChildren(), diffMapControl, useImage);
         EasyBind.includeWhen(subControls.getChildren(), imgLoader, useImage);
@@ -88,6 +93,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             final Property<Boolean> udm, 
             final Property<Image> img, 
             final Property<Number> pScale, 
+            final Property<CarbonPatterns> patt,
             final Property<Function<Point3D,Number>> densFunc,
             final Property<Function<Number,Number>> funcFunc
     ) {
@@ -95,6 +101,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         diffMapControl = ControlFactory.buildImageViewToggle(udm, img, "Diffuse Map Image:");
         imgLoader = new FileLoadControl();
         patternScaler = ControlFactory.buildNumberSlider(pScale, 1, 100);
+        patternChooser = ControlFactory.buildPatternChooser(patt);
         densFunct = ControlFactory.buildScriptFunction3DControl(densFunc);
         funcFunct = ControlFactory.buildScriptFunction1DControl(funcFunc);
     }

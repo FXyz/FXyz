@@ -57,6 +57,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
 
     
     //specific
+        
     protected final Property<TriangleMeshHelper.SectionType> sectionType = new SimpleObjectProperty<TriangleMeshHelper.SectionType>(model, "secType", TriangleMeshHelper.SectionType.CIRCLE) {
         @Override
         protected void invalidated() {
@@ -139,12 +140,12 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             }
         }
     };
-    
     protected final ObjectProperty<CarbonPatterns> patterns = new SimpleObjectProperty<CarbonPatterns>(){
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
+                model.setCarbonPattern(patterns.getValue());
                 model.setPatternScale(pattScale.doubleValue());
             }
         }

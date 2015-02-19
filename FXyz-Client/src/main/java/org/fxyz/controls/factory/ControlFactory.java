@@ -52,6 +52,8 @@ import org.fxyz.controls.ScriptFunction3DControl;
 import org.fxyz.controls.SectionLabel;
 import org.fxyz.controls.TextureTypeControl;
 import org.fxyz.geometry.Point3D;
+import org.fxyz.scene.paint.Patterns;
+import org.fxyz.scene.paint.Patterns.CarbonPatterns;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
@@ -116,10 +118,14 @@ public final class ControlFactory {
 
     public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p,
             final Property<Number> clrs, final Property<Boolean> uDiffMap, final Property<Image> imgP,
-            final Property<Number> pScale, final Property<Function<Point3D, Number>> densFunc,
+            final Property<Patterns.CarbonPatterns> patt, final Property<Number> pScale, final Property<Function<Point3D, Number>> densFunc,
             final Property<Function<Number, Number>> funcFunc) {
         return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()),
-                clrs, uDiffMap, imgP, pScale, densFunc, funcFunc);
+                clrs, uDiffMap, imgP, patt, pScale, densFunc, funcFunc);
+    }
+    
+    public static final ComboBoxControl buildPatternChooser(final Property<CarbonPatterns> p) {
+        return new ComboBoxControl("Carbon Patterns: ", p, Arrays.asList(CarbonPatterns.values()), false);
     }
 
     public static final ComboBoxControl<SectionType> buildSectionTypeControl(final Property<SectionType> p) {
@@ -185,13 +191,14 @@ public final class ControlFactory {
             final Property<SectionType> stp,
             final Property<Boolean> uDiffMap,
             final Property<Image> imgP,
+            final Property<Patterns.CarbonPatterns> patt,
             final Property<Number> pScale,
             final Property<Function<Point3D, Number>> densFunc,
             final Property<Function<Number, Number>> funcFunc
     ) {
 
         final TextureTypeControl texType = buildTextureTypeControl(
-                ttp, cp, uDiffMap, imgP, pScale, densFunc, funcFunc);
+                ttp, cp, uDiffMap, imgP, patt, pScale, densFunc, funcFunc);
 
         final ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(

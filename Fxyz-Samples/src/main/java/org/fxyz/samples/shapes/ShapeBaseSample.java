@@ -391,6 +391,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 };
             }
 
+            
+            
             @Override
             protected void failed() {
                 super.failed();
