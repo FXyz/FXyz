@@ -46,6 +46,7 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.fxyz.geometry.Point3D;
+import org.fxyz.scene.paint.Patterns;
 import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
 
@@ -76,7 +77,7 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
                                 s.setTextureModeImage(diffMapPath.get());
                                 break;
                             case PATTERN:
-                                s.setTextureModePattern(pattScale.getValue());
+                                s.setTextureModePattern(patterns.get(), pattScale.getValue());
                                 break;
                             case COLORED_VERTICES_1D:
                                 s.setTextureModeVertices1D(1540, func.getValue());
@@ -110,6 +111,17 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
                     .forEach(s->{
                         if(s.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
                             s.setPatternScale(p1.doubleValue());
+                        }
+                    });
+            }
+        });
+        patterns.addListener((obs,c0,c1)->{
+            if (model != null){
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
+                    .forEach(s->{
+                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
+                            s.setCarbonPattern(c1);
                         }
                     });
             }
@@ -182,6 +194,7 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
      TriangleMeshHelper.TextureType.PATTERN 
     */
     protected final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 2.0d) {};
+    protected final ObjectProperty<Patterns.CarbonPatterns> patterns = new SimpleObjectProperty<Patterns.CarbonPatterns>(Patterns.CarbonPatterns.DARK_CARBON){};
     
     /*
      TriangleMeshHelper.TextureType.COLORED_VERTICES_3D 

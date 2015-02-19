@@ -45,8 +45,10 @@ import org.fxyz.shapes.primitives.IcosahedronMesh;
  * @author jpereda
  */
 public class Icosahedron extends TexturedMeshSample {
-    public static void main(String[] args){Icosahedron.launch(args);}
     
+    public static void main(String[] args){
+        Icosahedron.launch(args);
+    }
     private final DoubleProperty diameter = new SimpleDoubleProperty(model, "Diameter", 10d) {
         @Override
         protected void invalidated() {
@@ -70,7 +72,6 @@ public class Icosahedron extends TexturedMeshSample {
     public void createMesh() {
         model = new IcosahedronMesh(diameter.floatValue(),level.get());
 //        model.setTextureModeNone(Color.ROYALBLUE);
-//        model.setTextureModeVertices3D(1530,p->p.x);
     }
     
     @Override
@@ -80,9 +81,9 @@ public class Icosahedron extends TexturedMeshSample {
     @Override
     protected Node buildControlPanel() {
         NumberSliderControl diameterSlider = ControlFactory.buildNumberSlider(this.diameter, .01D, 200D);
-        diameterSlider.getSlider().setMinorTickCount(10);
-        diameterSlider.getSlider().setMajorTickUnit(0.5);
-        diameterSlider.getSlider().setBlockIncrement(0.01d);
+        diameterSlider.getSlider().setMinorTickCount(4);
+        diameterSlider.getSlider().setMajorTickUnit(25);
+        diameterSlider.getSlider().setBlockIncrement(1d);
         
         NumberSliderControl levelSlider = ControlFactory.buildNumberSlider(this.level, 0, 8);
         levelSlider.getSlider().setMinorTickCount(0);

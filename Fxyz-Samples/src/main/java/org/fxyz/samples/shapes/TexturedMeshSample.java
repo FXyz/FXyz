@@ -80,16 +80,16 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                         model.setTextureModeImage(diffMapPath.get());
                         break;
                     case PATTERN:
-                        model.setTextureModePattern(pattScale.getValue());
+                        model.setTextureModePattern(patterns.get(),pattScale.getValue());
                         break;
                     case COLORED_VERTICES_1D:
-                        model.setTextureModeVertices1D(1540, func.getValue());
+                        model.setTextureModeVertices1D(1530, func.getValue());
                         break;
                     case COLORED_VERTICES_3D:
-                        model.setTextureModeVertices3D(1600, dens.getValue());
+                        model.setTextureModeVertices3D(1530, dens.getValue());
                         break;
                     case COLORED_FACES:
-                        model.setTextureModeFaces(1550);
+                        model.setTextureModeFaces(1530);
                         break;
                 }                
             }
@@ -140,13 +140,12 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             }
         }
     };
-    protected final ObjectProperty<CarbonPatterns> patterns = new SimpleObjectProperty<CarbonPatterns>(){
+    protected final ObjectProperty<CarbonPatterns> patterns = new SimpleObjectProperty<CarbonPatterns>(CarbonPatterns.DARK_CARBON){
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
                 model.setCarbonPattern(patterns.getValue());
-                model.setPatternScale(pattScale.doubleValue());
             }
         }
     };

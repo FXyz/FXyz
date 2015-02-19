@@ -181,25 +181,25 @@ public class CurvedSpring extends TexturedMeshSample {
         lengthSlider.getSlider().setMajorTickUnit(50);
         lengthSlider.getSlider().setBlockIncrement(2d);
 
-        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(this.wireDivs, 2, 100);
+        NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(this.wireDivs, 2, 500);
         wDivSlider.getSlider().setMinorTickCount(4);
         wDivSlider.getSlider().setMajorTickUnit(25);
         wDivSlider.getSlider().setBlockIncrement(1);
         wDivSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl mCropSlider = ControlFactory.buildNumberSlider(this.wireCrop, 0l, 98);
+        NumberSliderControl mCropSlider = ControlFactory.buildNumberSlider(this.wireCrop, 0l, 248);
         mCropSlider.getSlider().setMinorTickCount(4);
         mCropSlider.getSlider().setMajorTickUnit(25);
         mCropSlider.getSlider().setBlockIncrement(1);
         mCropSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(this.lenDivs, 4l, 250);
+        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(this.lenDivs, 4l, 1000);
         lDivSlider.getSlider().setMinorTickCount(4);
         lDivSlider.getSlider().setMajorTickUnit(25);
         lDivSlider.getSlider().setBlockIncrement(1);
         lDivSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl lCropSlider = ControlFactory.buildNumberSlider(this.lenCrop, 0l, 200);
+        NumberSliderControl lCropSlider = ControlFactory.buildNumberSlider(this.lenCrop, 0l, 498);
         lCropSlider.getSlider().setMinorTickCount(4);
         lCropSlider.getSlider().setMajorTickUnit(25);
         lCropSlider.getSlider().setBlockIncrement(1);
@@ -207,8 +207,8 @@ public class CurvedSpring extends TexturedMeshSample {
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         geomControls.addControls(majRadSlider, minRadSlider,
-                tRadSlider, wDivSlider, pitchSlider, lengthSlider, mCropSlider,
-                lDivSlider, lCropSlider);
+                tRadSlider, pitchSlider, lengthSlider,
+                lDivSlider, wDivSlider, lCropSlider, mCropSlider);
 
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
