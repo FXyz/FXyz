@@ -64,6 +64,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.controlsfx.control.HiddenSidesPane;
 import org.fxmisc.easybind.EasyBind;
+import org.fxmisc.easybind.Subscription;
 import org.fxyz.client.ModelInfoTracker;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.factory.ControlFactory;
@@ -113,7 +114,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private ProgressBar progressBar;
     private long time;
 
-    private final BooleanProperty onService = new SimpleBooleanProperty();
+    private final BooleanProperty isActive = new SimpleBooleanProperty(this, "activeSample", false);
     protected final BooleanProperty useSkybox = new SimpleBooleanProperty(this, "SkyBox Enabled", false);
     private final BooleanProperty isPicking = new SimpleBooleanProperty(this, "isPicking");
     protected final Property<DrawMode> drawMode = new SimpleObjectProperty<>(model, "drawMode", DrawMode.FILL);
@@ -124,10 +125,15 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     private Vec3d vecIni, vecPos;
     private double distance;
-    private Sphere s;
+    private Sphere sphere;
+
+    //Bindings..
+    Subscription modelWidthBinder, modelHeightBinder, modelDepthBinder;
+    Subscription sceneActiveBinder;
 
     public ShapeBaseSample() {
         numberFormat.setMaximumFractionDigits(1);
+        
         initSample();
     }
 
@@ -140,7 +146,22 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         buildSubScenePane();
         buildParentPane();
 
-        createListeners();
+        createListeners();        
+    }
+
+    private void releaseBinders() {
+        if(modelWidthBinder != null){
+        modelWidthBinder.unsubscribe();
+        modelHeightBinder.unsubscribe();
+        modelDepthBinder.unsubscribe();
+        }
+    }
+
+    private void attachBinders() {
+        // should be conditional on scene not being null
+        EasyBind.subscribe(model.boundsInParentProperty(), (s) -> modelInfo.getBoundsWidth().setText(numberFormat.format(s.getWidth())));
+        EasyBind.subscribe(model.boundsInParentProperty(), (s) -> modelInfo.getBoundsHeight().setText(numberFormat.format(s.getHeight())));
+        EasyBind.subscribe(model.boundsInParentProperty(), (s) -> modelInfo.getBoundsDepth().setText(numberFormat.format(s.getDepth())));
     }
 
     private void createListeners() {
@@ -290,7 +311,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                     && pr.getIntersectedNode() instanceof Sphere
                     && pr.getIntersectedNode().getId().equals("knot")) {
                 distance = pr.getIntersectedDistance();
-                s = (Sphere) pr.getIntersectedNode();
+                sphere = (Sphere) pr.getIntersectedNode();
                 isPicking.set(true);
                 vecIni = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
             }
@@ -308,7 +329,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 vecPos = unProjectDirection(mousePosX, mousePosY, subScene.getWidth(), subScene.getHeight());
                 Point3D p = new Point3D(distance * (vecPos.x - vecIni.x),
                         distance * (vecPos.y - vecIni.y), distance * (vecPos.z - vecIni.z));
-                s.getTransforms().add(new Translate(modifier * p.getX(), modifier * p.getY(), modifier * p.getZ()));
+                sphere.getTransforms().add(new Translate(modifier * p.getX(), modifier * p.getY(), modifier * p.getZ()));
                 vecIni = vecPos;
 
             } else {
@@ -379,6 +400,8 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             @Override
             protected void succeeded() {
                 addMeshAndListeners();
+                attachBinders();
+                
                 mainPane.getChildren().remove(progressBar);
 
                 if (model != null && model instanceof Shape3D) {
@@ -424,7 +447,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                     ((ControlPanel) controlPanel).getPanes().get(0).setExpanded(true);
 
                     // setup model information
-                    modelInfo.getTimeToBuild().setText(String.valueOf(System.currentTimeMillis() - time));
+                    modelInfo.getTimeToBuild().setText(String.valueOf(System.currentTimeMillis() - time) + "ms");
                     if (model instanceof Group) {
                         modelInfo.getNodeCount().setText(String.valueOf(((Group) model).getChildren().filtered(t -> t instanceof Shape3D).size()));
                         modelInfo.getPoints().setText("");
@@ -433,10 +456,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                         modelInfo.getNodeCount().setText("1");
                         modelInfo.getPoints().textProperty().bind(((TexturedMesh) model).vertCountBinding());
                         modelInfo.getFaces().textProperty().bind(((TexturedMesh) model).faceCountBinding());
-                        // should be conditional on scene not being null
-                        EasyBind.subscribe(model.boundsInParentProperty(),(s)-> modelInfo.getBoundsWidth().setText(numberFormat.format(s.getWidth())));
-                        EasyBind.subscribe(model.boundsInParentProperty(),(s)-> modelInfo.getBoundsHeight().setText(numberFormat.format(s.getHeight())));
-                        EasyBind.subscribe(model.boundsInParentProperty(),(s)-> modelInfo.getBoundsDepth().setText(numberFormat.format(s.getDepth())));
+
                     }
 
                     modelInfo.getSampleTitle().setText(getSampleName());
@@ -452,12 +472,22 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     @Override
     public Node getSample() {
         loadSample();
-        
+
         progressBar = new ProgressBar();
         progressBar.setPrefSize(mainPane.getPrefWidth() * 0.5, USE_PREF_SIZE);
         progressBar.setProgress(-1);
         mainPane.getChildren().add(progressBar);
-
+        
+        parentPane.parentProperty().addListener(l->{
+            if(parentPane.getScene() != null){
+                if(model != null){
+                    attachBinders();
+                }
+            }else{
+                releaseBinders();
+            }
+        });
+        
         return parentPane;
     }
 
