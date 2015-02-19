@@ -27,6 +27,7 @@
 package org.fxyz.samples.shapes;
 
 import com.sun.javafx.geom.Vec3d;
+import java.text.NumberFormat;
 import java.util.concurrent.CountDownLatch;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
@@ -62,6 +63,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.controlsfx.control.HiddenSidesPane;
+import org.fxmisc.easybind.EasyBind;
 import org.fxyz.client.ModelInfoTracker;
 import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.factory.ControlFactory;
@@ -118,12 +120,14 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     protected final Property<CullFace> culling = new SimpleObjectProperty<>(model, "culling", CullFace.BACK);
 
     private final CountDownLatch latch = new CountDownLatch(1);
+    private final NumberFormat numberFormat = NumberFormat.getInstance();
 
     private Vec3d vecIni, vecPos;
     private double distance;
     private Sphere s;
 
     public ShapeBaseSample() {
+        numberFormat.setMaximumFractionDigits(1);
         initSample();
     }
 
@@ -408,6 +412,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                         if (exportButton.isVisible()) {
                             if (exportButton.getParent() != null) {
                                 exportButton.setMinWidth(((VBox) exportButton.getParent()).getPrefWidth());
+                                exportButton.autosize();
                             }
                         }
                     });
@@ -428,9 +433,10 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                         modelInfo.getNodeCount().setText("1");
                         modelInfo.getPoints().textProperty().bind(((TexturedMesh) model).vertCountBinding());
                         modelInfo.getFaces().textProperty().bind(((TexturedMesh) model).faceCountBinding());
-                        modelInfo.getBoundsWidth().textProperty().bind(((TexturedMesh) model).widthStringBinding());
-                        modelInfo.getBoundsHeight().textProperty().bind(((TexturedMesh) model).heightStringBinding());
-                        modelInfo.getBoundsDepth().textProperty().bind(((TexturedMesh) model).depthStringBinding());
+                        // should be conditional on scene not being null
+                        EasyBind.subscribe(model.boundsInParentProperty(),(s)-> modelInfo.getBoundsWidth().setText(numberFormat.format(s.getWidth())));
+                        EasyBind.subscribe(model.boundsInParentProperty(),(s)-> modelInfo.getBoundsHeight().setText(numberFormat.format(s.getHeight())));
+                        EasyBind.subscribe(model.boundsInParentProperty(),(s)-> modelInfo.getBoundsDepth().setText(numberFormat.format(s.getDepth())));
                     }
 
                     modelInfo.getSampleTitle().setText(getSampleName());
