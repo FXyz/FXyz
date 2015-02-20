@@ -155,6 +155,13 @@ public class TriangleMeshHelper {
     public Material getMaterialWithPattern(){
         return getMaterialWithPattern(DEFAULT_CARBON_PATTERN);
     }
+    public void setMaterialWithPattern(Material mat, CarbonPatterns cp){
+        if(mat==null){
+            mat=new PhongMaterial();
+        }
+        Image img = getPatternImage(cp);  
+        ((PhongMaterial)mat).setDiffuseMap(img);    
+    }
     public Material getMaterialWithPattern(CarbonPatterns cp){
         PhongMaterial mat = new PhongMaterial();
         Image img = getPatternImage(cp);  
@@ -167,7 +174,7 @@ public class TriangleMeshHelper {
     Colors, palette
     */
     public final static Color DEFAULT_DIFFUSE_COLOR = Color.WHITE;
-    public final static int DEFAULT_COLORS = 16;
+    public final static int DEFAULT_COLORS = 1530;
     public final static boolean DEFAULT_SAVE_PALETTE = false;
     private Palette palette;
     private int colors;
@@ -194,12 +201,28 @@ public class TriangleMeshHelper {
         return palette.getPaletteImage();
     }
     
+    public void setMaterialWithPalette(Material mat){
+        if(mat==null){
+            mat=new PhongMaterial();
+        }
+        Image img = getPaletteImage();
+        ((PhongMaterial)mat).setDiffuseMap(img);    
+    }
+    
     public Material getMaterialWithPalette(){
         PhongMaterial mat = new PhongMaterial();
         Image img = getPaletteImage();
         mat.setDiffuseMap(img);        
         //mat.setBumpMap(new NormalMap(1,10,true,img));
         return mat;
+    }
+    
+    public void setMaterialWithColor(Material mat, Color color){
+        if(mat==null){
+            mat=new PhongMaterial();
+        }
+        ((PhongMaterial)mat).setDiffuseColor(color);
+        ((PhongMaterial)mat).setDiffuseMap(null);  
     }
     
     public Material getMaterialWithColor(Color color){
@@ -293,6 +316,14 @@ public class TriangleMeshHelper {
     /*
     image
     */
+    public void setMaterialWithImage(Material mat, String image){
+        if(mat==null){
+            mat=new PhongMaterial();
+        }
+        Image img = new Image(image);  
+        ((PhongMaterial)mat).setDiffuseMap(img);    
+        ((PhongMaterial)mat).setBumpMap(new NormalMap(img));   
+    }
     public Material getMaterialWithImage(String image){
         PhongMaterial mat = new PhongMaterial();
         Image img = new Image(image);
