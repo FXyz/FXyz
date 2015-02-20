@@ -220,8 +220,8 @@ public class Patterns {
     }
 
     public static final ImagePattern createLightCarbonPattern() {
-        final double WIDTH = 12;
-        final double HEIGHT = 12;
+        final double WIDTH = 16;
+        final double HEIGHT = 16;
         final Canvas CANVAS = new Canvas(WIDTH, HEIGHT);
         final GraphicsContext CTX = CANVAS.getGraphicsContext2D();
 
@@ -234,8 +234,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(138, 138, 138)),
-                new Stop(1, Color.rgb(130, 130, 130))));
+                new Stop(0, Color.rgb(108, 108, 108)),
+                new Stop(1, Color.rgb(110, 100, 100))));
         CTX.fill();
 
         CTX.beginPath();
@@ -256,8 +256,8 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(138, 138, 138)),
-                new Stop(1, Color.rgb(130, 130, 130))));
+                new Stop(0, Color.rgb(108, 108, 108)),
+                new Stop(1, Color.rgb(110, 110, 110))));
         CTX.fill();
 
         CTX.beginPath();
@@ -328,7 +328,7 @@ public class Patterns {
         final GraphicsContext CTX = CANVAS.getGraphicsContext2D();
 
         double offsetY = 0;
-
+        /// 1= border=yellow=dark========================================================
         CTX.beginPath();
         CTX.rect(0, 0, WIDTH * 0.5, HEIGHT * 0.5);
         CTX.closePath();
@@ -336,10 +336,10 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(35, 35, 35)),
-                new Stop(1, Color.rgb(23, 23, 23))));
+                new Stop(0, Color.rgb(105, 105, 0)),
+                new Stop(1, Color.rgb(98, 98, 0))));
         CTX.fill();
-
+        //  2=body=yellow==============================
         CTX.beginPath();
         CTX.rect(WIDTH * 0.083333, 0, WIDTH * 0.333333, HEIGHT * 0.416666);
         CTX.closePath();
@@ -347,10 +347,10 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.416666 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(38, 38, 38)),
-                new Stop(1, Color.rgb(30, 30, 30))));
+                new Stop(0, Color.rgb(138, 138, 0)),
+                new Stop(1, Color.rgb(130, 130, 0))));
         CTX.fill();
-
+        //  3=border=yellow=dark=============================
         CTX.beginPath();
         CTX.rect(WIDTH * 0.5, HEIGHT * 0.5, WIDTH * 0.5, HEIGHT * 0.5);
         CTX.closePath();
@@ -358,10 +358,10 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(35, 35, 35)),
-                new Stop(1, Color.rgb(23, 23, 23))));
+                new Stop(0, Color.rgb(105, 105, 0)),
+                new Stop(1, Color.rgb(98, 98, 0))));
         CTX.fill();
-
+        //  4=body=yellow============================================================
         CTX.beginPath();
         CTX.rect(WIDTH * 0.583333, HEIGHT * 0.5, WIDTH * 0.333333, HEIGHT * 0.416666);
         CTX.closePath();
@@ -369,10 +369,10 @@ public class Patterns {
         CTX.setFill(new LinearGradient(0, offsetY * HEIGHT,
                 0, 0.416666 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
-                new Stop(0, Color.rgb(38, 38, 38)),
-                new Stop(1, Color.rgb(30, 30, 30))));
+                new Stop(0, Color.rgb(138, 138, 0)),
+                new Stop(1, Color.rgb(130, 130, 0))));
         CTX.fill();
-
+        //  5= border=gray=dark============================
         CTX.beginPath();
         CTX.rect(WIDTH * 0.5, 0, WIDTH * 0.5, HEIGHT * 0.5);
         CTX.closePath();
@@ -381,9 +381,9 @@ public class Patterns {
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
                 new Stop(0, Color.rgb(48, 48, 48)),
-                new Stop(1, Color.rgb(40, 40, 40))));
+                new Stop(1, Color.rgb(30, 30, 30))));
         CTX.fill();
-
+        //  6=body=gray=============================
         CTX.beginPath();
         CTX.rect(WIDTH * 0.583333, HEIGHT * 0.083333, WIDTH * 0.333333, HEIGHT * 0.416666);
         CTX.closePath();
@@ -394,7 +394,7 @@ public class Patterns {
                 new Stop(0, Color.rgb(53, 53, 53)),
                 new Stop(1, Color.rgb(45, 45, 45))));
         CTX.fill();
-
+        //  7= border=gray=dark=============================
         CTX.beginPath();
         CTX.rect(0, HEIGHT * 0.5, WIDTH * 0.5, HEIGHT * 0.5);
         CTX.closePath();
@@ -405,7 +405,7 @@ public class Patterns {
                 new Stop(0, Color.rgb(48, 48, 48)),
                 new Stop(1, Color.rgb(40, 40, 40))));
         CTX.fill();
-
+        //  8= body=gray=light==============================
         CTX.beginPath();
         CTX.rect(WIDTH * 0.083333, HEIGHT * 0.583333, WIDTH * 0.333333, HEIGHT * 0.416666);
         CTX.closePath();
