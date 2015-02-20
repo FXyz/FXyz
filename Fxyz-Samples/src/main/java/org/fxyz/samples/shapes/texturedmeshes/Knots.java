@@ -232,17 +232,17 @@ public class Knots extends TexturedMeshSample {
         NumberSliderControl majRadSlider = ControlFactory.buildNumberSlider(this.majRad, .01D, 200D);
         majRadSlider.getSlider().setMinorTickCount(4);
         majRadSlider.getSlider().setMajorTickUnit(25);
-        majRadSlider.getSlider().setBlockIncrement(1d);
+        majRadSlider.getSlider().setBlockIncrement(0.01d);
 
         NumberSliderControl minRadSlider = ControlFactory.buildNumberSlider(this.minRad, .01D, 200D);
         minRadSlider.getSlider().setMinorTickCount(4);
         minRadSlider.getSlider().setMajorTickUnit(25);
-        minRadSlider.getSlider().setBlockIncrement(1d);
+        minRadSlider.getSlider().setBlockIncrement(0.01d);
 
         NumberSliderControl tRadSlider = ControlFactory.buildNumberSlider(this.wireRad, 0.01D, 25D);
         tRadSlider.getSlider().setMinorTickCount(4);
         tRadSlider.getSlider().setMajorTickUnit(5);
-        tRadSlider.getSlider().setBlockIncrement(1d);
+        tRadSlider.getSlider().setBlockIncrement(0.01d);
 
         NumberSliderControl wDivSlider = ControlFactory.buildNumberSlider(this.wireDivs, 2, 200);
         wDivSlider.getSlider().setMinorTickCount(4);
@@ -256,10 +256,10 @@ public class Knots extends TexturedMeshSample {
         mCropSlider.getSlider().setBlockIncrement(1);
         mCropSlider.getSlider().setSnapToTicks(true);
 
-        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(this.lenDivs, 4l, 1000);
+        NumberSliderControl lDivSlider = ControlFactory.buildNumberSlider(this.lenDivs, 4l, 500);
         lDivSlider.getSlider().setMinorTickCount(4);
         lDivSlider.getSlider().setMajorTickUnit(100);
-        lDivSlider.getSlider().setBlockIncrement(10);
+        lDivSlider.getSlider().setBlockIncrement(1);
         lDivSlider.getSlider().setSnapToTicks(true);
 
         NumberSliderControl lCropSlider = ControlFactory.buildNumberSlider(this.lenCrop, 0l, 200);
@@ -270,12 +270,12 @@ public class Knots extends TexturedMeshSample {
         NumberSliderControl pSlider = ControlFactory.buildNumberSlider(this._p, 0.01d, 10.0D);
         pSlider.getSlider().setMinorTickCount(4);
         pSlider.getSlider().setMajorTickUnit(5);
-        pSlider.getSlider().setBlockIncrement(1);
+        pSlider.getSlider().setBlockIncrement(0.01);
 
         NumberSliderControl qSlider = ControlFactory.buildNumberSlider(this._q, 0.01d, 50.0D);
         qSlider.getSlider().setMinorTickCount(4);
         qSlider.getSlider().setMajorTickUnit(5);
-        qSlider.getSlider().setBlockIncrement(1);
+        qSlider.getSlider().setBlockIncrement(0.01);
 
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         geomControls.addControls(
