@@ -125,19 +125,16 @@ public class ScriptFunction2DControl extends ControlBase<Property<Function<Point
                     try{
                         res2.setText("val: "+String.format("%.3f", f.apply(p)));
                         error.set(false);
+                        function.set(f);
                     } catch(Exception e){
                         res2.setText("val: error");
                         error.set(true);
                     }
-                    function.set(f);
                 } catch (RuntimeException | ScriptException ex) {
                     System.err.println("Script Error "+ex);
                 }
             }
         });
-        
-        
-        
         
     }
     
