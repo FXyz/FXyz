@@ -125,7 +125,7 @@ public final class ControlFactory {
             final Property<Number> bmpFineScale,
             final Property<Boolean> invBmp,
             final Property<CarbonPatterns> patt, final Property<Number> pScale,
-            final Property<Color> spColor,
+            final Property<Number> spColor,
             final Property<Number> specP,
             final Property<Function<Point3D, Number>> densFunc,
             final Property<Function<Number, Number>> funcFunc) {
@@ -206,7 +206,7 @@ public final class ControlFactory {
             final Property<Boolean> invBmp,
             final Property<Patterns.CarbonPatterns> patt,
             final Property<Number> pScale,
-            final Property<Color> spColor,
+            final Property<Number> spColor,
             final Property<Number> specP,
             final Property<Function<Point3D, Number>> densFunc,
             final Property<Function<Number, Number>> funcFunc

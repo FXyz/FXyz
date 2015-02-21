@@ -195,6 +195,14 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
         @Override
         protected void invalidated() {
             if(model != null){
+                if (model.getMaterial() != null && ((PhongMaterial) model.getMaterial()).getDiffuseMap() != null) {
+                        ((PhongMaterial) model.getMaterial()).setBumpMap(
+                                new NormalMap(
+                                        bumpScale.doubleValue(), bumpFineScale.doubleValue(),
+                                        invert.getValue(), ((PhongMaterial) model.getMaterial()).getDiffuseMap()
+                                )
+                        );
+                    }
             }
         }
     };
@@ -202,7 +210,14 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
         @Override
         protected void invalidated() {
              if(model != null){
-                 
+                 if (model.getMaterial() != null && ((PhongMaterial) model.getMaterial()).getDiffuseMap() != null) {
+                        ((PhongMaterial) model.getMaterial()).setBumpMap(
+                                new NormalMap(
+                                        bumpScale.doubleValue(), bumpFineScale.doubleValue(),
+                                        invert.getValue(), ((PhongMaterial) model.getMaterial()).getDiffuseMap()
+                                )
+                        );
+                    }                 
              }
         }
     };
@@ -217,6 +232,14 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
         @Override
         protected void invalidated() {
              if(model != null){
+                 if (model.getMaterial() != null && ((PhongMaterial) model.getMaterial()).getDiffuseMap() != null) {
+                        ((PhongMaterial) model.getMaterial()).setBumpMap(
+                                new NormalMap(
+                                        bumpScale.doubleValue(), bumpFineScale.doubleValue(),
+                                        invert.getValue(), ((PhongMaterial) model.getMaterial()).getDiffuseMap()
+                                )
+                        );
+                    }
              }
         }
     };
@@ -254,15 +277,23 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             }
     };
     
-    protected final ObjectProperty<Color> specColor = new SimpleObjectProperty<Color>(this, "specColor", Color.TRANSPARENT){
+    protected final ObjectProperty<Color> specColorBinding = new SimpleObjectProperty<Color>(Color.BLACK){
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                material.setSpecularColor(get());
+            }
+        }
+    };
+    protected final IntegerProperty specColor = new SimpleIntegerProperty(this, "specColor", 1){
 
         @Override
         protected void invalidated() {
+            super.invalidated();
             if (model != null) {
-                    if (model.getMaterial() != null) {
-                        ((PhongMaterial)model.getMaterial()).setSpecularColor(specColor.getValue());
-                    }
-                }
+                specColorBinding.set(Color.hsb(360 * (1d - get() / 1530d), 1, 1));                
+            }
         }
     
     };

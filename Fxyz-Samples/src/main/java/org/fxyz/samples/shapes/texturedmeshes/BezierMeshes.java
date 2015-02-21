@@ -217,7 +217,7 @@ public class BezierMeshes extends GroupOfTexturedMeshSample {
                         null,null,//this.addNormalMap, this.bumpScale,
                         null,null,//this.bumpFineScale, this.invert,
                         this.patterns,this.pattScale,
-                        material.diffuseColorProperty(), material.specularPowerProperty(),
+                        null, null,
                         this.dens, this.func
                 )
         );

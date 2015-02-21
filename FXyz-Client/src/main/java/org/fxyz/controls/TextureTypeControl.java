@@ -34,7 +34,6 @@ import java.util.function.Function;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import org.fxmisc.easybind.EasyBind;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.Point3D;
@@ -58,7 +57,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
     protected ScriptFunction3DControl densFunct;
     protected ScriptFunction1DControl funcFunct;
     
-    protected ColorPickControl specColor;
+    protected ColorSliderControl specColor;
     protected NumberSliderControl specSlider;
     
     protected CheckBoxControl bumpMap;
@@ -84,7 +83,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             final Property<Boolean> invBmp,
             final Property<CarbonPatterns> patt,
             final Property<Number> pScale,
-            final Property<Color> spColor,
+            final Property<Number> spColor,
             final Property<Number> specP,
             final Property<Function<Point3D,Number>> densFunc,
             final Property<Function<Number,Number>> funcFunc
@@ -99,7 +98,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         this.usePatternChooser = selection.valueProperty().isEqualTo(TextureType.PATTERN);
         this.useSpecColor = selection.valueProperty().isNotNull();
         this.useSpecPower = selection.valueProperty().isNotNull();
-        this.useBumpMapping = selection.valueProperty().isNotNull();
+        this.useBumpMapping = selection.valueProperty().isNotNull().and(usePatternChooser);
+        
         
                 
         EasyBind.includeWhen(subControls.getChildren(), patternChooser, usePatternChooser);
@@ -107,11 +107,17 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         EasyBind.includeWhen(subControls.getChildren(), diffMapControl, useImage);
         EasyBind.includeWhen(subControls.getChildren(), imgLoader, useImage);
         EasyBind.includeWhen(subControls.getChildren(), patternScaler, usePatternScaler);
+        
         EasyBind.includeWhen(subControls.getChildren(), densFunct, useDensScriptor);
         EasyBind.includeWhen(subControls.getChildren(), funcFunct, useFuncScriptor);
+        
         EasyBind.includeWhen(subControls.getChildren(), specColor, useSpecColor);
         EasyBind.includeWhen(subControls.getChildren(), specSlider, useSpecPower);
+        
         EasyBind.includeWhen(subControls.getChildren(), bumpMap, useBumpMapping);
+        EasyBind.includeWhen(subControls.getChildren(), invertBumpMap, useBumpMapping);
+        EasyBind.includeWhen(subControls.getChildren(), bumpScale, useBumpMapping);
+        EasyBind.includeWhen(subControls.getChildren(), bumpFine, useBumpMapping);
     }
 
     @Override
@@ -129,12 +135,12 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             final Property<Boolean> invBmp, 
             final Property<Number> pScale, 
             final Property<CarbonPatterns> patt,
-            final Property<Color> spColor,
+            final Property<Number> spColor,
             final Property<Number> specP,
             final Property<Function<Point3D,Number>> densFunc,
             final Property<Function<Number,Number>> funcFunc
     ) {
-        specColor = new ColorPickControl(spColor, "Specular Color: ");
+        specColor = new ColorSliderControl(spColor, 0, 1530);
         specColor.setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);
         specSlider = ControlFactory.buildNumberSlider(specP, 32, 10000);
         

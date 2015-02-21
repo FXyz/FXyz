@@ -79,12 +79,9 @@ import org.fxyz.util.SampleScanner;
 public class FXyzClient extends Application {
 
     public static final String 
-            BACKGROUNDS = FXyzClient.class.getResource("clientBackgrounds.css").toExternalForm(),
-            BLACK_GLASS_BASE = FXyzClient.class.getResource("smokeBlackGlassBase.css").toExternalForm(),
-            BLACK_GLASS_CONTROLS = FXyzClient.class.getResource("smokeBlackGlassControls.css").toExternalForm();
-            //BLUE_GLASS_BASE = FXyzClient.class.getResource("/smokeBlueGlassBase.css").toExternalForm(),
-            //BLUE_GLASS_CONTROLS = FXyzClient.class.getResource("/smokeBlueGlassControls.css").toExternalForm();
-            //CUSTOM_WINDOW = FXyzClient.class.getResource("images/customWindow.css").toExternalForm();
+            BACKGROUNDS = FXyzClient.class.getResource("/org/fxyz/client/clientBackgrounds.css").toExternalForm(),
+            BLACK_GLASS_BASE = FXyzClient.class.getResource("/org/fxyz/client/smokeBlackGlassBase.css").toExternalForm(),
+            BLACK_GLASS_CONTROLS = FXyzClient.class.getResource("/org/fxyz/client/smokeBlackGlassControls.css").toExternalForm();
     private static FXyzClient rootClientInstance;
 
     public FXyzClient() {
@@ -275,9 +272,9 @@ public class FXyzClient extends Application {
 
     private void sort(TreeItem<FXyzSample> node, Comparator<TreeItem<FXyzSample>> comparator) {
         node.getChildren().sort(comparator);
-        for (TreeItem<FXyzSample> child : node.getChildren()) {
+        node.getChildren().stream().forEach((child) -> {
             sort(child, comparator);
-        }
+        });
     }
 
     // true == keep, false == delete
