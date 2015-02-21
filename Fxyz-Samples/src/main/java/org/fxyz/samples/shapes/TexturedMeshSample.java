@@ -83,6 +83,8 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                         break;
                     case PATTERN:
                         model.setTextureModePattern(patterns.get(),pattScale.getValue());
+                        material.setSpecularColor(specColorBinding.get());
+                        material.setSpecularPower(specularPower.doubleValue());
                         break;
                     case COLORED_VERTICES_1D:
                         model.setTextureModeVertices1D(1530, func.getValue());
@@ -148,6 +150,8 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             super.invalidated();
             if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
                 model.setCarbonPattern(patterns.getValue());
+                material.setSpecularColor(specColorBinding.get());
+                material.setSpecularPower(specularPower.doubleValue());
             }
         }
     };
