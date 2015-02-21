@@ -152,6 +152,12 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                 model.setCarbonPattern(patterns.getValue());
                 material.setSpecularColor(specColorBinding.get());
                 material.setSpecularPower(specularPower.doubleValue());
+                if(addNormalMap.get()){
+                    material.setBumpMap(new NormalMap(
+                                        bumpScale.doubleValue(), bumpFineScale.doubleValue(),
+                                        invert.getValue(), ((PhongMaterial) model.getMaterial()).getDiffuseMap()
+                                ));
+                }
             }
         }
     };
