@@ -47,7 +47,7 @@ public class SectionLabel extends StackPane{
 
     public SectionLabel(String text) {
         try {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("SectionLabel.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/fxyz/controls/SectionLabel.fxml"));
             loader.setRoot(SectionLabel.this);
             loader.setController(SectionLabel.this);
             loader.load();

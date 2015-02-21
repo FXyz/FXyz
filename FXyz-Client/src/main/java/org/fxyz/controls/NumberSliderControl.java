@@ -48,7 +48,7 @@ public class NumberSliderControl extends ControlBase<Property<Number>> {
     private final NumberFormat format = NumberFormat.getInstance();
     
     public NumberSliderControl(final Property<Number> prop, final Number lowerBound, final Number upperBound) {
-        super("NumberSliderControl.fxml", prop);
+        super("/org/fxyz/controls/NumberSliderControl.fxml", prop);
         
         if(prop instanceof IntegerProperty){
             format.setMaximumFractionDigits(0);

@@ -82,7 +82,7 @@ public class LightingControls extends ControlBase<Property<Boolean>> {
             final Property<Number> r1,
             final Property<Point3D> ra1 
     ) {
-        super("SubSceneControlPanel.fxml", show);
+        super("/org/fxyz/controls/LightControlPanel.fxml", show);
         this.setOnMouseEntered(me->{me.consume();});
         colorL1.getStyleClass().addAll("colorSlider", "lighting-slider");
         

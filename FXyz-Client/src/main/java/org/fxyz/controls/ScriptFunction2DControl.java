@@ -51,7 +51,6 @@ import javafx.scene.layout.VBox;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import org.fxyz.geometry.Point3D;
 
 /**
  *
@@ -65,7 +64,7 @@ public class ScriptFunction2DControl extends ControlBase<Property<Function<Point
     private BooleanProperty error=new SimpleBooleanProperty();
     
     public ScriptFunction2DControl(Property<Function<Point2D,Number>> prop, final Collection<String> items, boolean subControl) {
-        super("ScriptFunction2DControl.fxml", prop);
+        super("/org/fxyz/controls/ScriptFunction2DControl.fxml", prop);
         
         Point2D p=new Point2D(1,2);
         res1.setText("p: {"+p.getX()+","+p.getY()+"}");

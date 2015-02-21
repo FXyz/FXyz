@@ -44,7 +44,7 @@ public class CullFaceControl extends ControlBase{
     private ComboBox<CullFace> selection;
 
     public CullFaceControl(final Property<CullFace> prop) {        
-        super("CullFaceControl.fxml", prop);        
+        super("/org/fxyz/controls/CullFaceControl.fxml", prop);        
         prop.bind(selection.getSelectionModel().selectedItemProperty());
         selection.getSelectionModel().select(0);
     }

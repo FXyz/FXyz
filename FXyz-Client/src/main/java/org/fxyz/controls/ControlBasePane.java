@@ -44,7 +44,7 @@ public class ControlBasePane extends Accordion{
     
     public ControlBasePane() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ControlBasePane.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/fxyz/controls/ControlBasePane.fxml"));
             loader.setRoot(ControlBasePane.this);
             loader.setController(ControlBasePane.this);
             loader.load();

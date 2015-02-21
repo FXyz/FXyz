@@ -56,7 +56,7 @@ public class ImagePreviewControl extends ControlBase<Property<Boolean>> {
     private final Property<Image> image;
 
     public ImagePreviewControl(final Property<Boolean> prop, final Property<? extends Image> img, String name) {
-        super("ImageMapPreview.fxml", prop);
+        super("/org/fxyz/controls/ImageMapPreview.fxml", prop);
         assert img != null;
         this.image = new SimpleObjectProperty("image");
         useImage.setText(name);

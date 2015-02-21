@@ -75,7 +75,7 @@ public class ColorSliderControl extends ControlBase<Property<Number>> {
     };
     
     public ColorSliderControl(final Property<Number> prop, final Number lowerBound, final Number upperBound) {
-        super("ColorSliderControl.fxml", prop);
+        super("/org/fxyz/controls/ColorSliderControl.fxml", prop);
         valSlider.getStyleClass().add("texture-slider");
         if(prop instanceof IntegerProperty){
             format.setMaximumFractionDigits(0);

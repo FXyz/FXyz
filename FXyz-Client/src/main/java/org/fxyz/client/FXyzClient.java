@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 import javafx.application.Application;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -57,6 +56,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
@@ -105,10 +105,10 @@ public class FXyzClient extends Application {
     private SimpleWindowFrame frame;
 
     @Override
-    public void start(final Stage s) throws Exception {
+    public void start(final Stage mainStage) throws Exception {
         
-        stage = s;
-        //stage.getIcons().add(new Image(FXyzClient.class.getResource("../images/logo2.png").toExternalForm()));
+        stage = mainStage;
+        stage.getIcons().add(new Image(FXyzClient.class.getResource("/org/fxyz/images/logo2.png").toExternalForm()));
         
         projectsMap = new SampleScanner().discoverSamples();
         buildProjectTree(null);
@@ -168,24 +168,20 @@ public class FXyzClient extends Application {
                 };
             }
         });
-        contentTree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<FXyzSample>>() {
-            @Override
-            public void changed(ObservableValue<? extends TreeItem<FXyzSample>> observable, TreeItem<FXyzSample> oldValue, TreeItem<FXyzSample> newSample) {
-
-                if (newSample == null) {
-                    return;
-                } else if (newSample.getValue() instanceof EmptySample) {
-                    FXyzSample selectedSample = newSample.getValue();
-                    Project selectedProject = projectsMap.get(selectedSample.getSampleName());
-                    System.out.println(selectedProject);
-                    if (selectedProject != null) {
-                        changeToWelcomePage(selectedProject.getWelcomePage());
-                    }
-                    return;
+        contentTree.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends TreeItem<FXyzSample>> observable, TreeItem<FXyzSample> oldValue, TreeItem<FXyzSample> newSample) -> {
+            if (newSample == null) {
+                return;
+            } else if (newSample.getValue() instanceof EmptySample) {
+                FXyzSample selectedSample1 = newSample.getValue();
+                Project selectedProject = projectsMap.get(selectedSample1.getSampleName());
+                System.out.println(selectedProject);
+                if (selectedProject != null) {
+                    changeToWelcomePage(selectedProject.getWelcomePage());
                 }
-                selectedSample = newSample.getValue();
-                changeContent();
+                return;
             }
+            selectedSample = newSample.getValue();
+            changeContent();
         });
         contentTree.setFocusTraversable(false);
         leftSideContent.getChildren().addAll(new HBox(searchBar, ab),contentTree);       
@@ -377,7 +373,7 @@ public class FXyzClient extends Application {
     }
 
     /*==========================================================================
-     *                           Source Code Methods
+     *                          Source Code Methods
      ==========================================================================*/
     private String getResource(String resourceName, Class<?> baseClass) {
         Class<?> clz = baseClass == null ? getClass() : baseClass;

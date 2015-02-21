@@ -52,7 +52,7 @@ import javafx.scene.layout.VBox;
 public class ComboBoxControl<T> extends ControlBase<Property<T>> {
 
     public ComboBoxControl(final String lbl, final Property<T> p, final Collection<T> items, boolean subControl) {
-        super("ComboBoxControl.fxml", p);
+        super("/org/fxyz/controls/ComboBoxControl.fxml", p);
         title.setText(lbl);
         selection.getItems().addAll(items);
         selection.setValue(p.getValue());

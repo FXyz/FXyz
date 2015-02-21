@@ -29,7 +29,6 @@
 
 package org.fxyz.client;
 
-import org.fxyz.ExtrasAndTests.CustomWindow;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +65,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import org.fxyz.ExtrasAndTests.CustomWindow;
 
 /**
  * FXML Controller class
@@ -103,7 +103,7 @@ public class SimpleWindowFrame extends AnchorPane {
 
     public SimpleWindowFrame(Stage stage, double minWidth, double minHeight) {
         try {
-            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("SimpleFrame.fxml"));
+            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/org/fxyz/client/SimpleFrame.fxml"));
             loader.setController(SimpleWindowFrame.this);
             loader.setRoot(SimpleWindowFrame.this);
 

@@ -60,7 +60,7 @@ public class ControlCategory  extends TitledPane{
     private ControlCategory() {
         
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ControlPanelTitlePane.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/fxyz/controls/ControlPanelTitlePane.fxml"));
             loader.setRoot(ControlCategory.this);
             loader.setController(ControlCategory.this);
             loader.load();

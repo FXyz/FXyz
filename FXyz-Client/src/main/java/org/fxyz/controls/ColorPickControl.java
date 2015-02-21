@@ -47,7 +47,7 @@ public class ColorPickControl extends ControlBase{
     private Label title;
     
     public ColorPickControl(Property<Color> prop, String name) {
-        super("ColorControl.fxml", prop);
+        super("/org/fxyz/controls/ColorControl.fxml", prop);
         colors.setValue(prop.getValue());
         prop.bindBidirectional(colors.valueProperty());
         title.setText(name);

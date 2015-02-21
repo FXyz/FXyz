@@ -40,20 +40,16 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import org.fxyz.geometry.Point3D;
 
 /**
  *
@@ -67,7 +63,7 @@ public class ScriptFunction1DControl extends ControlBase<Property<Function<Numbe
     private BooleanProperty error=new SimpleBooleanProperty();
     
     public ScriptFunction1DControl(Property<Function<Number,Number>> prop, final Collection<String> items, boolean subControl) {
-        super("ScriptFunction1DControl.fxml", prop);
+        super("/org/fxyz/controls/ScriptFunction1DControl.fxml", prop);
         
        Double x=1d;
         res1.setText("x: {"+x+"}");

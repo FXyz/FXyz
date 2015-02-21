@@ -50,7 +50,7 @@ public class ModelInfoTracker extends StackPane {
     private HiddenSidesPane parentPane;
     public ModelInfoTracker(HiddenSidesPane parent) {
         try {
-            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("ModelInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/org/fxyz/client/ModelInfo.fxml"));
             loader.setController(ModelInfoTracker.this);
             loader.setRoot(ModelInfoTracker.this);
 
