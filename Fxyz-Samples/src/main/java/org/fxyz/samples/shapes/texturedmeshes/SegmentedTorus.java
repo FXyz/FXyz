@@ -158,6 +158,8 @@ public class SegmentedTorus extends TexturedMeshSample {
                         this.textureType, this.colors,
                         null, this.useDiffMap,
                         this.material.diffuseMapProperty(),
+                        this.addNormalMap, this.bumpScale,
+                        this.bumpFineScale, this.invert,
                         this.patterns, this.pattScale, 
                         this.specColor, this.specularPower, 
                         this.dens, this.func

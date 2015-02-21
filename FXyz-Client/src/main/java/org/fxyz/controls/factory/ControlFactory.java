@@ -116,15 +116,21 @@ public final class ControlFactory {
         return new ComboBoxControl<>("Draw Mode: ", dmp, Arrays.asList(DrawMode.values()), false);
     }
 
-    public static final TextureTypeControl buildTextureTypeControl(final Property<TextureType> p,
-            final Property<Number> clrs, final Property<Boolean> uDiffMap, final Property<Image> imgP,
+    public static final TextureTypeControl buildTextureTypeControl(
+            final Property<TextureType> p,
+            final Property<Number> clrs,
+            final Property<Boolean> uDiffMap, final Property<Image> imgP,
+            final Property<Boolean> bmpMap,
+            final Property<Number> bmpScale,
+            final Property<Number> bmpFineScale,
+            final Property<Boolean> invBmp,
             final Property<CarbonPatterns> patt, final Property<Number> pScale,
             final Property<Color> spColor,
             final Property<Number> specP,
             final Property<Function<Point3D, Number>> densFunc,
             final Property<Function<Number, Number>> funcFunc) {
         return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()),
-                clrs, uDiffMap, imgP, patt, pScale, spColor, specP, densFunc, funcFunc);
+                clrs, uDiffMap, imgP,bmpMap,bmpScale,bmpFineScale,invBmp, patt, pScale, spColor, specP, densFunc, funcFunc);
     }
     
     public static final ComboBoxControl buildPatternChooser(final Property<CarbonPatterns> p) {
@@ -194,6 +200,10 @@ public final class ControlFactory {
             final Property<SectionType> stp,
             final Property<Boolean> uDiffMap,
             final Property<Image> imgP,
+            final Property<Boolean> bmpMap,
+            final Property<Number> bmpScale,
+            final Property<Number> bmpFineScale,
+            final Property<Boolean> invBmp,
             final Property<Patterns.CarbonPatterns> patt,
             final Property<Number> pScale,
             final Property<Color> spColor,
@@ -203,7 +213,7 @@ public final class ControlFactory {
     ) {
 
         final TextureTypeControl texType = buildTextureTypeControl(
-                ttp, cp, uDiffMap, imgP, patt, pScale, spColor, specP, densFunc, funcFunc);
+                ttp, cp, uDiffMap, imgP,bmpMap,bmpScale,bmpFineScale,invBmp, patt, pScale, spColor, specP, densFunc, funcFunc);
 
         final ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(

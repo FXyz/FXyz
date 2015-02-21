@@ -203,6 +203,8 @@ public class Springs extends TexturedMeshSample {
                         this.textureType, this.colors,
                         this.sectionType, this.useDiffMap,
                         this.material.diffuseMapProperty(),
+                        this.addNormalMap, this.bumpScale,
+                        this.bumpFineScale, this.invert,
                         this.patterns, this.pattScale, 
                         this.specColor, this.specularPower, 
                         this.dens, this.func

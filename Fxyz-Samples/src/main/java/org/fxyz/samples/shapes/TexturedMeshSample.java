@@ -198,7 +198,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             }
         }
     };
-    protected final DoubleProperty bumpScale = new SimpleDoubleProperty(this, "bumpScale", 2.0d) {
+    protected final DoubleProperty bumpScale = new SimpleDoubleProperty(this, "bumpScale", 27d) {
         @Override
         protected void invalidated() {
              if(model != null){
@@ -213,7 +213,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
              }
         }
     };
-    protected final DoubleProperty bumpFineScale = new SimpleDoubleProperty(this, "bumpFineScale", 0.3d){
+    protected final DoubleProperty bumpFineScale = new SimpleDoubleProperty(this, "bumpFineScale", 9d){
         @Override
         protected void invalidated() {
              if(model != null){
@@ -266,4 +266,6 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
         }
     
     };
+    
+    
 }

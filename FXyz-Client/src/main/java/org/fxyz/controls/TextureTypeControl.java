@@ -49,23 +49,39 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
 
     protected ColorSliderControl colorSlider;
     protected ImagePreviewControl diffMapControl;
+    
     protected FileLoadControl imgLoader;
+    
     protected NumberSliderControl patternScaler;
     protected ComboBoxControl patternChooser;
+    
     protected ScriptFunction3DControl densFunct;
     protected ScriptFunction1DControl funcFunct;
+    
     protected ColorPickControl specColor;
     protected NumberSliderControl specSlider;
+    
+    protected CheckBoxControl bumpMap;
+    protected CheckBoxControl invertBumpMap;
+    protected NumberSliderControl bumpScale;
+    protected NumberSliderControl bumpFine;
+    
     
     private final BooleanBinding  useColorSlider,
             useImage, usePatternScaler ,
             useDensScriptor, useFuncScriptor,
-            usePatternChooser, useSpecColor, useSpecPower;
+            usePatternChooser,
+            useSpecColor, useSpecPower,
+            useBumpMapping;
     
     public TextureTypeControl(String lbl, Property<TextureType> type, Collection<TextureType> items,
             final Property<Number> colors,
             final Property<Boolean> udm,
             final Property<Image> dmp,
+            final Property<Boolean> bmpMap,
+            final Property<Number> bmpScale,
+            final Property<Number> bmpFineScale,
+            final Property<Boolean> invBmp,
             final Property<CarbonPatterns> patt,
             final Property<Number> pScale,
             final Property<Color> spColor,
@@ -74,7 +90,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             final Property<Function<Number,Number>> funcFunc
     ) {
         super(lbl, type, items, true);
-        buildSubControls(colors, udm, dmp, pScale, patt, spColor, specP, densFunc, funcFunc);
+        buildSubControls(colors, udm, dmp,bmpMap,bmpScale,bmpFineScale,invBmp, pScale, patt, spColor, specP, densFunc, funcFunc);
         this.useColorSlider = selection.valueProperty().isEqualTo(TextureType.NONE);
         this.useImage = selection.valueProperty().isEqualTo(TextureType.IMAGE);
         this.usePatternScaler = selection.valueProperty().isEqualTo(TextureType.PATTERN);   
@@ -83,6 +99,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         this.usePatternChooser = selection.valueProperty().isEqualTo(TextureType.PATTERN);
         this.useSpecColor = selection.valueProperty().isNotNull();
         this.useSpecPower = selection.valueProperty().isNotNull();
+        this.useBumpMapping = selection.valueProperty().isNotNull();
+        
                 
         EasyBind.includeWhen(subControls.getChildren(), patternChooser, usePatternChooser);
         EasyBind.includeWhen(subControls.getChildren(), colorSlider, useColorSlider);
@@ -93,6 +111,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         EasyBind.includeWhen(subControls.getChildren(), funcFunct, useFuncScriptor);
         EasyBind.includeWhen(subControls.getChildren(), specColor, useSpecColor);
         EasyBind.includeWhen(subControls.getChildren(), specSlider, useSpecPower);
+        EasyBind.includeWhen(subControls.getChildren(), bumpMap, useBumpMapping);
     }
 
     @Override
@@ -104,6 +123,10 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             final Property<Number> colors, 
             final Property<Boolean> udm, 
             final Property<Image> img, 
+            final Property<Boolean> bmpMap,
+            final Property<Number> bmpScale,
+            final Property<Number> bmpFineScale,
+            final Property<Boolean> invBmp, 
             final Property<Number> pScale, 
             final Property<CarbonPatterns> patt,
             final Property<Color> spColor,
@@ -114,6 +137,11 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         specColor = new ColorPickControl(spColor, "Specular Color: ");
         specColor.setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);
         specSlider = ControlFactory.buildNumberSlider(specP, 32, 10000);
+        
+        bumpMap = ControlFactory.buildCheckBoxControl(bmpMap);
+        invertBumpMap = ControlFactory.buildCheckBoxControl(invBmp);
+        bumpScale = ControlFactory.buildNumberSlider(bmpScale, 1, 100);
+        bumpFine = ControlFactory.buildNumberSlider(bmpFineScale, 1, 10);
         
         colorSlider = ControlFactory.buildColorSliderControl(colors, 0l, 1530l);
         diffMapControl = ControlFactory.buildImageViewToggle(udm, img, "Diffuse Map Image:");
