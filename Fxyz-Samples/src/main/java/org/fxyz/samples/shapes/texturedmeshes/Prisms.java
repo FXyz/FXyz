@@ -214,14 +214,15 @@ public class Prisms extends TexturedMeshSample{
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
                         this.drawMode,
-                        this.culling,
-                        this.material.diffuseColorProperty(),
-                        this.material.specularColorProperty()
+                        this.culling
                 ),
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
                         this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(), 
-                        this.patterns, this.pattScale, this.dens, this.func)
+                        this.patterns, this.pattScale,
+                        this.specColor, this.specularPower, 
+                        this.dens, this.func
+                )
         );
         
         return this.controlPanel;

@@ -219,7 +219,7 @@ public class Knots extends TexturedMeshSample {
                 this.model.setMaterial(null);
             }
         }));
-
+        model.materialProperty().addListener(i->System.out.println(model.getMaterial().hashCode()));
     }
 
     @Override
@@ -287,16 +287,16 @@ public class Knots extends TexturedMeshSample {
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
                         this.drawMode,
-                        this.culling,
-                        this.material.diffuseColorProperty(),
-                        this.material.specularColorProperty()
+                        this.culling
                 ),
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(
                         this.textureType, this.colors,
                         this.sectionType, this.useDiffMap,
                         this.material.diffuseMapProperty(), 
-                        this.patterns, this.pattScale, this.dens, this.func
+                        this.patterns, this.pattScale, 
+                        this.specColor, this.specularPower,  
+                        this.dens, this.func
                 )
         );
 

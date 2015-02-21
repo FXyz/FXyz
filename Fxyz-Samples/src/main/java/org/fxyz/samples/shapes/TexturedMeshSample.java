@@ -32,6 +32,7 @@ package org.fxyz.samples.shapes;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.function.Function;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -44,10 +45,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Patterns.CarbonPatterns;
 import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
+import org.fxyz.tools.NormalMap;
 
 /**
  *
@@ -55,7 +58,6 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
  */
 public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
 
-    
     //specific
         
     protected final Property<TriangleMeshHelper.SectionType> sectionType = new SimpleObjectProperty<TriangleMeshHelper.SectionType>(model, "secType", TriangleMeshHelper.SectionType.CIRCLE) {
@@ -189,5 +191,79 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
         }
     };
     
+    protected final Property<Boolean> invert = new SimpleBooleanProperty(this, "invertBump", false){
+        @Override
+        protected void invalidated() {
+            if(model != null){
+            }
+        }
+    };
+    protected final DoubleProperty bumpScale = new SimpleDoubleProperty(this, "bumpScale", 2.0d) {
+        @Override
+        protected void invalidated() {
+             if(model != null){
+                 
+             }
+        }
+    };
+    protected final ObjectProperty<Image> bumpMap = new SimpleObjectProperty<Image>(this, "bumpMap", null){
+        @Override
+        protected void invalidated() {
+             if(model != null){
+             }
+        }
+    };
+    protected final DoubleProperty bumpFineScale = new SimpleDoubleProperty(this, "bumpFineScale", 0.3d){
+        @Override
+        protected void invalidated() {
+             if(model != null){
+             }
+        }
+    };
+    protected final BooleanProperty addNormalMap = new SimpleBooleanProperty(this, "useBump", false) {
+        @Override
+        protected void invalidated() {
+            if (get()) {
+                if (model != null) {
+                    if (model.getMaterial() != null && ((PhongMaterial) model.getMaterial()).getDiffuseMap() != null) {
+                        ((PhongMaterial) model.getMaterial()).setBumpMap(
+                                new NormalMap(
+                                        bumpScale.doubleValue(), bumpFineScale.doubleValue(),
+                                        invert.getValue(), ((PhongMaterial) model.getMaterial()).getDiffuseMap()
+                                )
+                        );
+                    }
+                }
+            } else {
+                if (model != null) {
+                    ((PhongMaterial) model.getMaterial()).setBumpMap(null);
+                }
+            }
+        }
+
+    };
+
+    protected final DoubleProperty specularPower = new SimpleDoubleProperty(this, "specularPower"){
+        @Override
+        protected void invalidated() {
+                if (model != null) {
+                    if (model.getMaterial() != null) {
+                        ((PhongMaterial)model.getMaterial()).setSpecularPower(specularPower.getValue());
+                    }
+                }
+            }
+    };
     
+    protected final ObjectProperty<Color> specColor = new SimpleObjectProperty<Color>(this, "specColor", Color.TRANSPARENT){
+
+        @Override
+        protected void invalidated() {
+            if (model != null) {
+                    if (model.getMaterial() != null) {
+                        ((PhongMaterial)model.getMaterial()).setSpecularColor(specColor.getValue());
+                    }
+                }
+        }
+    
+    };
 }

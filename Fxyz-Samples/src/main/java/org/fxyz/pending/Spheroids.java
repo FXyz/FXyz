@@ -45,7 +45,6 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import org.fxyz.controls.ComboBoxControl;
 import org.fxyz.controls.ControlCategory;
-import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.samples.shapes.ShapeBaseSample;
@@ -184,11 +183,11 @@ public class Spheroids extends ShapeBaseSample {
                 illumImage, useIlluImage
         );
         //==============================================================
-        ControlPanel cPanel = ControlFactory.buildControlPanel(ControlFactory.buildMeshViewCategory(wireMode, culling, diffColor, specColor), geom);
-        cPanel.getPanes().add(images);
-        cPanel.setExpandedPane(geom);
+        //ControlPanel cPanel = ControlFactory.buildControlPanel(ControlFactory.buildMeshViewCategory(wireMode, culling, diffColor, specColor), geom);
+        //cPanel.getPanes().add(images);
+        //cPanel.setExpandedPane(geom);
 
-        return cPanel;
+        return controlPanel;
     }
 
     @Override

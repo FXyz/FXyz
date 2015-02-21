@@ -30,7 +30,6 @@
 package org.fxyz.shapes.primitives.helper;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -44,7 +43,6 @@ import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Palette;
 import org.fxyz.scene.paint.Patterns;
 import org.fxyz.scene.paint.Patterns.CarbonPatterns;
-import org.fxyz.tools.NormalMap;
 
 /**
  *
@@ -88,9 +86,18 @@ public class TriangleMeshHelper {
     
     public static final SectionType DEFAULT_SECTION_TYPE= SectionType.CIRCLE;
     private SectionType sectionType=DEFAULT_SECTION_TYPE;
+    private final PhongMaterial material = new PhongMaterial();
+    
     
     public TriangleMeshHelper(){
+        material.setDiffuseColor(DEFAULT_DIFFUSE_COLOR);
     }
+
+    public final PhongMaterial getMaterial() {
+        return material;
+    }
+    
+    
     
     public void setSectionType(SectionType sectionType){
         this.sectionType = sectionType;
@@ -152,28 +159,31 @@ public class TriangleMeshHelper {
         createCarbonPattern(cp);
         return patterns.getPatternImage();
     }
-    public Material getMaterialWithPattern(){
-        return getMaterialWithPattern(DEFAULT_CARBON_PATTERN);
+    public void getMaterialWithPattern(){
+        getMaterialWithPattern(DEFAULT_CARBON_PATTERN);
     }
     public void setMaterialWithPattern(Material mat, CarbonPatterns cp){
         if(mat==null){
-            mat=new PhongMaterial();
+            //mat=new PhongMaterial();
         }
         Image img = getPatternImage(cp);  
-        ((PhongMaterial)mat).setDiffuseMap(img);    
+        //((PhongMaterial)mat).setDiffuseMap(img); 
+        clearMaterialAndSetDiffMap(material, img);
     }
-    public Material getMaterialWithPattern(CarbonPatterns cp){
-        PhongMaterial mat = new PhongMaterial();
+    public void getMaterialWithPattern(CarbonPatterns cp){
+        //PhongMaterial mat = new PhongMaterial();
         Image img = getPatternImage(cp);  
-        mat.setDiffuseMap(img);
+        //material.setDiffuseMap(img);
         //mat.setBumpMap(new NormalMap(27,9,false,img));
-        return mat;
+        //return material;
+        clearMaterialAndSetDiffMap(material, img);
     }
     
     /*
     Colors, palette
     */
     public final static Color DEFAULT_DIFFUSE_COLOR = Color.WHITE;
+    public final static Color DEFAULT_SPECULAR_COLOR = Color.BLACK;
     public final static int DEFAULT_COLORS = 1530;
     public final static boolean DEFAULT_SAVE_PALETTE = false;
     private Palette palette;
@@ -203,31 +213,34 @@ public class TriangleMeshHelper {
     
     public void setMaterialWithPalette(Material mat){
         if(mat==null){
-            mat=new PhongMaterial();
+            //mat=new PhongMaterial();
         }
         Image img = getPaletteImage();
-        ((PhongMaterial)mat).setDiffuseMap(img);    
+        //((PhongMaterial)mat).setDiffuseMap(img); 
+        clearMaterialAndSetDiffMap(material, img);
     }
     
-    public Material getMaterialWithPalette(){
-        PhongMaterial mat = new PhongMaterial();
+    public void getMaterialWithPalette(){
+        //PhongMaterial mat = new PhongMaterial();
         Image img = getPaletteImage();
-        mat.setDiffuseMap(img);        
+        clearMaterialAndSetDiffMap(material, img);    
         //mat.setBumpMap(new NormalMap(1,10,true,img));
-        return mat;
+        //return material;
     }
     
     public void setMaterialWithColor(Material mat, Color color){
         if(mat==null){
-            mat=new PhongMaterial();
+            //mat=new PhongMaterial();
         }
-        ((PhongMaterial)mat).setDiffuseColor(color);
-        ((PhongMaterial)mat).setDiffuseMap(null);  
+        //((PhongMaterial)mat).setDiffuseColor(color);
+        //((PhongMaterial)mat).setDiffuseMap(null);  
+        clearMaterialAndSetColor(material, color);
     }
     
-    public Material getMaterialWithColor(Color color){
-        PhongMaterial mat = new PhongMaterial(color);
-        return mat;
+    public void getMaterialWithColor(Color color){
+        //PhongMaterial mat = new PhongMaterial(color);
+        clearMaterialAndSetColor(material, color);
+        //return material;
     }
     
     public float[] getTexturePaletteArray(){
@@ -318,18 +331,20 @@ public class TriangleMeshHelper {
     */
     public void setMaterialWithImage(Material mat, String image){
         if(mat==null){
-            mat=new PhongMaterial();
+           // mat=new PhongMaterial();
         }
         Image img = new Image(image);  
-        ((PhongMaterial)mat).setDiffuseMap(img);    
-        ((PhongMaterial)mat).setBumpMap(new NormalMap(img));   
+        clearMaterialAndSetDiffMap(material, img);
+        //((PhongMaterial)mat).setDiffuseMap(img);    
+        //((PhongMaterial)mat).setBumpMap(new NormalMap(img));   
     }
-    public Material getMaterialWithImage(String image){
-        PhongMaterial mat = new PhongMaterial();
+    public void getMaterialWithImage(String image){
+        //PhongMaterial mat = new PhongMaterial();
         Image img = new Image(image);
-        mat.setDiffuseMap(img);
-        mat.setBumpMap(new NormalMap(img));
-        return mat;
+        //mat.setDiffuseMap(img);
+        //mat.setBumpMap(new NormalMap(img));
+        clearMaterialAndSetDiffMap(material, img);
+        //return material;
     }
     
     /*
@@ -541,4 +556,26 @@ public class TriangleMeshHelper {
             return false;
         }).collect(Collectors.toList());
     }
+    
+    private void clearMaterialAndSetDiffMap(PhongMaterial mat, Image diff){
+        mat.setBumpMap(null);
+        mat.setSpecularMap(null);
+        mat.setSelfIlluminationMap(null);
+        
+        mat.setDiffuseColor(DEFAULT_DIFFUSE_COLOR);
+        mat.setSpecularColor(DEFAULT_SPECULAR_COLOR);
+        
+        mat.setDiffuseMap(diff);        
+    }
+    
+    private void clearMaterialAndSetColor(PhongMaterial mat, Color col){
+        mat.setBumpMap(null);
+        mat.setSpecularMap(null);
+        mat.setSelfIlluminationMap(null);
+        mat.setDiffuseMap(null);
+        
+        mat.setDiffuseColor(col);
+       
+    }
+    
 }

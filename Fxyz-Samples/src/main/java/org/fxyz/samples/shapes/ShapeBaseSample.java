@@ -57,6 +57,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
@@ -406,12 +407,12 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 
                 mainPane.getChildren().remove(progressBar);
 
-                if (model != null && model instanceof Shape3D) {
-                    material = (PhongMaterial) ((Shape3D) model).getMaterial();
+                if (model != null && model instanceof MeshView) {
+                    material = (PhongMaterial) ((MeshView) model).getMaterial();
                 } else {
                     if (model != null && model instanceof Group) {
-                        if (!((Group) model).getChildren().filtered(isShape -> isShape instanceof Shape3D).isEmpty()) {
-                            material = (PhongMaterial) ((Shape3D) ((Group) model).getChildren().filtered(t -> t instanceof Shape3D).get(0)).getMaterial();
+                        if (!((Group) model).getChildren().filtered(isShape -> isShape instanceof MeshView).isEmpty()) {
+                            material = (PhongMaterial) ((MeshView) ((Group) model).getChildren().filtered(t -> t instanceof MeshView).get(0)).getMaterial();
                         }
                     }
                 }
@@ -462,7 +463,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                     }
 
                     modelInfo.getSampleTitle().setText(getSampleName());
-
+                    
                 }
             }
         };
