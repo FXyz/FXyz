@@ -98,5 +98,9 @@ public class ImagePreviewControl extends ControlBase<Property<Image>> {
         controlledProperty.bind(imageSelector.valueProperty());
     }
 
+    public final ComboBox<Image> getImageSelector() {
+        return imageSelector;
+    }
+
     
 }

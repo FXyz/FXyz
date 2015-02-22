@@ -147,12 +147,11 @@ public class SurfacePlot extends TexturedMeshSample {
                         this.culling
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(
-                        this.textureType,
+                ControlFactory.buildTextureMeshCategory(this.textureType,
                         this.colors,
                         null,
                         this.textureImage,
-                        this.addNormalMap, 
+                        this.useBumpMap, 
                         this.bumpScale,
                         this.bumpFineScale, 
                         this.invert,

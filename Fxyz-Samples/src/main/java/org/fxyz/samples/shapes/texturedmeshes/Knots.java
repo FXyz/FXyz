@@ -281,10 +281,9 @@ public class Knots extends TexturedMeshSample {
                         this.culling
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(
-                        this.textureType, this.colors,
+                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors,
                         this.sectionType, this.textureImage,
-                        this.addNormalMap, this.bumpScale,
+                        this.useBumpMap, this.bumpScale,
                         this.bumpFineScale, this.invert,
                         this.patterns, this.pattScale, 
                         this.specColor, this.specularPower,  

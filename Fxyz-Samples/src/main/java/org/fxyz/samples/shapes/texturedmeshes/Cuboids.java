@@ -129,7 +129,7 @@ public class Cuboids extends TexturedMeshSample{
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
                         null, this.textureImage,
-                        this.addNormalMap, this.bumpScale,
+                        this.useBumpMap, this.bumpScale,
                         this.bumpFineScale, this.invert,
                         this.patterns, this.pattScale, 
                         this.specColor, this.specularPower, 

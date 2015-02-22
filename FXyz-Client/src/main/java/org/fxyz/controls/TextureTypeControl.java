@@ -120,7 +120,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         this.usePatternChooser = selection.valueProperty().isEqualTo(TextureType.PATTERN);
         this.usePatternScaler = selection.valueProperty().isEqualTo(TextureType.PATTERN);   
         
-        this.useBumpMapping = selection.valueProperty().isNotNull().and(usePatternChooser).or(useImage);
+        this.useBumpMapping = selection.valueProperty().isNotNull().and(usePatternChooser).or(useImage)
+                .and(diffMapControl.getImageSelector().valueProperty().isNotEqualTo(animatedWater));
         
         this.useDensScriptor = selection.valueProperty().isEqualTo(TextureType.COLORED_VERTICES_3D);
         this.useFuncScriptor = selection.valueProperty().isEqualTo(TextureType.COLORED_VERTICES_1D);

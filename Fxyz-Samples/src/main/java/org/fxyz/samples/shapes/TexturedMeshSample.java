@@ -125,7 +125,8 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
         @Override
         protected void invalidated() {
             if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.IMAGE)) {
-                material.setDiffuseMap(textureImage.getValue());
+                //material.setDiffuseMap(textureImage.getValue());
+                model.setTextureModeImage(textureImage.getValue());
             }             
         }
     };
@@ -137,7 +138,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                 model.setCarbonPattern(patterns.getValue());
                 material.setSpecularColor(specColorBinding.get());
                 material.setSpecularPower(specularPower.doubleValue());
-                if(addNormalMap.get()){
+                if(useBumpMap.get()){
                     material.setBumpMap(new NormalMap(
                                         bumpScale.doubleValue(), bumpFineScale.doubleValue(),
                                         invert.getValue(), ((PhongMaterial) model.getMaterial()).getDiffuseMap()
@@ -189,7 +190,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
     protected final Property<Boolean> invert = new SimpleBooleanProperty(this, "invertBump", false){
         @Override
         protected void invalidated() {
-            if(model != null){
+            if(model != null && useBumpMap.getValue()){
                 if (model.getMaterial() != null && ((PhongMaterial) model.getMaterial()).getDiffuseMap() != null) {
                         ((PhongMaterial) model.getMaterial()).setBumpMap(
                                 new NormalMap(
@@ -238,7 +239,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
              }
         }
     };
-    protected final BooleanProperty addNormalMap = new SimpleBooleanProperty(this, "useBump", false) {
+    protected final BooleanProperty useBumpMap = new SimpleBooleanProperty(this, "useBump", false) {
         @Override
         protected void invalidated() {
             if (get()) {
