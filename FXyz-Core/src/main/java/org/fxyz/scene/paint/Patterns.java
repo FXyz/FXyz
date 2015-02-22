@@ -220,8 +220,8 @@ public class Patterns {
     }
 
     public static final ImagePattern createLightCarbonPattern() {
-        final double WIDTH = 24;
-        final double HEIGHT = 24;
+        final double WIDTH = 12;
+        final double HEIGHT = 12;
         final Canvas CANVAS = new Canvas(WIDTH, HEIGHT);
         final GraphicsContext CTX = CANVAS.getGraphicsContext2D();
 
@@ -322,8 +322,8 @@ public class Patterns {
     }
 
     public static final ImagePattern createCarbonKevlarPattern() {
-        final double WIDTH = 24;
-        final double HEIGHT = 24;
+        final double WIDTH = 12;
+        final double HEIGHT = 12;
         final Canvas CANVAS = new Canvas(WIDTH, HEIGHT);
         final GraphicsContext CTX = CANVAS.getGraphicsContext2D();
 

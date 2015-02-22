@@ -49,10 +49,12 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 public class TextureTypeControl extends ComboBoxControl<TextureType>{
 
     private static final Image 
-            animatedWater = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/anim.gif").toExternalForm()),
-            texture02 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture002.jpg").toExternalForm()), 
-            texture03 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture003.jpg").toExternalForm()), 
-            texture04 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture004.jpg").toExternalForm());
+            //animatedWater = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/anim.gif").toExternalForm()),
+            texture01 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture002.jpg").toExternalForm()), 
+            texture02 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/diamondPlate.jpg").toExternalForm()),
+            texture03 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/tiled.jpg").toExternalForm()),
+            texture04 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/water.jpg").toExternalForm()),
+            texture05 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/metal-scale-tile.jpg").toExternalForm());
     protected final ObservableList<Image> textures ;
     
     protected ColorSliderControl colorSlider;
@@ -101,7 +103,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             final Property<Function<Number,Number>> funcFunc
     ) {
         super(lbl, type, items, true);
-        this.textures = FXCollections.observableArrayList(animatedWater,texture02,texture03,texture04);
+        this.textures = FXCollections.observableArrayList(texture01,texture02,texture03,texture04, texture05);
         
         buildSubControls(
                 colors,
@@ -120,8 +122,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         this.usePatternChooser = selection.valueProperty().isEqualTo(TextureType.PATTERN);
         this.usePatternScaler = selection.valueProperty().isEqualTo(TextureType.PATTERN);   
         
-        this.useBumpMapping = selection.valueProperty().isNotNull().and(usePatternChooser).or(useImage)
-                .and(diffMapControl.getImageSelector().valueProperty().isNotEqualTo(animatedWater));
+        this.useBumpMapping = selection.valueProperty().isEqualTo(TextureType.IMAGE)
+                .or(selection.valueProperty().isEqualTo(TextureType.PATTERN));
         
         this.useDensScriptor = selection.valueProperty().isEqualTo(TextureType.COLORED_VERTICES_3D);
         this.useFuncScriptor = selection.valueProperty().isEqualTo(TextureType.COLORED_VERTICES_1D);
@@ -146,10 +148,10 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         EasyBind.includeWhen(subControls.getChildren(), specColor, useSpecColor);
         EasyBind.includeWhen(subControls.getChildren(), specSlider, useSpecPower);
         
-        EasyBind.includeWhen(subControls.getChildren(), bumpMap, useBumpMapping);
-        EasyBind.includeWhen(subControls.getChildren(), invertBumpMap, useBumpMapping);
-        EasyBind.includeWhen(subControls.getChildren(), bumpScale, useBumpMapping);
-        EasyBind.includeWhen(subControls.getChildren(), bumpFine, useBumpMapping);
+        EasyBind.includeWhen(subControls.getChildren(), bumpMap, useBumpMapping);//.or(diffMapControl.getImageSelector().valueProperty().isNotEqualTo(animatedWater)));
+        EasyBind.includeWhen(subControls.getChildren(), invertBumpMap, useBumpMapping);//.or(diffMapControl.getImageSelector().valueProperty().isNotEqualTo(animatedWater)));
+        EasyBind.includeWhen(subControls.getChildren(), bumpScale, useBumpMapping);//.or(diffMapControl.getImageSelector().valueProperty().isNotEqualTo(animatedWater)));
+        EasyBind.includeWhen(subControls.getChildren(), bumpFine, useBumpMapping);//.or(diffMapControl.getImageSelector().valueProperty().isNotEqualTo(animatedWater)));
     }
 
     @Override
@@ -181,8 +183,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         // only if image or pattern        
         bumpMap = ControlFactory.buildCheckBoxControl(bmpMap);
         invertBumpMap = ControlFactory.buildCheckBoxControl(invBmp);
-        bumpScale = ControlFactory.buildNumberSlider(bmpScale, 0.01, 10);
-        bumpFine = ControlFactory.buildNumberSlider(bmpFineScale, 0.01, 10);
+        bumpScale = ControlFactory.buildNumberSlider(bmpScale, 0, 100);
+        bumpFine = ControlFactory.buildNumberSlider(bmpFineScale, 0.01, 100);
         // only if texture none
         colorSlider = ControlFactory.buildColorSliderControl(colors, 0l, 1530l);
         //

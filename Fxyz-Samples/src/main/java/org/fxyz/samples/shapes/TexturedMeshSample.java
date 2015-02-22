@@ -187,7 +187,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
         }
     };
     
-    protected final Property<Boolean> invert = new SimpleBooleanProperty(this, "invertBump", false){
+    protected final Property<Boolean> invert = new SimpleBooleanProperty(this, "Invert Bump Map", false){
         @Override
         protected void invalidated() {
             if(model != null && useBumpMap.getValue()){
@@ -202,7 +202,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             }
         }
     };
-    protected final DoubleProperty bumpScale = new SimpleDoubleProperty(this, "bumpScale", 27d) {
+    protected final DoubleProperty bumpScale = new SimpleDoubleProperty(this, "Bump Scale", 27d) {
         @Override
         protected void invalidated() {
              if(model != null){
@@ -224,7 +224,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
              }
         }
     };
-    protected final DoubleProperty bumpFineScale = new SimpleDoubleProperty(this, "bumpFineScale", 9d){
+    protected final DoubleProperty bumpFineScale = new SimpleDoubleProperty(this, "Bump Fine Scale", 9d){
         @Override
         protected void invalidated() {
              if(model != null){
@@ -239,7 +239,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
              }
         }
     };
-    protected final BooleanProperty useBumpMap = new SimpleBooleanProperty(this, "useBump", false) {
+    protected final BooleanProperty useBumpMap = new SimpleBooleanProperty(this, "Generate Bump Map", false) {
         @Override
         protected void invalidated() {
             if (get()) {
@@ -262,7 +262,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
 
     };
 
-    protected final DoubleProperty specularPower = new SimpleDoubleProperty(this, "specularPower"){
+    protected final DoubleProperty specularPower = new SimpleDoubleProperty(this, "Specular Power"){
         @Override
         protected void invalidated() {
                 if (model != null) {
@@ -282,7 +282,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
             }
         }
     };
-    protected final IntegerProperty specColor = new SimpleIntegerProperty(this, "specColor", 1){
+    protected final IntegerProperty specColor = new SimpleIntegerProperty(this, "Specular Color", 1){
 
         @Override
         protected void invalidated() {
