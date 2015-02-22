@@ -39,10 +39,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import org.fxyz.controls.TextureImage;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Patterns.CarbonPatterns;
 import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 import org.fxyz.tools.NormalMap;
 
 /**
@@ -61,7 +63,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh> {
             }
         }
     };
-    protected final Property<TriangleMeshHelper.TextureType> textureType = new SimpleObjectProperty<TriangleMeshHelper.TextureType>(model, "texType", TriangleMeshHelper.TextureType.NONE) {
+    protected final Property<TextureType> textureType = new SimpleObjectProperty<TextureType>(model, "texType", TriangleMeshHelper.TextureType.NONE) {
         @Override
         protected void invalidated() {
             super.invalidated();
@@ -75,7 +77,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh> {
                         }
                         break;
                     case IMAGE:
-                        model.setTextureModeImage(textureImage.getValue());
+                        model.setTextureModeImage(textureImage.getValue()==null?null:textureImage.getValue().getImage());
                         if (useBumpMap.getValue() || invert.getValue()) {
                             useBumpMap.setValue(false);
                             invert.setValue(false);
@@ -141,12 +143,12 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh> {
     /*
      TriangleMeshHelper.TextureType.IMAGE 
      */
-    protected final Property<Image> textureImage = new SimpleObjectProperty(this, "Texture") {
+    protected final Property<TextureImage> textureImage = new SimpleObjectProperty(this, "Texture") {
         @Override
         protected void invalidated() {
             if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.IMAGE)) {
                 //material.setDiffuseMap(textureImage.getValue());
-                model.setTextureModeImage(textureImage.getValue());
+                model.setTextureModeImage(textureImage.getValue().getImage());
                 if (useBumpMap.getValue() || invert.getValue()) {
                     useBumpMap.setValue(false);
                     invert.setValue(false);

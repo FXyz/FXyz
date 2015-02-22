@@ -30,6 +30,7 @@
 package org.fxyz.samples.shapes;
 
 import java.util.function.Function;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -41,11 +42,17 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import org.fxyz.controls.TextureImage;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Patterns;
+import org.fxyz.scene.paint.Patterns.CarbonPatterns;
 import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
+import org.fxyz.tools.NormalMap;
 
 /**
  *
@@ -71,7 +78,7 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
                                 s.setTextureModeNone(colorBinding.get());
                                 break;
                             case IMAGE:
-                                s.setTextureModeImage(null);
+                                s.setTextureModeImage(textureImage.getValue()==null?null:textureImage.getValue().getImage());
                                 break;
                             case PATTERN:
                                 s.setTextureModePattern(patterns.get(), pattScale.getValue());
@@ -94,31 +101,32 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
             if (model != null){
                 model.getChildren().stream().filter(TexturedMesh.class::isInstance)
                     .map(TexturedMesh.class::cast)
-                    .forEach(s->{
-                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.NONE)) {
-                            s.setDiffuseColor(c1);
-                        }
-                    });
+                    .filter(s->s.getTextureType().equals(TextureType.NONE))
+                    .forEach(s->s.setDiffuseColor(c1));
             }
         });
         pattScale.addListener((obs,p0,p1)->{
             if (model != null){
                 model.getChildren().stream().filter(TexturedMesh.class::isInstance)
                     .map(TexturedMesh.class::cast)
-                    .forEach(s->{
-                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
-                            s.setPatternScale(p1.doubleValue());
-                        }
-                    });
+                    .filter(s->s.getTextureType().equals(TextureType.PATTERN))
+                    .forEach(s->s.setPatternScale(p1.doubleValue()));
             }
         });
         patterns.addListener((obs,c0,c1)->{
             if (model != null){
                 model.getChildren().stream().filter(TexturedMesh.class::isInstance)
                     .map(TexturedMesh.class::cast)
+                    .filter(s->s.getTextureType().equals(TextureType.PATTERN))
                     .forEach(s->{
-                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.PATTERN)) {
-                            s.setCarbonPattern(c1);
+                        s.setCarbonPattern(c1);
+                        ((PhongMaterial)s.getMaterial()).setSpecularColor(specColorBinding.get());
+                        ((PhongMaterial)s.getMaterial()).setSpecularPower(specularPower.doubleValue());
+                        if (useBumpMap.get()) {
+                            ((PhongMaterial)s.getMaterial()).setBumpMap(new NormalMap(
+                                    bumpScale.doubleValue(), bumpFineScale.doubleValue(),
+                                    invert.getValue(), ((PhongMaterial) s.getMaterial()).getDiffuseMap()
+                            ));
                         }
                     });
             }
@@ -127,41 +135,62 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
             if (model != null){
                 model.getChildren().stream().filter(TexturedMesh.class::isInstance)
                     .map(TexturedMesh.class::cast)
-                    .forEach(s->{
-                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.COLORED_VERTICES_3D)) {
-                            s.setDensity(f1);
-                        }
-                    });
+                    .filter(s->s.getTextureType().equals(TextureType.COLORED_VERTICES_3D))
+                    .forEach(s->s.setDensity(f1));
             }
         });
         func.addListener((obs,f0,f1)->{
             if (model != null){
                 model.getChildren().stream().filter(TexturedMesh.class::isInstance)
                     .map(TexturedMesh.class::cast)
+                    .filter(s->s.getTextureType().equals(TextureType.COLORED_VERTICES_1D))
+                    .forEach(s->s.setFunction(f1));
+            }
+        });
+        textureImage.addListener((obs,f0,f1)->{
+            if (model != null){
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
+                    .filter(s->s.getTextureType().equals(TextureType.IMAGE))
                     .forEach(s->{
-                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.COLORED_VERTICES_1D)) {
-                            s.setFunction(f1);
+                        s.setTextureModeImage(f1.getImage());
+                        if (useBumpMap.getValue() || invert.getValue()) {
+                            useBumpMap.setValue(false);
+                            invert.setValue(false);
                         }
                     });
             }
         });
-        useDiffMap.addListener((obs,b0,b1)->{
-            if (model != null){
+        
+        invert.addListener((obs,b,b1)->updateGroupMaterial());
+        bumpScale.addListener((obs,b,b1)->updateGroupMaterial());
+        bumpFineScale.addListener((obs,b,b1)->updateGroupMaterial());
+        useBumpMap.addListener((obs,b,b1)->{
+            if (b1) {
+                updateGroupMaterial();
+            } else {
+                if (model != null) {
+                    model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                        .map(TexturedMesh.class::cast)
+                        .forEach(s->((PhongMaterial)s.getMaterial()).setBumpMap(null));
+                }
+            }
+        });
+        specularPower.addListener((obs,n,n1)->{
+            if (model != null) {
                 model.getChildren().stream().filter(TexturedMesh.class::isInstance)
                     .map(TexturedMesh.class::cast)
                     .forEach(s->{
-                        if(s.getTextureType().equals(TriangleMeshHelper.TextureType.IMAGE)) {
-//                            if (diffMapPath.get().isEmpty()) {
-                                //load default
-                                diffMapPath.set(getClass().getResource("/org/fxyz/samples/res/LaminateSteel.jpg").toExternalForm());
-//                            } else {
-//                                try { // should be given the string from filechooser
-//                                    material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
-//                                } catch (Exception e) {
-//                                    e.printStackTrace(System.err);
-//                                }
-//                            }
-                        }
+                        ((PhongMaterial)s.getMaterial()).setSpecularPower(n1.doubleValue());
+                    });
+            }
+        });
+        specColorBinding.addListener((obs,c,c1)->{
+            if (model != null) {
+                model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                    .map(TexturedMesh.class::cast)
+                    .forEach(s->{
+                        ((PhongMaterial)s.getMaterial()).setSpecularColor(c1);
                     });
             }
         });
@@ -184,15 +213,44 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
     /*
      TriangleMeshHelper.TextureType.IMAGE 
     */
-    protected final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", getClass().getResource("/org/fxyz/samples/res/LaminateSteel.jpg").toExternalForm());
-    protected final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {};
+    protected final Property<TextureImage> textureImage = new SimpleObjectProperty(this, "Texture");
     
     /*
      TriangleMeshHelper.TextureType.PATTERN 
     */
     protected final DoubleProperty pattScale = new SimpleDoubleProperty(this, "Pattern Scale: ", 2.0d) {};
-    protected final ObjectProperty<Patterns.CarbonPatterns> patterns = new SimpleObjectProperty<Patterns.CarbonPatterns>(Patterns.CarbonPatterns.DARK_CARBON){};
+    protected final ObjectProperty<CarbonPatterns> patterns = new SimpleObjectProperty<CarbonPatterns>(Patterns.CarbonPatterns.DARK_CARBON){};
     
+    private void updateGroupMaterial(){
+        if (model != null) {
+            model.getChildren().stream().filter(TexturedMesh.class::isInstance)
+                .map(TexturedMesh.class::cast)
+                .filter(s->((PhongMaterial)s.getMaterial()).getDiffuseMap()!=null)
+                .forEach(s->{
+                    ((PhongMaterial)s.getMaterial()).setBumpMap(
+                        new NormalMap(bumpScale.doubleValue(), bumpFineScale.doubleValue(),
+                                      invert.getValue(), ((PhongMaterial)s.getMaterial()).getDiffuseMap()));
+                });
+        }
+    }
+    protected final Property<Boolean> invert = new SimpleBooleanProperty(this, "Invert Bump Map", false);
+    protected final DoubleProperty bumpScale = new SimpleDoubleProperty(this, "Bump Scale", 27d);
+    protected final ObjectProperty<Image> bumpMap = new SimpleObjectProperty<Image>(this, "bumpMap", null);
+    protected final DoubleProperty bumpFineScale = new SimpleDoubleProperty(this, "Bump Fine Scale", 9d);
+    protected final BooleanProperty useBumpMap = new SimpleBooleanProperty(this, "Generate Bump Map", false);
+    protected final DoubleProperty specularPower = new SimpleDoubleProperty(this, "Specular Power");
+    protected final ObjectProperty<Color> specColorBinding = new SimpleObjectProperty<Color>(Color.BLACK);
+    protected final IntegerProperty specColor = new SimpleIntegerProperty(this, "Specular Color", 1) {
+
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                specColorBinding.set(Color.hsb(360 * (1d - get() / 1530d), 1, 1));
+            }
+        }
+
+    };
     /*
      TriangleMeshHelper.TextureType.COLORED_VERTICES_3D 
     */

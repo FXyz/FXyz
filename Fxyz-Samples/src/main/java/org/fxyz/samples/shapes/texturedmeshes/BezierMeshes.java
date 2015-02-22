@@ -213,11 +213,11 @@ public class BezierMeshes extends GroupOfTexturedMeshSample {
                 ),
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
-                        this.sectionType, null,
-                        null,null,//this.addNormalMap, this.bumpScale,
-                        null,null,//this.bumpFineScale, this.invert,
-                        this.patterns,this.pattScale,
-                        null, null,
+                        this.sectionType, this.textureImage,
+                        this.useBumpMap, this.bumpScale,
+                        this.bumpFineScale, this.invert,
+                        this.patterns, this.pattScale, 
+                        this.specColor, this.specularPower, 
                         this.dens, this.func
                 )
         );
