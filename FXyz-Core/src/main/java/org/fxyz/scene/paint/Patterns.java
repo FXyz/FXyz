@@ -220,8 +220,8 @@ public class Patterns {
     }
 
     public static final ImagePattern createLightCarbonPattern() {
-        final double WIDTH = 16;
-        final double HEIGHT = 16;
+        final double WIDTH = 24;
+        final double HEIGHT = 24;
         final Canvas CANVAS = new Canvas(WIDTH, HEIGHT);
         final GraphicsContext CTX = CANVAS.getGraphicsContext2D();
 
@@ -235,7 +235,7 @@ public class Patterns {
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
                 new Stop(0, Color.rgb(108, 108, 108)),
-                new Stop(1, Color.rgb(110, 100, 100))));
+                new Stop(1, Color.rgb(100, 100, 100))));
         CTX.fill();
 
         CTX.beginPath();
@@ -257,7 +257,7 @@ public class Patterns {
                 0, 0.5 * HEIGHT + offsetY * HEIGHT,
                 false, CycleMethod.NO_CYCLE,
                 new Stop(0, Color.rgb(108, 108, 108)),
-                new Stop(1, Color.rgb(110, 110, 110))));
+                new Stop(1, Color.rgb(100, 100, 100))));
         CTX.fill();
 
         CTX.beginPath();
@@ -322,8 +322,8 @@ public class Patterns {
     }
 
     public static final ImagePattern createCarbonKevlarPattern() {
-        final double WIDTH = 12;
-        final double HEIGHT = 12;
+        final double WIDTH = 24;
+        final double HEIGHT = 24;
         final Canvas CANVAS = new Canvas(WIDTH, HEIGHT);
         final GraphicsContext CTX = CANVAS.getGraphicsContext2D();
 

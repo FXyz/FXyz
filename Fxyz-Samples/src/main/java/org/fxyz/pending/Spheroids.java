@@ -176,12 +176,7 @@ public class Spheroids extends ShapeBaseSample {
         ControlCategory geom = ControlFactory.buildCategory("Geometry");
         geom.addControls(div, minor, major, cfc, ControlFactory.buildDrawModeControl(wireMode));
         //==============================================================
-        ControlCategory images = ControlFactory.buildMaterialMapCategory(
-                diffuseImage, useDiffImage,
-                bumpImage, useNormImage,
-                specImage, useSpecImage,
-                illumImage, useIlluImage
-        );
+       
         //==============================================================
         //ControlPanel cPanel = ControlFactory.buildControlPanel(ControlFactory.buildMeshViewCategory(wireMode, culling, diffColor, specColor), geom);
         //cPanel.getPanes().add(images);

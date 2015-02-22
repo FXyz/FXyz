@@ -29,40 +29,34 @@
 
 package org.fxyz.controls;
 
+import java.util.Collection;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 
 /**
  * FXML Controller class
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class ImagePreviewControl extends ControlBase<Property<Boolean>> {
+public class ImagePreviewControl extends ControlBase<Property<Image>> {
 
-    @FXML
-    private StackPane root;
     @FXML
     private ImageView preview;
     @FXML
-    private CheckBox useImage;
+    private ComboBox imageSelector;
     
-    
-    @FXML
-    private final Property<Image> image;
 
-    public ImagePreviewControl(final Property<Boolean> prop, final Property<? extends Image> img, String name) {
-        super("/org/fxyz/controls/ImageMapPreview.fxml", prop);
-        assert img != null;
-        this.image = new SimpleObjectProperty("image");
-        useImage.setText(name);
-        image.bindBidirectional((Property<Image>) img);
-        preview.imageProperty().bind(image);
-        controlledProperty.bind(useImage.selectedProperty());
+    public ImagePreviewControl(final Property<Image> img, String name, final Collection<Image> items) {
+        super("/org/fxyz/controls/ImageMapPreview.fxml", img);
+       
+        imageSelector.getItems().addAll(items);
+        imageSelector.getSelectionModel().selectFirst();
+        
+        preview.imageProperty().bind(imageSelector.valueProperty());
+        controlledProperty.bind(imageSelector.valueProperty());
     }
 
 }

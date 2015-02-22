@@ -30,7 +30,6 @@
 package org.fxyz.samples.shapes.texturedmeshes;
 
 import java.util.Objects;
-import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -212,14 +211,6 @@ public class Knots extends TexturedMeshSample {
     @Override
     protected void addMeshAndListeners() {
 
-        this.useDiffMap.addListener(new WeakInvalidationListener(i -> {
-            if (this.useDiffMap.getValue()) {
-                this.model.setMaterial(this.material);
-            } else if (!this.useDiffMap.getValue()) {
-                this.model.setMaterial(null);
-            }
-        }));
-        model.materialProperty().addListener(i->System.out.println(model.getMaterial().hashCode()));
     }
 
     @Override
@@ -292,8 +283,7 @@ public class Knots extends TexturedMeshSample {
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(
                         this.textureType, this.colors,
-                        this.sectionType, this.useDiffMap,
-                        this.material.diffuseMapProperty(), 
+                        this.sectionType, this.textureImage,
                         this.addNormalMap, this.bumpScale,
                         this.bumpFineScale, this.invert,
                         this.patterns, this.pattScale, 

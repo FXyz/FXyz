@@ -30,6 +30,7 @@
 package org.fxyz.controls.factory;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Function;
 import javafx.beans.property.Property;
 import javafx.geometry.Point2D;
@@ -101,8 +102,8 @@ public final class ControlFactory {
         return new ColorPickControl(p, name);
     }
 
-    public static final ImagePreviewControl buildImageViewToggle(final Property<Boolean> prop, final Property<? extends Image> img, String name) {
-        return new ImagePreviewControl(prop, img, name);
+    public static final ImagePreviewControl buildImageViewToggle(final Property<Image> img, String name, final Collection<Image> imgs) {
+        return new ImagePreviewControl(img, name, imgs);
     }
     /*==========================================================================
      List like Items
@@ -119,7 +120,7 @@ public final class ControlFactory {
     public static final TextureTypeControl buildTextureTypeControl(
             final Property<TextureType> p,
             final Property<Number> clrs,
-            final Property<Boolean> uDiffMap, final Property<Image> imgP,
+            final Property<Image> imgP,
             final Property<Boolean> bmpMap,
             final Property<Number> bmpScale,
             final Property<Number> bmpFineScale,
@@ -129,8 +130,21 @@ public final class ControlFactory {
             final Property<Number> specP,
             final Property<Function<Point3D, Number>> densFunc,
             final Property<Function<Number, Number>> funcFunc) {
-        return new TextureTypeControl("Texture Type:", p, Arrays.asList(TextureType.values()),
-                clrs, uDiffMap, imgP,bmpMap,bmpScale,bmpFineScale,invBmp, patt, pScale, spColor, specP, densFunc, funcFunc);
+        return new TextureTypeControl("Texture Type:", 
+                p, 
+                Arrays.asList(TextureType.values()),
+                clrs,
+                imgP,
+                bmpMap,
+                bmpScale,
+                bmpFineScale,
+                invBmp, 
+                patt,
+                pScale,
+                spColor,
+                specP, 
+                densFunc, 
+                funcFunc);
     }
     
     public static final ComboBoxControl buildPatternChooser(final Property<CarbonPatterns> p) {
@@ -170,26 +184,7 @@ public final class ControlFactory {
         );
         return mvc;
     }
-    /*
-     Build a Category for the four Image maps available to PhongMaterial
-     */
-
-    public static ControlCategory buildMaterialMapCategory(
-            final Property<Image> dm, final Property<Boolean> udm,
-            final Property<? extends Image> bm, final Property<Boolean> ubm,
-            final Property<Image> sm, final Property<Boolean> usm,
-            final Property<Image> im, final Property<Boolean> uim
-    ) {
-        ControlCategory mvc = new ControlCategory("Material Image Maps");
-        mvc.addControls(
-                new SectionLabel("Material Image Maps"),
-                buildImageViewToggle(udm, dm, "Use Diffuse Map"),
-                buildImageViewToggle(ubm, bm, "Use Bump Map"),
-                buildImageViewToggle(usm, sm, "Use Specular Map"),
-                buildImageViewToggle(uim, im, "Use Illumination Map")
-        );
-        return mvc;
-    }
+    
     /*
     
      */
@@ -198,7 +193,6 @@ public final class ControlFactory {
             final Property<TextureType> ttp,
             final Property<Number> cp,
             final Property<SectionType> stp,
-            final Property<Boolean> uDiffMap,
             final Property<Image> imgP,
             final Property<Boolean> bmpMap,
             final Property<Number> bmpScale,
@@ -213,7 +207,7 @@ public final class ControlFactory {
     ) {
 
         final TextureTypeControl texType = buildTextureTypeControl(
-                ttp, cp, uDiffMap, imgP,bmpMap,bmpScale,bmpFineScale,invBmp, patt, pScale, spColor, specP, densFunc, funcFunc);
+                ttp, cp, imgP, bmpMap, bmpScale, bmpFineScale, invBmp, patt, pScale, spColor, specP, densFunc, funcFunc);
 
         final ControlCategory mvc = new ControlCategory("TexturedMesh Properties");
         mvc.addControls(

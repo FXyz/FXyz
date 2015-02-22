@@ -29,8 +29,6 @@
 
 package org.fxyz.samples.shapes;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.function.Function;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -41,8 +39,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -79,7 +75,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                         model.setTextureModeNone(colorBinding.get());
                         break;
                     case IMAGE:
-                        model.setTextureModeImage(diffMapPath.get());
+                        model.setTextureModeImage("");
                         break;
                     case PATTERN:
                         model.setTextureModePattern(patterns.get(),pattScale.getValue());
@@ -125,23 +121,12 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
     /*
      TriangleMeshHelper.TextureType.IMAGE 
     */
-    protected final StringProperty diffMapPath = new SimpleStringProperty(this, "imagePath", "");
-    protected final Property<Boolean> useDiffMap = new SimpleBooleanProperty(this, "Use PhongMaterial", false) {
+    protected final Property<Image> textureImage = new SimpleObjectProperty(this, "Texture") {
         @Override
         protected void invalidated() {
-            super.invalidated();
             if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.IMAGE)) {
-                if (diffMapPath.get().isEmpty()) {
-                    //load default
-                    material.setDiffuseMap((new Image(getClass().getResource("samples/res/LaminateSteel.jpg").toExternalForm())));
-                } else {
-                    try { // should be given the string from filechooser
-                        material.setDiffuseMap(new Image(new FileInputStream(new File(diffMapPath.get()))));
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                    }
-                }
-            }
+                material.setDiffuseMap(textureImage.getValue());
+            }             
         }
     };
     protected final ObjectProperty<CarbonPatterns> patterns = new SimpleObjectProperty<CarbonPatterns>(CarbonPatterns.DARK_CARBON){

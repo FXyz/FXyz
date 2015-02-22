@@ -217,8 +217,9 @@ public class Prisms extends TexturedMeshSample{
                         this.culling
                 ),
                 geomControls,
-                ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
-                        this.sectionType, this.useDiffMap, this.material.diffuseMapProperty(),
+                ControlFactory.buildTextureMeshCategory(
+                        this.textureType, this.colors, 
+                        this.sectionType, this.textureImage, 
                         this.addNormalMap, this.bumpScale,
                         this.bumpFineScale, this.invert,
                         this.patterns, this.pattScale,

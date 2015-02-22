@@ -102,7 +102,7 @@ public class Icosahedron extends TexturedMeshSample {
                 geomControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType,
                         this.colors, null, 
-                        this.useDiffMap, this.material.diffuseMapProperty(),
+                        this.textureImage,
                         this.addNormalMap, this.bumpScale,
                         this.bumpFineScale, this.invert,
                         this.patterns, this.pattScale, 
