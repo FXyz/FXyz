@@ -45,27 +45,29 @@ import javafx.util.Callback;
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class ImagePreviewControl extends ControlBase<Property<Image>> {
+public class ImagePreviewControl extends ControlBase<Property<TextureImage>> {
 
     @FXML
     private ImageView preview;
     @FXML
-    private ComboBox<Image> imageSelector;
+    private ComboBox<TextureImage> imageSelector;
     
 
-    public ImagePreviewControl(final Property<Image> img, String name, final Collection<Image> items) {
+    public ImagePreviewControl(final Property<TextureImage> img, String name, final Collection<TextureImage> items) {
         super("/org/fxyz/controls/ImageMapPreview.fxml", img);
        
         imageSelector.getItems().addAll(items);
+        imageSelector.getSelectionModel().selectedItemProperty().addListener((obs,t,t1)->{
+            preview.setImage(t1.getImage());
+        });
         imageSelector.getSelectionModel().selectFirst();
-        imageSelector.setCellFactory(new Callback<ListView<Image>,ListCell<Image>>() {
+        imageSelector.setCellFactory(new Callback<ListView<TextureImage>,ListCell<TextureImage>>() {
             
             @Override
-            public ListCell<Image> call(ListView<Image> param) {
-                return new ListCell<Image>(){
+            public ListCell<TextureImage> call(ListView<TextureImage> param) {
+                return new ListCell<TextureImage>(){
                     {
                         this.setFocusTraversable(false);
-                        this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                     }
                     @Override
                     public boolean isResizable() {
@@ -78,15 +80,18 @@ public class ImagePreviewControl extends ControlBase<Property<Image>> {
                     }
                     
                     @Override
-                    protected void updateItem(Image item, boolean empty) {
+                    protected void updateItem(TextureImage item, boolean empty) {
                         if(item != null && !empty){
-                            
                             super.updateItem(item, empty);  
-                            final ImageView view = new ImageView(item);
+                            final ImageView view = new ImageView(item.getImage());
                             view.setFitHeight(75);
                             view.setPreserveRatio(true);
                             view.setSmooth(true);
                             super.setGraphic(view);                            
+                            super.setText(item.getName());
+                        } else {
+                            setGraphic(null);
+                            setText(null);
                         }
                     }
                     
@@ -94,11 +99,14 @@ public class ImagePreviewControl extends ControlBase<Property<Image>> {
             }
         });
         
-        preview.imageProperty().bind(imageSelector.valueProperty());
-        controlledProperty.bind(imageSelector.valueProperty());
+//        preview.imageProperty().bind(imageSelector.getSelectionModel().getSelectedItem().imageProperty());
+        if(controlledProperty!=null){
+            controlledProperty.bind(imageSelector.valueProperty());
+        }
+        preview.setOnMouseClicked(e->imageSelector.show());
     }
 
-    public final ComboBox<Image> getImageSelector() {
+    public final ComboBox<TextureImage> getImageSelector() {
         return imageSelector;
     }
 

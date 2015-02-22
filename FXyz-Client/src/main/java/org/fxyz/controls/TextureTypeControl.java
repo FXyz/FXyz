@@ -35,7 +35,6 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.image.Image;
 import org.fxmisc.easybind.EasyBind;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.Point3D;
@@ -48,14 +47,14 @@ import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
  */
 public class TextureTypeControl extends ComboBoxControl<TextureType>{
 
-    private static final Image 
+    private static final TextureImage 
             //animatedWater = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/anim.gif").toExternalForm()),
-            texture01 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture002.jpg").toExternalForm()), 
-            texture02 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/diamondPlate.jpg").toExternalForm()),
-            texture03 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/tiled.jpg").toExternalForm()),
-            texture04 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/water.jpg").toExternalForm()),
-            texture05 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/metal-scale-tile.jpg").toExternalForm());
-    protected final ObservableList<Image> textures ;
+            texture01 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/texture002.jpg").toExternalForm(),"Sand"), 
+            texture02 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/diamondPlate.jpg").toExternalForm(),"Diamond Plate"),
+            texture03 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/tiled.jpg").toExternalForm(),"Tiled"),
+            texture04 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/water.jpg").toExternalForm(),"Water"),
+            texture05 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/metal-scale-tile.jpg").toExternalForm(),"Metal Tile");
+    protected final ObservableList<TextureImage> textures;
     
     protected ColorSliderControl colorSlider;
     
@@ -90,7 +89,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             Property<TextureType> type, 
             Collection<TextureType> items,
             final Property<Number> colors,
-            final Property<Image> diffMap,
+            final Property<TextureImage> diffMap,
             final Property<Boolean> bmpMap,
             final Property<Number> bmpScale,
             final Property<Number> bmpFineScale,
@@ -131,10 +130,6 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         this.useSpecColor = selection.valueProperty().isNotNull();
         this.useSpecPower = selection.valueProperty().isNotNull();
         
-        
-        
-                
-        
         EasyBind.includeWhen(subControls.getChildren(), colorSlider, useColorSlider);
         
         EasyBind.includeWhen(subControls.getChildren(), diffMapControl, useImage);
@@ -161,7 +156,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
 
     private void buildSubControls(
             final Property<Number> colors,
-            final Property<Image> img, 
+            final Property<TextureImage> img, 
             final Property<Boolean> bmpMap,
             final Property<Number> bmpScale,
             final Property<Number> bmpFineScale,

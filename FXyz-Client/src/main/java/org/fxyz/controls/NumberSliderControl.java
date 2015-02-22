@@ -61,6 +61,9 @@ public class NumberSliderControl extends ControlBase<Property<Number>> {
             valSlider.setMax(upperBound.doubleValue());
         }
         valueLabel.textProperty().bindBidirectional(valSlider.valueProperty(),format);
+        if(controlledProperty==null){
+            return;
+        }
         valSlider.setValue(controlledProperty.getValue().doubleValue());
         
         // PENDING

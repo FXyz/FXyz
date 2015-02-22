@@ -88,6 +88,9 @@ public class ColorSliderControl extends ControlBase<Property<Number>> {
             valSlider.setMax(upperBound.doubleValue());
         }
         valueLabel.textProperty().bind(colorBinding);
+        if(controlledProperty==null){
+            return;
+        }
         valSlider.setValue(controlledProperty.getValue().doubleValue());
         
         colors.bind(valSlider.valueProperty());

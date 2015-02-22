@@ -49,6 +49,9 @@ public class CheckBoxControl extends ControlBase<Property<Boolean>>{
     @FXML
     private CheckBox checkBox;
     public final void loadBindings() {
+        if(controlledProperty==null){
+            return;
+        }
         checkBox.selectedProperty().addListener(l->{
             if(checkBox != null){
                 controlledProperty.setValue(checkBox.isSelected());

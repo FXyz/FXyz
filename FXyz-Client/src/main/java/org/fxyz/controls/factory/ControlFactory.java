@@ -51,6 +51,7 @@ import org.fxyz.controls.ScriptFunction1DControl;
 import org.fxyz.controls.ScriptFunction2DControl;
 import org.fxyz.controls.ScriptFunction3DControl;
 import org.fxyz.controls.SectionLabel;
+import org.fxyz.controls.TextureImage;
 import org.fxyz.controls.TextureTypeControl;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Patterns;
@@ -102,7 +103,7 @@ public final class ControlFactory {
         return new ColorPickControl(p, name);
     }
 
-    public static final ImagePreviewControl buildImageViewToggle(final Property<Image> img, String name, final Collection<Image> imgs) {
+    public static final ImagePreviewControl buildImageViewToggle(final Property<TextureImage> img, String name, final Collection<TextureImage> imgs) {
         return new ImagePreviewControl(img, name, imgs);
     }
     /*==========================================================================
@@ -120,7 +121,7 @@ public final class ControlFactory {
     public static final TextureTypeControl buildTextureTypeControl(
             final Property<TextureType> p,
             final Property<Number> clrs,
-            final Property<Image> imgP,
+            final Property<TextureImage> imgP,
             final Property<Boolean> bmpMap,
             final Property<Number> bmpScale,
             final Property<Number> bmpFineScale,
@@ -193,7 +194,7 @@ public final class ControlFactory {
             final Property<TextureType> ttp,
             final Property<Number> cp,
             final Property<SectionType> stp,
-            final Property<Image> imgP,
+            final Property<TextureImage> imgP,
             final Property<Boolean> bmpMap,
             final Property<Number> bmpScale,
             final Property<Number> bmpFineScale,
