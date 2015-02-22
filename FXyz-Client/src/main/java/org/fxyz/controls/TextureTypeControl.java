@@ -50,11 +50,10 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
 
     private static final Image 
             animatedWater = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/anim.gif").toExternalForm()),
-            texture01 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture001.jpg").toExternalForm()),
             texture02 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture002.jpg").toExternalForm()), 
             texture03 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture003.jpg").toExternalForm()), 
             texture04 = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/texture004.jpg").toExternalForm());
-    protected final ObservableList<Image> textures = FXCollections.observableArrayList(animatedWater,texture01,texture02,texture03,texture04);
+    protected final ObservableList<Image> textures ;
     
     protected ColorSliderControl colorSlider;
     
@@ -102,6 +101,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
             final Property<Function<Number,Number>> funcFunc
     ) {
         super(lbl, type, items, true);
+        this.textures = FXCollections.observableArrayList(animatedWater,texture02,texture03,texture04);
+        
         buildSubControls(
                 colors,
                 diffMap,
@@ -110,6 +111,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
                 spColor, specP, 
                 densFunc, funcFunc
         );
+        
         
         this.useColorSlider = selection.valueProperty().isEqualTo(TextureType.NONE);
         
@@ -171,6 +173,8 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         /*
             Lay out controls in the order you want them to be seen
         */
+        diffMapControl = ControlFactory.buildImageViewToggle(img, "Image", textures);
+        
         patternChooser = ControlFactory.buildPatternChooser(patt);
         patternScaler = ControlFactory.buildNumberSlider(pScale, 1, 100);        
         // only if image or pattern        
@@ -181,8 +185,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         // only if texture none
         colorSlider = ControlFactory.buildColorSliderControl(colors, 0l, 1530l);
         //
-        diffMapControl = ControlFactory.buildImageViewToggle(img, "Diffuse Map Image", textures);        
-        
+               
         densFunct = ControlFactory.buildScriptFunction3DControl(densFunc);
         funcFunct = ControlFactory.buildScriptFunction1DControl(funcFunc);
         

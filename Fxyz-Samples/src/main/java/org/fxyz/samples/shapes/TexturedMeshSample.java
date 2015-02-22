@@ -75,7 +75,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh>{
                         model.setTextureModeNone(colorBinding.get());
                         break;
                     case IMAGE:
-                        model.setTextureModeImage("");
+                        model.setTextureModeImage(textureImage.getValue());
                         break;
                     case PATTERN:
                         model.setTextureModePattern(patterns.get(),pattScale.getValue());

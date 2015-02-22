@@ -29,8 +29,6 @@
 
 package org.fxyz.samples.shapes;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.function.Function;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -43,7 +41,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.scene.paint.Patterns;
@@ -74,7 +71,7 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
                                 s.setTextureModeNone(colorBinding.get());
                                 break;
                             case IMAGE:
-                                s.setTextureModeImage(diffMapPath.get());
+                                s.setTextureModeImage(null);
                                 break;
                             case PATTERN:
                                 s.setTextureModePattern(patterns.get(), pattScale.getValue());

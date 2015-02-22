@@ -37,6 +37,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Rectangle;
@@ -136,8 +137,8 @@ public abstract class TexturedMesh extends MeshView {
         setTextureType(helper.getTextureType());
     }
 
-    public void setTextureModeImage(String image) {
-        if (image != null && !image.isEmpty()) {
+    public void setTextureModeImage(Image image) {
+        if (image != null){// && !image.isEmpty()) {
             helper.setTextureType(TextureType.IMAGE);
             helper.getMaterialWithImage(image);
             //setMaterial(helper.getMaterialWithImage(image));

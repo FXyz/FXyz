@@ -338,12 +338,12 @@ public class TriangleMeshHelper {
         //((PhongMaterial)mat).setDiffuseMap(img);    
         //((PhongMaterial)mat).setBumpMap(new NormalMap(img));   
     }
-    public void getMaterialWithImage(String image){
+    public void getMaterialWithImage(Image image){
         //PhongMaterial mat = new PhongMaterial();
-        Image img = new Image(image);
+        //Image img = new Image(image);
         //mat.setDiffuseMap(img);
         //mat.setBumpMap(new NormalMap(img));
-        clearMaterialAndSetDiffMap(material, img);
+        clearMaterialAndSetDiffMap(material, image);
         //return material;
     }
     

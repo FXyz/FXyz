@@ -6,12 +6,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="3.0" StackPane.alignment="TOP_CENTER">
+      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" spacing="3.0" StackPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="preview" cache="true" cacheHint="SPEED" fitHeight="94.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER" VBox.vgrow="NEVER" />
-            <ComboBox fx:id="imageSelector" focusTraversable="false" maxWidth="1.7976931348623157E308" prefWidth="150.0" />
+            <ImageView fx:id="preview" cache="true" cacheHint="SPEED" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER" />
+            <ComboBox fx:id="imageSelector" focusTraversable="false" maxWidth="1.7976931348623157E308" />
          </children>
          <padding>
             <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />

@@ -33,8 +33,12 @@ import java.util.Collection;
 import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -46,7 +50,7 @@ public class ImagePreviewControl extends ControlBase<Property<Image>> {
     @FXML
     private ImageView preview;
     @FXML
-    private ComboBox imageSelector;
+    private ComboBox<Image> imageSelector;
     
 
     public ImagePreviewControl(final Property<Image> img, String name, final Collection<Image> items) {
@@ -54,9 +58,45 @@ public class ImagePreviewControl extends ControlBase<Property<Image>> {
        
         imageSelector.getItems().addAll(items);
         imageSelector.getSelectionModel().selectFirst();
+        imageSelector.setCellFactory(new Callback<ListView<Image>,ListCell<Image>>() {
+            
+            @Override
+            public ListCell<Image> call(ListView<Image> param) {
+                return new ListCell<Image>(){
+                    {
+                        this.setFocusTraversable(false);
+                        this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                    }
+                    @Override
+                    public boolean isResizable() {
+                        return false; //To change body of generated methods, choose Tools | Templates.
+                    }
+                    
+                    @Override
+                    public void updateSelected(boolean selected) {
+                        //do nothing...
+                    }
+                    
+                    @Override
+                    protected void updateItem(Image item, boolean empty) {
+                        if(item != null && !empty){
+                            
+                            super.updateItem(item, empty);  
+                            final ImageView view = new ImageView(item);
+                            view.setFitHeight(75);
+                            view.setPreserveRatio(true);
+                            view.setSmooth(true);
+                            super.setGraphic(view);                            
+                        }
+                    }
+                    
+                };
+            }
+        });
         
         preview.imageProperty().bind(imageSelector.valueProperty());
         controlledProperty.bind(imageSelector.valueProperty());
     }
 
+    
 }
