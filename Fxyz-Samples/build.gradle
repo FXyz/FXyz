@@ -27,6 +27,8 @@ import org.gradle.api.artifacts.*
 apply plugin: 'application'
 apply plugin: 'shadow'
 
+//uncomment next line for NativePackages..
+//apply from: 'javafx.plugin'
 
 
 applicationName = 'FXyz-Samples'
