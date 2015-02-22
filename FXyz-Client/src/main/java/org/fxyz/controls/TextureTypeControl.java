@@ -182,6 +182,7 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         patternScaler = ControlFactory.buildNumberSlider(pScale, 1, 100);        
         // only if image or pattern        
         bumpMap = ControlFactory.buildCheckBoxControl(bmpMap);
+        
         invertBumpMap = ControlFactory.buildCheckBoxControl(invBmp);
         bumpScale = ControlFactory.buildNumberSlider(bmpScale, 0, 100);
         bumpFine = ControlFactory.buildNumberSlider(bmpFineScale, 0.01, 100);
@@ -196,5 +197,10 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
         specColor.setPrefSize(USE_COMPUTED_SIZE, USE_PREF_SIZE);
         specSlider = ControlFactory.buildNumberSlider(specP, 32, 10000);
     }
+
+    public void  resetBumpMap() {
+        bumpMap.setSelected(false);
+    }
+    
     
 }
