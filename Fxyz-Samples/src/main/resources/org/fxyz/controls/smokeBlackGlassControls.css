@@ -96,7 +96,7 @@
 .lighting-slider > .track {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
-    -fx-background-image:  url("../images/palette_1530.png");
+    -fx-background-image:  url("palette_1530.png");
     -fx-background-position: center;
     -fx-background-repeat: stretch;
     -fx-background-size: stretch, contain;
@@ -105,7 +105,7 @@
 .texture-slider > .track{
     -fx-background-color: transparent;
     -fx-background-radius: 0;
-    -fx-background-image:  url("../images/palette_1530.png");
+    -fx-background-image:  url("palette_1530.png");
     -fx-background-position: center;
     -fx-background-repeat: stretch;
     -fx-background-size: stretch, contain;
@@ -115,10 +115,10 @@
 .footer-hide{
     -fx-background-color: transparent;
     -fx-background-radius: 100;
-    -fx-graphic: url(../images/window-min.png);
+    -fx-graphic: url(window-min.png);
 }
 .footer-hide:hover{
-    -fx-graphic: url(../images/window-min-over.png);
+    -fx-graphic: url(window-min-over.png);
 }
 
 

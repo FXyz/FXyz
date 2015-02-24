@@ -52,6 +52,10 @@ sourceSets {
 
 dependencies {
     compile project(':FXyz-Client')
+    compile project(':FXyz-Core')
+    compile ('org.reactfx:reactfx:2.0-M4')
+    compile ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')
+    compile ('org.jfxtras:jfxtras-controls:8.0-r3')
     try {
         jdk files(jfxrtJar)
     } catch (MissingPropertyException pne) {

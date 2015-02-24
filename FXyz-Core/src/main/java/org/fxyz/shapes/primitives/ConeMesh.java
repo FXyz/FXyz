@@ -33,7 +33,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**
@@ -41,7 +40,7 @@ import javafx.scene.shape.TriangleMesh;
  * @author Birdasaur
  * adapted Dub's CapsuleMesh example
  */
-public class ConeMesh extends MeshView{
+public class ConeMesh extends TexturedMesh{
     /*
         Field vars
     */
@@ -71,7 +70,7 @@ public class ConeMesh extends MeshView{
     Methods
      */
     private TriangleMesh createCone(int divisions, float radius, float height) {
-        TriangleMesh mesh = new TriangleMesh();
+        mesh = new TriangleMesh();
         //Start with the top of the cone, later we will build our faces from these
         mesh.getPoints().addAll(0,0,0); //Point 0: Top of the Cone        
         //Generate the segments of the bottom circle (Cone Base)
@@ -158,4 +157,9 @@ public class ConeMesh extends MeshView{
     public IntegerProperty divisionsProperty() {
         return divisions;
     }    
+
+    @Override
+    protected void updateMesh() {
+        mesh = createCone(getDivisions(), (float)getRadius(), (float)getHeight());
+    }
 }

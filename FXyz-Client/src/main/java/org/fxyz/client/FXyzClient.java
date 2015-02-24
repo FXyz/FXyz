@@ -80,8 +80,8 @@ public class FXyzClient extends Application {
 
     public static final String 
             BACKGROUNDS = FXyzClient.class.getResource("/org/fxyz/client/clientBackgrounds.css").toExternalForm(),
-            BLACK_GLASS_BASE = FXyzClient.class.getResource("/org/fxyz/client/smokeBlackGlassBase.css").toExternalForm(),
-            BLACK_GLASS_CONTROLS = FXyzClient.class.getResource("/org/fxyz/client/smokeBlackGlassControls.css").toExternalForm();
+            BLACK_GLASS_BASE = FXyzClient.class.getResource("/org/fxyz/client/smokeBlackGlassBase.css").toExternalForm();
+            //BLACK_GLASS_CONTROLS = FXyzClient.class.getResource("/org/fxyz/client/smokeBlackGlassControls.css").toExternalForm();
     private static FXyzClient rootClientInstance;
 
     public FXyzClient() {
@@ -206,7 +206,7 @@ public class FXyzClient extends Application {
 
         Scene scene = new Scene(frame, 1200, 768);
         scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().addAll(BLACK_GLASS_BASE, BLACK_GLASS_CONTROLS);
+        scene.getStylesheets().addAll(BLACK_GLASS_BASE);
 
         this.stage.setScene(scene);
         this.stage.initStyle(StageStyle.TRANSPARENT);

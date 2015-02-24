@@ -49,11 +49,11 @@ public class TextureTypeControl extends ComboBoxControl<TextureType>{
 
     private static final TextureImage 
             //animatedWater = new Image(TextureTypeControl.class.getResource("/org/fxyz/images/anim.gif").toExternalForm()),
-            texture01 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/texture002.jpg").toExternalForm(),"Sand"), 
-            texture02 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/diamondPlate.jpg").toExternalForm(),"Diamond Plate"),
-            texture03 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/tiled.jpg").toExternalForm(),"Tiled"),
-            texture04 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/water.jpg").toExternalForm(),"Water"),
-            texture05 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/metal-scale-tile.jpg").toExternalForm(),"Metal Tile");
+            texture01 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/textures/texture002.jpg").toExternalForm(),"Sand"), 
+            texture02 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/textures/diamondPlate.jpg").toExternalForm(),"Diamond Plate"),
+            texture03 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/textures/tiled.jpg").toExternalForm(),"Tiled"),
+            texture04 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/textures/water.jpg").toExternalForm(),"Water"),
+            texture05 = new TextureImage(TextureTypeControl.class.getResource("/org/fxyz/images/textures/metal-scale-tile.jpg").toExternalForm(),"Metal Tile");
     protected final ObservableList<TextureImage> textures;
     
     protected ColorSliderControl colorSlider;

@@ -45,12 +45,13 @@ public abstract class FXyzSample extends FXyzSampleBase {
     protected final ThreadFactory threadFactory;
     public static ExecutorService serviceExecutor;
     
-    protected final Image top = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/top.png").toExternalForm()),
-            bottom = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/bottom.png").toExternalForm()),
-            left = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/left.png").toExternalForm()),
-            right = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/right.png").toExternalForm()),
-            front = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/front.png").toExternalForm()),
-            back = new Image(SkyBoxing.class.getResource("/org/fxyz/samples/res/back.png").toExternalForm());
+    protected final Image 
+            top = new Image(SkyBoxing.class.getResource("/org/fxyz/images/skyboxes/top.png").toExternalForm()),
+            bottom = new Image(SkyBoxing.class.getResource("/org/fxyz/images/skyboxes/bottom.png").toExternalForm()),
+            left = new Image(SkyBoxing.class.getResource("/org/fxyz/images/skyboxes/left.png").toExternalForm()),
+            right = new Image(SkyBoxing.class.getResource("/org/fxyz/images/skyboxes/right.png").toExternalForm()),
+            front = new Image(SkyBoxing.class.getResource("/org/fxyz/images/skyboxes/front.png").toExternalForm()),
+            back = new Image(SkyBoxing.class.getResource("/org/fxyz/images/skyboxes/back.png").toExternalForm());
 
     protected Skybox skyBox;
     

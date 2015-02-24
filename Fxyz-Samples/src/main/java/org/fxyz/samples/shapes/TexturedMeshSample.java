@@ -135,7 +135,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh> {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                colorBinding.set(Color.hsb(360 * (1d - get() / 1530d), 1, 1));
+                colorBinding.set(Color.hsb(360 * (1d - get() / 1530d), 1, 0.5));
             }
         }
     };

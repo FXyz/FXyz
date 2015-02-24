@@ -47,7 +47,7 @@ import org.fxyz.model.WelcomePage;
  */
 public class FXyzProject implements FXyzSamplerProject{
     
-        
+         
     //@Override
     @Override
     public final String getProjectName() {
@@ -97,7 +97,13 @@ public class FXyzProject implements FXyzSamplerProject{
         vBox.getChildren().addAll(pane, lCon);
         vBox.setAlignment(Pos.CENTER);
         WelcomePage wPage = new WelcomePage("Welcome to FXyzLib!", vBox);
-               
+        
+        pane.sceneProperty().addListener(l->{
+            if(pane.getScene()!= null){
+                pane.getScene().getStylesheets().add(FXyzProject.class.getResource("/org/fxyz/controls/smokeBlackGlassControls.css").toExternalForm());
+            }                
+        });
+        
         return wPage;
     }
     
