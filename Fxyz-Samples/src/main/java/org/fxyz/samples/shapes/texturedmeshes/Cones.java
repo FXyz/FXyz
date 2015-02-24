@@ -48,13 +48,11 @@ public class Cones extends TexturedMeshSample {
     public static void main(String[] args){launch(args);}
     
     protected Var<Integer> divisions = Var.newSimpleVar(64);
-    protected Subscription divSubscriber = (Subscription) divisions.pin();
     
     protected Var<Double> radius = Var.newSimpleVar(50.0);
-    protected Subscription radiusSubscriber = (Subscription) radius.pin();
     
     protected Var<Double> height = Var.newSimpleVar(75.0);
-    protected Subscription heightSubscriber = (Subscription) height.pin();
+    
     
     
     @Override
