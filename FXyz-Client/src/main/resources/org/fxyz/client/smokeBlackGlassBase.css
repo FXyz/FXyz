@@ -18,13 +18,13 @@
     
     
 
-    //################   FXYZ   ##############################
-    //-fxyz-color-palette1: "../samples/res/palette_1530.png";
+    /*################   FXYZ   ##############################*/
+    /*-fxyz-color-palette1: "../samples/res/palette_1530.png";*/
     -fxyz-lighting-track: linear-gradient(to right, #ffffff 5%, #ff0000 6%, #ffff00 40%, #00ff00 60%, #00ffff 80%, #0000ff 100%);
     -fx-default-button: linear-gradient(to bottom, #ffffff13 5%, transparent 100%);
     
     
-    //########################################################
+    /*########################################################*/
 
 
     /* One of these colors will be chosen based upon a ladder calculation
