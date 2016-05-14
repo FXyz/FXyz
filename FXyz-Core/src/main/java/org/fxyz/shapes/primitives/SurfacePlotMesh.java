@@ -55,31 +55,31 @@ public class SurfacePlotMesh extends TexturedMesh {
     private static final double DEFAULT_Y_RANGE = 10; // -5 +5
     private static final int DEFAULT_X_DIVISIONS = 64;
     private static final int DEFAULT_Y_DIVISIONS = 64;
-    private static final double DEFAULT_SCALE = 1.0D;
+    private static final double DEFAULT_FUNCTION_SCALE = 1.0D;
     
     public SurfacePlotMesh() {
-        this(DEFAULT_FUNCTION,DEFAULT_X_RANGE,DEFAULT_Y_RANGE,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,DEFAULT_SCALE);
+        this(DEFAULT_FUNCTION,DEFAULT_X_RANGE,DEFAULT_Y_RANGE,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,DEFAULT_FUNCTION_SCALE);
     }
 
     public SurfacePlotMesh(Function<Point2D,Number> function) {
-        this(function,DEFAULT_X_RANGE,DEFAULT_Y_RANGE,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,DEFAULT_SCALE);
+        this(function,DEFAULT_X_RANGE,DEFAULT_Y_RANGE,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,DEFAULT_FUNCTION_SCALE);
     }
 
     public SurfacePlotMesh(Function<Point2D,Number> function, double rangeX, double rangeY) {
-        this(function,rangeX,rangeY,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,DEFAULT_SCALE);
+        this(function,rangeX,rangeY,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,DEFAULT_FUNCTION_SCALE);
     }
 
-    public SurfacePlotMesh(Function<Point2D,Number> function, double rangeX, double rangeY, double scale) {
-        this(function,rangeX,rangeY,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,scale);
+    public SurfacePlotMesh(Function<Point2D,Number> function, double rangeX, double rangeY, double functionScale) {
+        this(function,rangeX,rangeY,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,functionScale);
     }
 
-    public SurfacePlotMesh(Function<Point2D,Number> function, double rangeX, double rangeY, int divisionsX, int divisionsY, double scale) {
+    public SurfacePlotMesh(Function<Point2D,Number> function, double rangeX, double rangeY, int divisionsX, int divisionsY, double functionScale) {
         setFunction2D(function);
         setRangeX(rangeX);
         setRangeY(rangeY);
         setDivisionsX(divisionsX);
         setDivisionsY(divisionsY);
-        setScale(scale);
+        setFunctionScale(functionScale);
         
         updateMesh();
         setCullFace(CullFace.BACK);
@@ -94,24 +94,24 @@ public class SurfacePlotMesh extends TexturedMesh {
             getFunction2D(), 
             getRangeX(),getRangeY(),
             getDivisionsX(),getDivisionsY(), 
-            getScale());
+            getFunctionScale());
         setMesh(mesh);
     }
     
     private final ObjectProperty<Function<Point2D, Number>> function2D = new SimpleObjectProperty<Function<Point2D, Number>>(DEFAULT_FUNCTION){
         @Override
         protected void invalidated() {
-            if(mesh!=null && get()!=null){
+            if(mesh!=null){
                 updateMesh();
             }
         }
     };
 
-    public Function getFunction2D() {
+    public Function<Point2D, Number> getFunction2D() {
         return function2D.get();
     }
 
-    public final void setFunction2D(Function value) {
+    public final void setFunction2D(Function<Point2D, Number> value) {
         function2D.set(value);
     }
 
@@ -202,25 +202,18 @@ public class SurfacePlotMesh extends TexturedMesh {
     public IntegerProperty divisionsYProperty() {
         return divisionsY;
     }
-    private final DoubleProperty scale = new SimpleDoubleProperty(DEFAULT_SCALE){
-        @Override
-        protected void invalidated() {
-            if(mesh!=null){
-                updateMesh();
-            }
-        }
-    };
+    private final DoubleProperty functionScale = new SimpleDoubleProperty(DEFAULT_FUNCTION_SCALE);
 
-    public double getScale() {
-        return scale.get();
+    public double getFunctionScale() {
+        return functionScale.get();
     }
 
-    public final void setScale(double value) {
-        scale.set(value);
+    public final void setFunctionScale(double value) {
+        functionScale.set(value);
     }
 
-    public DoubleProperty scaleProperty() {
-        return scale;
+    public DoubleProperty functionScaleProperty() {
+        return functionScale;
     }
     
     

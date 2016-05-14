@@ -1,7 +1,7 @@
 buildscript {
     repositories { jcenter() }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
     }
 }
 
@@ -9,7 +9,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
 }
 
-apply plugin: 'java' // or 'groovy'. Must be explicitly applied
+apply plugin: 'java'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 
@@ -26,8 +26,8 @@ subprojects {
 
     ext {
         artifact_suffix          = cfg.artifact_suffix
-        specification_title      = cfg.fxyz_specification_title  //'Java 8u20'
-        specification_version    = cfg.fxyz_specification_version //'8.20.7'
+        specification_title      = cfg.fxyz_specification_title
+        specification_version    = cfg.fxyz_specification_version
         fxyz_name                = 'FXyzLibs'
         fxyz_sampler_name        = 'FXyz-Sampler'
         fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
@@ -53,7 +53,9 @@ subprojects {
     }
     
     
-    dependencies {        
+    dependencies {     
+        compile 'eu.mihosoft.vrl.jcsg:jcsg:0.3.1'
+        compile 'org.orbisgis:poly2tri-core:0.1.2'
         testCompile 'junit:junit:[4,)'
     }
 

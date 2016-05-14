@@ -29,7 +29,6 @@
 
 package org.fxyz.scene;
 
-import com.sun.javafx.Utils;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -47,6 +46,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.util.Callback;
+import org.fxyz.geometry.MathUtils;
 
 /**
  * A self initializing First Person Shooter camera
@@ -202,10 +202,10 @@ public class SimpleFPSCamera extends Parent {
                     affine.setToIdentity();
 
                     rotateY.setAngle(
-                            Utils.clamp(-360, ((rotateY.getAngle() + mouseDeltaX * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 360)
+                            MathUtils.clamp(-360, ((rotateY.getAngle() + mouseDeltaX * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 360)
                     ); // horizontal                
                     rotateX.setAngle(
-                            Utils.clamp(-45, ((rotateX.getAngle() - mouseDeltaY * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 35)
+                            MathUtils.clamp(-45, ((rotateX.getAngle() - mouseDeltaY * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 35)
                     ); // vertical
                     affine.prepend(t.createConcatenation(rotateY.createConcatenation(rotateX)));
 
@@ -320,10 +320,10 @@ public class SimpleFPSCamera extends Parent {
                     affine.setToIdentity();
 
                     rotateY.setAngle(
-                            Utils.clamp(-360, ((rotateY.getAngle() + mouseDeltaX * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 360)
+                            MathUtils.clamp(-360, ((rotateY.getAngle() + mouseDeltaX * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 360)
                     ); // horizontal                
                     rotateX.setAngle(
-                            Utils.clamp(-45, ((rotateX.getAngle() - mouseDeltaY * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 35)
+                            MathUtils.clamp(-45, ((rotateX.getAngle() - mouseDeltaY * (mouseSpeed * mouseModifier)) % 360 + 540) % 360 - 180, 35)
                     ); // vertical
                     affine.prepend(t.createConcatenation(rotateY.createConcatenation(rotateX)));
 
