@@ -1,5 +1,5 @@
 /**
-* ControlBase.java
+* ComboBoxControl.java
 *
 * Copyright (c) 2013-2015, F(X)yz
 * All rights reserved.
@@ -29,44 +29,28 @@
 
 package org.fxyz.controls;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.property.Property;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.layout.StackPane;
+import javafx.beans.property.StringProperty;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 /**
+ * FXML Controller class
  *
  * @author Jason Pollastrini aka jdub1581
- * @param <P>
  */
-public abstract class ControlBase<P extends Property> extends StackPane{
-    protected P controlledProperty;
-    public ControlBase(final String fxml, final P prop) {
-        try {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            loader.setRoot(ControlBase.this);
-            loader.setController(ControlBase.this);
-            loader.load();
-        } catch (IOException ex) {
-            
-            Logger.getLogger(CheckBoxControl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.controlledProperty = prop;
-//        this.setPrefSize(USE_PREF_SIZE, StackPane.BASELINE_OFFSET_SAME_AS_HEIGHT );
-        this.setPrefWidth(USE_PREF_SIZE);
-        //this.getStyleClass().add("fxyz-control");
-        
+public class TextFieldControl extends ControlBase<StringProperty> {
+
+    public TextFieldControl(final String lbl, final StringProperty p) {
+        super("/org/fxyz/controls/TextFieldControl.fxml", p);
+        title.setText(lbl);
+        selection.setText(p.getValue());
+        controlledProperty.bind(selection.textProperty());
     }
 
-    private ControlBase() {
-        throw new UnsupportedOperationException("Cannot assign");
-    }
+    @FXML
+    protected TextField selection;
+    @FXML
+    private Label title;
 
-    private ControlBase(Node... children) {
-        throw new UnsupportedOperationException("Cannot assign");
-    }
-    
 }

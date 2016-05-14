@@ -107,7 +107,7 @@ public class SurfacePlot extends TexturedMeshSample {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((SurfacePlotMesh)model).setScale(scale.get());
+                ((SurfacePlotMesh)model).setFunctionScale(scale.get());
             }
         }
     };

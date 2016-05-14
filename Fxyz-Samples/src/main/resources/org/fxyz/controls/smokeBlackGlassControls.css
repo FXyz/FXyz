@@ -87,12 +87,11 @@
 }
 .colorSlider .thumb {
     -fx-background-color: transparent;
-    -fx-border-color: white; //linear-gradient(to bottom, white 20%, black 21%, black 79%, white 80%);
+    -fx-border-color: white; /*linear-gradient(to bottom, white 20%, black 21%, black 79%, white 80%); */
     -fx-border-width: 1.5px;
     -fx-background-insets: 5 0 0 0;
     -fx-padding: 6 2 6 2;
 }
-//==========================
 .lighting-slider > .track {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
@@ -101,7 +100,6 @@
     -fx-background-repeat: stretch;
     -fx-background-size: stretch, contain;
 }
-//==
 .texture-slider > .track{
     -fx-background-color: transparent;
     -fx-background-radius: 0;
@@ -129,9 +127,9 @@
     -fxx-value-alignment: center;
     -fx-background-radius: 10 10 0 0;
     -fx-background-insets: 0 0 5 0;
-    //-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+/*    //-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
     //-fx-background-insets: 0 0 -1 0, 0, 1, 2;
-    //-fx-background-radius: 5, 5, 4, 3;
+    //-fx-background-radius: 5, 5, 4, 3;*/
     -fx-padding: 0.266667em 0.233333em 0.25em 0.233333em;
     -fx-text-fill: -fx-text-base-color;
 }
@@ -143,13 +141,13 @@
 .ListSpinner:focused { 
     -fx-color: -fx-base;
     -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
-    //-fx-background-insets: -1.4, 0, 1, 2;
+    /*-fx-background-insets: -1.4, 0, 1, 2;*/
     -fx-background-radius: 6.4, 5, 4, 3;	
 }
 
-//==============================================================================
+/*//==============================================================================
 //                  Standard controls we need to alter
-//==============================================================================
+//==============================================================================*/
 .label {
     -fx-text-fill: -fx-text-base-color;
 }
@@ -246,7 +244,7 @@
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
 }
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
-    //-fx-padding: 4 0 4 5;
+    /*//-fx-padding: 4 0 4 5;*/
     /* No alternate highlighting */
     -fx-background: -fx-control-inner-background;
 }
@@ -282,15 +280,15 @@
     -fx-padding: 6 2 6 2;
     -fx-border-color: white, -fx-accent;
     -fx-shape: "M4,2 L-4,2 L0,-2 Z";
-    //-fx-effect: dropshadow(gaussian , rgba(0, 0, 0, 0.1), 5, 0.0 , 0, 2);
+    /*//-fx-effect: dropshadow(gaussian , rgba(0, 0, 0, 0.1), 5, 0.0 , 0, 2);*/
 }
 .slider:pressed .thumb {
-    //-fx-background-radius: 0em; /* makes sure this remains circular */
-    //-fx-background-color: null;
+/*    //-fx-background-radius: 0em;  makes sure this remains circular 
+    //-fx-background-color: null;*/
 }
 .slider:focused .thumb {
-    //-fx-background-radius: 0em; /* makes sure this remains circular */
-    //-fx-background-color: null;
+/*    //-fx-background-radius: 0em;  makes sure this remains circular 
+    //-fx-background-color: null;*/
 }
 .slider .track {
     -fx-background-color: 
@@ -395,7 +393,7 @@
 }*/
 /* focus purely on the arrow */
 .titled-pane:focused > .title > .arrow-button > .arrow {
-    -fx-background-color: inherit;//-fx-focus-color, -fx-mark-color;
+    -fx-background-color: inherit;/* -fx-focus-color, -fx-mark-color; */
     -fx-background-insets: -1, 0;
     -fx-effect: dropshadow(two-pass-box , -fx-focus-color, 5, 0.2 , 0, 0);
 }
@@ -418,7 +416,7 @@
 .titled-pane > *.content {
     -fx-border-color: -fx-box-border;
     -fx-border-insets: -1 0 0 0;
-    -fx-background-color: null;//linear-gradient(from 0px 0px to 0px 5px, derive(-fx-background, -6%), -fx-background);
+    -fx-background-color: null; /* linear-gradient(from 0px 0px to 0px 5px, derive(-fx-background, -6%), -fx-background);*/
 }
 
 /*******************************************************************************

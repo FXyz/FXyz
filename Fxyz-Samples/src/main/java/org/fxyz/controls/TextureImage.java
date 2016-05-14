@@ -43,10 +43,12 @@ public class TextureImage {
     
     private final ObjectProperty<Image> image;
     private final StringProperty name;
+    private final StringProperty source;
 
     TextureImage(String imageSrc, String name) {
         this.image=new SimpleObjectProperty<>(new Image(imageSrc));
         this.name=new SimpleStringProperty(name);
+        this.source = new SimpleStringProperty(imageSrc);
     }
 
     public Image getImage() {
@@ -63,6 +65,14 @@ public class TextureImage {
 
     public void setName(String name) {
         this.name.set(name);
+    }
+
+    public String getSource() {
+        return source.get();
+    }
+    
+    public void setSource(String source) {
+        this.source.set(source);
     }
     
     public ObjectProperty<Image> imageProperty(){

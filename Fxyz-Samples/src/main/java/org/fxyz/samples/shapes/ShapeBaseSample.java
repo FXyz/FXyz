@@ -71,6 +71,7 @@ import org.fxyz.controls.ControlPanel;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.samples.FXyzSample;
 import org.fxyz.scene.Skybox;
+import org.fxyz.shapes.primitives.Text3DMesh;
 import org.fxyz.shapes.primitives.TexturedMesh;
 import org.fxyz.utils.CameraTransformer;
 
@@ -152,17 +153,20 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
     private void releaseBinders() {
         if(modelWidthBinder != null){
-        modelWidthBinder.unsubscribe();
-        modelHeightBinder.unsubscribe();
-        modelDepthBinder.unsubscribe();
+            modelWidthBinder.unsubscribe();
+            modelHeightBinder.unsubscribe();
+            modelDepthBinder.unsubscribe();
         }
     }
 
     private void attachBinders() {
         // should be conditional on scene not being null
-        EasyBind.subscribe(model.boundsInParentProperty(), (s) -> modelInfo.getBoundsWidth().setText(numberFormat.format(s.getWidth())));
-        EasyBind.subscribe(model.boundsInParentProperty(), (s) -> modelInfo.getBoundsHeight().setText(numberFormat.format(s.getHeight())));
-        EasyBind.subscribe(model.boundsInParentProperty(), (s) -> modelInfo.getBoundsDepth().setText(numberFormat.format(s.getDepth())));
+        modelWidthBinder = EasyBind.subscribe(model.boundsInParentProperty(), 
+                (s) -> modelInfo.getBoundsWidth().setText(numberFormat.format(s.getWidth())));
+        modelHeightBinder = EasyBind.subscribe(model.boundsInParentProperty(), 
+                (s) -> modelInfo.getBoundsHeight().setText(numberFormat.format(s.getHeight())));
+        modelDepthBinder = EasyBind.subscribe(model.boundsInParentProperty(), 
+                (s) -> modelInfo.getBoundsDepth().setText(numberFormat.format(s.getDepth())));
     }
 
     private void createListeners() {
@@ -422,7 +426,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 } else {
                     throw new UnsupportedOperationException("Model returned Null ... ");
                 }
-
+                camera.setTranslateZ(-3d * Math.max(model.getBoundsInParent().getWidth(), model.getBoundsInParent().getHeight()));
                 if (controlPanel != null && ((ControlPanel) controlPanel).getPanes().filtered(t -> t.getText().contains("lighting")).isEmpty()) {
                     ((ControlPanel) controlPanel).getPanes().add(0, ControlFactory.buildSceneAndLightCategory(
                             useSkybox,
@@ -451,7 +455,11 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
 
                     // setup model information
                     modelInfo.getTimeToBuild().setText(String.valueOf(System.currentTimeMillis() - time) + "ms");
-                    if (model instanceof Group) {
+                    if (model instanceof Text3DMesh) {
+                        modelInfo.getNodeCount().setText(String.valueOf(((Group) model).getChildren().size()));
+                        modelInfo.getPoints().textProperty().bind(((Text3DMesh) model).vertCountBinding());
+                        modelInfo.getFaces().textProperty().bind(((Text3DMesh) model).faceCountBinding());
+                    } else if (model instanceof Group) {
                         modelInfo.getNodeCount().setText(String.valueOf(((Group) model).getChildren().filtered(t -> t instanceof Shape3D).size()));
                         modelInfo.getPoints().setText("");
                         modelInfo.getFaces().setText("");

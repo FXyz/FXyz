@@ -39,8 +39,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -78,7 +76,7 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
                                 s.setTextureModeNone(colorBinding.get());
                                 break;
                             case IMAGE:
-                                s.setTextureModeImage(textureImage.getValue()==null?null:textureImage.getValue().getImage());
+                                s.setTextureModeImage(textureImage.getValue()==null?null:textureImage.getValue().getSource());
                                 break;
                             case PATTERN:
                                 s.setTextureModePattern(patterns.get(), pattScale.getValue());
@@ -153,7 +151,7 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
                     .map(TexturedMesh.class::cast)
                     .filter(s->s.getTextureType().equals(TextureType.IMAGE))
                     .forEach(s->{
-                        s.setTextureModeImage(f1.getImage());
+                        s.setTextureModeImage(textureImage.getValue().getSource());
                         if (useBumpMap.getValue() || invert.getValue()) {
                             useBumpMap.setValue(false);
                             invert.setValue(false);
@@ -235,11 +233,11 @@ public abstract class GroupOfTexturedMeshSample extends ShapeBaseSample<Group>{
     }
     protected final Property<Boolean> invert = new SimpleBooleanProperty(this, "Invert Bump Map", false);
     protected final DoubleProperty bumpScale = new SimpleDoubleProperty(this, "Bump Scale", 27d);
-    protected final ObjectProperty<Image> bumpMap = new SimpleObjectProperty<Image>(this, "bumpMap", null);
+    protected final ObjectProperty<Image> bumpMap = new SimpleObjectProperty<>(this, "bumpMap", null);
     protected final DoubleProperty bumpFineScale = new SimpleDoubleProperty(this, "Bump Fine Scale", 9d);
     protected final BooleanProperty useBumpMap = new SimpleBooleanProperty(this, "Generate Bump Map", false);
     protected final DoubleProperty specularPower = new SimpleDoubleProperty(this, "Specular Power");
-    protected final ObjectProperty<Color> specColorBinding = new SimpleObjectProperty<Color>(Color.BLACK);
+    protected final ObjectProperty<Color> specColorBinding = new SimpleObjectProperty<>(Color.BLACK);
     protected final IntegerProperty specColor = new SimpleIntegerProperty(this, "Specular Color", 1) {
 
         @Override

@@ -40,39 +40,21 @@ import org.fxyz.controls.NumberSliderControl;
 import org.fxyz.controls.factory.ControlFactory;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.samples.shapes.TexturedMeshSample;
-import org.fxyz.shapes.primitives.CuboidMesh;
+import org.fxyz.shapes.primitives.TetrahedraMesh;
 
 /**
  *
  * @author jpereda
  */
-public class Cuboids extends TexturedMeshSample{
+public class Tetrahedra extends TexturedMeshSample{
     public static void main(String[] args){launch(args);}
     
-    private final DoubleProperty width = new SimpleDoubleProperty(model, "Width", 10d) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((CuboidMesh)model).setWidth(width.get());
-            }
-        }
-    };
     private final DoubleProperty height = new SimpleDoubleProperty(model, "Height", 12d) {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((CuboidMesh)model).setHeight(height.get());
-            }
-        }
-    };
-    private final DoubleProperty depth = new SimpleDoubleProperty(model, "Depth", 4d) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((CuboidMesh)model).setDepth(depth.get());
+                ((TetrahedraMesh)model).setHeight(height.get());
             }
         }
     };
@@ -81,13 +63,13 @@ public class Cuboids extends TexturedMeshSample{
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((CuboidMesh)model).setLevel(level.get());
+                ((TetrahedraMesh)model).setLevel(level.get());
             }
         }
     };
     @Override
     protected void createMesh() {
-        model = new CuboidMesh(this.width.get(), this.height.get(), this.depth.get(), this.level.get(), new Point3D(0f,0f,0f));
+        model = new TetrahedraMesh(this.height.get(), this.level.get(), new Point3D(0f,0f,0f));
 //        model.setTextureModeNone(Color.ROYALBLUE);
     }
 
@@ -98,20 +80,10 @@ public class Cuboids extends TexturedMeshSample{
 
     @Override
     protected Node buildControlPanel() {
-        NumberSliderControl widthSlider = ControlFactory.buildNumberSlider(this.width, .01D, 200D);
-        widthSlider.getSlider().setMinorTickCount(10);
-        widthSlider.getSlider().setMajorTickUnit(0.5);
-        widthSlider.getSlider().setBlockIncrement(0.01d);
-
         NumberSliderControl heightSlider = ControlFactory.buildNumberSlider(this.height, .01D, 200D);
         heightSlider.getSlider().setMinorTickCount(10);
         heightSlider.getSlider().setMajorTickUnit(0.5);
         heightSlider.getSlider().setBlockIncrement(0.01d);
-        
-        NumberSliderControl depthSlider = ControlFactory.buildNumberSlider(this.depth, .01D, 200D);
-        depthSlider.getSlider().setMinorTickCount(10);
-        depthSlider.getSlider().setMajorTickUnit(0.5);
-        depthSlider.getSlider().setBlockIncrement(0.01d);
         
         NumberSliderControl levelSlider = ControlFactory.buildNumberSlider(this.level, 0, 8);
         levelSlider.getSlider().setMinorTickCount(0);
@@ -120,7 +92,7 @@ public class Cuboids extends TexturedMeshSample{
         levelSlider.getSlider().setSnapToTicks(true);
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        geomControls.addControls(widthSlider,heightSlider,depthSlider,levelSlider);
+        geomControls.addControls(heightSlider,levelSlider);
 
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(

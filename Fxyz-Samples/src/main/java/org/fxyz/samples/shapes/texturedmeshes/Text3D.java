@@ -30,49 +30,46 @@
 package org.fxyz.samples.shapes.texturedmeshes;
 
 import static javafx.application.Application.launch;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
+import org.fxyz.controls.ComboBoxControl;
 import org.fxyz.controls.ControlCategory;
 import org.fxyz.controls.NumberSliderControl;
+import org.fxyz.controls.TextFieldControl;
 import org.fxyz.controls.factory.ControlFactory;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.samples.shapes.TexturedMeshSample;
-import org.fxyz.shapes.primitives.CuboidMesh;
+import org.fxyz.samples.shapes.GroupOfTexturedMeshSample;
+import org.fxyz.shapes.primitives.Text3DMesh;
 
 /**
  *
  * @author jpereda
  */
-public class Cuboids extends TexturedMeshSample{
+public class Text3D extends GroupOfTexturedMeshSample{
+    
     public static void main(String[] args){launch(args);}
     
-    private final DoubleProperty width = new SimpleDoubleProperty(model, "Width", 10d) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((CuboidMesh)model).setWidth(width.get());
-            }
-        }
-    };
     private final DoubleProperty height = new SimpleDoubleProperty(model, "Height", 12d) {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((CuboidMesh)model).setHeight(height.get());
+                ((Text3DMesh)model).setHeight(get());
             }
         }
     };
-    private final DoubleProperty depth = new SimpleDoubleProperty(model, "Depth", 4d) {
+    private final DoubleProperty gap = new SimpleDoubleProperty(model, "Gap", 0d) {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((CuboidMesh)model).setDepth(depth.get());
+                ((Text3DMesh)model).setGap(get());
             }
         }
     };
@@ -81,13 +78,52 @@ public class Cuboids extends TexturedMeshSample{
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((CuboidMesh)model).setLevel(level.get());
+                ((Text3DMesh)model).setLevel(get());
             }
         }
     };
+    private final IntegerProperty fontSize = new SimpleIntegerProperty(model, "Font Size", 100) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                ((Text3DMesh)model).setFontSize(get());
+            }
+        }
+    };
+    private final BooleanProperty joinSegments = new SimpleBooleanProperty(model, "Join Segments", false) {
+        @Override
+        protected void invalidated() {
+            super.invalidated();
+            if (model != null) {
+                ((Text3DMesh)model).setJoinSegments(get());
+            }
+        }
+    };
+    private final StringProperty text3D = new SimpleStringProperty(model, "Text3D", "F(X)yz") {
+        @Override
+        protected void invalidated() {
+            super.invalidated(); 
+            System.out.println("text " + get());
+            if (model != null) {
+                ((Text3DMesh)model).setText3D(get());
+            }
+        }
+    }; 
+    private final StringProperty font = new SimpleStringProperty(model, "Font Family", "Arial") {
+        @Override
+        protected void invalidated() {
+            super.invalidated(); 
+            System.out.println("font " + get());
+            if (model != null) {
+                ((Text3DMesh)model).setFont(get());
+            }
+        }
+    }; 
+    
     @Override
     protected void createMesh() {
-        model = new CuboidMesh(this.width.get(), this.height.get(), this.depth.get(), this.level.get(), new Point3D(0f,0f,0f));
+        model = new Text3DMesh(this.text3D.get(), this.height.get(), this.level.get());
 //        model.setTextureModeNone(Color.ROYALBLUE);
     }
 
@@ -98,20 +134,20 @@ public class Cuboids extends TexturedMeshSample{
 
     @Override
     protected Node buildControlPanel() {
-        NumberSliderControl widthSlider = ControlFactory.buildNumberSlider(this.width, .01D, 200D);
-        widthSlider.getSlider().setMinorTickCount(10);
-        widthSlider.getSlider().setMajorTickUnit(0.5);
-        widthSlider.getSlider().setBlockIncrement(0.01d);
-
         NumberSliderControl heightSlider = ControlFactory.buildNumberSlider(this.height, .01D, 200D);
         heightSlider.getSlider().setMinorTickCount(10);
         heightSlider.getSlider().setMajorTickUnit(0.5);
         heightSlider.getSlider().setBlockIncrement(0.01d);
         
-        NumberSliderControl depthSlider = ControlFactory.buildNumberSlider(this.depth, .01D, 200D);
-        depthSlider.getSlider().setMinorTickCount(10);
-        depthSlider.getSlider().setMajorTickUnit(0.5);
-        depthSlider.getSlider().setBlockIncrement(0.01d);
+        NumberSliderControl gapSlider = ControlFactory.buildNumberSlider(this.gap, 0D, 100D);
+        gapSlider.getSlider().setMinorTickCount(4);
+        gapSlider.getSlider().setMajorTickUnit(5);
+        gapSlider.getSlider().setBlockIncrement(1d);
+        
+        NumberSliderControl fontSizeSlider = ControlFactory.buildNumberSlider(this.fontSize, 1D, 400D);
+        fontSizeSlider.getSlider().setMinorTickCount(1);
+        fontSizeSlider.getSlider().setMajorTickUnit(10d);
+        fontSizeSlider.getSlider().setBlockIncrement(1d);
         
         NumberSliderControl levelSlider = ControlFactory.buildNumberSlider(this.level, 0, 8);
         levelSlider.getSlider().setMinorTickCount(0);
@@ -120,14 +156,19 @@ public class Cuboids extends TexturedMeshSample{
         levelSlider.getSlider().setSnapToTicks(true);
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        geomControls.addControls(widthSlider,heightSlider,depthSlider,levelSlider);
+        geomControls.addControls(heightSlider, gapSlider, fontSizeSlider,levelSlider);
+
+        ControlCategory text3DControls = ControlFactory.buildCategory("Text");
+        text3DControls.addControls(ControlFactory.buildFontControl(this.font), 
+                ControlFactory.buildTextFieldControl("Text", text3D), 
+                ControlFactory.buildCheckBoxControl(joinSegments));
 
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
                         this.drawMode,
                         this.culling
                 ),
-                geomControls,
+                geomControls, text3DControls,
                 ControlFactory.buildTextureMeshCategory(this.textureType, this.colors, 
                         null, this.textureImage,
                         this.useBumpMap, this.bumpScale,
