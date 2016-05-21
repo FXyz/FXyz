@@ -33,11 +33,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
 import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
 import org.fxyz.controls.CheckBoxControl;
 import org.fxyz.controls.ColorPickControl;
 import org.fxyz.controls.ColorSliderControl;
@@ -51,6 +53,7 @@ import org.fxyz.controls.ScriptFunction1DControl;
 import org.fxyz.controls.ScriptFunction2DControl;
 import org.fxyz.controls.ScriptFunction3DControl;
 import org.fxyz.controls.SectionLabel;
+import org.fxyz.controls.TextFieldControl;
 import org.fxyz.controls.TextureImage;
 import org.fxyz.controls.TextureTypeControl;
 import org.fxyz.geometry.Point3D;
@@ -87,6 +90,10 @@ public final class ControlFactory {
      Standard Control Types
      ==========================================================================*/
 
+    public static final TextFieldControl buildTextFieldControl(final String title, final StringProperty p) {
+        return new TextFieldControl(title, p);
+    }
+
     public static final CheckBoxControl buildCheckBoxControl(final Property<Boolean> p) {
         return new CheckBoxControl(p);
     }
@@ -116,6 +123,10 @@ public final class ControlFactory {
 
     public static final ComboBoxControl<DrawMode> buildDrawModeControl(final Property<DrawMode> dmp) {
         return new ComboBoxControl<>("Draw Mode: ", dmp, Arrays.asList(DrawMode.values()), false);
+    }
+    
+    public static final ComboBoxControl<String> buildFontControl(final Property<String> font) {
+        return new ComboBoxControl<>("Font Family: ", font, Font.getFontNames(), false);
     }
 
     public static final TextureTypeControl buildTextureTypeControl(

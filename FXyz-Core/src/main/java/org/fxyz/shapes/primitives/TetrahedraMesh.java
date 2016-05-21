@@ -1,32 +1,21 @@
-/**
-* CuboidMesh.java
-*
-* Copyright (c) 2013-2015, F(X)yz
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-* * Redistributions of source code must retain the above copyright
-* notice, this list of conditions and the following disclaimer.
-* * Redistributions in binary form must reproduce the above copyright
-* notice, this list of conditions and the following disclaimer in the
-* documentation and/or other materials provided with the distribution.
-* * Neither the name of the organization nor the
-* names of its contributors may be used to endorse or promote products
-* derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
+/*
+ * Copyright (C) 2013-2015 F(X)yz, 
+ * Sean Phillips, Jason Pollastrini and Jose Pereda
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.fxyz.shapes.primitives;
 
 import java.util.Arrays;
@@ -51,36 +40,31 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import org.fxyz.geometry.Face3;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.collections.FloatCollector;
-import org.fxyz.geometry.Face3;
 
 /**
  *
- * @author JosÃ© Pereda Llamas
+ * @author José Pereda Llamas
  * Created on 22-dic-2014 - 21:51:51
  */
-public class CuboidMesh extends TexturedMesh {
+public class TetrahedraMesh extends TexturedMesh {
 
-    private final static double DEFAULT_WIDTH = 10;
     private final static double DEFAULT_HEIGHT = 10;
-    private final static double DEFAULT_DEPTH = 10;
-    
-    private final static int DEFAULT_LEVEL = 0;
+    private final static int DEFAULT_LEVEL = 1;
     private final static Point3D DEFAULT_CENTER = new Point3D(0f,0f,0f);
     
     
-    public CuboidMesh(){
-        this(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_DEPTH, DEFAULT_LEVEL,null);
+    public TetrahedraMesh(){
+        this(DEFAULT_HEIGHT, DEFAULT_LEVEL,null);
     }
-    public CuboidMesh(double width, double height, double depth){
-        this(width, height, depth, DEFAULT_LEVEL, null);
+    public TetrahedraMesh(double height){
+        this(height, DEFAULT_LEVEL, null);
     }
     
-    public CuboidMesh(double width, double height, double depth, int level, Point3D center){
-        setWidth(width);        
+    public TetrahedraMesh(double height, int level, Point3D center){
         setHeight(height);        
-        setDepth(depth);        
         setLevel(level);
         setCenter(center);
         
@@ -90,28 +74,6 @@ public class CuboidMesh extends TexturedMesh {
         setDepthTest(DepthTest.ENABLE);
     }
     
-    private final DoubleProperty width = new SimpleDoubleProperty(DEFAULT_WIDTH){
-
-        @Override
-        protected void invalidated() {
-            if(mesh!=null){
-                updateMesh();
-            }
-        }
-
-    };
-
-    public double getWidth() {
-        return width.get();
-    }
-
-    public final void setWidth(double value) {
-        width.set(value);
-    }
-
-    public DoubleProperty widthProperty() {
-        return width;
-    }
     private final DoubleProperty height = new SimpleDoubleProperty(DEFAULT_HEIGHT){
 
         @Override
@@ -134,28 +96,7 @@ public class CuboidMesh extends TexturedMesh {
     public DoubleProperty heightProperty() {
         return height;
     }
-    private final DoubleProperty depth = new SimpleDoubleProperty(DEFAULT_DEPTH){
 
-        @Override
-        protected void invalidated() {
-            if(mesh!=null){
-                updateMesh();
-            }
-        }
-
-    };
-
-    public double getDepth() {
-        return depth.get();
-    }
-
-    public final void setDepth(double value) {
-        depth.set(value);
-    }
-
-    public DoubleProperty depthProperty() {
-        return depth;
-    }
     private final IntegerProperty level = new SimpleIntegerProperty(DEFAULT_LEVEL){
 
         @Override
@@ -205,7 +146,7 @@ public class CuboidMesh extends TexturedMesh {
     @Override
     protected final void updateMesh() {
         setMesh(null);
-        mesh=createCube((float)getWidth(), (float)getHeight(), (float)getDepth(), getLevel());
+        mesh=createTetrahedra((float)getHeight(), getLevel());
         setMesh(mesh);
     }
     
@@ -215,58 +156,47 @@ public class CuboidMesh extends TexturedMesh {
     private List<Point2D> texCoord1;
     private Transform a = new Affine();
     
-    private TriangleMesh createCube(float width, float height, float depth, 
-            int level){
+    private TriangleMesh createTetrahedra(float height, int level){
         
         TriangleMesh m0=null;
         if(level>0){
-            m0= createCube(width, height, depth, level-1);
+            m0= createTetrahedra(height, level-1);
         }
         
         if(level==0){
             a = new Affine();
-            float L=2f*width+2f*depth;
-            float H=height+2f*depth;
-            float hw=width/2f, hh=height/2f, hd=depth/2f;        
+            float hw=height;        
             if(center.get()!=null){
                 a=a.createConcatenation(new Translate(center.get().x,center.get().y,center.get().z));
-//                hw+=center.get().x;
-//                hh+=center.get().y;
-//                hd+=center.get().z;
             }
             final float[] baseVertices = new float[]{
-                hw, hh, hd,             hw, hh, -hd,
-                hw, -hh, hd,            hw, -hh, -hd,
-                -hw, hh, hd,            -hw, hh, -hd,
-                -hw, -hh, hd,           -hw, -hh, -hd
+                0f, 0f, 0.612372f*hw, 
+                -0.288675f*hw, -0.5f*hw, -0.204124f*hw, 
+                -0.288675f*hw, 0.5f*hw, -0.204124f*hw, 
+                0.57735f*hw, 0f, -0.204124f*hw
             };
 
             final float[] baseTexCoords = new float[]{
-                depth/L, 0f,                       (depth+width)/L, 0f,
-                0f, depth/H,                        depth/L, depth/H, 
-                (depth+width)/L, depth/H,           (2f*depth+width)/L, depth/H,  
-                1f, depth/H,                        0f, (depth+height)/H,    
-                depth/L, (depth+height)/H,          (depth+width)/L, (depth+height)/H,  
-                (2f*depth+width)/L, (depth+height)/H,  1f, (depth+height)/H,
-                depth/L, 1f,                        (depth+width)/L, 1f        
+                0f, 0f, 
+                0.5f, 0.866025f, 
+                1f, 0f, 
+                1f, 1.73205f, 
+                1.5f, 0.866025f, 
+                2f, 0f
             };
 
             final int[] baseTexture = new int[]{
-                8,3,7,            3,2,7,            
-                9,10,4,           4,10,5,            
-                8,12,9,           9,12,13,            
-                3,4,0,            0,4,1,            
-                8,9,3,            3,9,4,            
-                11,6,10,          10,6,5
+                0, 2, 1, 
+                3, 1, 4, 
+                2, 4, 1, 
+                4, 2, 5
             };
 
             final List<Integer> baseFaces = Arrays.asList(
-                0,2,1,            2,3,1,            
-                4,5,6,            6,5,7,            
-                0,1,4,            4,1,5,            
-                2,6,3,            3,6,7,            
-                0,4,2,            2,4,6,            
-                1,3,5,            5,3,7
+                1, 2, 3, 
+                2, 1, 0, 
+                3, 0, 1, 
+                0, 3, 2
             );
             
             for(int i=0; i<baseVertices.length/3; i++){
@@ -377,11 +307,11 @@ public class CuboidMesh extends TexturedMesh {
         numTexCoords=texCoord0.length/2;
         textureCoords=texCoord0;
         if(level==getLevel()){
-            areaMesh.setWidth(2f*width+2f*depth);
-            areaMesh.setHeight(height+2f*depth);
+            areaMesh.setWidth(2f*height);
+            areaMesh.setHeight(height*Math.sqrt(3));
             
             // 1<<j -> bitset, 00100. Otherwise: 000111 will mean they are shared
-            smoothingGroups=IntStream.range(0,listFaces.size()).map(i->1<<(i/(listFaces.size()/6))).toArray();
+            smoothingGroups=IntStream.range(0,listFaces.size()).map(i->1<<(i/(listFaces.size()/4))).toArray();
             // smoothing groups based on 3DViewer -> same result
 //            float[] normals=new float[]{1,0,0,-1,0,0,0,1,0,0,-1,0,0,0,1,0,0,-1};
 //            int[] newFaces = IntStream.range(0, listFaces.size())

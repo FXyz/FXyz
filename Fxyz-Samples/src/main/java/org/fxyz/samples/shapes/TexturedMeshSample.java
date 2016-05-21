@@ -77,7 +77,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh> {
                         }
                         break;
                     case IMAGE:
-                        model.setTextureModeImage(textureImage.getValue()==null?null:textureImage.getValue().getImage());
+                        model.setTextureModeImage(textureImage.getValue()==null?null:textureImage.getValue().getSource());
                         if (useBumpMap.getValue() || invert.getValue()) {
                             useBumpMap.setValue(false);
                             invert.setValue(false);
@@ -148,7 +148,7 @@ public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh> {
         protected void invalidated() {
             if (model != null && model.getTextureType().equals(TriangleMeshHelper.TextureType.IMAGE)) {
                 //material.setDiffuseMap(textureImage.getValue());
-                model.setTextureModeImage(textureImage.getValue().getImage());
+                model.setTextureModeImage(textureImage.getValue().getSource());
                 if (useBumpMap.getValue() || invert.getValue()) {
                     useBumpMap.setValue(false);
                     invert.setValue(false);

@@ -18,13 +18,13 @@
     
     
 
-    //################   FXYZ   ##############################
-    //-fxyz-color-palette1: "../samples/res/palette_1530.png";
+    /* ################   FXYZ   ############################## */
+    /*-fxyz-color-palette1: "../samples/res/palette_1530.png"; */
     -fxyz-lighting-track: linear-gradient(to right, #ffffff 5%, #ff0000 6%, #ffff00 40%, #00ff00 60%, #00ffff 80%, #0000ff 100%);
     -fx-default-button: linear-gradient(to bottom, #ffffff13 5%, transparent 100%);
     
     
-    //########################################################
+    /* ######################################################## */
 
 
     /* One of these colors will be chosen based upon a ladder calculation
@@ -310,7 +310,7 @@
     /*-fx-background-radius: 0.583em; *//* 7 */
     -fx-background-radius: 10;
     -fx-padding: 0.75em;
-    //-fx-effect: innershadow(gaussian, white, 1,0,0,0,0);
+    /*//-fx-effect: innershadow(gaussian, white, 1,0,0,0,0);*/
 }
 
 /*
@@ -900,15 +900,15 @@
     -fx-padding: 6 2 6 2;
     -fx-border-color: white, -fx-accent;
     -fx-shape: "M4,2 L-4,2 L0,-2 Z";
-    //-fx-effect: dropshadow(gaussian , rgba(0, 0, 0, 0.1), 5, 0.0 , 0, 2);
+    /*//-fx-effect: dropshadow(gaussian , rgba(0, 0, 0, 0.1), 5, 0.0 , 0, 2);*/
 }
 .slider:pressed .thumb {
-    //-fx-background-radius: 0em; /* makes sure this remains circular */
-    //-fx-background-color: null;
+/*    //-fx-background-radius: 0em;  makes sure this remains circular 
+    //-fx-background-color: null;*/
 }
 .slider:focused .thumb {
-    //-fx-background-radius: 0em; /* makes sure this remains circular */
-    //-fx-background-color: null;
+/*    //-fx-background-radius: 0em;  makes sure this remains circular 
+    //-fx-background-color: null;*/
 }
 .slider .track {
     -fx-background-color: 
@@ -985,7 +985,7 @@
     -fx-background-radius: 3, 2, 1;
 }
 .scroll-bar:vertical > .thumb {
-    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;//-to-right; 
+    -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;/*-to-right; */
 }
 .scroll-bar > .increment-button, 
 .scroll-bar > .decrement-button {
@@ -1600,7 +1600,7 @@
 }
 .tab-pane > .tab-header-area > .headers-region > .tab:hover {
     -fx-color: -fx-hover-base;
-    //-fx-border-color: #00ffff;
+    /*//-fx-border-color: #00ffff;*/
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected {
@@ -1614,7 +1614,7 @@
     -fx-border-radius: 2, 1; /* looks sharper if outer border has a tighter radius (2 instead of 3) */
 }
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:bottom:selected .focus-indicator {
-    //-fx-border-insets: -6 -5 -4 -4, -5 -3 -2 -2;
+    /*//-fx-border-insets: -6 -5 -4 -4, -5 -3 -2 -2;*/
 }
 .tab-pane > .tab-header-area > .headers-region > .tab:disabled:hover {
     -fx-color: -fx-base;
@@ -1841,7 +1841,7 @@
 .titled-pane > *.content {
     -fx-border-color: -fx-box-border;
     -fx-border-insets: -1 0 0 0;
-    -fx-background-color: null;//linear-gradient(from 0px 0px to 0px 5px, derive(-fx-background, -6%), -fx-background);
+    -fx-background-color: null;/*linear-gradient(from 0px 0px to 0px 5px, derive(-fx-background, -6%), -fx-background);*/
 }
 
 
@@ -2246,8 +2246,8 @@
 /* standard cell */
 .list-cell,
 .tree-cell {
-    //-fx-background: -fx-control-inner-background;
-    //-fx-background-color: -fx-background;
+/*    //-fx-background: -fx-control-inner-background;
+    //-fx-background-color: -fx-background;*/
     -fx-text-fill: white;
 }
 /* Selected rows */
@@ -2291,7 +2291,7 @@
     -fx-padding: 0.25em 0.583em 0.25em 0.583em; /* 3 7 3 7 */
 }
 .list-cell:odd {
-    //-fx-background: -fx-control-inner-background;
+    /*//-fx-background: -fx-control-inner-background;*/
 }
 
 /*******************************************************************************
@@ -3123,13 +3123,13 @@
 .fxyz-control:hover{
     -fx-color: -fx-hover-base;
 }
-//==============================================================================
+/*============================================================================== */
 
 .segmented-button-bar .button , .toggle-button {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
-//============================================================================== 
+/* ============================================================================== */
 .segmented-button-bar .toggle-button:selected{
     -fx-effect: innershadow(gaussian , rgba(0,255,255,0.8) ,3.5 ,0.2 ,0 ,-1 );
 }
@@ -3142,7 +3142,7 @@
     -fx-background-insets: 0;
     -fx-background-radius: 0 0 10 0;
 }
-//==============================================================================
+/* ============================================================================== */
 .colorSlider {
     -fx-effect: dropshadow(two-pass-box , rgba(0, 0, 0, 0.3), 5, 0.0 , 0, 2);
 }
@@ -3157,12 +3157,12 @@
 }
 .colorSlider .thumb {
     -fx-background-color: transparent;
-    -fx-border-color: white; //linear-gradient(to bottom, white 20%, black 21%, black 79%, white 80%);
+    -fx-border-color: white; /* linear-gradient(to bottom, white 20%, black 21%, black 79%, white 80%); */
     -fx-border-width: 1.5px;
     -fx-background-insets: 5 0 0 0;
     -fx-padding: 6 2 6 2;
 }
-//==========================
+/* ========================== */
 .lighting-slider > .track {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
@@ -3171,7 +3171,7 @@
     -fx-background-repeat: stretch;
     -fx-background-size: stretch, contain;
 }
-//==
+/* ========================== */
 .texture-slider > .track{
     -fx-background-color: transparent;
     -fx-background-radius: 0;
@@ -3181,12 +3181,12 @@
     -fx-background-size: stretch, contain;
 
 }
-///==============================================================================
+/* ============================================================================== */
 
 .sub-scene-container{
     -fx-background-color: linear-gradient(to right, #2e2e2e33 0%, #66666633 50%, #2e2e2e33 100%),
         radial-gradient(focus-angle 180deg, focus-distance 10%, center 50% 170%, radius 100%, reflect, -fx-base 0%, #66666633 40%, transparent 100%);
-    //-fx-background-image: url("../samples/sceneBackground.jpg");
+    /*//-fx-background-image: url("../samples/sceneBackground.jpg");*/
 
     -fx-border-color: linear-gradient(from 0% 50% to 100% 50%, rgba(0,0,0,0.9) 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.9) 100%);
 }
@@ -3198,9 +3198,9 @@
     -fxx-value-alignment: center;
     -fx-background-radius: 10 10 0 0;
     -fx-background-insets: 0 0 5 0;
-    //-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+/*    //-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
     //-fx-background-insets: 0 0 -1 0, 0, 1, 2;
-    //-fx-background-radius: 5, 5, 4, 3;
+    //-fx-background-radius: 5, 5, 4, 3;*/
     -fx-padding: 0.266667em 0.233333em 0.25em 0.233333em;
     -fx-text-fill: -fx-text-base-color;
 }
@@ -3212,7 +3212,7 @@
 .ListSpinner:focused { 
     -fx-color: -fx-base;
     -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
-    //-fx-background-insets: -1.4, 0, 1, 2;
+    /*//-fx-background-insets: -1.4, 0, 1, 2;*/
     -fx-background-radius: 6.4, 5, 4, 3;	
 }
 
