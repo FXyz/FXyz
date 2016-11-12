@@ -29,6 +29,7 @@
 
 package org.fxyz.shapes.primitives;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -438,6 +439,13 @@ public class Text3DMesh extends Group implements TextureMode {
     private final Callback<List<Face3>, Integer> faceCount = (List<Face3> param) -> {
         return param.size();
     };
+    
+    /**
+     * @return an unmodifiable list of all meshes
+     */
+    public List<TexturedMesh> getMeshes() {
+        return Collections.unmodifiableList(meshes);
+    }
 
     protected final StringBinding vertCountBinding = new StringBinding() {
         @Override
