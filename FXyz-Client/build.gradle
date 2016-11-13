@@ -51,7 +51,7 @@ repositories{
 }
 
 dependencies {    
-    compile ('org.controlsfx:controlsfx:8.40.10')
+    compile ('org.controlsfx:controlsfx:8.40.12')
     compile ('org.reactfx:reactfx:2.0-M4')    
     
     try {
