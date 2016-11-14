@@ -45,6 +45,7 @@ import javafx.stage.Stage;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.samples.FXyzSample;
 import org.fxyz.shapes.composites.PolyLine3D;
+import org.fxyz.shapes.composites.PolyLine3D.LineType;
 import org.fxyz.utils.CameraTransformer;
 
 /**
@@ -60,7 +61,6 @@ public class PolyLines3D extends FXyzSample {
         CameraTransformer cameraTransform = new CameraTransformer();
         final double sceneWidth = 800;
         final double sceneHeight = 600;
-        double cameraDistance = 5000;
         PolyLine3D polyLine3D;
 
         Group sceneRoot = new Group();
@@ -74,8 +74,6 @@ public class PolyLines3D extends FXyzSample {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setTranslateZ(-30);
-//        cameraTransform.ry.setAngle(-45.0);
-//        cameraTransform.rx.setAngle(-10.0);
         //add a Point Light for better viewing of the grid coordinate system
         PointLight light = new PointLight(Color.WHITE);
         cameraTransform.getChildren().add(light);
@@ -91,7 +89,9 @@ public class PolyLines3D extends FXyzSample {
                     (float) Math.sin(i) * 50 + i,
                     (float) Math.cos(i) * 50 + i));
         }
-        polyLine3D = new PolyLine3D(points, 3, Color.STEELBLUE);
+        //Use Default constructor for a simple ribbon
+        //        polyLine3D = new PolyLine3D(points,3,Color.STEELBLUE);    
+        polyLine3D = new PolyLine3D(points,8, Color.STEELBLUE, LineType.TRIANGLE);    
         sceneRoot.getChildren().addAll(polyLine3D);
 
         //First person shooter keyboard movement 
