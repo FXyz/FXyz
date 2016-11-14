@@ -57,27 +57,7 @@ public class PolyLine3D extends Group {
     
     //Creates a Ribbon PolyLine3D
     public PolyLine3D(List<Point3D> points, int width, Color color) {
-        this.points = points;
-        this.width = width;
-        this.color = color;
-        setDepthTest(DepthTest.ENABLE);        
-        mesh  = new TriangleMesh();
-        buildRibbon();
-        //Need to add the mesh to a MeshView before adding to our 3D scene 
-        meshView = new MeshView(mesh);
-        meshView.setDrawMode(DrawMode.FILL);  //Fill so that the line shows width
-        material = new PhongMaterial(color);
-        material.setDiffuseColor(color);
-        material.setSpecularColor(color);
-        meshView.setMaterial(material); 
-        //Make sure you Cull the Back so that no black shows through
-        meshView.setCullFace(CullFace.BACK);
-
-        //Add some ambient light so folks can see it
-        AmbientLight light = new AmbientLight(Color.WHITE);
-        light.getScope().add(meshView);
-        getChildren().add(light);
-        getChildren().add(meshView);           
+        this(points, width, color, LineType.RIBBON);          
     }
     //Creates a PolyLine3D with the user's choice of mesh style
     public PolyLine3D(List<Point3D> points, int width, Color color, LineType lineType ) {
