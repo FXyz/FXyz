@@ -32,10 +32,10 @@ subprojects {
         fxyz_name                = 'FXyzLibs'
         fxyz_sampler_name        = 'FXyz-Sampler'
         fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
-        fxyz_sampler_mainClass   = 'org.fxyz.client.FXyzClient'
+        fxyz_sampler_mainClass   = 'org.fxyz3d.client.FXyzClient'
     }
     
-    group = 'org.fxyz'
+    group = 'org.fxyz3d'
     version = specification_version + artifact_suffix
 
     sourceCompatibility = '1.8'

@@ -40,7 +40,7 @@ sourceSets {
 }
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'org.fxyz.client.FXyzClient'
+    ext.mainClass = 'org.fxyz3d.client.FXyzClient'
 }
 
 repositories{
@@ -89,10 +89,10 @@ shadow {
 }
 shadowJar {
     mergeServiceFiles {
-        include 'META-INF/services/org.fxyz.*'
+        include 'META-INF/services/org.fxyz3d.*'
     }
     //transform(ServiceFileTransformer) {
-    //path = 'META-INF/services/org.fxyz.*'
+    //path = 'META-INF/services/org.fxyz3d.*'
     //}
 }
 // sign all generated jars
