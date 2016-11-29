@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import org.fxyz3d.shapes.primitives.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Group cache="true" cacheHint="SPEED" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text cache="true" cacheHint="SPEED" depthTest="DISABLE" fill="AQUA" fontSmoothingType="LCD" stroke="TRANSPARENT" strokeType="OUTSIDE" strokeWidth="0.0" text="F(X)yz">
+         <font>
+            <Font name="MV Boli" size="96.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="GAUSSIAN" color="AQUA" spread="0.5">
+               <input>
+                  <InnerShadow choke="0.56" color="WHITE" height="5.25" radius="2.0625" width="5.0">
+                     <input>
+                        <InnerShadow blurType="GAUSSIAN" choke="0.31" color="#000000bf" height="40.0" radius="19.5" width="40.0" />
+                     </input>
+                  </InnerShadow>
+               </input>
+            </DropShadow>
+         </effect>
+      </Text>
+   </children>
+   <effect>
+      <Bloom threshold="1.0" />
+   </effect>
+</Group>
