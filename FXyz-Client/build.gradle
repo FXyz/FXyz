@@ -6,6 +6,17 @@ buildscript {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
+
+plugins {
+    id 'com.github.hierynomus.license' version '0.13.1'
+    id 'maven-publish'
+    id 'net.nemerosa.versioning' version '2.4.0'
+    id 'com.jfrog.bintray' version '1.7.2'
+    id 'com.github.ben-manes.versions' version '0.13.0'
+}
+
+apply from: 'gradle/publishing.gradle'
+
 repositories {
     jcenter()
 }
@@ -84,12 +95,3 @@ artifacts {
     // add the by shadow generated jar to the artifacts
     archives shadowJar
 }
-
-plugins {
-    id 'com.github.hierynomus.license' version '0.13.1'
-    id 'maven-publish'
-    id 'net.nemerosa.versioning' version '2.4.0'
-    id 'com.jfrog.bintray' version '1.7.2'
-    id 'com.github.ben-manes.versions' version '0.13.0'
-}
-apply from: 'gradle/publishing.gradle'
