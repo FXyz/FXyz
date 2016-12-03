@@ -1,27 +1,13 @@
-
-
 buildscript {
     repositories {
-        mavenLocal()
-        mavenCentral()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
-        maven {
-            name 'JCenter - for Gradle Shadow'
-            url 'http://jcenter.bintray.com/'
-        }
+        jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-    }
+    jcenter()
 }
 
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
@@ -43,16 +29,9 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.fxyz3d.client.FXyzClient'
 }
 
-repositories{
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/' 
-    }    
-    mavenCentral()
-}
-
 dependencies {    
-    compile ('org.controlsfx:controlsfx:8.40.12')
-    compile ('org.reactfx:reactfx:2.0-M4')    
+    compile 'org.controlsfx:controlsfx:8.40.12'
+    compile 'org.reactfx:reactfx:2.0-M5'    
     
     try {
         jdk files(jfxrtJar)

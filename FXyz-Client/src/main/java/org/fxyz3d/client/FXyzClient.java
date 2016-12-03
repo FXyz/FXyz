@@ -193,7 +193,7 @@ public class FXyzClient extends Application {
         client.setTriggerDistance(20);
         
         frame = new SimpleWindowFrame(stage, 1280, 800);
-        frame.setText("Fxyz-SamplerApp <ver: 0.0.1a>");
+        frame.setText("Fxyz-SamplerApp <ver: 0.1.1>");
         frame.setRootContent(client);
                 
         List<TreeItem<FXyzSample>> projects = contentTree.getRoot().getChildren();

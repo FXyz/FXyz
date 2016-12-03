@@ -1,7 +1,9 @@
 buildscript {
-    repositories { jcenter() }
+    repositories { 
+        jcenter() 
+    }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
 
@@ -43,19 +45,12 @@ subprojects {
 
     repositories {
         jcenter()
-        mavenCentral()
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots/' 
-        }
-        maven {
-            name 'JCenter - for Gradle Shadow'
-            url 'http://jcenter.bintray.com/'
-        }
     }
     
-    
     dependencies {     
-        compile 'eu.mihosoft.vrl.jcsg:jcsg:0.3.2'
+        compile ('eu.mihosoft.vrl.jcsg:jcsg:0.4.0') {
+            exclude group: 'eu.mihosoft.ext.org.fxyz'
+        }
         compile 'org.orbisgis:poly2tri-core:0.1.2'
         testCompile 'junit:junit:[4,)'
     }
@@ -81,15 +76,8 @@ subprojects {
         classifier = 'sources'
     }
 
-    task javadocJar(type: Jar) {
-        dependsOn javadoc
-        from javadoc.destinationDir
-        classifier = 'javadoc'
-    }
-
     artifacts {
         archives sourceJar
-        archives javadocJar
     }
 }
 

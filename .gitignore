@@ -10,3 +10,6 @@
 /FXyz-Core/build/
 /FXyz-Client/build/
 /.gradle
+/.nb-gradle/
+/.idea/
+/Fxyz-Samples/build/
