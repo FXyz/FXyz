@@ -84,3 +84,5 @@ artifacts {
     // add the by shadow generated jar to the artifacts
     archives shadowJar
 }
+
+apply from: 'gradle/publishing.gradle'
