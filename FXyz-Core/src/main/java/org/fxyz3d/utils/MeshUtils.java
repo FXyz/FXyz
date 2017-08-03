@@ -28,10 +28,10 @@
  */
 package org.fxyz3d.utils;
 
-import eu.mihosoft.vrl.v3d.CSG;
-import eu.mihosoft.vrl.v3d.Polygon;
-import eu.mihosoft.vrl.v3d.PropertyStorage;
-import eu.mihosoft.vrl.v3d.Vector3d;
+import eu.mihosoft.jcsg.CSG;
+import eu.mihosoft.jcsg.Polygon;
+import eu.mihosoft.jcsg.PropertyStorage;
+import eu.mihosoft.vvecmath.Vector3d;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -79,9 +79,9 @@ public class MeshUtils {
             // convert faces to polygons
             for(int i=0; i<faces.size()/6; i++){
                 int i0=f[6*i], i1=f[6*i+2], i2=f[6*i+4];
-                vertices.add(new Vector3d(p[3*i0], p[3*i0+1], p[3*i0+2]));
-                vertices.add(new Vector3d(p[3*i1], p[3*i1+1], p[3*i1+2]));
-                vertices.add(new Vector3d(p[3*i2], p[3*i2+1], p[3*i2+2]));
+                vertices.add(Vector3d.xyz(p[3*i0], p[3*i0+1], p[3*i0+2]));
+                vertices.add(Vector3d.xyz(p[3*i1], p[3*i1+1], p[3*i1+2]));
+                vertices.add(Vector3d.xyz(p[3*i2], p[3*i2+1], p[3*i2+2]));
                 polygons.add(Polygon.fromPoints(vertices));
                 vertices = new ArrayList<>();
             }
