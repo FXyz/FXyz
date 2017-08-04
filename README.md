@@ -9,6 +9,15 @@ FXyz3D
 
 A JavaFX 3D Visualization and Component Library
 
+## How to build
+
+The project is managed by gradle. To build, type
+
+	gradle assemble
+	gradle publishToMavenLocal
+
+To deploy it to your local Maven repository. 
+
 ## Use of FXyz3D Core
 
 With FXyz3D there are many different 3D custom shapes. The following sample makes use of `SpringMesh` to create 
