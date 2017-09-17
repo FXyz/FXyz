@@ -14,9 +14,10 @@ A JavaFX 3D Visualization and Component Library
 The project is managed by gradle. To build, type
 
 	gradle assemble
-	gradle publishToMavenLocal
 
-To deploy it to your local Maven repository. 
+To deploy it to your local Maven repository, type:
+
+	gradle publishToMavenLocal
 
 ## Use of FXyz3D Core
 
