@@ -29,8 +29,8 @@
 
 package org.fxyz3d.shapes.primitives;
 
-import eu.mihosoft.vrl.v3d.CSG;
-import eu.mihosoft.vrl.v3d.Vertex;
+import eu.mihosoft.jcsg.CSG;
+import eu.mihosoft.jcsg.Vertex;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.DepthTest;
@@ -76,7 +76,7 @@ public class CSGMesh extends TexturedMesh {
             p.vertices.forEach(v -> {
                 if (!vertices.contains(v)) {
                     vertices.add(v);
-                    listVertices.add(new Point3D((float)v.pos.x, (float)v.pos.y, (float)v.pos.z));
+                    listVertices.add(new Point3D((float)v.pos.getX(), (float)v.pos.getY(), (float)v.pos.getZ()));
                     polyIndices.add(vertices.size());
                 } else {
                     polyIndices.add(vertices.indexOf(v) + 1);
