@@ -202,7 +202,14 @@ public class SurfacePlotMesh extends TexturedMesh {
     public IntegerProperty divisionsYProperty() {
         return divisionsY;
     }
-    private final DoubleProperty functionScale = new SimpleDoubleProperty(DEFAULT_FUNCTION_SCALE);
+    private final DoubleProperty functionScale = new SimpleDoubleProperty(DEFAULT_FUNCTION_SCALE) {
+        @Override
+        protected void invalidated() {
+            if(mesh!=null){
+                updateMesh();
+            }
+        }
+    };
 
     public double getFunctionScale() {
         return functionScale.get();
