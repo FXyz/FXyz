@@ -712,7 +712,7 @@ public abstract class TexturedMesh extends MeshView implements TextureMode {
         vertCountBinding.invalidate();
         faceCountBinding.invalidate();
 
-        System.out.println("nodes: "+listVertices.size()+", faces: "+listFaces.size());
+//        System.out.println("nodes: "+listVertices.size()+", faces: "+listFaces.size());
 //        System.out.println("area: "+helper.getMeshArea(listVertices, listFaces));
         return triangleMesh;
     }
@@ -793,7 +793,7 @@ public abstract class TexturedMesh extends MeshView implements TextureMode {
         mesh.getFaces().setAll(faces);
         long time=System.currentTimeMillis();
         List<Face3> listIntersections = helper.getListIntersections(origin, direction, listVertices, listFaces);
-        System.out.println("t: "+(System.currentTimeMillis()-time));
+//        System.out.println("t: "+(System.currentTimeMillis()-time));
         listIntersections.forEach(System.out::println);
         return listIntersections.size();        
     }
