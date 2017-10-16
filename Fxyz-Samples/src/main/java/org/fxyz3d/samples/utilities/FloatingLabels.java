@@ -1,7 +1,7 @@
 /**
- * RayIntersections.java
+ * FloatingLabels.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2017, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
