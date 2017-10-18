@@ -1,7 +1,9 @@
 buildscript {
-    repositories { jcenter() }
+    repositories { 
+        jcenter() 
+    }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
 
@@ -32,10 +34,10 @@ subprojects {
         fxyz_name                = 'FXyzLibs'
         fxyz_sampler_name        = 'FXyz-Sampler'
         fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
-        fxyz_sampler_mainClass   = 'org.fxyz.client.FXyzClient'
+        fxyz_sampler_mainClass   = 'org.fxyz3d.client.FXyzClient'
     }
     
-    group = 'org.fxyz'
+    group = 'org.fxyz3d'
     version = specification_version + artifact_suffix
 
     sourceCompatibility = '1.8'
@@ -43,19 +45,12 @@ subprojects {
 
     repositories {
         jcenter()
-        mavenCentral()
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots/' 
-        }
-        maven {
-            name 'JCenter - for Gradle Shadow'
-            url 'http://jcenter.bintray.com/'
-        }
     }
     
-    
     dependencies {     
-        compile 'eu.mihosoft.vrl.jcsg:jcsg:0.3.2'
+        compile ('eu.mihosoft.vrl.jcsg:jcsg:0.5.6') {
+            exclude group: 'eu.mihosoft.ext.org.fxyz'
+        }
         compile 'org.orbisgis:poly2tri-core:0.1.2'
         testCompile 'junit:junit:[4,)'
     }
@@ -81,15 +76,8 @@ subprojects {
         classifier = 'sources'
     }
 
-    task javadocJar(type: Jar) {
-        dependsOn javadoc
-        from javadoc.destinationDir
-        classifier = 'javadoc'
-    }
-
     artifacts {
         archives sourceJar
-        archives javadocJar
     }
 }
 

@@ -1,27 +1,24 @@
-
-
 buildscript {
     repositories {
-        mavenLocal()
-        mavenCentral()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
-        maven {
-            name 'JCenter - for Gradle Shadow'
-            url 'http://jcenter.bintray.com/'
-        }
+        jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
+
+plugins {
+    id 'com.github.hierynomus.license' version '0.13.1'
+    id 'maven-publish'
+    id 'net.nemerosa.versioning' version '2.4.0'
+    id 'com.jfrog.bintray' version '1.7.2'
+    id 'com.github.ben-manes.versions' version '0.13.0'
+}
+
+apply from: 'gradle/publishing.gradle'
+
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-    }
+    jcenter()
 }
 
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
@@ -40,19 +37,12 @@ sourceSets {
 }
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'org.fxyz.client.FXyzClient'
-}
-
-repositories{
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/' 
-    }    
-    mavenCentral()
+    ext.mainClass = 'org.fxyz3d.client.FXyzClient'
 }
 
 dependencies {    
-    compile ('org.controlsfx:controlsfx:8.40.12')
-    compile ('org.reactfx:reactfx:2.0-M4')    
+    compile 'org.controlsfx:controlsfx:8.40.12'
+    compile 'org.reactfx:reactfx:2.0-M5'    
     
     try {
         jdk files(jfxrtJar)
@@ -89,10 +79,10 @@ shadow {
 }
 shadowJar {
     mergeServiceFiles {
-        include 'META-INF/services/org.fxyz.*'
+        include 'META-INF/services/org.fxyz3d.*'
     }
     //transform(ServiceFileTransformer) {
-    //path = 'META-INF/services/org.fxyz.*'
+    //path = 'META-INF/services/org.fxyz3d.*'
     //}
 }
 // sign all generated jars
