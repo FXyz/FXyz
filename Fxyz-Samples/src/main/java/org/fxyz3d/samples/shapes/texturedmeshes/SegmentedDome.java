@@ -144,10 +144,10 @@ public class SegmentedDome extends TexturedMeshSample {
         radSlider.getSlider().setMajorTickUnit(0.5);
         radSlider.getSlider().setBlockIncrement(0.01d);
         
-        NumberSliderControl divsSlider = ControlFactory.buildNumberSlider(divisions, .01D, 200D);
-        divsSlider.getSlider().setMinorTickCount(10);
-        divsSlider.getSlider().setMajorTickUnit(0.5);
-        divsSlider.getSlider().setBlockIncrement(0.01d);
+        NumberSliderControl divsSlider = ControlFactory.buildNumberSlider(divisions, 5, 200D);
+        divsSlider.getSlider().setMinorTickCount(4);
+        divsSlider.getSlider().setMajorTickUnit(5);
+        divsSlider.getSlider().setBlockIncrement(5);
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         geomControls.addControls(radSlider, phiMinSlider, phiMaxSlider, 

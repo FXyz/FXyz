@@ -36,6 +36,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.DepthTest;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Translate;
+import org.fxyz3d.geometry.Face3;
 
 /**
  *
@@ -79,58 +82,67 @@ public class SegmentedDomeMesh extends TexturedMesh {
         setThetamin(thetamin);
         setThetamax(thetamax);
         setDivisions(divisions);
-        setMesh(createSphereSegment(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions()));
+        updateMesh();
+        setDepthTest(DepthTest.ENABLE);
+        
     }
-    
-    private TriangleMesh createSphereSegment(double radius,
+    private TriangleMesh createSegmentedDome(double radius,
             double phimin, double phimax, 
             double thetamin, double thetamax,
-            int granularity) {
-    
-        setDepthTest(DepthTest.ENABLE);
+            int divisions){
+        
+        listVertices.clear();
+        listTextures.clear();
+        listFaces.clear();   
 
-        mesh = new TriangleMesh();
-        // Fill Points
+        // Create Points
         double phi = phimin;
         double theta;
 
-        for (int i = 0; i < granularity + 1; i++) {
+        for (int i = 0; i < divisions + 1; i++) {
             theta = thetamin;
-            for (int j = 0; j < granularity + 1; j++) {
-                Point3D p3D = new Point3D((float) (radius * Math.cos(theta) * Math.sin(phi)),
+            for (int j = 0; j < divisions + 1; j++) {
+               org.fxyz3d.geometry.Point3D ta = new org.fxyz3d.geometry.Point3D(
+                        (float) (radius * Math.cos(theta) * Math.sin(phi)),
                         (float) (radius * Math.cos(theta) * Math.cos(phi)),
                         (float) (radius * Math.sin(theta)));
-                mesh.getPoints().addAll(new Float(p3D.getX()), new Float(p3D.getY()), new Float(p3D.getZ()));
-                theta += (thetamax - thetamin) / granularity;
+                listVertices.add(ta);                
+                theta += (thetamax - thetamin) / divisions;
             }
-            phi += (phimax - phimin) / granularity;
-        }
-
-        //for now we'll just make an empty texCoordinate group
-        mesh.getTexCoords().addAll(0, 0);
+            phi += (phimax - phimin) / divisions;
+        }        
+        
+        // Create texture coordinates
+        createTexCoords(divisions,divisions);
+        
         //Add the faces "winding" the points generally counter clock wise
-        for (int i = 0; i < granularity; i++) {
-            int multiplier = (i * granularity) + i;
+        for (int i = 0; i < divisions; i++) {
+            int multiplier = (i * divisions) + i;
             //Up the Outside
-            for (int j = multiplier; j < granularity + multiplier; j++) {
-                mesh.getFaces().addAll(j, 0, j + 1, 0, j + granularity + 1, 0); //lower triangle
-                mesh.getFaces().addAll(j + granularity + 1, 0, j + 1, 0, j + granularity + 2, 0); //upper triangle
+            for (int j = multiplier; j < divisions + multiplier; j++) {
+                listFaces.add(new Face3(j, j + 1, j + divisions + 1)); //lower triangle
+                listTextures.add(new Face3(j, j + 1, j + divisions + 1));
+                listFaces.add(new Face3(j + divisions + 1, j + 1, j + divisions + 2)); //upper triangle
+                listTextures.add(new Face3(j + divisions + 1, j + 1, j + divisions + 2));
             }
             //Down the Inside            
-            for (int j = granularity + multiplier; j > multiplier; j--) {
-                mesh.getFaces().addAll(j, 0, j - 1, 0, j + granularity + 1, 0); //lower triangle
-                mesh.getFaces().addAll(j - 1, 0, j + granularity, 0, j + granularity + 1, 0); //upper triangle
+            for (int j = divisions + multiplier; j > multiplier; j--) {
+                listFaces.add(new Face3(j, j - 1, j + divisions + 1)); ; //lower triangle
+                listTextures.add(new Face3(j, j - 1, j + divisions + 1));
+                listFaces.add(new Face3(j - 1, j + divisions, j + divisions + 1)); //upper triangle
+                listTextures.add(new Face3(j - 1, j + divisions, j + divisions + 1));
             }
-        }
-        return mesh;
+        }    
+        
+        return createMesh();
     }
     /*
         Properties
     */
-    private final DoubleProperty radius = new SimpleDoubleProperty(){
+    private final DoubleProperty radius = new SimpleDoubleProperty(DEFAULT_RADIUS){
         @Override
         protected void invalidated() {
-            setMesh(createSphereSegment(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions()));
+            updateMesh();
         }
     };
     public final double getRadius() {
@@ -143,10 +155,10 @@ public class SegmentedDomeMesh extends TexturedMesh {
         return radius;
     }
     
-    private final DoubleProperty phimin = new SimpleDoubleProperty(){
+    private final DoubleProperty phimin = new SimpleDoubleProperty(DEFAULT_PHIMIN){
         @Override
         protected void invalidated() {
-            setMesh(createSphereSegment(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions()));
+            updateMesh();
         }
     };
     public final double getPhimin() {
@@ -159,10 +171,10 @@ public class SegmentedDomeMesh extends TexturedMesh {
         return phimin;
     }
 
-    private final DoubleProperty phimax = new SimpleDoubleProperty(){
+    private final DoubleProperty phimax = new SimpleDoubleProperty(DEFAULT_PHIMAX){
         @Override
         protected void invalidated() {
-            setMesh(createSphereSegment(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions()));
+            updateMesh();
         }
     };
     public final double getPhimax() {
@@ -175,10 +187,10 @@ public class SegmentedDomeMesh extends TexturedMesh {
         return phimax;
     }
     
-    private final DoubleProperty thetamax = new SimpleDoubleProperty(){
+    private final DoubleProperty thetamax = new SimpleDoubleProperty(DEFAULT_THETAMAX){
         @Override
         protected void invalidated() {
-            setMesh(createSphereSegment(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions()));
+            updateMesh();
         }
     };
     public final double getThetamax() {
@@ -191,10 +203,10 @@ public class SegmentedDomeMesh extends TexturedMesh {
         return thetamax;
     }
     
-    private final DoubleProperty thetamin = new SimpleDoubleProperty(){
+    private final DoubleProperty thetamin = new SimpleDoubleProperty(DEFAULT_THETAMIN){
         @Override
         protected void invalidated() {
-            setMesh(createSphereSegment(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions()));
+            updateMesh();
         }
     };
     public final double getThetamin() {
@@ -207,10 +219,10 @@ public class SegmentedDomeMesh extends TexturedMesh {
         return thetamin;
     }    
     
-    private final IntegerProperty divisions = new SimpleIntegerProperty(){
+    private final IntegerProperty divisions = new SimpleIntegerProperty(DEFAULT_DIVISIONS){
         @Override
         protected void invalidated() {
-            setMesh(createSphereSegment(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions()));
+            updateMesh();
         }        
     };    
     public final int getDivisions() {
@@ -224,8 +236,9 @@ public class SegmentedDomeMesh extends TexturedMesh {
     }        
     
     @Override
-    protected void updateMesh() {
-        mesh = createSphereSegment(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions());
+    protected final void updateMesh() {
+        setMesh(null);
+        mesh = createSegmentedDome(getRadius(), getPhimin(), getPhimax(), getThetamin(), getThetamax(), getDivisions());
+        setMesh(mesh);
     }
-
 }
