@@ -113,7 +113,7 @@ public class SegmentedDomeMesh extends TexturedMesh {
         }        
         
         // Create texture coordinates
-        createTexCoords(divisions,divisions);
+        createTexCoords(divisions, divisions);
         
         //Add the faces "winding" the points generally counter clock wise
         for (int i = 0; i < divisions; i++) {
