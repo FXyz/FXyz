@@ -1,7 +1,7 @@
 /**
  * CapsuleMesh.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2017, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,15 +30,16 @@
 package org.fxyz3d.shapes.primitives;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.shape.MeshView;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.shape.TriangleMesh;
 
 /**
  *
  * @author Dub
  */
-public class CapsuleMesh extends MeshView{
+public class CapsuleMesh extends TexturedMesh{
     /*
         Field vars
     */
@@ -57,9 +58,10 @@ public class CapsuleMesh extends MeshView{
     }
     
     public CapsuleMesh(int divisions, double radius, double height) {    
+        setDivisions(divisions);
         setRadius(radius);
         setHeight(height);
-        setMesh(createCapsule(DEFAULT_DIVISIONS, (float)getRadius(), (float)getHeight()));        
+        setMesh(createCapsule(getDivisions(), (float)getRadius(), (float)getHeight()));        
     }
 
     /*
@@ -214,10 +216,27 @@ public class CapsuleMesh extends MeshView{
     /*
         Properties
     */
+    
+    private final IntegerProperty divisions = new SimpleIntegerProperty(){
+        @Override
+        protected void invalidated() {
+            setMesh(createCapsule(getDivisions(),(float)getRadius(), (float)getHeight()));
+        }        
+    };    
+    public final int getDivisions() {
+        return divisions.get();
+    }
+    public final void setDivisions(int value) {
+        divisions.set(value);
+    }
+    public IntegerProperty divisionsProperty() {
+        return divisions;
+    }        
+    
     private final DoubleProperty radius = new SimpleDoubleProperty(DEFAULT_RADIUS){
         @Override
         protected void invalidated() {
-            setMesh(createCapsule(DEFAULT_DIVISIONS, (float)getRadius(), (float)getHeight()));
+            setMesh(createCapsule(getDivisions(), (float)getRadius(), (float)getHeight()));
         }        
     };
 
@@ -236,7 +255,7 @@ public class CapsuleMesh extends MeshView{
     private final DoubleProperty height = new SimpleDoubleProperty(DEFAULT_HEIGHT){
         @Override
         protected void invalidated() {
-            setMesh(createCapsule(DEFAULT_DIVISIONS, (float)getRadius(), (float)getHeight()));
+            setMesh(createCapsule(getDivisions(), (float)getRadius(), (float)getHeight()));
         }        
     };
 
@@ -251,6 +270,11 @@ public class CapsuleMesh extends MeshView{
 
     public DoubleProperty heightProperty() {
         return height;
+    }
+
+    @Override
+    protected void updateMesh() {
+        mesh = createCapsule(getDivisions(),(float)getRadius(), (float)getHeight());
     }
     
     

@@ -1,7 +1,7 @@
 /**
- * SphereSegments.java
+ * RandomSegmentedDomes.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2017, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package org.fxyz3d.pending;
+package org.fxyz3d.samples.shapes.texturedmeshes;
 
 import java.util.Random;
 import javafx.scene.AmbientLight;
@@ -42,18 +42,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.fxyz3d.samples.FXyzSample;
-import org.fxyz3d.shapes.SphereSegment;
+import org.fxyz3d.shapes.primitives.SegmentedDomeMesh;
 import org.fxyz3d.utils.CameraTransformer;
 
 /**
  *
  * @author Sean
  */
-public class SphereSegments extends FXyzSample {
+public class RandomSegmentedDomes extends FXyzSample {
 
     @Override
     public Node getSample() {
@@ -106,13 +107,12 @@ public class SphereSegments extends FXyzSample {
             }
             int randomSegments = (int) ((r.nextFloat() * 15) + 5);
             Color randomColor = new Color(r.nextDouble(), r.nextDouble(), r.nextDouble(), r.nextDouble());
-            boolean ambientRandom = r.nextBoolean();
-            boolean fillRandom = r.nextBoolean();
 
-            SphereSegment sphereSegment = new SphereSegment(randomRadius, randomColor,
+            SegmentedDomeMesh segmentedDome = new SegmentedDomeMesh(randomRadius,
                     Math.toRadians(0), Math.toRadians(360),
                     Math.toRadians(randomPolarMin), Math.toRadians(randomPolarMax),
-                    randomSegments, ambientRandom, fillRandom);
+                    randomSegments);
+            segmentedDome.setMaterial(new PhongMaterial(randomColor));
 
             double translationX = Math.random() * sceneWidth / 2;
             if (Math.random() >= 0.5) {
@@ -131,9 +131,9 @@ public class SphereSegments extends FXyzSample {
             Rotate rotateY = new Rotate(Math.random() * 360, Rotate.Y_AXIS);
             Rotate rotateZ = new Rotate(Math.random() * 360, Rotate.Z_AXIS);
 
-            sphereSegment.getTransforms().addAll(translate, rotateX, rotateY, rotateZ);
-            sphereSegment.getTransforms().add(translate);
-            sphereGroup.getChildren().add(sphereSegment);
+            segmentedDome.getTransforms().addAll(translate, rotateX, rotateY, rotateZ);
+            segmentedDome.getTransforms().add(translate);
+            sphereGroup.getChildren().add(segmentedDome);
 
         }
         sceneRoot.getChildren().addAll(sphereGroup);

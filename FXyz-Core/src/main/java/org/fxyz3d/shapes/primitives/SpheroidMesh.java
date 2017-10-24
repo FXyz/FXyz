@@ -36,14 +36,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.DepthTest;
 import javafx.scene.shape.CullFace;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**
  *
  * @author Dub
  */
-public class SpheroidMesh extends MeshView{
+public class SpheroidMesh extends TexturedMesh{
     
     private static final double DEFAULT_MAJOR_RADIUS = 50f;
     private static final double DEFAULT_MINOR_RADIUS = 12f;
@@ -53,7 +52,6 @@ public class SpheroidMesh extends MeshView{
         setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
         setCullFace(CullFace.BACK);
         setDepthTest(DepthTest.ENABLE);
-        
     }   
 
     /**
@@ -244,69 +242,55 @@ public class SpheroidMesh extends MeshView{
     
     */
     private final DoubleProperty majorRadius = new SimpleDoubleProperty(this, "majorRadius", DEFAULT_MAJOR_RADIUS){
-
         @Override
         protected void invalidated() {
             setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
         }
-        
     };
-
     public final Double getMajorRadius() {
         return majorRadius.get();
     }
-
     public final void setMajorRadius(Double value) {
         majorRadius.set(value);
     }
-
     public DoubleProperty majorRadiusProperty() {
         return majorRadius;
     }
     
-    
     private final DoubleProperty minorRadius = new SimpleDoubleProperty(this, "minorRadius", DEFAULT_MINOR_RADIUS){
-
         @Override
         protected void invalidated() {
             setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
         }
-        
     };
-
     public final Double getMinorRadius() {
         return minorRadius.get();
     }
-
     public final void setMinorRadius(double value) {
         minorRadius.set(value);
     }
-
     public DoubleProperty minorRadiusProperty() {
         return minorRadius;
     }
     
-    
     private final IntegerProperty divisions = new SimpleIntegerProperty(this, "divisions", DEFAULT_DIVISIONS){
-
         @Override
         protected void invalidated() {
             setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
         }
-        
     };
-
     public final int getDivisions() {
         return divisions.get();
     }
-
     public final void setDivisions(int value) {
         divisions.set(value);
     }
-
     public IntegerProperty divisionsProperty() {
         return divisions;
     }
-    
-    
+
+    @Override
+    protected void updateMesh() {
+        setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
+    }
 }
