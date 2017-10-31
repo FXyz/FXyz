@@ -33,7 +33,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.DepthTest;
 import javafx.scene.shape.TriangleMesh;
+import org.fxyz3d.geometry.Face3;
+import org.fxyz3d.geometry.Point3D;
 
 /**
  *
@@ -61,7 +64,8 @@ public class CapsuleMesh extends TexturedMesh{
         setDivisions(divisions);
         setRadius(radius);
         setHeight(height);
-        setMesh(createCapsule(getDivisions(), (float)getRadius(), (float)getHeight()));        
+        updateMesh();
+        setDepthTest(DepthTest.ENABLE);
     }
 
     /*
@@ -71,156 +75,94 @@ public class CapsuleMesh extends TexturedMesh{
         return ((div + 3) / 4) * 4;
     }
     
-    static TriangleMesh createCapsule(int sphereDivisions, float radius, float height) {
-        TriangleMesh m = new TriangleMesh();
+    public TriangleMesh createCapsule(int sphereDivisions, float radius, float height) {
+        listVertices.clear();
+        listTextures.clear();
+        listFaces.clear();  
         
         sphereDivisions = correctDivisions(sphereDivisions);
+        //Add the primary end point
+        Point3D capPoint1 = new Point3D(
+            (float) 0,
+            (float) -radius,
+            (float) 0);
+        listVertices.add(capPoint1);                
         
         final int halfDivisions = sphereDivisions / 2;
         final float fDivisions = 1.f / sphereDivisions;
-        
-        final int numPoints = sphereDivisions * (halfDivisions - 1) + 2;
-        final int numTexCoords = (sphereDivisions + 1) * (halfDivisions - 1) + sphereDivisions * 2;
-        final int numFaces = sphereDivisions * (halfDivisions - 2) * 2 + sphereDivisions * 2;
-
-        
-
-        float points[] = new float[numPoints * m.getPointElementSize()];
-        float texCoords[] = new float[numTexCoords * m.getTexCoordElementSize()];
-        int faces[] = new int[numFaces * m.getFaceElementSize()];
-
-        int pointIndex = 0, texIndex = 0;
-        float x, y, z;
-        
-        for (int i = 0; i < halfDivisions - 1; ++i) {
+        //create vertex points 
+        for (int i = 0; i < halfDivisions; ++i) {
             float va = fDivisions * (i + 1 - halfDivisions / 2) * 2 * (float) Math.PI;
             float hdY = (float) Math.sin(va);
             float hdX = (float) Math.cos(va);
-
-            float thetaY = 0.5f + hdY * 0.5f;
-
-            for (int point = 0; point < sphereDivisions; ++point) {
+            //inner loop wraps around circumference of capsule
+            for (int point = 0; point < sphereDivisions+1; ++point) {
                 double localTheta = fDivisions * point * 2 * (float) Math.PI;
                 float ly = (float) Math.sin(localTheta);
                 float lx = (float) Math.cos(localTheta);
+                //how far around the circumference are we? Are we rising or falling? 
                 if(i >= (halfDivisions - 1) / 2){
-                    points[pointIndex + 0] = x = ly * hdX * (radius);    //X
-                    points[pointIndex + 1] = y = hdY * (radius) * height;//Y
-                    points[pointIndex + 2] = z = lx * hdX * radius;      //Z
-                }else{
-                    points[pointIndex + 0] = x = ly * hdX * (radius);   //X
-                    points[pointIndex + 1] = y = hdY * (radius);        //Y
-                    points[pointIndex + 2] = z = lx * hdX * radius;     //Z
+                    Point3D ta = new Point3D(
+                        (float) (ly * hdX * radius), //X
+                        (float) (hdY * radius + height), //Y
+                        (float) (lx * hdX * radius)); //Z
+                    listVertices.add(ta);                
+                } else {
+                    Point3D ta = new Point3D(
+                        (float) (ly * hdX * radius), //X
+                        (float) (hdY * radius), //Y
+                        (float) (lx * hdX * radius)); //Z
+                    listVertices.add(ta);                
                 }
-                texCoords[texIndex + 0] = 1 - fDivisions * point;
-                texCoords[texIndex + 1] = thetaY;
-                pointIndex += 3;
-                texIndex += 2;                
-                
-            }
-            texCoords[texIndex + 0] = 0;
-            texCoords[texIndex + 1] = thetaY;
-            texIndex += 2;
-        }
-        points[pointIndex + 0] = 0;
-        points[pointIndex + 1] = -(radius);
-        points[pointIndex + 2] = 0;
-        points[pointIndex + 3] = 0;
-        points[pointIndex + 4] = radius + height;
-        points[pointIndex + 5] = 0;
-        pointIndex += 6;
-
-        int pS = (halfDivisions - 1) * sphereDivisions;
-
-        float textureDelta = 1.f / 256;
-        for (int i = 0; i < sphereDivisions; ++i) {
-            texCoords[texIndex + 0] = fDivisions * (0.5f + i);
-            texCoords[texIndex + 1] = textureDelta;
-            texIndex += 2;
-        }
-
-        for (int i = 0; i < sphereDivisions; ++i) {
-            texCoords[texIndex + 0] = fDivisions * (0.5f + i);
-            texCoords[texIndex + 1] = 1 - textureDelta;
-            texIndex += 2;
-        }
-
-        int faceIndex = 0;
-        for (int i = 0; i < halfDivisions - 2; ++i) {
-            for (int j = 0; j < sphereDivisions; ++j) {
-                int p0 = i * sphereDivisions + j;
-                int p1 = p0 + 1;
-                int p2 = p0 + sphereDivisions;
-                int p3 = p1 + sphereDivisions;
-
-                int t0 = p0 + i;
-                int t1 = t0 + 1;
-                int t2 = t0 + (sphereDivisions + 1);
-                int t3 = t1 + (sphereDivisions + 1);
-
-                // add p0, p1, p2
-                faces[faceIndex + 0] = p0;
-                faces[faceIndex + 1] = t0;
-                faces[faceIndex + 2] = p1 % sphereDivisions == 0 ? p1 - sphereDivisions : p1;
-                faces[faceIndex + 3] = t1;
-                faces[faceIndex + 4] = p2;
-                faces[faceIndex + 5] = t2;
-                faceIndex += 6;
-
-                // add p3, p2, p1
-                faces[faceIndex + 0] = p3 % sphereDivisions == 0 ? p3 - sphereDivisions : p3;
-                faces[faceIndex + 1] = t3;
-                faces[faceIndex + 2] = p2;
-                faces[faceIndex + 3] = t2;
-                faces[faceIndex + 4] = p1 % sphereDivisions == 0 ? p1 - sphereDivisions : p1;
-                faces[faceIndex + 5] = t1;
-                faceIndex += 6;
             }
         }
-
-        int p0 = pS;
-        int tB = (halfDivisions - 1) * (sphereDivisions + 1);
-        for (int i = 0; i < sphereDivisions; ++i) {
-            int p2 = i, p1 = i + 1, t0 = tB + i;
-            faces[faceIndex + 0] = p0;
-            faces[faceIndex + 1] = t0;
-            faces[faceIndex + 2] = p1 == sphereDivisions ? 0 : p1;
-            faces[faceIndex + 3] = p1;
-            faces[faceIndex + 4] = p2;
-            faces[faceIndex + 5] = p2;
-            faceIndex += 6;
+        //add the final end point
+        Point3D capPoint2 = new Point3D(
+            (float) 0,
+            (float) radius + height,
+            (float) 0);
+        listVertices.add(capPoint2);                
+        // Create texture coordinates
+        createTexCoords(sphereDivisions, sphereDivisions);
+        //Wind the top end cap as a triangle fan
+        for(int topCapIndex = 0; topCapIndex < sphereDivisions; ++topCapIndex){
+            listFaces.add(new Face3(0, topCapIndex + 2, topCapIndex + 1)); //triangle
+            listTextures.add(new Face3(0, topCapIndex + 2, topCapIndex + 1));
         }
 
-        p0 = p0 + 1;
-        tB = tB + sphereDivisions;
-        int pB = (halfDivisions - 2) * sphereDivisions;
-
-        for (int i = 0; i < sphereDivisions; ++i) {
-            int p1 = pB + i, p2 = pB + i + 1, t0 = tB + i;
-            int t1 = (halfDivisions - 2) * (sphereDivisions + 1) + i, t2 = t1 + 1;
-            faces[faceIndex + 0] = p0;
-            faces[faceIndex + 1] = t0;
-            faces[faceIndex + 2] = p1;
-            faces[faceIndex + 3] = t1;
-            faces[faceIndex + 4] = p2 % sphereDivisions == 0 ? p2 - sphereDivisions : p2;
-            faces[faceIndex + 5] = t2;
-            faceIndex += 6;
+        //Proceed to wind the capsule using triangle quad strips
+        for (int i = 0; i < halfDivisions - 2; i++) {
+            //calculate our "starting" index for the sub loop
+            int startIndex = (i * sphereDivisions) + i;  //gotta add our index to account for the widening gap
+            if(i==0) //cannot start at 0 because that is the "top cap point"
+                startIndex++;
+            int finishIndex = sphereDivisions + startIndex + i; //calculate our "finishing" index for the sub loop
+            //wrap around the capsule from the "starting" index to the "finishing" index
+            for (int j = startIndex; j < finishIndex; j++) {
+                listFaces.add(new Face3(j, j + 1, j + sphereDivisions + 1)); //lower triangle
+                listTextures.add(new Face3(j, j + 1, j + sphereDivisions + 1));
+                listFaces.add(new Face3(j + sphereDivisions + 1, j + 1, j + sphereDivisions + 2)); //upper triangle
+                listTextures.add(new Face3(j + sphereDivisions + 1, j + 1, j + sphereDivisions + 2));
+            }
+        }    
+        //Wind the bottom end cap as a triangle fan
+        int finalPoint = listVertices.size() - 1;
+        for(int bottomCapIndex = finalPoint; bottomCapIndex >= finalPoint - sphereDivisions; bottomCapIndex--){
+            listFaces.add(new Face3(finalPoint, bottomCapIndex - sphereDivisions - 2 , bottomCapIndex - sphereDivisions - 1)); //triangle
+            listTextures.add(new Face3(finalPoint, bottomCapIndex - sphereDivisions - 2, bottomCapIndex - sphereDivisions - 1));
         }
-                
-        m.getPoints().setAll(points);
-        m.getTexCoords().setAll(texCoords);
-        m.getFaces().setAll(faces);
-        
-        return m;
+        return createMesh();
     }
+
+
     /*
         Properties
     */
     
-    private final IntegerProperty divisions = new SimpleIntegerProperty(){
+    private final IntegerProperty divisions = new SimpleIntegerProperty(DEFAULT_DIVISIONS){
         @Override
         protected void invalidated() {
-            setMesh(createCapsule(getDivisions(),(float)getRadius(), (float)getHeight()));
+            updateMesh();
         }        
     };    
     public final int getDivisions() {
@@ -236,18 +178,15 @@ public class CapsuleMesh extends TexturedMesh{
     private final DoubleProperty radius = new SimpleDoubleProperty(DEFAULT_RADIUS){
         @Override
         protected void invalidated() {
-            setMesh(createCapsule(getDivisions(), (float)getRadius(), (float)getHeight()));
+            updateMesh();
         }        
     };
-
     public final double getRadius() {
         return radius.get();
     }
-
     public final void setRadius(double value) {
         radius.set(value);
     }
-
     public DoubleProperty radiusProperty() {
         return radius;
     }
@@ -255,28 +194,23 @@ public class CapsuleMesh extends TexturedMesh{
     private final DoubleProperty height = new SimpleDoubleProperty(DEFAULT_HEIGHT){
         @Override
         protected void invalidated() {
-            setMesh(createCapsule(getDivisions(), (float)getRadius(), (float)getHeight()));
+            updateMesh();
         }        
     };
-
-    
     public final double getHeight() {
         return height.get();
     }
-
     public final void setHeight(double value) {
         height.set(value);
     }
-
     public DoubleProperty heightProperty() {
         return height;
     }
 
     @Override
-    protected void updateMesh() {
+    protected final void updateMesh() {
+        setMesh(null);
         mesh = createCapsule(getDivisions(),(float)getRadius(), (float)getHeight());
+        setMesh(mesh);
     }
-    
-    
-         
 }
