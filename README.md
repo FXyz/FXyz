@@ -31,8 +31,12 @@ a 3D mesh of a spring.
 Create a gradle project, add the dependency:
 
 ```
+repositories {
+    jcenter()
+}
+
 dependencies {
-    compile 'org.fxyz3d:fxyz3d:0.1.1'
+    compile 'org.fxyz3d:fxyz3d:0.2.0'
 }
 ```
 
