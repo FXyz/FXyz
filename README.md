@@ -78,7 +78,7 @@ and create a JavaFX Application class:
 To use the FXSampler and visualize all the samples and the different options available, clone the repository, and run:
 
     cd Fxyz-Samples
-    gradle run
+    ./gradlew run
     
 There is a hidden side popup menu at the left, from where different samples can be selected. From the right panels different options can be applied dynamically to the 3D shape.
 
