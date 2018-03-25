@@ -1,7 +1,7 @@
 /**
  * PolyLine3D.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2018, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,19 +48,27 @@ import org.fxyz3d.geometry.Point3D;
 public class PolyLine3D extends Group {
     
     public List<Point3D> points;
-    public int width = 2;
+    public float width = 2.0f;
     public Color color = Color.WHITE;
     private TriangleMesh mesh;
     public MeshView meshView;
     public PhongMaterial material;
     public static enum LineType {RIBBON, TRIANGLE};
     
-    //Creates a Ribbon PolyLine3D
+    @Deprecated
     public PolyLine3D(List<Point3D> points, int width, Color color) {
+        this(points, new Integer(width).floatValue(), color);
+    }
+    //Creates a Ribbon PolyLine3D
+    public PolyLine3D(List<Point3D> points, float width, Color color) {
         this(points, width, color, LineType.RIBBON);          
     }
-    //Creates a PolyLine3D with the user's choice of mesh style
+    @Deprecated
     public PolyLine3D(List<Point3D> points, int width, Color color, LineType lineType ) {
+        this(points, new Integer(width).floatValue(), color, lineType);
+    }
+    //Creates a PolyLine3D with the user's choice of mesh style
+    public PolyLine3D(List<Point3D> points, float width, Color color, LineType lineType ) {
         this.points = points;
         this.width = width;
         this.color = color;
