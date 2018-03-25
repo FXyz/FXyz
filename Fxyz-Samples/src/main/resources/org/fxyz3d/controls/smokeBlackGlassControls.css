@@ -1,8 +1,4 @@
 
-
-
-
-
 /*******************************************************************************
  *                                                                             *
  * FXyz Controls                                                               *
@@ -244,7 +240,7 @@
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
 }
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
-    /*//-fx-padding: 4 0 4 5;*/
+    /*-fx-padding: 4 0 4 5;*/
     /* No alternate highlighting */
     -fx-background: -fx-control-inner-background;
 }
@@ -280,15 +276,15 @@
     -fx-padding: 6 2 6 2;
     -fx-border-color: white, -fx-accent;
     -fx-shape: "M4,2 L-4,2 L0,-2 Z";
-    /*//-fx-effect: dropshadow(gaussian , rgba(0, 0, 0, 0.1), 5, 0.0 , 0, 2);*/
+    /*-fx-effect: dropshadow(gaussian , rgba(0, 0, 0, 0.1), 5, 0.0 , 0, 2);*/
 }
 .slider:pressed .thumb {
-/*    //-fx-background-radius: 0em;  makes sure this remains circular 
-    //-fx-background-color: null;*/
+/* -fx-background-radius: 0em;  makes sure this remains circular 
+   -fx-background-color: null;*/
 }
 .slider:focused .thumb {
-/*    //-fx-background-radius: 0em;  makes sure this remains circular 
-    //-fx-background-color: null;*/
+/* -fx-background-radius: 0em;  makes sure this remains circular 
+   -fx-background-color: null;*/
 }
 .slider .track {
     -fx-background-color: 
@@ -491,11 +487,3 @@
     -fx-background-insets: -0.2, 1, -1.4, 2.6;
     -fx-background-radius: 3, 2, 4, 0;
 }
-
-
-
-
-
-
-
-

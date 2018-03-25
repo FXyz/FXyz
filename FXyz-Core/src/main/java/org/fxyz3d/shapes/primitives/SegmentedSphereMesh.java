@@ -316,6 +316,9 @@ public class SegmentedSphereMesh extends TexturedMesh {
         
         int subDivX=subDivY;
         
+        cropX = Math.min(cropX, (subDivX + 1) / 2);
+        cropY = Math.min(cropY, (subDivY + 1) / 2);
+        
         int numDivX = subDivX + 1-2*cropX;
         float pointX, pointY, pointZ;
         

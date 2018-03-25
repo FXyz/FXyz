@@ -2,7 +2,6 @@
     
 buildscript {
     repositories {
-        mavenLocal()
         mavenCentral()
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots"
@@ -13,11 +12,10 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
 repositories {
-    mavenLocal()
     mavenCentral()
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
@@ -46,16 +44,12 @@ sourceSets {
     }
 }
 
-//javafx{
-        
-///}
-
 dependencies {
     compile project(':FXyz-Client')
     compile project(':FXyz-Core')
-    compile ('org.reactfx:reactfx:2.0-M4')
+    compile ('org.reactfx:reactfx:2.0-M5')
     compile ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')
-    compile ('org.jfxtras:jfxtras-controls:8.0-r4')
+    compile ('org.jfxtras:jfxtras-controls:8.0-r5')
     try {
         jdk files(jfxrtJar)
     } catch (MissingPropertyException pne) {
