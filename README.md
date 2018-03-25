@@ -31,8 +31,12 @@ a 3D mesh of a spring.
 Create a gradle project, add the dependency:
 
 ```
+repositories {
+    jcenter()
+}
+
 dependencies {
-    compile 'org.fxyz3d:fxyz3d:0.1.1'
+    compile 'org.fxyz3d:fxyz3d:0.2.0'
 }
 ```
 
@@ -68,6 +72,17 @@ and create a JavaFX Application class:
         primaryStage.show();
     }
 ```
+
+### FXSampler
+
+To use the FXSampler and visualize all the samples and the different options available, clone the repository, and run:
+
+    cd Fxyz-Samples
+    ./gradlew run
+    
+There is a hidden side popup menu at the left, from where different samples can be selected. From the right panels different options can be applied dynamically to the 3D shape.
+
+![](/resources/fxsampler.png)
 
 
 Special Thanks go to ControlsFX for providing the FXSampler framework.
