@@ -1,7 +1,7 @@
 /**
  * FrustumMesh.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2018, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -263,6 +263,9 @@ public class FrustumMesh extends TexturedMesh {
             
             if(getAxisOrigin()!=null && getAxisEnd()!=null){
                 Point3D dir=getAxisEnd().substract(getAxisOrigin()).crossProduct(new Point3D(0,-1,0));
+                if (dir.magnitude() == 0f) {
+                    dir = new Point3D(0f, 0f, 1f);
+                }
                 double angle=Math.acos(getAxisEnd().substract(getAxisOrigin()).normalize().dotProduct(new Point3D(0,-1,0)));
                 a=a.createConcatenation(new Translate(getAxisOrigin().x, getAxisOrigin().y-height/2d, getAxisOrigin().z))
                    .createConcatenation(new Rotate(-Math.toDegrees(angle), 0d,height/2d,0d,
