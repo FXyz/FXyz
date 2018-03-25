@@ -1,7 +1,7 @@
 /**
  * Capsules.java
  *
- * Copyright (c) 2013-2017, F(X)yz
+ * Copyright (c) 2013-2018, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -89,25 +89,25 @@ public class Capsule extends TexturedMeshSample{
 
     @Override
     protected Node buildControlPanel() {
-        
+        //The radius of the capsule at its widest point (center)
         NumberSliderControl radSlider = ControlFactory.buildNumberSlider(radius, 5.0d, 150.0d);
         radSlider.getSlider().setMinorTickCount(10);
         radSlider.getSlider().setMajorTickUnit(25);
         radSlider.getSlider().setBlockIncrement(1);
         radSlider.getSlider().setSnapToTicks(true);       
         
+        //The height of the capsule is also the length of the base cylinder form
         NumberSliderControl heightSlider = ControlFactory.buildNumberSlider(height, 10.0d, 400d);
         heightSlider.getSlider().setMinorTickCount(10);        
         heightSlider.getSlider().setMajorTickUnit(25);
         heightSlider.getSlider().setBlockIncrement(1);
         heightSlider.getSlider().setSnapToTicks(true);
-
+        //The  divisions around the circumference of the Capsule
         NumberSliderControl divsSlider = ControlFactory.buildNumberSlider(divisions, 3D, 400D);
         divsSlider.getSlider().setMinorTickCount(5);
         divsSlider.getSlider().setMajorTickUnit(20);
         divsSlider.getSlider().setBlockIncrement(10d);
         divsSlider.getSlider().setSnapToTicks(true);
-
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
         geomControls.addControls(radSlider, heightSlider, divsSlider);
@@ -128,7 +128,6 @@ public class Capsule extends TexturedMeshSample{
                         this.dens, this.func
                 )
         );
-        
         return this.controlPanel;
     }
 }
