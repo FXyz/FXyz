@@ -10,7 +10,7 @@ buildscript {
 plugins {
     id 'com.github.hierynomus.license' version '0.13.1'
     id 'maven-publish'
-    id 'net.nemerosa.versioning' version '2.4.0'
+    id 'net.nemerosa.versioning' version '2.6.1'
     id 'com.jfrog.bintray' version '1.7.2'
     id 'com.github.ben-manes.versions' version '0.13.0'
 }
@@ -41,7 +41,7 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {    
-    compile 'org.controlsfx:controlsfx:8.40.12'
+    compile 'org.controlsfx:controlsfx:8.40.14'
     compile 'org.reactfx:reactfx:2.0-M5'    
     
     try {

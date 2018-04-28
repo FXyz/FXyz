@@ -13,11 +13,11 @@ A JavaFX 3D Visualization and Component Library
 
 The project is managed by gradle. To build, type
 
-	gradle assemble
+	./gradlew assemble
 
 To deploy it to your local Maven repository, type:
 
-	gradle publishToMavenLocal
+	./gradlew publishToMavenLocal
 
 ## Use of FXyz3D Core
 
@@ -75,9 +75,8 @@ and create a JavaFX Application class:
 
 ### FXSampler
 
-To use the FXSampler and visualize all the samples and the different options available, clone the repository, and run:
+To use the FXSampler and visualize all the samples and the different options available, run:
 
-    cd Fxyz-Samples
     ./gradlew run
     
 There is a hidden side popup menu at the left, from where different samples can be selected. From the right panels different options can be applied dynamically to the 3D shape.
