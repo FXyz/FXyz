@@ -53,7 +53,7 @@ public class SurfacePlot extends TexturedMeshSample {
     
     //private static final Image image = new Image(SurfacePlot.class.getResourceAsStream(".../res/top.png"));
     private final ObjectProperty<Function<Point2D, Number>> function2D = 
-            new SimpleObjectProperty<Function<Point2D, Number>>(model,"Function F(P(x,y))",p->Math.sin(p.magnitude())/p.magnitude()){
+            new SimpleObjectProperty<Function<Point2D, Number>>(model,"Function F(P(x,y))",p->Math.sin(p.magnitude())){
         @Override
         protected void invalidated() {
             super.invalidated();

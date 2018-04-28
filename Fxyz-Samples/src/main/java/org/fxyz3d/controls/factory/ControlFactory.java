@@ -1,7 +1,7 @@
 /**
  * ControlFactory.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2018, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -171,7 +171,7 @@ public final class ControlFactory {
     }
 
     public static final ScriptFunction2DControl buildScriptFunction2DControl(final Property<Function<Point2D,Number>> p) {
-        return new ScriptFunction2DControl(p, Arrays.asList("Math.sin(p.magnitude())/p.magnitude()", "p.x", "p.y", "p.x*3+p.y*p.y", "p.magnitude()"), false);
+        return new ScriptFunction2DControl(p, Arrays.asList("Math.sin(p.magnitude())", "p.x", "p.y", "p.x*3+p.y*p.y", "p.magnitude()"), false);
     }
 
     public static final ScriptFunction1DControl buildScriptFunction1DControl(final Property<Function<Number,Number>> p) {

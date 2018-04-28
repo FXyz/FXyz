@@ -1,7 +1,7 @@
 /**
- * SegmentedDome.java
+ * SegmentedSphere.java
  *
- * Copyright (c) 2013-2017, F(X)yz
+ * Copyright (c) 2013-2018, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,14 +38,15 @@ import javafx.scene.Node;
 import org.fxyz3d.controls.ControlCategory;
 import org.fxyz3d.controls.NumberSliderControl;
 import org.fxyz3d.controls.factory.ControlFactory;
+import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.samples.shapes.TexturedMeshSample;
-import org.fxyz3d.shapes.primitives.SegmentedDomeMesh;
+import org.fxyz3d.shapes.primitives.SegmentedSphereMesh;
 
 /**
  *
  * @author Sean
  */
-public class SegmentedDome extends TexturedMeshSample {
+public class SegmentedSphere extends TexturedMeshSample {
 
     public static void main(String[] args){launch(args);}
 
@@ -54,52 +55,34 @@ public class SegmentedDome extends TexturedMeshSample {
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((SegmentedDomeMesh)model).setRadius(radius.get());
+                ((SegmentedSphereMesh)model).setRadius(radius.get());
             }
         }
     };
-    private final DoubleProperty phiMin = new SimpleDoubleProperty(model, "PhiMin", Math.toRadians(0)) {
+    private final IntegerProperty cropX = new SimpleIntegerProperty(model, "Radius Crop X", 0) {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((SegmentedDomeMesh)model).setPhimin(phiMin.get());
+                ((SegmentedSphereMesh)model).setRadiusCropX(cropX.get());
             }
         }
     };
-    private final DoubleProperty phiMax = new SimpleDoubleProperty(model, "PhiMax", Math.toRadians(360)) {
+    private final IntegerProperty cropY = new SimpleIntegerProperty(model, "Radius Crop Y", 0) {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((SegmentedDomeMesh)model).setPhimax(phiMax.get());
+                ((SegmentedSphereMesh)model).setRadiusCropY(cropY.get());
             }
         }
     };
-    private final DoubleProperty thetaMin = new SimpleDoubleProperty(model, "ThetaMin", Math.toRadians(0)) {
+    private final IntegerProperty divisions = new SimpleIntegerProperty(model, "Radius Divisions", 20) {
         @Override
         protected void invalidated() {
             super.invalidated();
             if (model != null) {
-                ((SegmentedDomeMesh)model).setThetamin(thetaMin.get());
-            }
-        }
-    };
-    private final DoubleProperty thetaMax = new SimpleDoubleProperty(model, "ThetaMax", Math.toRadians(90)) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((SegmentedDomeMesh)model).setThetamax(thetaMax.get());
-            }
-        }
-    };
-    private final IntegerProperty divisions = new SimpleIntegerProperty(model, "Divisions", 20) {
-        @Override
-        protected void invalidated() {
-            super.invalidated();
-            if (model != null) {
-                ((SegmentedDomeMesh)model).setDivisions(divisions.get());
+                ((SegmentedSphereMesh)model).setRadiusDivisions(divisions.get());
             }
         }
     };
@@ -107,8 +90,7 @@ public class SegmentedDome extends TexturedMeshSample {
     
     @Override
     protected void createMesh() {
-        model = new SegmentedDomeMesh(radius.getValue(), phiMin.getValue(), phiMax.getValue(),
-            thetaMin.getValue(), thetaMax.getValue(), divisions.getValue());
+        model = new SegmentedSphereMesh(divisions.getValue(), cropX.getValue(), cropY.getValue(), radius.getValue(), new Point3D(0f, 0f, 0f));
     }
 
     @Override
@@ -124,34 +106,25 @@ public class SegmentedDome extends TexturedMeshSample {
         radSlider.getSlider().setMajorTickUnit(0.5);
         radSlider.getSlider().setBlockIncrement(0.01d);
 
-        NumberSliderControl phiMinSlider = ControlFactory.buildNumberSlider(phiMin, Math.toRadians(0), Math.toRadians(360));
-        phiMinSlider.getSlider().setMinorTickCount(10);
-        phiMinSlider.getSlider().setMajorTickUnit(0.5);
-        phiMinSlider.getSlider().setBlockIncrement(0.01d);
+        NumberSliderControl cropXSlider = ControlFactory.buildNumberSlider(cropX, 0, 5);
+        cropXSlider.getSlider().setBlockIncrement(1);
 
-        NumberSliderControl phiMaxSlider = ControlFactory.buildNumberSlider(phiMax, Math.toRadians(0), Math.toRadians(360));
-        phiMaxSlider.getSlider().setMinorTickCount(10);
-        phiMaxSlider.getSlider().setMajorTickUnit(0.5);
-        phiMaxSlider.getSlider().setBlockIncrement(0.01d);
-        
-        NumberSliderControl thetaMinSlider = ControlFactory.buildNumberSlider(thetaMin, Math.toRadians(0), Math.toRadians(90));
-        thetaMinSlider.getSlider().setMinorTickCount(10);
-        thetaMinSlider.getSlider().setMajorTickUnit(0.5);
-        thetaMinSlider.getSlider().setBlockIncrement(0.01d);
+        NumberSliderControl cropYSlider = ControlFactory.buildNumberSlider(cropY, 0, 5);
+        cropYSlider.getSlider().setBlockIncrement(1);
 
-        NumberSliderControl thetaMaxSlider = ControlFactory.buildNumberSlider(thetaMax, Math.toRadians(0), Math.toRadians(90));
-        thetaMaxSlider.getSlider().setMinorTickCount(10);
-        thetaMaxSlider.getSlider().setMajorTickUnit(0.5);
-        thetaMaxSlider.getSlider().setBlockIncrement(0.01d);
-        
-        NumberSliderControl divsSlider = ControlFactory.buildNumberSlider(divisions, 5, 200D);
+        NumberSliderControl divsSlider = ControlFactory.buildNumberSlider(divisions, 5, 200);
         divsSlider.getSlider().setMinorTickCount(4);
         divsSlider.getSlider().setMajorTickUnit(5);
         divsSlider.getSlider().setBlockIncrement(5);
+        divsSlider.getSlider().valueProperty().addListener((obs, ov, nv) -> {
+            cropXSlider.getSlider().setValue(Math.min(cropXSlider.getSlider().getValue(), nv.intValue() / 2 - 1));
+            cropXSlider.getSlider().setMax(nv.intValue() / 2 - 1);
+            cropYSlider.getSlider().setValue(Math.min(cropYSlider.getSlider().getValue(), nv.intValue() / 2 - 1));
+            cropYSlider.getSlider().setMax(nv.intValue() / 2 - 1);
+        });
         
         ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
-        geomControls.addControls(radSlider, phiMinSlider, phiMaxSlider, 
-            thetaMinSlider, thetaMaxSlider, divsSlider);
+        geomControls.addControls(radSlider, cropXSlider, cropYSlider, divsSlider);
 
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
