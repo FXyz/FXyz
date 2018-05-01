@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.fxyz3d:fxyz3d:0.2.0'
+    compile 'org.fxyz3d:fxyz3d:0.3.0'
 }
 ```
 
