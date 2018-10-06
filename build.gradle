@@ -3,6 +3,16 @@ apply plugin: 'base'
 Properties cfg = new Properties()
 cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
 
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
+
 ext {
     artifact_suffix          = cfg.artifact_suffix
     specification_title      = cfg.fxyz_specification_title
@@ -10,7 +20,7 @@ ext {
     fxyz_name                = 'FXyzLibs'
     fxyz_sampler_name        = 'FXyz-Sampler'
     fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
-    fxyz_sampler_mainClass   = 'org.fxyz3d.client.FXyzClient'
+    fxyz_sampler_mainClass   = 'org.fxyz3d.Launcher'
     fxyz_group               = cfg.fxyz_group
 }
     
@@ -25,14 +35,20 @@ subprojects {
     group = fxyz_group
     version = specification_version + artifact_suffix
 
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = '1.9'
+    targetCompatibility = '1.9'
 
     repositories {
         jcenter()
     }
     
     dependencies {     
+        compile "org.openjfx:javafx-base:11:${platform}"
+        compile "org.openjfx:javafx-graphics:11:${platform}"
+        compile "org.openjfx:javafx-controls:11:${platform}"
+        compile "org.openjfx:javafx-fxml:11:${platform}"
+        compile "org.openjfx:javafx-swing:11:${platform}"
+    
         compile 'eu.mihosoft.vrl.jcsg:jcsg:0.5.7'
         compile 'org.orbisgis:poly2tri-core:0.1.2'
         testCompile 'junit:junit:[4,)'
@@ -46,10 +62,16 @@ subprojects {
     }
 
     task wrapper(type: Wrapper) {
-        gradleVersion = '4.7'
+        gradleVersion = '4.10'
     }
 
-    compileJava {  
+    compileJava {
+        doFirst {
+            options.compilerArgs = [
+                    '--module-path', classpath.asPath,
+                    '--add-modules', 'javafx.controls,javafx.fxml,javafx.swing'
+            ]
+        }
         options.encoding = "UTF-8"
     }
 

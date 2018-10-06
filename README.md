@@ -83,6 +83,15 @@ There is a hidden side popup menu at the left, from where different samples can 
 
 ![](/resources/fxsampler.png)
 
+ #### Shadow Jar
+
+You can create a fat jar running:
+
+    ./gradlew clean :FXyz-Samples:shadow  
+
+And you can run the jar with Java 9+ on Windows, Linux and Mac:
+
+    java -jar FXyz-Samples/build/libs/FXyz-Samples-1.0-SNAPSHOT-all.jar
 
 Special Thanks go to ControlsFX for providing the FXSampler framework.
 http://fxexperience.com/controlsfx/

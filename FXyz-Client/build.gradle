@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.hierynomus.license' version '0.13.1'
+    //id 'com.github.hierynomus.license' version '0.13.1'
     id 'maven-publish'
     id 'net.nemerosa.versioning' version '2.6.1'
     id 'com.jfrog.bintray' version '1.7.2'
@@ -25,37 +25,23 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransf
 version = fxyz_sampler_version
 apply plugin: 'com.github.johnrengelman.shadow'
 
-configurations {
-    //samples.extendsFrom mainRuntime
-    jdk
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.jdk
-    }
-}
-
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.fxyz3d.client.FXyzClient'
 }
 
 dependencies {    
-    compile 'org.controlsfx:controlsfx:8.40.14'
-    compile 'org.reactfx:reactfx:2.0-M5'    
-    
-    try {
-        jdk files(jfxrtJar)
-    } catch (MissingPropertyException pne) {
-        jdk files("${System.properties['java.home']}/lib/jfxrt.jar")
-        jdk files("${System.properties['java.home']}/lib/ext/jfxrt.jar")
+    if (JavaVersion.current().isJava9Compatible()) {
+        compile 'org.controlsfx:controlsfx:9.0.0'
+    } else {
+        compile 'org.controlsfx:controlsfx:8.40.14'
     }
+    compile 'org.reactfx:reactfx:2.0-M5'    
 }
 
 javadoc {
     exclude 'impl/*'
     failOnError = false
-    classpath = project.sourceSets.main.runtimeClasspath + configurations.jdk
+    classpath = project.sourceSets.main.runtimeClasspath
     
     options.windowTitle("FXSampler Project ${version}")
     options.links("http://docs.oracle.com/javase/8/docs/api/");

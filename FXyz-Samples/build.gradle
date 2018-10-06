@@ -34,28 +34,31 @@ mainClassName = fxyz_sampler_mainClass
 ext.mainClass = mainClassName
 applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC"]
 
-configurations {
-    jdk
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.jdk
-    }
-}
-
 dependencies {
+    compile "org.openjfx:javafx-graphics:11:win"
+    compile "org.openjfx:javafx-graphics:11:linux"
+    compile "org.openjfx:javafx-graphics:11:mac"
+        
     compile project(':FXyz-Client')
     compile project(':FXyz-Core')
     compile ('org.reactfx:reactfx:2.0-M5')
     compile ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')
-    compile ('org.jfxtras:jfxtras-controls:8.0-r5')
-    try {
-        jdk files(jfxrtJar)
-    } catch (MissingPropertyException pne) {
-        // javafx plugin will provide in this case
+    if (JavaVersion.current().isJava9Compatible()) {
+        compile ('org.jfxtras:jfxtras-controls:9.0-r1')
+    } else {
+        compile ('org.jfxtras:jfxtras-controls:8.0-r6')
     }
-    
+}
+
+run {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml,javafx.swing',
+                '--add-exports', 'javafx.base/com.sun.javafx.runtime=ALL-UNNAMED',
+                '--add-exports', 'javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED'
+        ]
+    }
 }
 
 jar {
@@ -63,7 +66,8 @@ jar {
         attributes  'Implementation-Title':    'FXyz-Samples',
                     'Implementation-Version':   project.version,
                     'Class-Path':               configurations.compile.collect { it.getName() }.join(' '),
-                    'Main-Class':               fxyz_sampler_mainClass
+                    'Main-Class':               fxyz_sampler_mainClass,
+                    'Automatic-Module-Name' :   "org.fxyz3d.samples"
     }
     from sourceSets.main.allJava
 }
