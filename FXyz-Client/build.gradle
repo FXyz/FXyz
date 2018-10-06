@@ -25,6 +25,9 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransf
 version = fxyz_sampler_version
 apply plugin: 'com.github.johnrengelman.shadow'
 
+sourceCompatibility = '1.9'
+targetCompatibility = '1.9'
+    
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.fxyz3d.client.FXyzClient'
 }
@@ -36,6 +39,16 @@ dependencies {
         compile 'org.controlsfx:controlsfx:8.40.14'
     }
     compile 'org.reactfx:reactfx:2.0-M5'    
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml,javafx.swing'
+        ]
+    }
+    options.encoding = "UTF-8"
 }
 
 javadoc {

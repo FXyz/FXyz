@@ -15,6 +15,10 @@ buildscript {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
+
+sourceCompatibility = '1.9'
+targetCompatibility = '1.9'
+    
 repositories {
     mavenCentral()
     maven {
@@ -48,6 +52,16 @@ dependencies {
     } else {
         compile ('org.jfxtras:jfxtras-controls:8.0-r6')
     }
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml,javafx.swing'
+        ]
+    }
+    options.encoding = "UTF-8"
 }
 
 run {

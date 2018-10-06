@@ -35,9 +35,6 @@ subprojects {
     group = fxyz_group
     version = specification_version + artifact_suffix
 
-    sourceCompatibility = '1.9'
-    targetCompatibility = '1.9'
-
     repositories {
         jcenter()
     }
@@ -63,16 +60,6 @@ subprojects {
 
     task wrapper(type: Wrapper) {
         gradleVersion = '4.10'
-    }
-
-    compileJava {
-        doFirst {
-            options.compilerArgs = [
-                    '--module-path', classpath.asPath,
-                    '--add-modules', 'javafx.controls,javafx.fxml,javafx.swing'
-            ]
-        }
-        options.encoding = "UTF-8"
     }
 
     task sourceJar(type: Jar) {
