@@ -3,13 +3,7 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
-        maven {
-            name 'JCenter - for Gradle Shadow'
-            url 'http://jcenter.bintray.com/'
-        }
+        jcenter()
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
