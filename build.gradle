@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+    }
+}
+
 apply plugin: 'base'
+apply plugin: 'com.google.osdetector'
 
 Properties cfg = new Properties()
 cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
@@ -10,8 +20,9 @@ ext {
     fxyz_name                = 'FXyzLibs'
     fxyz_sampler_name        = 'FXyz-Sampler'
     fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
-    fxyz_sampler_mainClass   = 'org.fxyz3d.client.FXyzClient'
+    fxyz_sampler_mainClass   = 'org.fxyz3d.Launcher'
     fxyz_group               = cfg.fxyz_group
+    platform                 = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 }
     
 subprojects {
@@ -25,14 +36,17 @@ subprojects {
     group = fxyz_group
     version = specification_version + artifact_suffix
 
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-
     repositories {
         jcenter()
     }
     
     dependencies {     
+        compile "org.openjfx:javafx-base:11:$platform"
+        compile "org.openjfx:javafx-graphics:11:$platform"
+        compile "org.openjfx:javafx-controls:11:$platform"
+        compile "org.openjfx:javafx-fxml:11:$platform"
+        compile "org.openjfx:javafx-swing:11:$platform"
+    
         compile 'eu.mihosoft.vrl.jcsg:jcsg:0.5.7'
         compile 'org.orbisgis:poly2tri-core:0.1.2'
         testCompile 'junit:junit:[4,)'
@@ -46,11 +60,7 @@ subprojects {
     }
 
     task wrapper(type: Wrapper) {
-        gradleVersion = '4.7'
-    }
-
-    compileJava {  
-        options.encoding = "UTF-8"
+        gradleVersion = '4.10'
     }
 
     task sourceJar(type: Jar) {
