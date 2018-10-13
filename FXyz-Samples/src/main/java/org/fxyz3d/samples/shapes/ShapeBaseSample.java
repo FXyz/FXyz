@@ -29,7 +29,6 @@
 
 package org.fxyz3d.samples.shapes;
 
-import com.sun.javafx.geom.Vec3d;
 import java.text.NumberFormat;
 import java.util.concurrent.CountDownLatch;
 import javafx.beans.property.BooleanProperty;
@@ -77,6 +76,7 @@ import org.fxyz3d.scene.Skybox;
 import org.fxyz3d.shapes.primitives.Text3DMesh;
 import org.fxyz3d.shapes.primitives.TexturedMesh;
 import org.fxyz3d.utils.CameraTransformer;
+import org.fxyz3d.utils.Vec3d;
 
 /**
  * + mainPane resizable StackPane ++ subScene SubScene, with camera +++ root
