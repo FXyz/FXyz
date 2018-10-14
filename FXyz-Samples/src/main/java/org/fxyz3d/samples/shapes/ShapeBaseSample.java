@@ -76,7 +76,7 @@ import org.fxyz3d.scene.Skybox;
 import org.fxyz3d.shapes.primitives.Text3DMesh;
 import org.fxyz3d.shapes.primitives.TexturedMesh;
 import org.fxyz3d.utils.CameraTransformer;
-import org.fxyz3d.utils.Vec3d;
+import org.fxyz3d.utils.geom.Vec3d;
 
 /**
  * + mainPane resizable StackPane ++ subScene SubScene, with camera +++ root
