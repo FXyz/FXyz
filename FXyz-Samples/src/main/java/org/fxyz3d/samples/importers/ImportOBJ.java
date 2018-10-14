@@ -68,12 +68,12 @@ public class ImportOBJ extends ShapeBaseSample<Group> {
     protected void addMeshAndListeners() {
         drawMode.addListener((obs, b, b1) -> {
             if (model != null) {
-                if (model != null && asPolygonMesh) {
+                if (asPolygonMesh) {
                     model.getChildren().stream()
                             .filter(PolygonMeshView.class::isInstance)
                             .map(PolygonMeshView.class::cast)
                             .forEach(pmv -> pmv.setDrawMode(b1));
-                } else if (model != null) {
+                } else {
                     model.getChildren().stream()
                             .filter(MeshView.class::isInstance)
                             .map(MeshView.class::cast)
@@ -83,12 +83,12 @@ public class ImportOBJ extends ShapeBaseSample<Group> {
         });
         culling.addListener((obs, b, b1) -> {
             if (model != null) {
-                if (model != null && asPolygonMesh) {
+                if (asPolygonMesh) {
                     model.getChildren().stream()
                             .filter(PolygonMeshView.class::isInstance)
                             .map(PolygonMeshView.class::cast)
                             .forEach(pmv -> pmv.setCullFace(b1));
-                } else if (model != null) {
+                } else {
                     model.getChildren().stream()
                             .filter(MeshView.class::isInstance)
                             .map(MeshView.class::cast)
