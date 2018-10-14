@@ -94,7 +94,6 @@ import java.util.RandomAccess;
  * @see Collection
  * @see List
  * @see LinkedList
- * @see Vector
  *
  * TODO replace with ObservableFloatArray
  */

@@ -33,7 +33,8 @@ compileJava {
 }
 
 javadoc {
-    include 'org/fxyz3d/project/importers/obj/*'
-    options.addBooleanOption('html5', true)
+    options.addBooleanOption("Xdoclint:none").setValue(true);
+    options.addBooleanOption("javafx").setValue(true);
+    options.addBooleanOption("html5").setValue(true);
 }
     
