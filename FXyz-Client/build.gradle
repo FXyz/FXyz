@@ -54,7 +54,6 @@ compileJava {
 javadoc {
     exclude 'impl/*'
     failOnError = false
-    classpath = project.sourceSets.main.runtimeClasspath
     
     options.windowTitle("FXSampler Project ${version}")
     options.links("http://docs.oracle.com/javase/8/docs/api/");
