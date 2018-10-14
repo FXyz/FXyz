@@ -28,15 +28,54 @@ a 3D mesh of a spring.
 
 ### Sample
 
-Create a gradle project, add the dependency:
+Create a gradle project, edit the build.gradle file and add:
 
 ```
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'com.google.osdetector'
+
+def platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+
+mainClassName = 'org.fxyz3d.Sample'
+
 repositories {
     jcenter()
 }
 
 dependencies {
-    compile 'org.fxyz3d:fxyz3d:0.3.0'
+    compile "org.openjfx:javafx-base:11:$platform"
+    compile "org.openjfx:javafx-controls:11:$platform"
+    compile "org.openjfx:javafx-graphics:11:$platform"
+    
+    compile 'org.fxyz3d:fxyz3d:0.4.0'
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls'
+        ]
+    }
+}
+
+run {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls'
+        ]
+    }
 }
 ```
 
