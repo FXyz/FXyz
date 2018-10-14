@@ -46,7 +46,7 @@ jar {
                 'Specification-Version': project.version,
                 'Implementation-Title': project.name,
                 'Implementation-Version': project.version,
-                'Automatic-Module-Name' : "org.fxyz3d.core"
+                'Automatic-Module-Name' : "org.fxyz3d.importers"
         )
     }
 }
