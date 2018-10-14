@@ -1,0 +1,39 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+    }
+}
+
+plugins {
+    //id 'com.github.hierynomus.license' version '0.13.1'
+    id 'maven-publish'
+    id 'net.nemerosa.versioning' version '2.6.1'
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.github.ben-manes.versions' version '0.13.0'
+}
+
+apply from: 'gradle/publishing.gradle'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile project(':FXyz-Core')
+}
+
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+javadoc {
+    include 'org/fxyz3d/project/importers/obj/*'
+    options.addBooleanOption('html5', true)
+}
+    
