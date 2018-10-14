@@ -54,8 +54,8 @@ repositories {
 
 dependencies {
     compile "org.openjfx:javafx-base:11:$platform"
-    compile "org.openjfx:javafx-controls:11:$platform"
     compile "org.openjfx:javafx-graphics:11:$platform"
+    compile "org.openjfx:javafx-controls:11:$platform"
     
     compile 'org.fxyz3d:fxyz3d:0.4.0'
 }
@@ -79,7 +79,7 @@ run {
 }
 ```
 
-and create a JavaFX Application class: 
+and create a JavaFX Application class `Sample` under the `org.fxyz3d` package: 
 
 ```java
     @Override
@@ -111,6 +111,8 @@ and create a JavaFX Application class:
         primaryStage.show();
     }
 ```
+
+Note: For more information on JavaFX 11, check this [link](https://openjfx.io).
 
 ### FXSampler
 
