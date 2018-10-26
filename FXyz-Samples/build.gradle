@@ -45,6 +45,7 @@ dependencies {
         
     compile project(':FXyz-Client')
     compile project(':FXyz-Core')
+    compile project(':FXyz-Importers')
     compile ('org.reactfx:reactfx:2.0-M5')
     compile ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')
     if (JavaVersion.current().isJava9Compatible()) {

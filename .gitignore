@@ -5,13 +5,10 @@
 /FXyzLib/build/
 /.nb-gradle/private/
 /build/
+/FXyz-Importers/build/
 /FXyz-Samples/build/
-/Fxyz-Core/build/
-/Lcd/build/
-/FXyz-Core/build/
 /FXyz-Client/build/
+/FXyz-Core/build/
 /.gradle
 /.nb-gradle/
 /.idea/
-/Fxyz-Samples/build/
-/Fxyz-Samples2/build/
