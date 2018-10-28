@@ -40,6 +40,11 @@ import org.fxyz3d.shapes.polygon.PolygonMeshView;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.Parent;
+import org.fxyz3d.controls.ControlCategory;
+import org.fxyz3d.controls.NumberSliderControl;
 
 /**
  *
@@ -47,7 +52,8 @@ import java.util.logging.Logger;
  */
 public class ImportOBJ extends ShapeBaseSample<Group> {
 
-
+    private final IntegerProperty subdivision = new SimpleIntegerProperty(this, "Subdivision Level", 0);
+    
     private boolean asPolygonMesh = true;
 
     public static void main(String[] args){launch(args);}
@@ -96,15 +102,32 @@ public class ImportOBJ extends ShapeBaseSample<Group> {
                 }
             }
         });
+        subdivision.addListener((obs, ov, nv) -> setSubdivisionLevel(model, nv.intValue()));
+    }
+    
+    private void setSubdivisionLevel(Node node, int subdivisionLevel) {
+        if (node instanceof PolygonMeshView) {
+            ((PolygonMeshView) node).setSubdivisionLevel(subdivisionLevel);
+        } else if (node instanceof Parent) {
+            ((Parent) node).getChildrenUnmodifiable().forEach(n -> setSubdivisionLevel(n, subdivisionLevel));
+        }
     }
     
     @Override
     protected Node buildControlPanel() {
+        NumberSliderControl subdivisionSlider = ControlFactory.buildNumberSlider(subdivision, 0, 2);
+        subdivisionSlider.getSlider().setMajorTickUnit(1);
+        subdivisionSlider.getSlider().setMinorTickCount(0);
+        subdivisionSlider.getSlider().setBlockIncrement(1);
+        subdivisionSlider.getSlider().setSnapToTicks(true);
+        ControlCategory geomControls = ControlFactory.buildCategory("Geometry");
+        geomControls.addControls(subdivisionSlider);
+        
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(
                         this.drawMode,
                         this.culling
-                ));
+                ), geomControls);
         return controlPanel;
     }
 }
