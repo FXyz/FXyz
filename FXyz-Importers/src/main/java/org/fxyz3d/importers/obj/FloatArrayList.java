@@ -281,7 +281,6 @@ public class FloatArrayList extends AbstractList<Float>
      */
     @Override public Object clone() {
         try {
-            @SuppressWarnings("unchecked")
             FloatArrayList v = (FloatArrayList) super.clone();
             v.elementData = Arrays.copyOf(elementData, size);
             v.modCount = 0;
@@ -348,7 +347,7 @@ public class FloatArrayList extends AbstractList<Float>
 
     // Positional Access Operations
 
-    @SuppressWarnings("unchecked") Float elementData(int index) {
+    Float elementData(int index) {
         return (Float) elementData[index];
     }
 
@@ -726,7 +725,6 @@ public class FloatArrayList extends AbstractList<Float>
             return cursor != size;
         }
 
-        @SuppressWarnings("unchecked")
         @Override public Float next() {
             checkForComodification();
             int i = cursor;
@@ -779,7 +777,6 @@ public class FloatArrayList extends AbstractList<Float>
             return cursor - 1;
         }
 
-        @SuppressWarnings("unchecked")
         @Override public Float previous() {
             checkForComodification();
             int i = cursor - 1;
@@ -961,7 +958,6 @@ public class FloatArrayList extends AbstractList<Float>
                     return cursor != FloatArrayList.SubList.this.size;
                 }
 
-                @SuppressWarnings("unchecked")
                 @Override public Float next() {
                     checkForComodification();
                     int i = cursor;
@@ -978,7 +974,6 @@ public class FloatArrayList extends AbstractList<Float>
                     return cursor != 0;
                 }
 
-                @SuppressWarnings("unchecked")
                 @Override public Float previous() {
                     checkForComodification();
                     int i = cursor - 1;

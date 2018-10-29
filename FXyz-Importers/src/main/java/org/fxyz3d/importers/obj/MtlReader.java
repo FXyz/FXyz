@@ -32,8 +32,6 @@
 package org.fxyz3d.importers.obj;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -150,7 +148,6 @@ public class MtlReader {
     private Image loadImage(String filename) {
         filename = baseUrl + filename;
         log("Loading image from " + filename);
-        Image image = new Image(filename);
         return new Image(filename);
     }
 

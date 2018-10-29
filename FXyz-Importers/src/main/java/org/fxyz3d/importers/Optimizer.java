@@ -344,7 +344,7 @@ public class Optimizer {
         int kfTotal = timelineKeyFrames.size(), kfRemoved = 0;
         int kvTotal = 0, kvRemoved = 0;
         Map<Duration, KeyFrame> kfUnique = new HashMap<>();
-        Map<WritableValue, KeyValue> kvUnique = new HashMap<>();
+        Map<WritableValue<?>, KeyValue> kvUnique = new HashMap<>();
         MapOfLists<KeyFrame, KeyFrame> duplicates = new MapOfLists<>();
         Iterator<KeyFrame> iterator = timelineKeyFrames.iterator();
         while (iterator.hasNext()) {
@@ -422,8 +422,8 @@ public class Optimizer {
 //        cleanUpRepeatingFramesAndValues(); // we don't need it usually as timeline is initially correct
         SortedList<KeyFrame> sortedKeyFrames = timeline.getKeyFrames().sorted(new KeyFrameComparator());
         MapOfLists<KeyFrame, KeyValue> toRemove = new MapOfLists<>();
-        Map<WritableValue, KeyInfo> prevValues = new HashMap<>();
-        Map<WritableValue, KeyInfo> prevPrevValues = new HashMap<>();
+        Map<WritableValue<?>, KeyInfo> prevValues = new HashMap<>();
+        Map<WritableValue<?>, KeyInfo> prevPrevValues = new HashMap<>();
         int kvTotal = 0;
         for (KeyFrame keyFrame : sortedKeyFrames) {
             for (KeyValue keyValue : keyFrame.getValues()) {
@@ -454,7 +454,7 @@ public class Optimizer {
             }
         }
         // Deal with ending keyValues
-        for (WritableValue target : prevValues.keySet()) {
+        for (WritableValue<?> target : prevValues.keySet()) {
             KeyInfo prev = prevValues.get(target);
             KeyInfo prevPrev = prevPrevValues.get(target);
             if (prevPrev != null && prevPrev.keyValue.getEndValue().equals(prev.keyValue.getEndValue())) {
@@ -511,7 +511,7 @@ public class Optimizer {
             for (KeyValue keyValue : keyFrame.getValues()) {
                 WritableValue<?> target = keyValue.getTarget();
                 if (target instanceof Property) {
-                    Property p = (Property) target;
+                    Property<?> p = (Property<?>) target;
                     Object bean = p.getBean();
                     if (bean instanceof Transform) {
                         bound.add((Transform) bean);
