@@ -53,22 +53,18 @@ public class ImporterFinder {
             ue.printStackTrace();
             throw new RuntimeException("Could not import library. Failed to determine library location. URL = " + url.getPath());
         }
-        if (libDir != null) {
-            File[] files = libDir.listFiles();
-            final List<URL> urlList = new ArrayList<>();
-            if (files != null) {
-                for (File file : files) {
-                    try {
-                        urlList.add(file.toURI().toURL());
-                    } catch (MalformedURLException me) {
-                        me.printStackTrace();
-                    }
-                }
-            }
-            URLClassLoader cl = new URLClassLoader((URL[]) urlList.toArray(new URL[0]), this.getClass().getClassLoader());
-            return cl;
-        } else {
-            throw new RuntimeException("Could not import library. Failed to determine importer library location ");
-        }
+        File[] files = libDir.listFiles();
+		final List<URL> urlList = new ArrayList<>();
+		if (files != null) {
+		    for (File file : files) {
+		        try {
+		            urlList.add(file.toURI().toURL());
+		        } catch (MalformedURLException me) {
+		            me.printStackTrace();
+		        }
+		    }
+		}
+		URLClassLoader cl = new URLClassLoader((URL[]) urlList.toArray(new URL[0]), this.getClass().getClassLoader());
+		return cl;
     }
 }
