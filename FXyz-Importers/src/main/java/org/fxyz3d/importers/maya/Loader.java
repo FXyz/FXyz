@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -124,9 +123,9 @@ class Loader {
     // Joint rootJoint; //NO_JOINTS
     Map<MNode, Node> loaded = new HashMap<>();
 
-    Map<Float, List<KeyValue>> keyFrameMap = new TreeMap();
+    Map<Float, List<KeyValue>> keyFrameMap = new TreeMap<>();
 
-    Map<Node, MNode> meshParents = new HashMap();
+    Map<Node, MNode> meshParents = new HashMap<>();
 
     private MFloat3Array mVerts;
     // Optionally force per-face per-vertex normal generation
@@ -303,7 +302,7 @@ class Loader {
             PolygonMeshView targetMayaMeshView = (PolygonMeshView) targetMayaMeshNode;
             
             PolygonMesh sourceMesh = (PolygonMesh) sourceMayaMeshView.getMesh();
-            SkinningMesh targetMesh = new SkinningMesh(sourceMesh, weights, bindPreMatrix, bindGlobalMatrix, jointNodes, new ArrayList(jointForest));
+            SkinningMesh targetMesh = new SkinningMesh(sourceMesh, weights, bindPreMatrix, bindGlobalMatrix, jointNodes, new ArrayList<>(jointForest));
             targetMayaMeshView.setMesh(targetMesh);
 
             final SkinningMeshTimer skinningMeshTimer = new SkinningMeshTimer(targetMesh);
@@ -941,7 +940,7 @@ class Loader {
     void convertAnimCurveRange(
             MNode n, final DoubleProperty property,
             boolean convertAnglesToDegrees) {
-        Collection inputs = n.getConnectionsTo("i");
+        List<MConnection> inputs = n.getConnectionsTo("i");
         boolean isDrivenAnimCurve = (inputs.size() > 0);
         boolean useTangentInterpolator = true;  // use the NEW tangent interpolator
 
@@ -991,7 +990,7 @@ class Loader {
                 (n.isInstanceOf(animCurveUA) || n.isInstanceOf(animCurveUL) ||
                         n.isInstanceOf(animCurveUT) || n.isInstanceOf(animCurveUU));
 
-        List<KeyFrame> drivenKeys = new LinkedList();
+        List<KeyFrame> drivenKeys = new LinkedList<>();
 
         // Many incoming animation curves start at keyframe 1; to
         // correctly interpret these we need to subtract off one frame
@@ -1005,7 +1004,7 @@ class Loader {
         float[] prevOutTan = new float[3];  // for orig interpolator
         float[] curOutTan = new float[3];  // for tan interpolator
         float[] curInTan = new float[3];  // for both interpolators
-        Collection toPaths = n.getPathsConnectingFrom("o");
+        List<MPath> toPaths = n.getPathsConnectingFrom("o");
         String keyName = null;
         String targetName = null;
         for (Object obj : toPaths) {

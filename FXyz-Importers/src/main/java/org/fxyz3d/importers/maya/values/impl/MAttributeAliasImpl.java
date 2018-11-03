@@ -43,21 +43,21 @@ import org.fxyz3d.importers.maya.values.MAttributeAlias;
 
 public class MAttributeAliasImpl extends MDataImpl implements MAttributeAlias {
 
-    Map<String, String> map = new TreeMap();
+    Map<String, String> map = new TreeMap<>();
 
     public MAttributeAliasImpl(MAttributeAliasType type) {
         super(type);
     }
 
     @Override
-    public Map getMapping() {
+    public Map<String, String> getMapping() {
         return map;
     }
 
     @Override
     public void parse(Iterator<String> values) {
         int count = 0;
-        List<String> list = new ArrayList();
+        List<String> list = new ArrayList<>();
         while (values.hasNext()) {
             String str = values.next();
             int start = str.indexOf("\"");

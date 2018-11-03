@@ -42,8 +42,8 @@ import org.fxyz3d.importers.maya.values.impl.MCompoundImpl;
 
 public class MCompoundType extends MDataType {
 
-    Map<String, Field> fields = new HashMap();
-    List<Field> fieldArray = new ArrayList();
+    Map<String, Field> fields = new HashMap<>();
+    List<Field> fieldArray = new ArrayList<>();
 
     public MCompoundType(MEnv env, String name) {
         super(env, name);

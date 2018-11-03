@@ -44,7 +44,7 @@ public class MArrayImpl extends MDataImpl implements MArray {
     public static final boolean DEBUG = MayaImporter.DEBUG;
     public static final boolean WARN = MayaImporter.WARN;
 
-    List<MData> data = new ArrayList();
+    List<MData> data = new ArrayList<>();
 
     static class Parser {
         private final MArray array;
@@ -127,6 +127,7 @@ public class MArrayImpl extends MDataImpl implements MArray {
         return (MArrayType) getType();
     }
 
+    @Override
     public List<MData> get() {
         return data;
     }
