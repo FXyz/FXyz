@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Timeline;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Parent;
@@ -73,9 +75,13 @@ public class ImportMaya extends ShapeBaseSample<Node> {
                 timeline.setCycleCount(Timeline.INDEFINITE);
                 timeline.play();
 
-                model.sceneProperty().addListener((obs, ov, nv) -> {
-                    if (nv == null) {
-                        timeline.stop();
+                model.sceneProperty().addListener(new InvalidationListener() {
+                    @Override
+                    public void invalidated(Observable observable) {
+                        if (model.getScene() == null) {
+                            model.sceneProperty().removeListener(this);
+                            timeline.stop();
+                        }
                     }
                 });
             }
