@@ -283,7 +283,6 @@ public class IntegerArrayList extends AbstractList<Integer>
      */
     @Override public Object clone() {
         try {
-            @SuppressWarnings("unchecked")
             IntegerArrayList v = (IntegerArrayList) super.clone();
             v.elementData = Arrays.copyOf(elementData, size);
             v.modCount = 0;
@@ -350,7 +349,7 @@ public class IntegerArrayList extends AbstractList<Integer>
 
     // Positional Access Operations
 
-    @SuppressWarnings("unchecked") Integer elementData(int index) {
+    Integer elementData(int index) {
         return (Integer) elementData[index];
     }
 
@@ -728,7 +727,6 @@ public class IntegerArrayList extends AbstractList<Integer>
             return cursor != size;
         }
 
-        @SuppressWarnings("unchecked")
         @Override public Integer next() {
             checkForComodification();
             int i = cursor;
@@ -781,7 +779,6 @@ public class IntegerArrayList extends AbstractList<Integer>
             return cursor - 1;
         }
 
-        @SuppressWarnings("unchecked")
         @Override public Integer previous() {
             checkForComodification();
             int i = cursor - 1;
@@ -963,7 +960,6 @@ public class IntegerArrayList extends AbstractList<Integer>
                     return cursor != IntegerArrayList.SubList.this.size;
                 }
 
-                @SuppressWarnings("unchecked")
                 @Override public Integer next() {
                     checkForComodification();
                     int i = cursor;
@@ -980,7 +976,6 @@ public class IntegerArrayList extends AbstractList<Integer>
                     return cursor != 0;
                 }
 
-                @SuppressWarnings("unchecked")
                 @Override public Integer previous() {
                     checkForComodification();
                     int i = cursor - 1;
