@@ -31,6 +31,4 @@ compileJava {
 javadoc {
     options.addBooleanOption("Xdoclint:none").setValue(true);
     options.addBooleanOption("javafx").setValue(true);
-    options.addBooleanOption("html5").setValue(true);
 }
-    

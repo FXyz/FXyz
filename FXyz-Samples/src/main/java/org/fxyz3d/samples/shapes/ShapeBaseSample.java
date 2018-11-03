@@ -31,6 +31,8 @@ package org.fxyz3d.samples.shapes;
 
 import java.text.NumberFormat;
 import java.util.concurrent.CountDownLatch;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -119,13 +121,11 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
     private ProgressBar progressBar;
     private long time;
 
-    private final BooleanProperty isActive = new SimpleBooleanProperty(this, "activeSample", false);
     protected final BooleanProperty useSkybox = new SimpleBooleanProperty(this, "SkyBox Enabled", false);
     private final BooleanProperty isPicking = new SimpleBooleanProperty(this, "isPicking");
     protected final Property<DrawMode> drawMode = new SimpleObjectProperty<>(model, "drawMode", DrawMode.FILL);
     protected final Property<CullFace> culling = new SimpleObjectProperty<>(model, "culling", CullFace.BACK);
 
-    private final CountDownLatch latch = new CountDownLatch(1);
     private final NumberFormat numberFormat = NumberFormat.getInstance();
 
     private Vec3d vecIni, vecPos;
@@ -425,6 +425,18 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
                 }
 
                 if (model != null) {
+                    // remove old model when it is detached from the scene
+                    model.sceneProperty().addListener(new InvalidationListener() {
+                        @Override
+                        public void invalidated(Observable observable) {
+                            if (model.getScene() == null) {
+                                model.sceneProperty().removeListener(this);
+                                releaseBinders();
+                                group.getChildren().remove(model);
+                                model = null;
+                            }
+                        }
+                    });
                     group.getChildren().add(model);
                 } else {
                     throw new UnsupportedOperationException("Model returned Null ... ");
@@ -491,16 +503,6 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         progressBar.setPrefSize(mainPane.getPrefWidth() * 0.5, USE_PREF_SIZE);
         progressBar.setProgress(-1);
         mainPane.getChildren().add(progressBar);
-        
-        parentPane.parentProperty().addListener(l->{
-            if(parentPane.getScene() != null){
-                if(model != null){
-                    attachBinders();
-                }
-            }else{
-                releaseBinders();
-            }
-        });
         
         return parentPane;
     }
