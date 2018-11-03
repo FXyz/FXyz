@@ -67,11 +67,17 @@ public class ImportMaya extends ShapeBaseSample<Node> {
             Pair<Node,Timeline> content = Importer3D.loadIncludingAnimation(ImportMaya.class.getResource("/org/fxyz3d/importers/King_WalkCycle.ma").toExternalForm(),
                     asPolygonMesh);
             model = content.getKey();
-            
+
             Timeline timeline = content.getValue();
             if (timeline != null) {
                 timeline.setCycleCount(Timeline.INDEFINITE);
                 timeline.play();
+
+                model.sceneProperty().addListener((obs, ov, nv) -> {
+                    if (nv == null) {
+                        timeline.stop();
+                    }
+                });
             }
         } catch (IOException ex) {
             Logger.getLogger(ImportMaya.class.getName()).log(Level.SEVERE, null, ex);
