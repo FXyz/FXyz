@@ -44,9 +44,9 @@ import org.fxyz3d.importers.maya.values.MIntArray;
 
 // ry => r[1];
 
-public class MPath implements Comparable {
+public class MPath implements Comparable<MPath> {
 
-    static abstract class Component implements Comparable {
+    static abstract class Component implements Comparable<Component> {
         public MData apply(MData data) {
             return null;
         }
@@ -94,7 +94,7 @@ public class MPath implements Comparable {
         }
 
         @Override
-        public int compareTo(Object arg) {
+        public int compareTo(Component arg) {
             if (arg instanceof Index) {
                 return index - ((Index) arg).index;
             }
@@ -142,7 +142,7 @@ public class MPath implements Comparable {
         }
 
         @Override
-        public int compareTo(Object arg) {
+        public int compareTo(Component arg) {
             if (arg instanceof Slice) {
                 Slice other = (Slice) arg;
                 int diff = start - other.start;
@@ -201,7 +201,7 @@ public class MPath implements Comparable {
         }
 
         @Override
-        public int compareTo(Object arg) {
+        public int compareTo(Component arg) {
             if (arg instanceof Select) {
                 return name.compareTo(((Select) arg).name);
             }
@@ -217,7 +217,7 @@ public class MPath implements Comparable {
     // A Path always exists within the context of a given node
     MNode node;
 
-    List<Component> components = new ArrayList();
+    List<Component> components = new ArrayList<>();
 
     private void add(Component comp) {
         components.add(comp);
@@ -304,8 +304,7 @@ public class MPath implements Comparable {
     }
 
     @Override
-    public int compareTo(Object arg) {
-        MPath other = (MPath) arg;
+    public int compareTo(MPath other) {
         if (node != other.node) {
             return node.hashCode() - other.node.hashCode();
         }

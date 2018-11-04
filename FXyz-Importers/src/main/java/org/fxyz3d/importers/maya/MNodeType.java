@@ -39,11 +39,11 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class MNodeType extends MObject {
-    Map<String, MAttribute> attributes = new HashMap();
-    Map<String, MAttribute> attributesByShortName = new HashMap();
-    List<MNodeType> superTypes = new ArrayList();
+    Map<String, MAttribute> attributes = new HashMap<>();
+    Map<String, MAttribute> attributesByShortName = new HashMap<>();
+    List<MNodeType> superTypes = new ArrayList<>();
 
-    Map<String, String> canonicalNames = new HashMap();
+    Map<String, String> canonicalNames = new HashMap<>();
 
     public Collection<MAttribute> getAttributes() {
         return attributes.values();

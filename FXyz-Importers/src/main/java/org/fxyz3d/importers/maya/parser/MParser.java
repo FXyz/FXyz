@@ -466,7 +466,7 @@ public class MParser {
 
     private void doSetAttr() {
         String target = null;
-        List<String> value = new ArrayList();
+        List<String> value = new ArrayList<>();
         @SuppressWarnings("UnusedDeclaration") String type = null;
         int size = -1;
         for (int i = 0; i < curArgs.size(); i++) {

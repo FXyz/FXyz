@@ -493,9 +493,9 @@ public class MEnv {
     }
 
 
-    private final Set<MNode> nodes = new LinkedHashSet();
-    private final Map<String, MNodeType> nodeTypes = new HashMap();
-    private final Map<String, MDataType> dataTypes = new HashMap();
+    private final Set<MNode> nodes = new LinkedHashSet<>();
+    private final Map<String, MNodeType> nodeTypes = new HashMap<>();
+    private final Map<String, MDataType> dataTypes = new HashMap<>();
 
     public Collection<MNode> getNodes() {
         return nodes;
@@ -748,6 +748,7 @@ public class MEnv {
             addAttribute(new MAttribute(env, "spread", "spr", env.findDataType("double")));
         }
 
+        @Override
         protected void initNode(MNode result) {
             MInt e = (MInt)result.getAttr("emt");
             e.set(1);
@@ -2700,8 +2701,8 @@ Less or Equal */
         addNodeType(new nxRigidBody(this));
     }
 
-    Map<MNode, Set<MConnection> > connections = new HashMap();
-    Map<MNode, Set<MConnection> > invConnections = new HashMap();
+    Map<MNode, Set<MConnection> > connections = new HashMap<>();
+    Map<MNode, Set<MConnection> > invConnections = new HashMap<>();
     
     public void connectAttr(String src,  String target) {
         MPath srcPath = new MPath(this, src);
@@ -2717,14 +2718,14 @@ Less or Equal */
         MConnection conn = new MConnection(srcPath, targetPath);
         Set<MConnection> set = connections.get(srcNode);
         if (set == null) {
-            set = new HashSet();
+            set = new HashSet<>();
             connections.put(srcNode, set);
         }
         set.add(conn);
 
         set = invConnections.get(targetNode);
         if (set == null) {
-            set = new HashSet();
+            set = new HashSet<>();
             invConnections.put(targetNode, set);
         }
         set.add(conn);
@@ -2744,7 +2745,7 @@ Less or Equal */
 
     public Set<MConnection> getConnectionsTo(MPath path, boolean checkSubPaths) {
 
-        Set<MConnection> result = new HashSet();
+        Set<MConnection> result = new HashSet<>();
         getConnectionsTo(path, checkSubPaths, result);
         return result;
     }
@@ -2784,7 +2785,7 @@ Less or Equal */
     }
 
     public Set<MPath> getPathsConnectingTo(MPath path, boolean checkSubPaths) {
-        Set<MPath> result = new HashSet();
+        Set<MPath> result = new HashSet<>();
         Set<MConnection> conns = getConnectionsTo(path, checkSubPaths);
         for (MConnection conn : conns) {
             result.add(conn.getSourcePath());
@@ -2805,7 +2806,7 @@ Less or Equal */
     }
 
     public Set<MConnection> getConnectionsFrom(MPath path, boolean checkSubPaths) {
-        Set<MConnection> result = new HashSet();
+        Set<MConnection> result = new HashSet<>();
         Set<MConnection> conns = connections.get(path.getTargetNode());
         if (conns != null) {
             for (MConnection conn : conns) {
@@ -2836,7 +2837,7 @@ Less or Equal */
     }
 
     public Set<MPath> getPathsConnectingFrom(MPath path, boolean checkSubPaths) {
-        Set<MPath> result = new HashSet();
+        Set<MPath> result = new HashSet<>();
         Set<MConnection> conns = getConnectionsFrom(path, checkSubPaths);
         for (MConnection conn : conns) {
             result.add(conn.getTargetPath());

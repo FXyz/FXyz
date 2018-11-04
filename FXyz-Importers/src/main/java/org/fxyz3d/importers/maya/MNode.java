@@ -47,7 +47,7 @@ public class MNode extends MObject {
 
     MNodeType nodeType;
     boolean hasLocalType = false;
-    Map<String, MData> values = new HashMap();
+    Map<String, MData> values = new HashMap<>();
 
     public void createInstance(String instanceName) {
     }
@@ -66,8 +66,8 @@ public class MNode extends MObject {
         return nodeType;
     }
 
-    List<MNode> parentNodes = new ArrayList();
-    List<MNode> childNodes = new ArrayList();
+    List<MNode> parentNodes = new ArrayList<>();
+    List<MNode> childNodes = new ArrayList<>();
 
     public void addAttr(
             String longName,
@@ -149,7 +149,7 @@ public class MNode extends MObject {
 
     public String getFullName() {
         String result = "";
-        LinkedList<MNode> path = new LinkedList();
+        LinkedList<MNode> path = new LinkedList<>();
         MNode n = this;
         while (true) {
             path.addFirst(n);
@@ -170,7 +170,7 @@ public class MNode extends MObject {
     /** Returns a list of MConnections connecting out of the given attribute, sorted by the source path. */
     public List<MConnection> getConnectionsFrom(String attr) {
         Set<MConnection> c = getEnv().getConnectionsFrom(new MPath(this, "." + attr));
-        List<MConnection> result = new ArrayList();
+        List<MConnection> result = new ArrayList<>();
         result.addAll(c);
         Collections.sort(result, MConnection.SOURCE_PATH_COMPARATOR);
         return result;
@@ -179,7 +179,7 @@ public class MNode extends MObject {
     /** Returns a list of MPaths connecting out of the given attribute. */
     public List<MPath> getPathsConnectingFrom(String attr) {
         Set<MPath> c = getEnv().getPathsConnectingFrom(new MPath(this, "." + attr));
-        List<MPath> result = new ArrayList();
+        List<MPath> result = new ArrayList<>();
         result.addAll(c);
         return result;
     }
@@ -191,7 +191,7 @@ public class MNode extends MObject {
     /** Returns a list of MConnections connecting into the given attribute, sorted by the target path. */
     public List<MConnection> getConnectionsTo(String attr) {
         Set<MConnection> c = getEnv().getConnectionsTo(new MPath(this, "." + attr));
-        List<MConnection> result = new ArrayList();
+        List<MConnection> result = new ArrayList<>();
         result.addAll(c);
         Collections.sort(result, MConnection.TARGET_PATH_COMPARATOR);
         return result;
@@ -200,7 +200,7 @@ public class MNode extends MObject {
     /** Returns a list of MPaths connecting into the given attribute. */
     public List<MPath> getPathsConnectingTo(String attr) {
         Set<MPath> c = getEnv().getPathsConnectingTo(new MPath(this, "." + attr));
-        List<MPath> result = new ArrayList();
+        List<MPath> result = new ArrayList<>();
         result.addAll(c);
         return result;
     }

@@ -66,15 +66,11 @@ public class MConnection {
         return sourcePath.hashCode() ^ targetPath.hashCode();
     }
 
-    public static final Comparator SOURCE_PATH_COMPARATOR = (o1, o2) -> {
-        MConnection c1 = (MConnection) o1;
-        MConnection c2 = (MConnection) o2;
-        return c1.getSourcePath().compareTo(c2.getSourcePath());
+    public static final Comparator<? super MConnection> SOURCE_PATH_COMPARATOR = (o1, o2) -> {
+        return o1.getSourcePath().compareTo(o2.getSourcePath());
     };
 
-    public static final Comparator TARGET_PATH_COMPARATOR = (o1, o2) -> {
-        MConnection c1 = (MConnection) o1;
-        MConnection c2 = (MConnection) o2;
-        return c1.getTargetPath().compareTo(c2.getTargetPath());
+    public static final Comparator<? super MConnection> TARGET_PATH_COMPARATOR = (o1, o2) -> {
+        return o1.getTargetPath().compareTo(o2.getTargetPath());
     };
 }
