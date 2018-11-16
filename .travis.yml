@@ -17,3 +17,10 @@ script:
 cache:
   directories:
   - $HOME/.gradle/caches/
+  
+deploy:
+  provider: script
+  script: ./gradlew bintrayUpload -PbintrayUsername=$bintrayUsername -PbintrayApiKey=$bintrayApiKey
+  skip_cleanup: true
+  on:
+    tags: true
