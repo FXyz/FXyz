@@ -1,0 +1,19 @@
+# use java support.
+language: java
+jdk:
+  - oraclejdk9
+  
+# run in container.
+sudo: false
+
+# use linux as operating system.
+os:
+  - linux
+
+# run maven build.
+script:
+  - ./gradlew build
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
