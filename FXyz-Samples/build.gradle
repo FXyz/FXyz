@@ -1,13 +1,5 @@
-
-    
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-    }
+plugins {
+    id 'application'
 }
 
 sourceCompatibility = '1.9'
@@ -19,13 +11,6 @@ repositories {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
 }
-import org.gradle.api.artifacts.*
-apply plugin: 'application'
-apply plugin: 'com.github.johnrengelman.shadow'
-
-//uncomment next line for NativePackages..
-//apply from: 'javafx.plugin'
-
 
 applicationName = 'FXyz-Samples'
 mainClassName = fxyz_sampler_mainClass
@@ -33,15 +18,9 @@ ext.mainClass = mainClassName
 applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC"]
 
 dependencies {
-    compile "org.openjfx:javafx-base:11:$platform"
-    compile "org.openjfx:javafx-controls:11:$platform"
-    compile "org.openjfx:javafx-graphics:11:$platform"
-    compile "org.openjfx:javafx-fxml:11:$platform"
-    compile "org.openjfx:javafx-swing:11:$platform"
-      
-    compile "org.openjfx:javafx-graphics:11:win"
-    compile "org.openjfx:javafx-graphics:11:linux"
-    compile "org.openjfx:javafx-graphics:11:mac"
+    compile "org.openjfx:javafx-graphics:11.0.2:win"
+    compile "org.openjfx:javafx-graphics:11.0.2:linux"
+    compile "org.openjfx:javafx-graphics:11.0.2:mac"
         
     compile project(':FXyz-Client')
     compile project(':FXyz-Core')
@@ -55,23 +34,9 @@ dependencies {
     }
 }
 
-compileJava {
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls,javafx.fxml,javafx.swing'
-        ]
-    }
-    options.encoding = "UTF-8"
-}
-
 run {
     doFirst {
-        jvmArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls,javafx.fxml,javafx.swing',
-                '--add-exports', 'javafx.base/com.sun.javafx.runtime=ALL-UNNAMED'
-        ]
+        jvmArgs = ['--add-exports', 'javafx.base/com.sun.javafx.runtime=ALL-UNNAMED']
     }
 }
 
