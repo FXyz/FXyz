@@ -29,8 +29,6 @@
 
 package org.fxyz3d.samples.utilities;
 
-import com.sun.javafx.scene.NodeHelper;
-import com.sun.javafx.scene.SceneUtils;
 import java.util.HashMap;
 import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
@@ -236,12 +234,8 @@ public class FloatingLabels extends FXyzSample {
     }
     private void updateLabels() {
         shape3DToLabel.forEach((node, label) -> {
-            javafx.geometry.Point3D coordinates = node.localToScene(javafx.geometry.Point3D.ZERO);
-            //@DEBUG SMP useful debugging print
-            //System.out.println("localToScene Coordinates: " + coordinates.toString());
-            SubScene oldSubScene = NodeHelper.getSubScene(node);
-            coordinates = SceneUtils.subSceneToScene(oldSubScene, coordinates);
-            //@DEBUG SMP  useful debugging print
+            javafx.geometry.Point3D coordinates = node.localToScene(javafx.geometry.Point3D.ZERO, true);
+             //@DEBUG SMP  useful debugging print
             //System.out.println("subSceneToScene Coordinates: " + coordinates.toString());
             //Clipping Logic
             //if coordinates are outside of the scene it could
