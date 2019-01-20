@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'org.beryx.jlink' version '2.3.1'
 }
 
 sourceCompatibility = '1.9'
@@ -13,30 +14,32 @@ repositories {
 }
 
 applicationName = 'FXyz-Samples'
-mainClassName = fxyz_sampler_mainClass
+mainClassName = "${moduleName}/${fxyz_sampler_mainClass}"
 ext.mainClass = mainClassName
 applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC"]
 
 dependencies {
-    compile "org.openjfx:javafx-graphics:11.0.2:win"
-    compile "org.openjfx:javafx-graphics:11.0.2:linux"
-    compile "org.openjfx:javafx-graphics:11.0.2:mac"
-        
     compile project(':FXyz-Client')
     compile project(':FXyz-Core')
     compile project(':FXyz-Importers')
     compile ('org.reactfx:reactfx:2.0-M5')
     compile ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')
-    if (JavaVersion.current().isJava9Compatible()) {
-        compile ('org.jfxtras:jfxtras-controls:9.0-r1')
-    } else {
-        compile ('org.jfxtras:jfxtras-controls:8.0-r6')
+    compile ('org.jfxtras:jfxtras-controls:9.0-r1')
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples'
+        ]
     }
+    options.encoding = "UTF-8"
 }
 
 run {
     doFirst {
-        jvmArgs = ['--add-exports', 'javafx.base/com.sun.javafx.runtime=ALL-UNNAMED']
+        jvmArgs = ['--add-exports', 'javafx.base/com.sun.javafx.runtime=controlsfx', 
+                   '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples']
     }
 }
 
@@ -51,4 +54,13 @@ jar {
     from sourceSets.main.allJava
 }
 
-shadow{}
+jlink {
+    imageName = 'FXyz'
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    addExtraDependencies("javafx")
+    launcher {
+        name = 'FXyzSamples'
+        jvmArgs = ['--add-exports', 'javafx.base/com.sun.javafx.runtime=org.fxyz3d.merged.module', 
+                   '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples']
+    }
+}

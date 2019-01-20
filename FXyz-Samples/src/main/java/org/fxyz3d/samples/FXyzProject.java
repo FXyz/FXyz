@@ -49,25 +49,22 @@ import org.fxyz3d.model.WelcomePage;
 public class FXyzProject implements FXyzSamplerProject {
     
          
-    //@Override
     @Override
     public final String getProjectName() {
         return "FXyz-Samples";
     }
 
-    //@Override
     @Override
     public final String getSampleBasePackage() {
         return "org.fxyz3d.samples";
     }
 
-    //@Override
     @Override
     public WelcomePage getWelcomePage() {
         VBox vBox = new VBox();
         Parent logo = null;
         try {
-            logo = FXMLLoader.load(FXyzProject.class.getResource("/org/fxyz3d/client/Logo.fxml"));
+            logo = FXMLLoader.load(FXyzProject.class.getResource("Logo.fxml"));
         } catch (IOException ex) {
             Logger.getLogger(FXyzProject.class.getName()).log(Level.SEVERE, null, ex);
         }

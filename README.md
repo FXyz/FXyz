@@ -31,20 +31,10 @@ a 3D mesh of a spring.
 Create a gradle project, edit the build.gradle file and add:
 
 ```
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
-    }
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
 }
-
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'com.google.osdetector'
-
-def platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 
 mainClassName = 'org.fxyz3d.Sample'
 
@@ -53,29 +43,11 @@ repositories {
 }
 
 dependencies {
-    compile "org.openjfx:javafx-base:11:$platform"
-    compile "org.openjfx:javafx-graphics:11:$platform"
-    compile "org.openjfx:javafx-controls:11:$platform"
-    
     compile 'org.fxyz3d:fxyz3d:0.4.0'
 }
 
-compileJava {
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls'
-        ]
-    }
-}
-
-run {
-    doFirst {
-        jvmArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls'
-        ]
-    }
+javafx {
+    modules = [ 'javafx.controls' ]
 }
 ```
 
@@ -124,15 +96,15 @@ There is a hidden side popup menu at the left, from where different samples can 
 
 ![](/resources/fxsampler.png)
 
- #### Shadow Jar
+ #### Custom image
 
-You can create a fat jar running:
+You can create a custom image for your platform running:
 
-    ./gradlew clean :FXyz-Samples:shadow  
+    ./gradlew clean :FXyz-Samples:jlink  
 
-And you can run the jar with Java 9+ on Windows, Linux and Mac:
+And you can run it with Java 9+ on your platform:
 
-    java -jar FXyz-Samples/build/libs/FXyz-Samples-1.0-SNAPSHOT-all.jar
+    FXyz-Samples/build/FXyz/bin/FXyzSamples
 
 Special Thanks go to ControlsFX for providing the FXSampler framework.
 http://fxexperience.com/controlsfx/
