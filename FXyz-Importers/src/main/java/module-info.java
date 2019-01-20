@@ -38,6 +38,4 @@ module org.fxyz3d.importers {
     uses org.fxyz3d.importers.Importer;
     
     exports org.fxyz3d.importers;
-    exports org.fxyz3d.importers.maya;
-    exports org.fxyz3d.importers.obj;
 }

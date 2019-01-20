@@ -46,7 +46,7 @@ module org.fxyz3d.FXyz.Samples {
     opens org.fxyz3d.controls to javafx.fxml;
     provides org.fxyz3d.FXyzSamplerProject with org.fxyz3d.samples.FXyzProject;
     
-    exports org.fxyz3d.samples.importers to org.fxyz3d.client;
+    exports org.fxyz3d.samples.importers to org.fxyz3d.client, org.fxyz3d.importers;
     exports org.fxyz3d.samples.shapes.compound to org.fxyz3d.client;
     exports org.fxyz3d.samples.shapes.texturedmeshes to org.fxyz3d.client;
     exports org.fxyz3d.samples.utilities to org.fxyz3d.client;
