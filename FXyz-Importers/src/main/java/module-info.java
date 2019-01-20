@@ -27,8 +27,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-module org.fxyz3d.FXyz.Importers {
-    requires org.fxyz3d.FXyz.Core;
+module org.fxyz3d.importers {
+    requires org.fxyz3d.core;
     requires transitive javafx.graphics;
     requires transitive javafx.fxml;
     requires java.logging;

@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-module org.fxyz3d.FXyz.Client {
+module org.fxyz3d.client {
     requires transitive javafx.controls;
     requires transitive javafx.fxml;
     requires java.logging;
