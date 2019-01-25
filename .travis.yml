@@ -1,7 +1,7 @@
 # use java support.
 language: java
 jdk:
-  - oraclejdk9
+  - openjdk11
   
 # run in container.
 sudo: false
