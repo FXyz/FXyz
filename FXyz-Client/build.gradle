@@ -15,12 +15,8 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {    
-    if (JavaVersion.current().isJava9Compatible()) {
-        compile 'org.controlsfx:controlsfx:9.0.0'
-    } else {
-        compile 'org.controlsfx:controlsfx:8.40.14'
-    }
-    compile 'org.reactfx:reactfx:2.0-M5'    
+    implementation 'org.controlsfx:controlsfx:9.0.0'
+    implementation 'org.reactfx:reactfx:2.0-M5'    
 }
 
 javadoc {

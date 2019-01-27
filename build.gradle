@@ -40,9 +40,9 @@ subprojects {
     }
     
     dependencies {     
-        compile ('eu.mihosoft.vrl.jcsg:jcsg:0.5.7') { transitive = false }
-        compile 'eu.mihosoft.vvecmath:vvecmath:0.3.8'
-        compile 'org.orbisgis:poly2tri-core:0.1.2'
+        implementation ('eu.mihosoft.vrl.jcsg:jcsg:0.5.7') { transitive = false }
+        implementation 'eu.mihosoft.vvecmath:vvecmath:0.3.8'
+        implementation 'org.orbisgis:poly2tri-core:0.1.2'
         testCompile 'junit:junit:[4,)'
     }
     

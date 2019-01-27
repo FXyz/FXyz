@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    compile project(':FXyz-Core')
+    implementation project(':FXyz-Core')
 }
 
 javadoc {

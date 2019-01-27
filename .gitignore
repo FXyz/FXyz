@@ -11,3 +11,6 @@
 /.gradle
 /.nb-gradle/
 /.idea/
+.classpath
+.project
+.settings
