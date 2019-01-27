@@ -28,6 +28,7 @@ ext {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
+    apply plugin: 'eclipse'
     apply plugin: 'org.openjfx.javafxplugin'
     apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'com.github.hierynomus.license'
@@ -50,6 +51,18 @@ subprojects {
         modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
     }
 
+    eclipse {
+        classpath {
+            file {
+                whenMerged {
+                    entries.findAll { it.properties.kind.equals('lib') }.each {
+                        it.entryAttributes['module'] = 'true'
+                    }
+                }
+            }
+        }
+    }
+	
     task wrapper(type: Wrapper) {
         gradleVersion = '5.0'
     }
