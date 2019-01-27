@@ -149,13 +149,14 @@ public class SampleScanner {
                 .forEach(mref -> {
                     try (ModuleReader reader = mref.open()) {
                         reader.list()
-                                .filter(c -> c.endsWith(".class") && ! ILLEGAL_CLASS_NAMES.contains(c))
-                                .forEach(c -> {
-                            final Class<?> clazz = processClassName(c);
-                            if (clazz != null) {
-                                classes.add(clazz);
-                            }
-                        });
+                            .filter(c -> c.endsWith(".class") && 
+                                    ! ILLEGAL_CLASS_NAMES.contains(c))
+                            .forEach(c -> {
+                                final Class<?> clazz = processClassName(c);
+                                if (clazz != null) {
+                                    classes.add(clazz);
+                                }
+                            });
                     } catch (IOException ioe) {
                         throw new UncheckedIOException(ioe);
                     }

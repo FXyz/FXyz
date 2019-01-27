@@ -95,5 +95,3 @@ subprojects {
         excludes(['**/*.txt', '**/*.html', '**/*.fxml', '**/*.css', '**/*.obj', '**/*.mtl', '**/*.ma', '**/*.png', '**/*.gif', '**/*.jpg'])
     }
 }
-
-
