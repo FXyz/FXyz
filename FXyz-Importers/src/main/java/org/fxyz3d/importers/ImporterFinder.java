@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2014, Oracle and/or its affiliates.
+ * Copyright (c) 2013-2018, F(X)yz
+ * 
  * All rights reserved. Use is subject to license terms.
  *
  * This file is available and licensed under the following license:
@@ -31,40 +33,96 @@
  */
 package org.fxyz3d.importers;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.lang.module.ModuleReader;
+import java.lang.module.ResolvedModule;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ImporterFinder {
 
     public URLClassLoader addUrlToClassPath() {
-        final Class<?> referenceClass = ImporterFinder.class;
-        final URL url = referenceClass.getProtectionDomain().getCodeSource().getLocation();
-
-        File libDir = null;
         try {
-            File currentDir = new File(url.toURI()).getParentFile();
-            libDir = new File(currentDir, "lib");
-        } catch (URISyntaxException ue) {
-            ue.printStackTrace();
-            throw new RuntimeException("Could not import library. Failed to determine library location. URL = " + url.getPath());
+            final List<URL> urls = loadFromPathScanning();
+            return new URLClassLoader((URL[]) urls.toArray(new URL[0]), this.getClass().getClassLoader());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        File[] files = libDir.listFiles();
+        return null;
+    }
+    
+    /**
+     * Scans all classes.
+     *
+     * @return a list of URLs
+     * @throws IOException
+     */
+    private List<URL> loadFromPathScanning() throws IOException {
+
         final List<URL> urlList = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                try {
-                    urlList.add(file.toURI().toURL());
-                } catch (MalformedURLException me) {
-                    me.printStackTrace();
-                }
-            }
+        
+        ModuleLayer.boot().configuration().modules().stream()
+                .map(ResolvedModule::reference)
+                .filter(rm -> !isSystemModule(rm.descriptor().name()))
+                .forEach(mref -> {
+                    try (ModuleReader reader = mref.open()) {
+                        reader.list()
+                                .filter(c -> c.endsWith(".class"))
+                                .map(this::processClassName)
+                                .filter(Objects::nonNull)
+                                .forEach(urlList::add);
+                    } catch (IOException ioe) {
+                        throw new UncheckedIOException(ioe);
+                    }
+                });
+        
+        return urlList;
+    }
+    
+    private URL processClassName(final String name) {
+        String className = name.replace("\\", ".");
+        className = className.replace("/", ".");
+        
+        if (className.contains("$")) {
+            return null;
         }
-        URLClassLoader cl = new URLClassLoader((URL[]) urlList.toArray(new URL[0]), this.getClass().getClassLoader());
-        return cl;
+        
+        if (className.contains(".bin")) {
+            className = className.substring(className.indexOf(".bin") + 4);
+            className = className.replace(".bin", "");
+        }
+        if (className.startsWith(".")) {
+            className = className.substring(1);
+        }
+        if (className.endsWith(".class")) {
+            className = className.substring(0, className.length() - 6);
+        }
+
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(className);
+        } catch (Throwable e) {
+            // ignored
+        }
+        if (clazz != null) {
+            return clazz.getProtectionDomain().getCodeSource().getLocation();
+        }
+        return null;
+    }
+    
+    /**
+     * Return true if the given module name is a system module. There can be
+     * system modules in layers above the boot layer.
+     */
+    private static boolean isSystemModule(final String moduleName) {
+        return moduleName.startsWith("java.")
+                || moduleName.startsWith("javax.")
+                || moduleName.startsWith("javafx.")
+                || moduleName.startsWith("jdk.")
+                || moduleName.startsWith("oracle.");
     }
 }

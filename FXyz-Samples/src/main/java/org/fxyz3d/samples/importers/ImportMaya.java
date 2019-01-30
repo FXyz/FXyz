@@ -31,6 +31,7 @@ package org.fxyz3d.samples.importers;
 
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
+import static javafx.application.Application.launch;
 import org.fxyz3d.controls.factory.ControlFactory;
 import org.fxyz3d.importers.Importer3D;
 import org.fxyz3d.samples.shapes.ShapeBaseSample;
@@ -66,7 +67,7 @@ public class ImportMaya extends ShapeBaseSample<Node> {
     @Override
     protected void createMesh() {
         try {
-            Pair<Node,Timeline> content = Importer3D.loadIncludingAnimation(ImportMaya.class.getResource("/org/fxyz3d/importers/King_WalkCycle.ma").toExternalForm(),
+            Pair<Node,Timeline> content = Importer3D.loadIncludingAnimation(ImportMaya.class.getResource("King_WalkCycle.ma").toExternalForm(),
                     asPolygonMesh);
             model = content.getKey();
 
