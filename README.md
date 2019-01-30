@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.fxyz3d:fxyz3d:0.4.0'
+    implementation 'org.fxyz3d:fxyz3d:0.4.0'
 }
 
 javafx {
