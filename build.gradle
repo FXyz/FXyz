@@ -55,7 +55,7 @@ subprojects {
         classpath {
             file {
                 whenMerged {
-                    entries.findAll { it.properties.kind.equals('lib') }.each {
+                    entries.findAll { it.kind == 'src' || it.kind == 'lib' }.each {
                         it.entryAttributes['module'] = 'true'
                     }
                 }
