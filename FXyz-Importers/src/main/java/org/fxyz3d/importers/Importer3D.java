@@ -125,6 +125,9 @@ public final class Importer3D {
                     Class<?> clazz = Class.forName(name);
                     Object obj = clazz.getDeclaredConstructor().newInstance();
                     if (obj instanceof Importer) {
+
+                        System.out.println(obj);
+
                         Importer plugin = (Importer) obj;
                         if (plugin.isSupported(extension)) {
                             importer = plugin;
@@ -140,8 +143,10 @@ public final class Importer3D {
             if (fail) throw new IOException("Unknown 3D file format [" + extension + "]");
         }
 
+        URL url = new URL(fileUrl);
+
         if (extension.equals("fxml")) {
-            final Object fxmlRoot = FXMLLoader.load(new URL(fileUrl));
+            final Object fxmlRoot = FXMLLoader.load(url);
             if (fxmlRoot instanceof Node) {
                 return new Pair<>((Node) fxmlRoot, null);
             } else if (fxmlRoot instanceof TriangleMesh) {
@@ -149,7 +154,12 @@ public final class Importer3D {
             }
             throw new IOException("Unknown object in FXML file [" + fxmlRoot.getClass().getName() + "]");
         } else {
-            importer.load(fileUrl, asPolygonMesh);
+            if (asPolygonMesh) {
+                importer.loadAsPolygonMesh(url);
+            } else {
+                importer.load(url);
+            }
+
             return new Pair<>(importer.getRoot(), importer.getTimeline());
         }
     }

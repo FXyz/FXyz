@@ -32,6 +32,9 @@
 package org.fxyz3d.importers.maya;
 
 import org.fxyz3d.importers.Importer;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +52,7 @@ import javafx.scene.shape.TriangleMesh;
  * <p/>
  * MayaImporter.getRoot() returns a JavaFX node hierarchy MayaImporter.getTimeline() returns a JavaFX timeline
  */
-public class MayaImporter extends Importer {
+public class MayaImporter implements Importer {
     public static final boolean DEBUG = Loader.DEBUG;
     public static final boolean WARN = Loader.WARN;
 
@@ -87,14 +90,24 @@ public class MayaImporter extends Importer {
         return meshParents;
     }
 
+    @Override
+    public void load(URL url) throws IOException {
+        load(url, false);
+    }
+
+    @Override
+    public void loadAsPolygonMesh(URL url) throws IOException {
+        load(url, true);
+    }
+
     //=========================================================================
     // MayaImporter.load
     //=========================================================================
-    @Override
-    public void load(String url, boolean asPolygonMesh) {
+
+    private void load(URL url, boolean asPolygonMesh) {
         try {
             Loader loader = new Loader();
-            loader.load(new java.net.URL(url), asPolygonMesh);
+            loader.load(url, asPolygonMesh);
 
             // This root is not automatically added to the scene.
             // It needs to be added by the user of MayaImporter.
