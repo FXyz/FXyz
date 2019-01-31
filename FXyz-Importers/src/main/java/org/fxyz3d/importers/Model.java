@@ -1,4 +1,4 @@
-/**
+/*
  * F(X)yz
  *
  * Copyright (c) 2013-2019, F(X)yz
@@ -36,14 +36,22 @@ import javafx.scene.paint.Material;
 import java.util.*;
 
 /**
+ * Represents a loader-independent 3D model data.
+ *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 public class Model {
 
     private final Group root = new Group();
-    private Map<String, Material> materials = new HashMap<>();
-    private Map<String, Node> meshViews = new HashMap<>();
+    private final Map<String, Material> materials = new HashMap<>();
+    private final Map<String, Node> meshViews = new HashMap<>();
 
+    /**
+     * The root that may contain Node / MeshView / PolygonMeshView.
+     * You can add this root to your scene graph.
+     *
+     * @return root node
+     */
     public Group getRoot() {
         return root;
     }
@@ -57,10 +65,19 @@ public class Model {
         root.getChildren().add(view);
     }
 
+    /**
+     * Mesh names can be obtained by calling getMeshNames().
+     *
+     * @param key mesh name
+     * @return a specific view (part) of this model
+     */
     public final Node getMeshView(String key) {
         return meshViews.get(key);
     }
 
+    /**
+     * @return all views that this model contains
+     */
     public final List<Node> getMeshViews() {
         return new ArrayList<>(meshViews.values());
     }
