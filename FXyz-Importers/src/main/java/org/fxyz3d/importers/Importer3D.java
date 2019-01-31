@@ -125,9 +125,6 @@ public final class Importer3D {
                     Class<?> clazz = Class.forName(name);
                     Object obj = clazz.getDeclaredConstructor().newInstance();
                     if (obj instanceof Importer) {
-
-                        System.out.println(obj);
-
                         Importer plugin = (Importer) obj;
                         if (plugin.isSupported(extension)) {
                             importer = plugin;
