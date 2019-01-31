@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2019 F(X)yz
  * Copyright (c) 2010, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -87,6 +88,9 @@ public final class Importer3D {
      * @throws IOException if issue loading file
      */
     public static Model loadIncludingAnimation(URL fileUrl, boolean asPolygonMesh) throws IOException {
+        if (fileUrl == null)
+            throw new IOException("URL is null");
+
         String extForm = fileUrl.toExternalForm();
 
         // get extension
@@ -155,7 +159,6 @@ public final class Importer3D {
 
             throw new IOException("Unknown object in FXML file [" + fxmlRoot.getClass().getName() + "]");
         } else {
-
             return asPolygonMesh ? importer.loadAsPoly(fileUrl) : importer.load(fileUrl);
         }
     }
