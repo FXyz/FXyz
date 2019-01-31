@@ -33,6 +33,7 @@ import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
 import org.fxyz3d.controls.factory.ControlFactory;
 import org.fxyz3d.importers.Importer3D;
+import org.fxyz3d.importers.Model;
 import org.fxyz3d.samples.shapes.ShapeBaseSample;
 import org.fxyz3d.shapes.polygon.PolygonMeshView;
 
@@ -66,12 +67,12 @@ public class ImportMaya extends ShapeBaseSample<Node> {
     @Override
     protected void createMesh() {
         try {
-            Pair<Node,Timeline> content = Importer3D.loadIncludingAnimation(ImportMaya.class.getResource("/org/fxyz3d/importers/King_WalkCycle.ma").toExternalForm(),
+            Model modelData = Importer3D.loadIncludingAnimation(ImportMaya.class.getResource("/org/fxyz3d/importers/King_WalkCycle.ma"),
                     asPolygonMesh);
-            model = content.getKey();
 
-            Timeline timeline = content.getValue();
-            if (timeline != null) {
+            model = modelData.getRoot();
+
+            modelData.getTimeline().ifPresent(timeline -> {
                 timeline.setCycleCount(Timeline.INDEFINITE);
                 timeline.play();
 
@@ -84,7 +85,7 @@ public class ImportMaya extends ShapeBaseSample<Node> {
                         }
                     }
                 });
-            }
+            });
         } catch (IOException ex) {
             Logger.getLogger(ImportMaya.class.getName()).log(Level.SEVERE, null, ex);
         }

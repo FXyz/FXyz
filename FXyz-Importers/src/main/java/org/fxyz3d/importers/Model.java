@@ -38,7 +38,7 @@ import java.util.*;
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-public abstract class Model {
+public class Model {
 
     private final Group root = new Group();
     private Map<String, Material> materials = new HashMap<>();

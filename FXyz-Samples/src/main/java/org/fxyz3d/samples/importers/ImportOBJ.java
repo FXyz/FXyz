@@ -61,9 +61,7 @@ public class ImportOBJ extends ShapeBaseSample<Group> {
     @Override
     protected void createMesh() {
         try {
-            model = (Group) Importer3D.load(
-                    ImportOBJ.class.getResource("/org/fxyz3d/importers/DukeKing.obj").toExternalForm(),
-                    asPolygonMesh);
+            model = Importer3D.loadAsPoly(ImportOBJ.class.getResource("/org/fxyz3d/importers/DukeKing.obj")).getRoot();
 
         } catch (IOException ex) {
             Logger.getLogger(ImportOBJ.class.getName()).log(Level.SEVERE, null, ex);

@@ -31,18 +31,15 @@
  */
 package org.fxyz3d.importers;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import javafx.util.Pair;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ServiceLoader;
 
 /**
@@ -66,20 +63,19 @@ public final class Importer3D {
      * @return The loaded Node which could be a MeshView or a Group
      * @throws IOException if issue loading file
      */
-    public static Node load(String fileUrl) throws IOException {
-        return load(fileUrl,false);
+    public static Model load(URL fileUrl) throws IOException {
+        return loadIncludingAnimation(fileUrl, false);
     }
 
     /**
-     * Load a 3D file.
+     * Load a 3D file, load as a PolygonMesh if the loader supports.
      *
      * @param fileUrl The url of the 3D file to load
-     * @param asPolygonMesh When true load as a PolygonMesh if the loader supports
      * @return The loaded Node which could be a MeshView or a Group
      * @throws IOException if issue loading file
      */
-    public static Node load(String fileUrl, boolean asPolygonMesh) throws IOException {
-        return loadIncludingAnimation(fileUrl,asPolygonMesh).getKey();
+    public static Model loadAsPoly(URL fileUrl) throws IOException {
+        return loadIncludingAnimation(fileUrl, true);
     }
 
     /**
@@ -90,13 +86,15 @@ public final class Importer3D {
      * @return The loaded Node which could be a MeshView or a Group and the Timeline animation
      * @throws IOException if issue loading file
      */
-    public static Pair<Node,Timeline> loadIncludingAnimation(String fileUrl, boolean asPolygonMesh) throws IOException {
+    public static Model loadIncludingAnimation(URL fileUrl, boolean asPolygonMesh) throws IOException {
+        String extForm = fileUrl.toExternalForm();
+
         // get extension
-        final int dot = fileUrl.lastIndexOf('.');
+        final int dot = extForm.lastIndexOf('.');
         if (dot <= 0) {
             throw new IOException("Unknown 3D file format, url missing extension [" + fileUrl + "]");
         }
-        final String extension = fileUrl.substring(dot + 1, fileUrl.length()).toLowerCase();
+        final String extension = extForm.substring(dot + 1).toLowerCase();
         // Reference all the importer jars
         ImporterFinder finder = new ImporterFinder();
         URLClassLoader classLoader = finder.addUrlToClassPath();
@@ -140,21 +138,25 @@ public final class Importer3D {
             if (fail) throw new IOException("Unknown 3D file format [" + extension + "]");
         }
 
-        URL url = new URL(fileUrl);
-
         if (extension.equals("fxml")) {
-            final Object fxmlRoot = FXMLLoader.load(url);
+            final Object fxmlRoot = FXMLLoader.load(fileUrl);
+
+            Model model = new Model();
+
             if (fxmlRoot instanceof Node) {
-                return new Pair<>((Node) fxmlRoot, null);
+                model.addMeshView("default", (Node) fxmlRoot);
+
+                return model;
             } else if (fxmlRoot instanceof TriangleMesh) {
-                return new Pair<>(new MeshView((TriangleMesh) fxmlRoot), null);
+                model.addMeshView("default", new MeshView((TriangleMesh) fxmlRoot));
+
+                return model;
             }
+
             throw new IOException("Unknown object in FXML file [" + fxmlRoot.getClass().getName() + "]");
         } else {
 
-            Model model = asPolygonMesh ? importer.loadAsPoly(url) : importer.load(url);
-
-            return new Pair<>(model.getRoot(), model.getTimeline().isPresent() ? model.getTimeline().get() : null);
+            return asPolygonMesh ? importer.loadAsPoly(fileUrl) : importer.load(fileUrl);
         }
     }
 }
