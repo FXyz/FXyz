@@ -42,6 +42,7 @@ public interface Importer {
      *
      * @param url The url of the 3D file to load
      * @throws IOException If issue loading file
+     * @return loaded 3d model
      */
     Model load(URL url) throws IOException;
 
@@ -50,6 +51,7 @@ public interface Importer {
      *
      * @param url The url of the 3D file to load
      * @throws IOException If issue loading file
+     * @return loaded 3d poly model
      */
     Model loadAsPoly(URL url) throws IOException;
 
