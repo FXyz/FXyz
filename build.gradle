@@ -1,14 +1,15 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
-    }
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+    id 'com.github.hierynomus.license' version '0.15.0'
+    id 'net.nemerosa.versioning' version '2.7.1'
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.github.ben-manes.versions' version '0.13.0'
+    id "com.github.johnrengelman.shadow" version "4.0.3"
 }
 
 apply plugin: 'base'
-apply plugin: 'com.google.osdetector'
 
 Properties cfg = new Properties()
 cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
@@ -20,19 +21,18 @@ ext {
     fxyz_name                = 'FXyzLibs'
     fxyz_sampler_name        = 'FXyz-Sampler'
     fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
-    fxyz_sampler_mainClass   = 'org.fxyz3d.Launcher'
+    fxyz_sampler_mainClass   = 'org.fxyz3d.samples.Launcher'
     fxyz_group               = cfg.fxyz_group
-    platform                 = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 }
     
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
+    apply plugin: 'eclipse'
+    apply plugin: 'org.openjfx.javafxplugin'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'com.github.hierynomus.license'
 
-    // run: gradle repairHeaders
-    apply from: 'http://gradle-plugins.mihosoft.eu/latest/vlicenseheader.gradle'
-    repairHeaders.licenseHeaderText = new File(rootDir,'fxyz-license.txt')
-    
     group = fxyz_group
     version = specification_version + artifact_suffix
 
@@ -41,26 +41,30 @@ subprojects {
     }
     
     dependencies {     
-        compileOnly "org.openjfx:javafx-base:11:$platform"
-        compileOnly "org.openjfx:javafx-graphics:11:$platform"
-        compileOnly "org.openjfx:javafx-controls:11:$platform"
-        compileOnly "org.openjfx:javafx-fxml:11:$platform"
-        compileOnly "org.openjfx:javafx-swing:11:$platform"
-    
-        compile 'eu.mihosoft.vrl.jcsg:jcsg:0.5.7'
-        compile 'org.orbisgis:poly2tri-core:0.1.2'
+        implementation ('eu.mihosoft.vrl.jcsg:jcsg:0.5.7') { transitive = false }
+        implementation 'eu.mihosoft.vvecmath:vvecmath:0.3.8'
+        implementation 'org.orbisgis:poly2tri-core:0.1.2'
         testCompile 'junit:junit:[4,)'
     }
-
-    test {
-        testLogging {
-            // Show that tests are run in the command-line output
-            events 'started', 'passed'
-        }
+    
+    javafx {
+        modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
     }
 
+    eclipse {
+        classpath {
+            file {
+                whenMerged {
+                    entries.findAll { it.kind == 'src' || it.kind == 'lib' }.each {
+                        it.entryAttributes['module'] = 'true'
+                    }
+                }
+            }
+        }
+    }
+	
     task wrapper(type: Wrapper) {
-        gradleVersion = '4.10'
+        gradleVersion = '5.0'
     }
 
     task sourceJar(type: Jar) {
@@ -72,6 +76,22 @@ subprojects {
     artifacts {
         archives sourceJar
     }
+
+    license {
+        header = rootProject.file('fxyz-license.txt')
+        strictCheck = true
+        ignoreFailures = false
+        skipExistingHeaders = true
+        mapping {
+            java   = 'SLASHSTAR_STYLE'
+            groovy = 'SLASHSTAR_STYLE'
+            fxml   = 'XML_STYLE'
+        }
+
+        ext.title           = 'F(X)yz'
+        ext.yearCurrent     = new SimpleDateFormat("yyyy").format(new Date())
+        ext.yearSince       = '2013'
+
+        excludes(['**/*.txt', '**/*.html', '**/*.fxml', '**/*.css', '**/*.obj', '**/*.mtl', '**/*.ma', '**/*.png', '**/*.gif', '**/*.jpg'])
+    }
 }
-
-

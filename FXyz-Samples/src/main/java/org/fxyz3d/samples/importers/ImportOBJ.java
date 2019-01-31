@@ -32,6 +32,7 @@ package org.fxyz3d.samples.importers;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
+import static javafx.application.Application.launch;
 import org.fxyz3d.controls.factory.ControlFactory;
 import org.fxyz3d.importers.Importer3D;
 import org.fxyz3d.samples.shapes.ShapeBaseSample;

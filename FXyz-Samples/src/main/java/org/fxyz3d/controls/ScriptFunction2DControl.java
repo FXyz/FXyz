@@ -109,6 +109,10 @@ public class ScriptFunction2DControl extends ControlBase<Property<Function<Point
             }
         });
         change.addListener((obs,b,b1)->{
+            if (engine == null) {
+                System.err.println("Script Error: No Script Engine found");
+                return;
+            }
             if(b1){
                 change.set(false);
                 String text=selection.getValue();

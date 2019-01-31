@@ -1,5 +1,5 @@
 /**
- * Launcher.java
+ * F(X)yz
  *
  * Copyright (c) 2013-2018, F(X)yz
  * All rights reserved.
@@ -26,17 +26,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
-package org.fxyz3d;
 
-import org.fxyz3d.client.FXyzClient;
-
-/**
- *
- * @author JosePereda
- */
-public class Launcher {
+module org.fxyz3d.importers {
+    requires org.fxyz3d.core;
+    requires transitive javafx.graphics;
+    requires transitive javafx.fxml;
+    requires java.logging;
     
-    public static void main(String[] args) {
-        FXyzClient.main(args);
-    }
+    opens org.fxyz3d.importers to javafx.fxml;
+    
+    uses org.fxyz3d.importers.Importer;
+    
+    exports org.fxyz3d.importers;
 }
