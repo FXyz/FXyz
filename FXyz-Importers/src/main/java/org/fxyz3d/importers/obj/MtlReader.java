@@ -57,7 +57,7 @@ public class MtlReader {
         String fileUrl = baseUrl + filename;
         try {
             URL mtlUrl = new URL(fileUrl);
-            ObjOrPolyObjImporter.log("Reading material from filename = " + mtlUrl);
+            ObjImporter.log("Reading material from filename = " + mtlUrl);
             read(mtlUrl.openStream());
         } catch (FileNotFoundException ex) {
             System.err.println("No material file found for obj. ["+fileUrl+"]");
@@ -130,7 +130,7 @@ public class MtlReader {
             if (!materials.containsKey(name)) {
                 materials.put(name, material);
             } else {
-                ObjOrPolyObjImporter.log("This material is already added. Ignoring " + name);
+                ObjImporter.log("This material is already added. Ignoring " + name);
             }
             material = new PhongMaterial(Color.WHITE);
         }
@@ -146,7 +146,7 @@ public class MtlReader {
 
     private Image loadImage(String filename) {
         filename = baseUrl + filename;
-        ObjOrPolyObjImporter.log("Loading image from " + filename);
+        ObjImporter.log("Loading image from " + filename);
         return new Image(filename);
     }
 

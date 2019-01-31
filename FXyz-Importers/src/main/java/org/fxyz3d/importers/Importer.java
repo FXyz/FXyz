@@ -34,9 +34,6 @@ package org.fxyz3d.importers;
 import java.io.IOException;
 import java.net.URL;
 
-import javafx.animation.Timeline;
-import javafx.scene.Group;
-
 public interface Importer {
 
     /**
@@ -45,23 +42,15 @@ public interface Importer {
      * @param url The url of the 3D file to load
      * @throws IOException If issue loading file
      */
-    void load(URL url) throws IOException;
+    Model load(URL url) throws IOException;
 
     /**
-     * Loads the 3D file
+     * Loads the 3D file as a polygonal mesh.
      *
      * @param url The url of the 3D file to load
-     * @param asPolygonMesh When true load as a PolygonMesh if the loader
-     * supports.
      * @throws IOException If issue loading file
      */
-    void loadAsPolygonMesh(URL url) throws IOException;
-
-    /**
-     * Gets the 3D node that was loaded earlier through the load() call
-     * @return The loaded node
-     */
-    Group getRoot();
+    Model loadAsPoly(URL url) throws IOException;
 
     /**
      * Tests if the given 3D file extension is supported (e.g. "ma", "ase",
@@ -71,10 +60,4 @@ public interface Importer {
      * @return True if the extension is of a supported type. False otherwise.
      */
     boolean isSupported(String supportType);
-
-    /**
-     * Can be overridden to return a timeline animation for the 3D file
-     * @return A timeline animation. Null if there is no timeline animation.
-     */
-    Timeline getTimeline();
 }

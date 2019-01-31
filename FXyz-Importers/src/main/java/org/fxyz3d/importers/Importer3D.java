@@ -117,7 +117,7 @@ public final class Importer3D {
                  "org.fxyz3d.importers.dae.DaeImporter",
                  "org.fxyz3d.importers.max.MaxLoader",
                  "org.fxyz3d.importers.maya.MayaImporter",
-                 "org.fxyz3d.importers.obj.ObjOrPolyObjImporter",
+                 "org.fxyz3d.importers.obj.ObjImporter",
             };
             boolean fail = true;
             for (String name : names) {
@@ -154,13 +154,10 @@ public final class Importer3D {
             }
             throw new IOException("Unknown object in FXML file [" + fxmlRoot.getClass().getName() + "]");
         } else {
-            if (asPolygonMesh) {
-                importer.loadAsPolygonMesh(url);
-            } else {
-                importer.load(url);
-            }
 
-            return new Pair<>(importer.getRoot(), importer.getTimeline());
+            Model model = asPolygonMesh ? importer.loadAsPoly(url) : importer.load(url);
+
+            return new Pair<>(model.getRoot(), model.getTimeline().isPresent() ? model.getTimeline().get() : null);
         }
     }
 }

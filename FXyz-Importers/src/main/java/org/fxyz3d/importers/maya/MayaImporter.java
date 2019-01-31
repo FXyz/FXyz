@@ -31,14 +31,13 @@
  */
 package org.fxyz3d.importers.maya;
 
+import javafx.scene.Group;
 import org.fxyz3d.importers.Importer;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -46,6 +45,7 @@ import javafx.scene.DepthTest;
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import org.fxyz3d.importers.Model;
 
 /**
  * MayaImporter
@@ -67,7 +67,7 @@ public class MayaImporter implements Importer {
     //        return rootCharacter;
     // }
 
-    @Override
+
     public MayaGroup getRoot() {
         return root;
     }
@@ -78,7 +78,7 @@ public class MayaImporter implements Importer {
     // MayaImporter.getTimeline() returns a JavaFX timeline
     // (javafx.animation.Timeline)
     //=========================================================================
-    @Override
+
     public Timeline getTimeline() {
         return timeline;
     }
@@ -91,13 +91,35 @@ public class MayaImporter implements Importer {
     }
 
     @Override
-    public void load(URL url) throws IOException {
+    public Model load(URL url) throws IOException {
         load(url, false);
+        return new Model() {
+            @Override
+            public Optional<Timeline> getTimeline() {
+                return Optional.of(MayaImporter.this.getTimeline());
+            }
+
+            @Override
+            public Group getRoot() {
+                return MayaImporter.this.root;
+            }
+        };
     }
 
     @Override
-    public void loadAsPolygonMesh(URL url) throws IOException {
+    public Model loadAsPoly(URL url) throws IOException {
         load(url, true);
+        return new Model() {
+            @Override
+            public Optional<Timeline> getTimeline() {
+                return Optional.of(MayaImporter.this.getTimeline());
+            }
+
+            @Override
+            public Group getRoot() {
+                return MayaImporter.this.root;
+            }
+        };
     }
 
     //=========================================================================
