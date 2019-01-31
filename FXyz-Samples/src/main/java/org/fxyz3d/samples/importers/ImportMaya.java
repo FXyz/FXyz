@@ -68,8 +68,7 @@ public class ImportMaya extends ShapeBaseSample<Node> {
     @Override
     protected void createMesh() {
         try {
-            Model modelData = Importer3D.loadIncludingAnimation(ImportMaya.class.getResource("/org/fxyz3d/importers/King_WalkCycle.ma"),
-                    asPolygonMesh);
+            Model modelData = Importer3D.loadIncludingAnimation(getClass().getResource("King_WalkCycle.ma"), asPolygonMesh);
 
             model = modelData.getRoot();
 
