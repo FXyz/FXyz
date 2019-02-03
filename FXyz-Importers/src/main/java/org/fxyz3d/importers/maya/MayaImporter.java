@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2013-2019, F(X)yz
  * Copyright (c) 2010, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -67,22 +68,6 @@ public class MayaImporter implements Importer {
     //        return rootCharacter;
     // }
 
-
-    public MayaGroup getRoot() {
-        return root;
-    }
-
-    //=========================================================================
-    // MayaImporter.getTimeline
-    //-------------------------------------------------------------------------
-    // MayaImporter.getTimeline() returns a JavaFX timeline
-    // (javafx.animation.Timeline)
-    //=========================================================================
-
-    public Timeline getTimeline() {
-        return timeline;
-    }
-
     //=========================================================================
     // MayaImporter.getMeshParents
     //=========================================================================
@@ -96,7 +81,7 @@ public class MayaImporter implements Importer {
         return new Model3D() {
             @Override
             public Optional<Timeline> getTimeline() {
-                return Optional.of(MayaImporter.this.getTimeline());
+                return Optional.of(MayaImporter.this.timeline);
             }
 
             @Override
@@ -112,7 +97,7 @@ public class MayaImporter implements Importer {
         return new Model3D() {
             @Override
             public Optional<Timeline> getTimeline() {
-                return Optional.of(MayaImporter.this.getTimeline());
+                return Optional.of(MayaImporter.this.timeline);
             }
 
             @Override

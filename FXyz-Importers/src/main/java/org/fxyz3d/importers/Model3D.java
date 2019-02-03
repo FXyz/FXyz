@@ -48,7 +48,7 @@ public class Model3D {
 
     /**
      * The root that may contain Node / MeshView / PolygonMeshView.
-     * You can add this root to your scene graph.
+     * This root can be added to the scene graph.
      *
      * @return root node
      */
@@ -94,6 +94,9 @@ public class Model3D {
         return new ArrayList<>(materials.values());
     }
 
+    /**
+     * @return animation timeline associated with this model
+     */
     public Optional<Timeline> getTimeline() {
         return Optional.empty();
     }
