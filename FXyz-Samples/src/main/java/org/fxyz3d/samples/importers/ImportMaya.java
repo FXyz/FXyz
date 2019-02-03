@@ -59,15 +59,13 @@ import org.fxyz3d.controls.NumberSliderControl;
 public class ImportMaya extends ShapeBaseSample<Node> {
 
     private final IntegerProperty subdivision = new SimpleIntegerProperty(this, "Subdivision Level", 0);
-    
-    private boolean asPolygonMesh = true;
 
     public static void main(String[] args){launch(args);}
     
     @Override
     protected void createMesh() {
         try {
-            Model3D modelData = Importer3D.loadIncludingAnimation(getClass().getResource("King_WalkCycle.ma"), asPolygonMesh);
+            Model3D modelData = Importer3D.loadAsPoly(getClass().getResource("King_WalkCycle.ma"));
 
             model = modelData.getRoot();
 

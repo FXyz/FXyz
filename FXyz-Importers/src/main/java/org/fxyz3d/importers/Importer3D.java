@@ -87,7 +87,7 @@ public final class Importer3D {
      * @return The loaded Node which could be a MeshView or a Group and the Timeline animation
      * @throws IOException if issue loading file
      */
-    public static Model3D loadIncludingAnimation(URL fileUrl, boolean asPolygonMesh) throws IOException {
+    private static Model3D loadIncludingAnimation(URL fileUrl, boolean asPolygonMesh) throws IOException {
         if (fileUrl == null)
             throw new IOException("URL is null");
 
