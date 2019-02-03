@@ -60,6 +60,8 @@ import org.fxyz3d.shapes.polygon.PolygonMeshView;
  */
 public class ObjImporter implements Importer {
 
+    private static final String SUPPORTED_EXT = "obj";
+
     private static boolean debug = false;
     private static float scale = 1;
     private static boolean flatXZ = false;
@@ -113,7 +115,7 @@ public class ObjImporter implements Importer {
 
     @Override
     public boolean isSupported(String extension) {
-        return extension != null && extension.equals("obj");
+        return SUPPORTED_EXT.equals(extension);
     }
 
     private ObjModel read(URL url, boolean asPolygon) throws IOException {
