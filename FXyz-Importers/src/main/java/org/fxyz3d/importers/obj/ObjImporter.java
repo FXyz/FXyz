@@ -50,7 +50,7 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import org.fxyz3d.importers.Importer;
-import org.fxyz3d.importers.Model;
+import org.fxyz3d.importers.Model3D;
 import org.fxyz3d.importers.SmoothingGroups;
 import org.fxyz3d.shapes.polygon.PolygonMesh;
 import org.fxyz3d.shapes.polygon.PolygonMeshView;
@@ -102,12 +102,12 @@ public class ObjImporter implements Importer {
     }
 
     @Override
-    public Model load(URL url) throws IOException {
+    public Model3D load(URL url) throws IOException {
         return read(url, false);
     }
 
     @Override
-    public Model loadAsPoly(URL url) throws IOException {
+    public Model3D loadAsPoly(URL url) throws IOException {
         return read(url, true);
     }
 
@@ -322,7 +322,7 @@ public class ObjImporter implements Importer {
         model.normals.add(z);
     }
 
-    private static class ObjModel extends Model {
+    private static class ObjModel extends Model3D {
 
         List<Map<String, Material>> materialLibrary = new ArrayList<>();
 

@@ -40,7 +40,7 @@ import java.util.*;
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-public class Model {
+public class Model3D {
 
     private final Group root = new Group();
     private final Map<String, Material> materials = new HashMap<>();

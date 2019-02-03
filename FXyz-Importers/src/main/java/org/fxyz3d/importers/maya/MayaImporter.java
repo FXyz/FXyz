@@ -45,7 +45,7 @@ import javafx.scene.DepthTest;
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import org.fxyz3d.importers.Model;
+import org.fxyz3d.importers.Model3D;
 
 /**
  * MayaImporter
@@ -91,9 +91,9 @@ public class MayaImporter implements Importer {
     }
 
     @Override
-    public Model load(URL url) throws IOException {
+    public Model3D load(URL url) throws IOException {
         load(url, false);
-        return new Model() {
+        return new Model3D() {
             @Override
             public Optional<Timeline> getTimeline() {
                 return Optional.of(MayaImporter.this.getTimeline());
@@ -107,9 +107,9 @@ public class MayaImporter implements Importer {
     }
 
     @Override
-    public Model loadAsPoly(URL url) throws IOException {
+    public Model3D loadAsPoly(URL url) throws IOException {
         load(url, true);
-        return new Model() {
+        return new Model3D() {
             @Override
             public Optional<Timeline> getTimeline() {
                 return Optional.of(MayaImporter.this.getTimeline());

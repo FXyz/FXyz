@@ -64,7 +64,7 @@ public final class Importer3D {
      * @return The loaded Node which could be a MeshView or a Group
      * @throws IOException if issue loading file
      */
-    public static Model load(URL fileUrl) throws IOException {
+    public static Model3D load(URL fileUrl) throws IOException {
         return loadIncludingAnimation(fileUrl, false);
     }
 
@@ -75,7 +75,7 @@ public final class Importer3D {
      * @return The loaded Node which could be a MeshView or a Group
      * @throws IOException if issue loading file
      */
-    public static Model loadAsPoly(URL fileUrl) throws IOException {
+    public static Model3D loadAsPoly(URL fileUrl) throws IOException {
         return loadIncludingAnimation(fileUrl, true);
     }
 
@@ -87,7 +87,7 @@ public final class Importer3D {
      * @return The loaded Node which could be a MeshView or a Group and the Timeline animation
      * @throws IOException if issue loading file
      */
-    public static Model loadIncludingAnimation(URL fileUrl, boolean asPolygonMesh) throws IOException {
+    public static Model3D loadIncludingAnimation(URL fileUrl, boolean asPolygonMesh) throws IOException {
         if (fileUrl == null)
             throw new IOException("URL is null");
 
@@ -145,7 +145,7 @@ public final class Importer3D {
         if (extension.equals("fxml")) {
             final Object fxmlRoot = FXMLLoader.load(fileUrl);
 
-            Model model = new Model();
+            Model3D model = new Model3D();
 
             if (fxmlRoot instanceof Node) {
                 model.addMeshView("default", (Node) fxmlRoot);

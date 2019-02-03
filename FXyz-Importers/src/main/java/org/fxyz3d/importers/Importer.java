@@ -44,7 +44,7 @@ public interface Importer {
      * @throws IOException If issue loading file
      * @return loaded 3d model
      */
-    Model load(URL url) throws IOException;
+    Model3D load(URL url) throws IOException;
 
     /**
      * Loads the 3D file as a polygonal mesh.
@@ -53,7 +53,7 @@ public interface Importer {
      * @throws IOException If issue loading file
      * @return loaded 3d poly model
      */
-    Model loadAsPoly(URL url) throws IOException;
+    Model3D loadAsPoly(URL url) throws IOException;
 
     /**
      * Tests if the given 3D file extension is supported (e.g. "ma", "ase",

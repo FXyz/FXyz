@@ -34,7 +34,7 @@ import javafx.scene.shape.MeshView;
 import static javafx.application.Application.launch;
 import org.fxyz3d.controls.factory.ControlFactory;
 import org.fxyz3d.importers.Importer3D;
-import org.fxyz3d.importers.Model;
+import org.fxyz3d.importers.Model3D;
 import org.fxyz3d.samples.shapes.ShapeBaseSample;
 import org.fxyz3d.shapes.polygon.PolygonMeshView;
 
@@ -49,7 +49,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Parent;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-import javafx.util.Pair;
 import org.fxyz3d.controls.ControlCategory;
 import org.fxyz3d.controls.NumberSliderControl;
 
@@ -68,7 +67,7 @@ public class ImportMaya extends ShapeBaseSample<Node> {
     @Override
     protected void createMesh() {
         try {
-            Model modelData = Importer3D.loadIncludingAnimation(getClass().getResource("King_WalkCycle.ma"), asPolygonMesh);
+            Model3D modelData = Importer3D.loadIncludingAnimation(getClass().getResource("King_WalkCycle.ma"), asPolygonMesh);
 
             model = modelData.getRoot();
 
