@@ -271,8 +271,8 @@ public class ObjImporter implements Importer {
             for (int i = 0; i < split.length; i++) {
                 String[] split2 = split[i].split("/");
                 faceIndexes[i*2] = model.vertexIndex(Integer.parseInt(split2[0]));
-                faceIndexes[(i*2)+1] = (split2.length > 1 && split2[1].length()>0) ? model.uvIndex(Integer.parseInt(split2[1])) : -1;
-                faceNormalIndexes[i] = (split2.length > 2 && split2[2].length()>0) ? model.normalIndex(Integer.parseInt(split2[2])) : -1;
+                faceIndexes[(i*2)+1] = (split2.length > 1 && split2[1].length() > 0) ? model.uvIndex(Integer.parseInt(split2[1])) : -1;
+                faceNormalIndexes[i] = (split2.length > 2 && split2[2].length() > 0) ? model.normalIndex(Integer.parseInt(split2[2])) : -1;
             }
 
             ((PolyObjModel) model).facesPolygon.add(faceIndexes);
@@ -282,11 +282,7 @@ public class ObjImporter implements Importer {
     }
 
     private static void parseS(String line, ObjModel model) {
-        if (line.substring(2).equals("off")) {
-            model.currentSmoothGroup = 0;
-        } else {
-            model.currentSmoothGroup = Integer.parseInt(line.substring(2));
-        }
+        model.currentSmoothGroup = line.substring(2).equals("off") ? 0 : Integer.parseInt(line.substring(2));
     }
 
     private static void parseMtllib(String line, ObjModel model) {
@@ -394,9 +390,7 @@ public class ObjImporter implements Importer {
         }
 
         void loadComplete() {
-            meshNames.forEach(meshName -> {
-                addMeshView(meshName, buildMeshView(meshName));
-            });
+            meshNames.forEach(meshName -> addMeshView(meshName, buildMeshView(meshName)));
         }
 
         void addMesh(String key) {

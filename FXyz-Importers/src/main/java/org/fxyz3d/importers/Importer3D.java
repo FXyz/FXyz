@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Objects;
 import java.util.ServiceLoader;
 
 /**
@@ -88,8 +89,7 @@ public final class Importer3D {
      * @throws IOException if issue loading file
      */
     private static Model3D loadIncludingAnimation(URL fileUrl, boolean asPolygonMesh) throws IOException {
-        if (fileUrl == null)
-            throw new IOException("URL is null");
+        Objects.requireNonNull(fileUrl, "URL must not be null");
 
         String extForm = fileUrl.toExternalForm();
 
@@ -149,11 +149,9 @@ public final class Importer3D {
 
             if (fxmlRoot instanceof Node) {
                 model.addMeshView("default", (Node) fxmlRoot);
-
                 return model;
             } else if (fxmlRoot instanceof TriangleMesh) {
                 model.addMeshView("default", new MeshView((TriangleMesh) fxmlRoot));
-
                 return model;
             }
 
