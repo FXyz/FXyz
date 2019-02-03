@@ -61,19 +61,11 @@ public class MayaImporter implements Importer {
     // javafx.scene.shape3d.Character rootCharacter = new javafx.scene.shape3d.Character();
     MayaGroup root = new MayaGroup();
     Timeline timeline;
-    Set<Node> meshParents = new HashSet<>();
 
     // NO_JOINTS
     // public javafx.scene.shape3d.Character getRootCharacter() {
     //        return rootCharacter;
     // }
-
-    //=========================================================================
-    // MayaImporter.getMeshParents
-    //=========================================================================
-    public Set<Node> getMeshParents() {
-        return meshParents;
-    }
 
     @Override
     public Model3D load(URL url) throws IOException {
