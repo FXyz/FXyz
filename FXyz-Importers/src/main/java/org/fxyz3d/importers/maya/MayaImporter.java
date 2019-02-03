@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2013-2019, F(X)yz
  * Copyright (c) 2010, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -31,11 +32,13 @@
  */
 package org.fxyz3d.importers.maya;
 
+import javafx.scene.Group;
 import org.fxyz3d.importers.Importer;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -43,13 +46,14 @@ import javafx.scene.DepthTest;
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import org.fxyz3d.importers.Model3D;
 
 /**
  * MayaImporter
  * <p/>
  * MayaImporter.getRoot() returns a JavaFX node hierarchy MayaImporter.getTimeline() returns a JavaFX timeline
  */
-public class MayaImporter extends Importer {
+public class MayaImporter implements Importer {
     public static final boolean DEBUG = Loader.DEBUG;
     public static final boolean WARN = Loader.WARN;
 
@@ -57,7 +61,6 @@ public class MayaImporter extends Importer {
     // javafx.scene.shape3d.Character rootCharacter = new javafx.scene.shape3d.Character();
     MayaGroup root = new MayaGroup();
     Timeline timeline;
-    Set<Node> meshParents = new HashSet<>();
 
     // NO_JOINTS
     // public javafx.scene.shape3d.Character getRootCharacter() {
@@ -65,36 +68,45 @@ public class MayaImporter extends Importer {
     // }
 
     @Override
-    public MayaGroup getRoot() {
-        return root;
+    public Model3D load(URL url) throws IOException {
+        load(url, false);
+        return new Model3D() {
+            @Override
+            public Optional<Timeline> getTimeline() {
+                return Optional.of(MayaImporter.this.timeline);
+            }
+
+            @Override
+            public Group getRoot() {
+                return MayaImporter.this.root;
+            }
+        };
     }
 
-    //=========================================================================
-    // MayaImporter.getTimeline
-    //-------------------------------------------------------------------------
-    // MayaImporter.getTimeline() returns a JavaFX timeline
-    // (javafx.animation.Timeline)
-    //=========================================================================
     @Override
-    public Timeline getTimeline() {
-        return timeline;
-    }
+    public Model3D loadAsPoly(URL url) throws IOException {
+        load(url, true);
+        return new Model3D() {
+            @Override
+            public Optional<Timeline> getTimeline() {
+                return Optional.of(MayaImporter.this.timeline);
+            }
 
-    //=========================================================================
-    // MayaImporter.getMeshParents
-    //=========================================================================
-    public Set<Node> getMeshParents() {
-        return meshParents;
+            @Override
+            public Group getRoot() {
+                return MayaImporter.this.root;
+            }
+        };
     }
 
     //=========================================================================
     // MayaImporter.load
     //=========================================================================
-    @Override
-    public void load(String url, boolean asPolygonMesh) {
+
+    private void load(URL url, boolean asPolygonMesh) {
         try {
             Loader loader = new Loader();
-            loader.load(new java.net.URL(url), asPolygonMesh);
+            loader.load(url, asPolygonMesh);
 
             // This root is not automatically added to the scene.
             // It needs to be added by the user of MayaImporter.

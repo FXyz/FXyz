@@ -1,7 +1,7 @@
 /**
  * ImportOBJ.java
  *
- * Copyright (c) 2013-2018, F(X)yz
+ * Copyright (c) 2013-2019, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,10 +62,7 @@ public class ImportOBJ extends ShapeBaseSample<Group> {
     @Override
     protected void createMesh() {
         try {
-            model = (Group) Importer3D.load(
-                    ImportOBJ.class.getResource("DukeKing.obj").toExternalForm(),
-                    asPolygonMesh);
-
+            model = Importer3D.loadAsPoly(getClass().getResource("DukeKing.obj")).getRoot();
         } catch (IOException ex) {
             Logger.getLogger(ImportOBJ.class.getName()).log(Level.SEVERE, null, ex);
         }
