@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package org.fxyz3d;
+package org.fxyz3d.samples;
 
 import javafx.scene.Node;
 import org.fxyz3d.model.WelcomePage;

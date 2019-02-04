@@ -1,7 +1,7 @@
 /**
  * ImportMaya.java
  *
- * Copyright (c) 2013-2018, F(X)yz
+ * Copyright (c) 2013-2019, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,10 @@ package org.fxyz3d.samples.importers;
 
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
+import static javafx.application.Application.launch;
 import org.fxyz3d.controls.factory.ControlFactory;
 import org.fxyz3d.importers.Importer3D;
+import org.fxyz3d.importers.Model3D;
 import org.fxyz3d.samples.shapes.ShapeBaseSample;
 import org.fxyz3d.shapes.polygon.PolygonMeshView;
 
@@ -47,7 +49,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Parent;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-import javafx.util.Pair;
 import org.fxyz3d.controls.ControlCategory;
 import org.fxyz3d.controls.NumberSliderControl;
 
@@ -58,20 +59,17 @@ import org.fxyz3d.controls.NumberSliderControl;
 public class ImportMaya extends ShapeBaseSample<Node> {
 
     private final IntegerProperty subdivision = new SimpleIntegerProperty(this, "Subdivision Level", 0);
-    
-    private boolean asPolygonMesh = true;
 
     public static void main(String[] args){launch(args);}
     
     @Override
     protected void createMesh() {
         try {
-            Pair<Node,Timeline> content = Importer3D.loadIncludingAnimation(ImportMaya.class.getResource("/org/fxyz3d/importers/King_WalkCycle.ma").toExternalForm(),
-                    asPolygonMesh);
-            model = content.getKey();
+            Model3D modelData = Importer3D.loadAsPoly(getClass().getResource("King_WalkCycle.ma"));
 
-            Timeline timeline = content.getValue();
-            if (timeline != null) {
+            model = modelData.getRoot();
+
+            modelData.getTimeline().ifPresent(timeline -> {
                 timeline.setCycleCount(Timeline.INDEFINITE);
                 timeline.play();
 
@@ -84,7 +82,7 @@ public class ImportMaya extends ShapeBaseSample<Node> {
                         }
                     }
                 });
-            }
+            });
         } catch (IOException ex) {
             Logger.getLogger(ImportMaya.class.getName()).log(Level.SEVERE, null, ex);
         }

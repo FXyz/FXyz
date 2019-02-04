@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2013-2019, F(X)yz
  * Copyright (c) 2010, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -46,7 +47,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
-import static org.fxyz3d.importers.obj.ObjImporter.log;
 
 /** Reader for OBJ file MTL material files. */
 public class MtlReader {
@@ -58,7 +58,7 @@ public class MtlReader {
         String fileUrl = baseUrl + filename;
         try {
             URL mtlUrl = new URL(fileUrl);
-            log("Reading material from filename = " + mtlUrl);
+            ObjImporter.log("Reading material from filename = " + mtlUrl);
             read(mtlUrl.openStream());
         } catch (FileNotFoundException ex) {
             System.err.println("No material file found for obj. ["+fileUrl+"]");
@@ -117,7 +117,7 @@ public class MtlReader {
                         10   Casts shadows onto invisible surfaces
                      */
                 } else {
-                    log("material line ignored for " + name + ": " + line);
+                    //log("material line ignored for " + name + ": " + line);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(MtlReader.class.getName()).log(Level.SEVERE, "Failed to parse line:" + line, ex);
@@ -131,7 +131,7 @@ public class MtlReader {
             if (!materials.containsKey(name)) {
                 materials.put(name, material);
             } else {
-                log("This material is already added. Ignoring " + name);
+                ObjImporter.log("This material is already added. Ignoring " + name);
             }
             material = new PhongMaterial(Color.WHITE);
         }
@@ -147,7 +147,7 @@ public class MtlReader {
 
     private Image loadImage(String filename) {
         filename = baseUrl + filename;
-        log("Loading image from " + filename);
+        ObjImporter.log("Loading image from " + filename);
         return new Image(filename);
     }
 

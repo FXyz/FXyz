@@ -1,29 +1,11 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-    }
-}
-
-plugins {
-    //id 'com.github.hierynomus.license' version '0.13.1'
-    id 'maven-publish'
-    id 'net.nemerosa.versioning' version '2.6.1'
-    id 'com.jfrog.bintray' version '1.8.4'
-    id 'com.github.ben-manes.versions' version '0.13.0'
-}
-
+apply plugin: 'maven-publish'
 apply from: 'gradle/publishing.gradle'
 
 repositories {
     jcenter()
 }
 
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 version = fxyz_sampler_version
-apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceCompatibility = '1.9'
 targetCompatibility = '1.9'
@@ -33,22 +15,8 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {    
-    if (JavaVersion.current().isJava9Compatible()) {
-        compile 'org.controlsfx:controlsfx:9.0.0'
-    } else {
-        compile 'org.controlsfx:controlsfx:8.40.14'
-    }
-    compile 'org.reactfx:reactfx:2.0-M5'    
-}
-
-compileJava {
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls,javafx.fxml,javafx.swing'
-        ]
-    }
-    options.encoding = "UTF-8"
+    implementation 'org.controlsfx:controlsfx:9.0.0'
+    implementation 'org.reactfx:reactfx:2.0-M5'    
 }
 
 javadoc {
@@ -79,9 +47,6 @@ shadowJar {
     mergeServiceFiles {
         include 'META-INF/services/org.fxyz3d.*'
     }
-    //transform(ServiceFileTransformer) {
-    //path = 'META-INF/services/org.fxyz3d.*'
-    //}
 }
 // sign all generated jars
 //signing {

@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package org.fxyz3d;
+package org.fxyz3d.samples;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -39,36 +39,32 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.fxyz3d.FXyzSamplerProject;
 import org.fxyz3d.model.WelcomePage;
 
 /**
  *
  * @author Jason Pollastrini aka jdub1581
  */
-public class FXyzProject implements FXyzSamplerProject{
+public class FXyzProject implements FXyzSamplerProject {
     
          
-    //@Override
     @Override
     public final String getProjectName() {
         return "FXyz-Samples";
     }
 
-    //@Override
     @Override
     public final String getSampleBasePackage() {
         return "org.fxyz3d.samples";
     }
 
-    //@Override
     @Override
     public WelcomePage getWelcomePage() {
         VBox vBox = new VBox();
         Parent logo = null;
         try {
-            //ImageView imgView = new ImageView();
-            //imgView.setStyle("-fx-image: url('org/controlsfx/samples/ControlsFX.png');");
-            logo = (Parent)FXMLLoader.load(getClass().getResource("client/Logo.fxml"));
+            logo = FXMLLoader.load(FXyzProject.class.getResource("Logo.fxml"));
         } catch (IOException ex) {
             Logger.getLogger(FXyzProject.class.getName()).log(Level.SEVERE, null, ex);
         }

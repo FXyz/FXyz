@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2019 F(X)yz
  * Copyright (c) 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,38 +33,34 @@
 package org.fxyz3d.importers;
 
 import java.io.IOException;
-import javafx.animation.Timeline;
-import javafx.scene.Group;
+import java.net.URL;
 
-public abstract class Importer {
+public interface Importer {
+
     /**
      * Loads the 3D file
      *
      * @param url The url of the 3D file to load
-     * @param asPolygonMesh When true load as a PolygonMesh if the loader
-     * supports.
      * @throws IOException If issue loading file
+     * @return loaded 3d model
      */
-    public abstract void load(String url, boolean asPolygonMesh) throws IOException;
+    Model3D load(URL url) throws IOException;
+
     /**
-     * Gets the 3D node that was loaded earlier through the load() call
-     * @return The loaded node
+     * Loads the 3D file as a polygonal mesh.
+     *
+     * @param url The url of the 3D file to load
+     * @throws IOException If issue loading file
+     * @return loaded 3d poly model
      */
-    public abstract Group getRoot();
+    Model3D loadAsPoly(URL url) throws IOException;
+
     /**
      * Tests if the given 3D file extension is supported (e.g. "ma", "ase",
      * "obj", "fxml", "dae").
      *
-     * @param supportType The file extension (e.g. "ma", "ase", "obj", "fxml",
-     * "dae")
+     * @param supportType The file extension (e.g. "ma", "ase", "obj", "fxml", "dae")
      * @return True if the extension is of a supported type. False otherwise.
      */
-    public abstract boolean isSupported(String supportType);
-    /**
-     * Can be overridden to return a timeline animation for the 3D file
-     * @return A timeline animation. Null if there is no timeline animation.
-     */
-    public Timeline getTimeline() {
-        return null;
-    }
+    boolean isSupported(String supportType);
 }

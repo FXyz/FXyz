@@ -107,12 +107,12 @@ publishing {
     }
 }
 
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
+def bintrayUsername = project.hasProperty('bintrayUsername') ? project.bintrayUsername : ''
+def bintrayApiKey = project.hasProperty('bintrayApiKey') ? project.bintrayApiKey : ''
 
 bintray {
-    user = project.bintrayUsername
-    key = project.bintrayApiKey
+    user = bintrayUsername
+    key = bintrayApiKey
     publications = ['mavenCustom']
     pkg {
         repo                  = publishing.bintray.repo

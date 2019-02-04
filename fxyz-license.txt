@@ -1,7 +1,7 @@
 /**
- * ${VRL-LICENSE-HEADER-FILE-NAME}
+ * ${title}
  *
- * Copyright (c) 2013-${VRL-LICENSE-HEADER-YEAR}, F(X)yz
+ * Copyright (c) ${yearSince}-${yearCurrent}, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
