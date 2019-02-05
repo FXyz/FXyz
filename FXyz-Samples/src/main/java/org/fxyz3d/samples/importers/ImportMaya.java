@@ -29,9 +29,20 @@
 
 package org.fxyz3d.samples.importers;
 
+import javafx.animation.Timeline;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.shape.CullFace;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-import static javafx.application.Application.launch;
+import org.fxyz3d.controls.ControlCategory;
+import org.fxyz3d.controls.NumberSliderControl;
 import org.fxyz3d.controls.factory.ControlFactory;
 import org.fxyz3d.importers.Importer3D;
 import org.fxyz3d.importers.Model3D;
@@ -41,16 +52,6 @@ import org.fxyz3d.shapes.polygon.PolygonMeshView;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.Timeline;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.Parent;
-import javafx.scene.shape.CullFace;
-import javafx.scene.shape.DrawMode;
-import org.fxyz3d.controls.ControlCategory;
-import org.fxyz3d.controls.NumberSliderControl;
 
 /**
  *
@@ -59,6 +60,8 @@ import org.fxyz3d.controls.NumberSliderControl;
 public class ImportMaya extends ShapeBaseSample<Node> {
 
     private final IntegerProperty subdivision = new SimpleIntegerProperty(this, "Subdivision Level", 0);
+
+    private final ObjectProperty<Timeline> timeline = new SimpleObjectProperty<>(this, "timeline");
 
     public static void main(String[] args){launch(args);}
     
@@ -69,16 +72,15 @@ public class ImportMaya extends ShapeBaseSample<Node> {
 
             model = modelData.getRoot();
 
-            modelData.getTimeline().ifPresent(timeline -> {
-                timeline.setCycleCount(Timeline.INDEFINITE);
-                timeline.play();
+             modelData.getTimeline().ifPresent(t -> {
+                timeline.set(t);
 
                 model.sceneProperty().addListener(new InvalidationListener() {
                     @Override
                     public void invalidated(Observable observable) {
                         if (model.getScene() == null) {
                             model.sceneProperty().removeListener(this);
-                            timeline.stop();
+                            timeline.set(null);
                         }
                     }
                 });
@@ -145,7 +147,8 @@ public class ImportMaya extends ShapeBaseSample<Node> {
                 ControlFactory.buildMeshViewCategory(
                         this.drawMode,
                         this.culling
-                ), geomControls);
+                ), geomControls,
+                ControlFactory.buildAnimationCategory(timeline));
         return controlPanel;
     }
 }
