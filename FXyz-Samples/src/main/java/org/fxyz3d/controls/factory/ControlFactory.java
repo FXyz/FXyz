@@ -32,6 +32,8 @@ package org.fxyz3d.controls.factory;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
+
+import javafx.animation.Timeline;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
@@ -39,22 +41,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
-import org.fxyz3d.controls.CheckBoxControl;
-import org.fxyz3d.controls.ColorPickControl;
-import org.fxyz3d.controls.ColorSliderControl;
-import org.fxyz3d.controls.ComboBoxControl;
-import org.fxyz3d.controls.ControlCategory;
-import org.fxyz3d.controls.ControlPanel;
-import org.fxyz3d.controls.ImagePreviewControl;
-import org.fxyz3d.controls.LightingControls;
-import org.fxyz3d.controls.NumberSliderControl;
-import org.fxyz3d.controls.ScriptFunction1DControl;
-import org.fxyz3d.controls.ScriptFunction2DControl;
-import org.fxyz3d.controls.ScriptFunction3DControl;
-import org.fxyz3d.controls.SectionLabel;
-import org.fxyz3d.controls.TextFieldControl;
-import org.fxyz3d.controls.TextureImage;
-import org.fxyz3d.controls.TextureTypeControl;
+import org.fxyz3d.controls.*;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.scene.paint.Patterns;
 import org.fxyz3d.scene.paint.Patterns.CarbonPatterns;
@@ -112,6 +99,11 @@ public final class ControlFactory {
     public static final ImagePreviewControl buildImageViewToggle(final Property<TextureImage> img, String name, final Collection<TextureImage> imgs) {
         return new ImagePreviewControl(img, name, imgs);
     }
+
+    public static final TimelineControl buildTimelineControl(final Property<Timeline> p, String name) {
+        return new TimelineControl(p, name);
+    }
+
     /*==========================================================================
      List like Items
      ==========================================================================*/
@@ -195,7 +187,16 @@ public final class ControlFactory {
         );
         return mvc;
     }
-    
+
+    public static ControlCategory buildAnimationCategory(final Property<Timeline> dmp) {
+        ControlCategory mvc = new ControlCategory("Animation");
+        mvc.addControls(
+                new SectionLabel("Animation"),
+                buildTimelineControl(dmp, "Timeline")
+        );
+        return mvc;
+    }
+
     /*
     
      */
