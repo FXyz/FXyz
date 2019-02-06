@@ -59,6 +59,7 @@ public class TimelineControl extends ControlBase<Property<Timeline>> {
     @FXML private Text currentTxt;
     @FXML private Text endTxt;
 
+    @FXML private HBox controls;
     @FXML private Button startBtn;
     @FXML private Button rwBtn;
     @FXML private ToggleButton playBtn;
@@ -89,12 +90,7 @@ public class TimelineControl extends ControlBase<Property<Timeline>> {
             }
             if (t == null) {
                 timelineDisplay.setVisible(false);
-                startBtn.setDisable(true);
-                rwBtn.setDisable(true);
-                playBtn.setDisable(true);
-                ffBtn.setDisable(true);
-                endBtn.setDisable(true);
-                loopBtn.setDisable(true);
+                controls.setDisable(true);
             } else {
                 timelineDisplay.setVisible(true);
                 currentTimeAsPercentage.bind(Bindings.createDoubleBinding(
@@ -110,12 +106,7 @@ public class TimelineControl extends ControlBase<Property<Timeline>> {
                         () -> progressBar.getWidth() * currentTimeAsPercentage.get(),
                         currentTimeAsPercentage));
 
-                startBtn.setDisable(false);
-                rwBtn.setDisable(false);
-                playBtn.setDisable(false);
-                ffBtn.setDisable(false);
-                endBtn.setDisable(false);
-                loopBtn.setDisable(false);
+                controls.setDisable(false);
                 playBtn.setSelected(t.getCurrentRate() != 0);
                 loopBtn.setSelected(t.getCycleDuration().equals(Timeline.INDEFINITE));
                 t.currentRateProperty().addListener(rateListener);
@@ -149,22 +140,10 @@ public class TimelineControl extends ControlBase<Property<Timeline>> {
                 timeline.pause();
             }
         });
-        ffBtn.setOnMousePressed(e -> {
-            Timeline timeline = getTimeline();
-            timeline.setRate(2);
-        });
-        ffBtn.setOnMouseReleased(e -> {
-            Timeline timeline = getTimeline();
-            timeline.setRate(1);
-        });
-        rwBtn.setOnMousePressed(e -> {
-            Timeline timeline = getTimeline();
-            timeline.setRate(-2);
-        });
-        rwBtn.setOnMouseReleased(e -> {
-            Timeline timeline = getTimeline();
-            timeline.setRate(1);
-        });
+        ffBtn.setOnMousePressed(e -> setTimelineRate(2));
+        ffBtn.setOnMouseReleased(e -> setTimelineRate(1));
+        rwBtn.setOnMousePressed(e -> setTimelineRate(-2));
+        rwBtn.setOnMouseReleased(e -> setTimelineRate(1));
         loopBtn.setOnAction(e -> {
             Timeline timeline = getTimeline();
             timeline.stop();
@@ -177,5 +156,9 @@ public class TimelineControl extends ControlBase<Property<Timeline>> {
         });
 
     }
-    
+
+    private void setTimelineRate(int rate) {
+        getTimeline().setRate(rate);
+    }
+
 }

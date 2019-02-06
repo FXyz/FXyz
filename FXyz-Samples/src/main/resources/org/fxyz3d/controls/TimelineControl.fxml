@@ -54,7 +54,7 @@
                   </VBox>
                </children>
             </StackPane>
-            <HBox id="playControls" alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
+            <HBox id="playControls" fx:id="controls" alignment="CENTER" prefHeight="-1.0" prefWidth="-1.0">
                <children>
                   <Button fx:id="startBtn" mnemonicParsing="false" styleClass="left-pill" text="|&lt;">
                      <graphic>
