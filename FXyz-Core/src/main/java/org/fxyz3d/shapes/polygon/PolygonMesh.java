@@ -41,17 +41,20 @@ import javafx.collections.ObservableIntegerArray;
  * can convert to using ObservableIntegerArray
  */
 public class PolygonMesh {
-    private final ObservableFloatArray points = FXCollections.observableFloatArray();
-    private final ObservableFloatArray texCoords = FXCollections.observableFloatArray();
+    private final ObservableFloatArray points;
+    private final ObservableFloatArray texCoords;
     public int[][] faces = new int[0][0];
     private final ObservableIntegerArray faceSmoothingGroups = FXCollections.observableIntegerArray();
     protected int numEdgesInFaces = -1; // TODO invalidate automatically by listening to faces (whenever it is an observable)
 
-    public PolygonMesh() {}
+    public PolygonMesh() {
+        points = FXCollections.observableFloatArray();
+        texCoords = FXCollections.observableFloatArray();
+    }
 
-    public PolygonMesh(float[] points, float[] texCoords, int[][] faces) {
-        this.points.addAll(points);
-        this.texCoords.addAll(texCoords);
+    public PolygonMesh(ObservableFloatArray points, ObservableFloatArray texCoords, int[][] faces) {
+        this.points = points;
+        this.texCoords = texCoords;
         this.faces = faces;
     }
 
