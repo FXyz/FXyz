@@ -88,11 +88,7 @@ public class TimelineControl extends ControlBase<Property<Timeline>> {
                 bar.prefWidthProperty().unbind();
                 old.currentRateProperty().removeListener(rateListener);
             }
-            if (t == null) {
-                timelineDisplay.setVisible(false);
-                controls.setDisable(true);
-            } else {
-                timelineDisplay.setVisible(true);
+            if (t != null) {
                 currentTimeAsPercentage.bind(Bindings.createDoubleBinding(
                         () ->  t.getCurrentTime().toMillis() / t.getCycleDuration().toMillis(),
                         t.currentTimeProperty(), t.cycleDurationProperty()));
@@ -106,7 +102,6 @@ public class TimelineControl extends ControlBase<Property<Timeline>> {
                         () -> progressBar.getWidth() * currentTimeAsPercentage.get(),
                         currentTimeAsPercentage));
 
-                controls.setDisable(false);
                 playBtn.setSelected(t.getCurrentRate() != 0);
                 loopBtn.setSelected(t.getCycleDuration().equals(Timeline.INDEFINITE));
                 t.currentRateProperty().addListener(rateListener);
@@ -118,6 +113,8 @@ public class TimelineControl extends ControlBase<Property<Timeline>> {
     public TimelineControl(Property<Timeline> prop, String name) {
         super("/org/fxyz3d/controls/TimelineControl.fxml", prop);
         timeline.bindBidirectional(prop);
+        controls.disableProperty().bind(timeline.isNull());
+        timelineDisplay.visibleProperty().bind(timeline.isNotNull());
         title.setText(name);
 
         background.setCache(true);
