@@ -32,7 +32,6 @@ module org.fxyz3d.importers {
     requires transitive javafx.graphics;
     requires transitive javafx.fxml;
     requires java.logging;
-    requires javafx.base;
     
     opens org.fxyz3d.importers to javafx.fxml;
     
