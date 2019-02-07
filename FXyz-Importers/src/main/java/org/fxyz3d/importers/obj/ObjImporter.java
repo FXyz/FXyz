@@ -234,6 +234,7 @@ public class ObjImporter implements Importer {
                 int vi = faces.get(i);
                 Integer nvi = vertexMap.putIfAbsent(vi, mesh.getPoints().size() / 3);
                 if (nvi == null) {
+                    nvi = mesh.getPoints().size() / 3;
                     mesh.getPoints().addAll(vertices, vi * 3, 3);
                 }
                 faces.set(i, nvi);
@@ -241,6 +242,7 @@ public class ObjImporter implements Importer {
                 int uvi = faces.get(i + 1);
                 Integer nuvi = uvMap.putIfAbsent(uvi, mesh.getTexCoords().size() / 2);
                 if (nuvi == null) {
+                    nuvi = mesh.getTexCoords().size() / 2;
                     if (uvi >= 0) {
                         mesh.getTexCoords().addAll(uvs, uvi * 2 , 2);
                     } else {
@@ -253,6 +255,7 @@ public class ObjImporter implements Importer {
                     int ni = faceNormals.get(i/2);
                     Integer nni = normalMap.putIfAbsent(ni, newNormals.size() / 3);
                     if (nni == null) {
+                        nni = newNormals.size() / 3;
                         if (ni >= 0 && normals.size() >= (ni + 1) * 3) {
                             newNormals.addAll(normals, ni * 3, 3);
                         } else {
@@ -488,6 +491,7 @@ public class ObjImporter implements Importer {
                     int vi = faceIndexes[j];
                     Integer nvi = vertexMap.putIfAbsent(vi, mesh.getPoints().size() / 3);
                     if (nvi == null) {
+                        nvi = mesh.getPoints().size() / 3;
                         mesh.getPoints().addAll(vertices, vi * 3, 3);
                     }
                     faceIndexes[j] = nvi;
@@ -496,6 +500,7 @@ public class ObjImporter implements Importer {
                     int uvi = faceIndexes[j+1];
                     Integer nuvi = uvMap.putIfAbsent(uvi, mesh.getTexCoords().size() / 2);
                     if (nuvi == null) {
+                        nuvi = mesh.getTexCoords().size() / 2;
                         if (uvi >= 0) {
                             mesh.getTexCoords().addAll(uvs, uvi * 2 , 2);
                         } else {
@@ -508,6 +513,7 @@ public class ObjImporter implements Importer {
                     int ni = faceNormalIndexes[j/2];
                     Integer nni = normalMap.putIfAbsent(ni, newNormals.size() / 3);
                     if (nni == null) {
+                        nni = newNormals.size() / 3;
                         if (ni >= 0 && normals.size() >= (ni + 1) * 3) {
                             newNormals.addAll(normals, ni * 3, 3);
                         } else {
