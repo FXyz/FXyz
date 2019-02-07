@@ -481,8 +481,8 @@ public class ObjImporter implements Importer {
             Map<Integer, Integer> uvMap = new HashMap<>(uvs.size() / 2);
             Map<Integer, Integer> normalMap = new HashMap<>(normals.size() / 2);
 
-            mesh.faces = new int[facesPolygon.size()-facesStart][];
-            int[][] faceNormalArrays = new int[faceNormalsPolygon.size()-facesNormalStart][];
+            mesh.setFaces(new int[facesPolygon.size() - facesStart][]);
+            int[][] faceNormalArrays = new int[faceNormalsPolygon.size() - facesNormalStart][];
 
             for (int i = facesStart; i < facesPolygon.size(); i++) {
                 int[] faceIndexes = facesPolygon.get(i);
@@ -523,14 +523,14 @@ public class ObjImporter implements Importer {
                     }
                     faceNormalIndexes[j/2] = nni;
                 }
-                mesh.faces[i-facesStart] = faceIndexes;
+                mesh.getFaces()[i-facesStart] = faceIndexes;
                 faceNormalArrays[i-facesNormalStart] = faceNormalIndexes;
             }
 
             // Use normals if they are provided
             if (useNormals) {
                 float[] normalsArray = newNormals.toArray(new float[newNormals.size()]);
-                int[] smGroups = SmoothingGroups.calcSmoothGroups(mesh.faces, faceNormalArrays, normalsArray);
+                int[] smGroups = SmoothingGroups.calcSmoothGroups(mesh.getFaces(), faceNormalArrays, normalsArray);
                 mesh.getFaceSmoothingGroups().setAll(smGroups);
             } else {
                 int length = smoothingGroups.size() - smoothingGroupsStart;
@@ -541,7 +541,7 @@ public class ObjImporter implements Importer {
                 System.out.println("mesh.points = " + mesh.getPoints());
                 System.out.println("mesh.texCoords = " + mesh.getTexCoords());
                 System.out.println("mesh.faces: ");
-                for (int[] face: mesh.faces) {
+                for (int[] face: mesh.getFaces()) {
                     System.out.println("    face:: " + Arrays.toString(face));
                 }
             }
@@ -558,7 +558,7 @@ public class ObjImporter implements Importer {
 
             log("Added mesh '" + key + "' of " + (mesh.getPoints().size()/3) + " vertices, "
                     + (mesh.getTexCoords().size()/2) + " uvs, "
-                    + mesh.faces.length + " faces, "
+                    + mesh.getFaces().length + " faces, "
                     + 0 + " smoothing groups.");
             log("material diffuse color = " + ((PhongMaterial) material).getDiffuseColor());
             log("material diffuse map = " + ((PhongMaterial) material).getDiffuseMap());

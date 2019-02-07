@@ -43,13 +43,16 @@ import javafx.collections.ObservableIntegerArray;
 public class PolygonMesh {
     private final ObservableFloatArray points;
     private final ObservableFloatArray texCoords;
-    public int[][] faces = new int[0][0];
+    private int[][] faces;
     private final ObservableIntegerArray faceSmoothingGroups = FXCollections.observableIntegerArray();
     protected int numEdgesInFaces = -1; // TODO invalidate automatically by listening to faces (whenever it is an observable)
 
     public PolygonMesh() {
-        points = FXCollections.observableFloatArray();
-        texCoords = FXCollections.observableFloatArray();
+        this(FXCollections.observableFloatArray(), FXCollections.observableFloatArray(), new int[0][0]);
+    }
+
+    public PolygonMesh(float[] points, float[] texCoords, int[][] faces) {
+        this(FXCollections.observableFloatArray(points), FXCollections.observableFloatArray(texCoords), faces);
     }
 
     public PolygonMesh(ObservableFloatArray points, ObservableFloatArray texCoords, int[][] faces) {
@@ -64,6 +67,14 @@ public class PolygonMesh {
 
     public ObservableFloatArray getTexCoords() {
         return texCoords;
+    }
+
+    public int[][] getFaces() {
+        return faces;
+    }
+
+    public void setFaces(int[][] faces) {
+        this.faces = faces;
     }
 
     public ObservableIntegerArray getFaceSmoothingGroups() {

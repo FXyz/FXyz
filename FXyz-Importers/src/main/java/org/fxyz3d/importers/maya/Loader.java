@@ -1726,7 +1726,7 @@ class Loader {
             PolygonMesh mesh = new PolygonMesh();
             mesh.getPoints().setAll(points);
             mesh.getTexCoords().setAll(texCoords);
-            mesh.faces = facesArray;
+            mesh.setFaces(facesArray);
             mesh.getFaceSmoothingGroups().setAll(smGroups);
             return mesh;
         } else {
