@@ -130,7 +130,7 @@ public class SubdivisionMesh extends PolygonMesh {
         }
 
         if (subdivisionLevelDirty) {
-            faces = symbolicMeshes.get(subdivisionLevel).faces;
+            setFaces(symbolicMeshes.get(subdivisionLevel).faces);
             numEdgesInFaces = -1;
             getFaceSmoothingGroups().setAll(symbolicMeshes.get(subdivisionLevel).faceSmoothingGroups);
             getTexCoords().setAll(symbolicMeshes.get(subdivisionLevel).texCoords);

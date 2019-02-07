@@ -255,7 +255,7 @@ public class PolygonMeshView extends Parent {
 
     private void updateMesh() {
         PolygonMesh pmesh = getMesh();
-        if (pmesh == null || pmesh.faces == null) {
+        if (pmesh == null || pmesh.getFaces() == null) {
             triangleMesh = new TriangleMesh();
             meshView.setMesh(triangleMesh);
             return;
@@ -282,7 +282,7 @@ public class PolygonMeshView extends Parent {
                 int [] facesArray = new int [pmesh.getNumEdgesInFaces() * faceElementSize];
                 int facesInd = 0;
                 int pointsInd = pmesh.getPoints().size();
-                for(int[] face: pmesh.faces) {
+                for(int[] face: pmesh.getFaces()) {
                     if (DEBUG) System.out.println("face.length = " + (face.length/2)+"  -- "+Arrays.toString(face));
                     int lastPointIndex = face[face.length-2];
                     if (DEBUG) System.out.println("    lastPointIndex = " + lastPointIndex);
@@ -316,7 +316,7 @@ public class PolygonMeshView extends Parent {
 
                 // add point for each edge
                 int pointsInd = pmesh.getPoints().size();
-                for(int[] face: pmesh.faces) {
+                for(int[] face: pmesh.getFaces()) {
                     int lastPointIndex = face[face.length-2];
                     for (int p=0;p<face.length;p+=2) {
                         int pointIndex = face[p];
@@ -349,13 +349,13 @@ public class PolygonMeshView extends Parent {
             if (facesDirty) {
                 facesDirty = false;
                 // create faces and break into triangles
-                final int numOfFacesBefore = pmesh.faces.length;
+                final int numOfFacesBefore = pmesh.getFaces().length;
                 final int numOfFacesAfter = pmesh.getNumEdgesInFaces() - 2*numOfFacesBefore;
                 int [] facesArray = new int [numOfFacesAfter * faceElementSize];
                 int [] smoothingGroupsArray = new int [numOfFacesAfter];
                 int facesInd = 0;
-                for(int f = 0; f < pmesh.faces.length; f++) {
-                    int[] face = pmesh.faces[f];
+                for(int f = 0; f < pmesh.getFaces().length; f++) {
+                    int[] face = pmesh.getFaces()[f];
                     int currentSmoothGroup = pmesh.getFaceSmoothingGroups().get(f);
                     if (DEBUG) System.out.println("face.length = " + face.length+"  -- "+Arrays.toString(face));
                     int firstPointIndex = face[0];
