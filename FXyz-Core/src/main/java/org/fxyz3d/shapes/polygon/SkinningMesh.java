@@ -76,7 +76,7 @@ public class SkinningMesh extends PolygonMesh {
     public SkinningMesh(PolygonMesh mesh, float[][] weights, Affine[] bindTransforms, Affine bindGlobalTransform, List<Joint> joints, List<Parent> jointForest) {
         this.getPoints().addAll(mesh.getPoints());
         this.getTexCoords().addAll(mesh.getTexCoords());
-        this.faces = mesh.faces;
+        this.setFaces(mesh.getFaces());
         this.getFaceSmoothingGroups().addAll(mesh.getFaceSmoothingGroups());
 
         this.weights = weights;

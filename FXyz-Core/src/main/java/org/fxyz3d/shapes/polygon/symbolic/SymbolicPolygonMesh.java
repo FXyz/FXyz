@@ -54,7 +54,7 @@ public class SymbolicPolygonMesh {
     public SymbolicPolygonMesh(PolygonMesh mesh) {
         this.points = new OriginalPointArray(mesh);
         this.texCoords = mesh.getTexCoords().toArray(this.texCoords);
-        this.faces = mesh.faces;
+        this.faces = mesh.getFaces();
         this.faceSmoothingGroups = mesh.getFaceSmoothingGroups().toArray(null);
     }
 
