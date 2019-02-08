@@ -49,6 +49,8 @@ class ObjImporterTest {
     @Test
     void testExtensions() {
         assertTrue(importer.isSupported("obj"));
+        assertTrue(importer.isSupported("OBJ"));
+        assertFalse(importer.isSupported(null));
     }
 
     @Test
