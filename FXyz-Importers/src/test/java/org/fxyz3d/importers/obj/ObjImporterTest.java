@@ -28,7 +28,12 @@
  */
 package org.fxyz3d.importers.obj;
 
+import javafx.scene.Node;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
 import org.fxyz3d.importers.Model3D;
+import org.fxyz3d.shapes.polygon.PolygonMesh;
+import org.fxyz3d.shapes.polygon.PolygonMeshView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,15 +66,24 @@ class ObjImporterTest {
         assertEquals(1, model.getMeshNames().size());
         assertTrue(model.getMeshNames().contains("cube"));
         assertSame(model.getMeshView("cube"), model.getRoot().getChildren().get(0));
+
+        for (Node n : model.getMeshViews()) {
+            assertTrue(n instanceof MeshView);
+            assertTrue(((MeshView) n).getMesh() instanceof TriangleMesh);
+        }
     }
 
     @Test
     void testLoadAsPoly() throws Exception {
-        Model3D model = importer.load(getClass().getResource("duke_king_poly.obj"));
+        Model3D model = importer.loadAsPoly(getClass().getResource("duke_king_poly.obj"));
 
         assertEquals(9, model.getRoot().getChildren().size());
         assertEquals(9, model.getMeshNames().size());
         assertEquals(9, model.getMeshViews().size());
+
+        for (Node n : model.getMeshViews()) {
+            assertTrue(n instanceof PolygonMeshView);
+        }
     }
 
     @Test
