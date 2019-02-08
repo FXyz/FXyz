@@ -64,6 +64,15 @@ class ObjImporterTest {
     }
 
     @Test
+    void testLoadAsPoly() throws Exception {
+        Model3D model = importer.load(getClass().getResource("duke_king_poly.obj"));
+
+        assertEquals(9, model.getRoot().getChildren().size());
+        assertEquals(9, model.getMeshNames().size());
+        assertEquals(9, model.getMeshViews().size());
+    }
+
+    @Test
     void testLoadMaterial() throws Exception {
         Model3D model = importer.load(getClass().getResource("cube_with_mtl.obj"));
 
