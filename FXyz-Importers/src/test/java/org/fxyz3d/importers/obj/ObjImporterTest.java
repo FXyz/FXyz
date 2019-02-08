@@ -76,7 +76,19 @@ class ObjImporterTest {
     void testLoadMaterial() throws Exception {
         Model3D model = importer.load(getClass().getResource("cube_with_mtl.obj"));
 
-        assertEquals(6, model.getMeshNames().size());
         assertEquals(6, model.getMaterials().size());
+    }
+
+    @Test
+    void testMeshes() throws Exception {
+        Model3D model = importer.load(getClass().getResource("cube_with_mtl.obj"));
+
+        assertEquals(6, model.getMeshNames().size());
+        assertNotNull(model.getMeshView("front"));
+        assertNotNull(model.getMeshView("back"));
+        assertNotNull(model.getMeshView("top"));
+        assertNotNull(model.getMeshView("bottom"));
+        assertNotNull(model.getMeshView("left"));
+        assertNotNull(model.getMeshView("right"));
     }
 }
