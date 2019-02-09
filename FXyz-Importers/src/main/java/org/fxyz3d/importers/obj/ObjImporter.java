@@ -105,7 +105,7 @@ public class ObjImporter implements Importer {
 
     @Override
     public boolean isSupported(String extension) {
-        return SUPPORTED_EXT.equals(extension);
+        return SUPPORTED_EXT.equalsIgnoreCase(extension);
     }
 
     private ObjModel read(URL url, boolean asPolygon) {

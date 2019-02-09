@@ -44,7 +44,9 @@ subprojects {
         implementation ('eu.mihosoft.vrl.jcsg:jcsg:0.5.7') { transitive = false }
         implementation 'eu.mihosoft.vvecmath:vvecmath:0.3.8'
         implementation 'org.orbisgis:poly2tri-core:0.1.2'
-        testCompile 'junit:junit:[4,)'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params:5.3.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
     }
     
     javafx {
@@ -93,5 +95,14 @@ subprojects {
         ext.yearSince       = '2013'
 
         excludes(['**/*.txt', '**/*.html', '**/*.fxml', '**/*.css', '**/*.obj', '**/*.mtl', '**/*.ma', '**/*.png', '**/*.gif', '**/*.jpg'])
+    }
+
+    test {
+        useJUnitPlatform()
+
+        testLogging {
+            events "failed"
+            exceptionFormat "full"
+        }
     }
 }
