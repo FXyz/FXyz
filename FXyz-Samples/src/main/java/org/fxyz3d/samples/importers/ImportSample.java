@@ -1,5 +1,5 @@
 /**
- * ImportOBJ.java
+ * ImportSample.java
  *
  * Copyright (c) 2013-2019, F(X)yz
  * All rights reserved.
