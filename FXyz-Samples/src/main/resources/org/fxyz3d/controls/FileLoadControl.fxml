@@ -19,12 +19,12 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="imagePathTf" prefWidth="30.0" HBox.hgrow="ALWAYS">
+            <TextField fx:id="filePathTf" prefWidth="30.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets right="1.0" />
                </HBox.margin>
             </TextField>
-            <Button mnemonicParsing="false" onAction="#chooseImage" text="..." HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#chooseFile" text="..." HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

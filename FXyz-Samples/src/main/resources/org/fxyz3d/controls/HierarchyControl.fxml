@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root maxHeight="-Infinity" maxWidth="1.7976931348623157E308" type="StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER_LEFT" StackPane.alignment="CENTER_LEFT">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <children>
+            <Label text="Node Hierarchy" />
+            <TreeTableView fx:id="hierarchyTreeTable" editable="true" prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                 <TreeTableColumn fx:id="nodeColumn" editable="false" prefWidth="75.0" sortable="false" text="Node" />
+                 <TreeTableColumn fx:id="idColumn" editable="false" prefWidth="75.0" text="Id" />
+                 <TreeTableColumn fx:id="visibilityColumn" editable="true" text="Visible" />
+              </columns>
+            </TreeTableView>
+         </children>
+      </VBox>
+   </children>
+</fx:root>

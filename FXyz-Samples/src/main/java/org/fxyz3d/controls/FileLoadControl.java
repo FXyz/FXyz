@@ -1,7 +1,7 @@
 /**
  * FileLoadControl.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2019, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,26 +29,45 @@
 
 package org.fxyz3d.controls;
 
+import javafx.beans.property.Property;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * FXML Controller class
  *
- * @author Jason Pollastrini aka jdub1581
+ * @author Jose Pereda
  */
-public class FileLoadControl  extends StackPane{
-    @FXML
-    private Label prefixLb;
-    @FXML
-    private TextField imagePathTf;
-  
+public class FileLoadControl extends ControlBase<Property<URL>> {
+
+    @FXML private TextField filePathTf;
+
+    public FileLoadControl(Property<URL> prop) {
+        super("/org/fxyz3d/controls/FileLoadControl.fxml", prop);
+        filePathTf.setEditable(false);
+    }
 
     @FXML
-    private void chooseImage(ActionEvent event) {
+    private void chooseFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        File file = fileChooser.showOpenDialog(filePathTf.getScene().getWindow());
+        if (file != null) {
+            filePathTf.setText(file.getAbsolutePath());
+            try {
+                controlledProperty.setValue(file.toURI().toURL());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
     }
-    
+
 }

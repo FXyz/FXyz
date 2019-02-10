@@ -29,6 +29,7 @@
 
 package org.fxyz3d.controls.factory;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Function;
@@ -37,6 +38,7 @@ import javafx.animation.Timeline;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -102,6 +104,14 @@ public final class ControlFactory {
 
     public static final TimelineControl buildTimelineControl(final Property<Timeline> p, String name) {
         return new TimelineControl(p, name);
+    }
+
+    public static final FileLoadControl buildFileLoadControl(final Property<URL> p) {
+        return new FileLoadControl(p);
+    }
+
+    public static final HierarchyControl buildHierarchyControl(final Property<Node> p) {
+        return new HierarchyControl(p);
     }
 
     /*==========================================================================
