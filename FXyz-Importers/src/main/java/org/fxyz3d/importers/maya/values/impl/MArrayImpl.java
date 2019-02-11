@@ -35,7 +35,6 @@ package org.fxyz3d.importers.maya.values.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.fxyz3d.importers.maya.MayaImporter;
 import org.fxyz3d.importers.maya.types.MArrayType;
 import org.fxyz3d.importers.maya.values.MArray;
 import org.fxyz3d.importers.maya.values.MData;
