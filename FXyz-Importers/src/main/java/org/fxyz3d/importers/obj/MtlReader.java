@@ -32,17 +32,16 @@
  */
 package org.fxyz3d.importers.obj;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.stream.Stream;
+
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
@@ -54,87 +53,143 @@ public class MtlReader {
     private String baseUrl;
 
     public MtlReader(String filename, String parentUrl) {
-        baseUrl = parentUrl.substring(0,parentUrl.lastIndexOf('/')+1);
+        baseUrl = parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1);
         String fileUrl = baseUrl + filename;
-        try {
-            URL mtlUrl = new URL(fileUrl);
-            ObjImporter.log("Reading material from filename = " + mtlUrl);
-            read(mtlUrl.openStream());
-        } catch (FileNotFoundException ex) {
-            System.err.println("No material file found for obj. ["+fileUrl+"]");
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        try (Stream<String> line = Files.lines(Paths.get(new URI(fileUrl)))) {
+            line.map(String::trim).filter(l -> !l.isEmpty() && !l.startsWith("#")).forEach(this::parse);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 
     private Map<String, Material> materials = new HashMap<>();
-    private PhongMaterial material = new PhongMaterial();
-    private boolean modified = false;
+    private PhongMaterial currentMaterial;
 
-    private void read(InputStream inputStream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        String name = "default";
-        while ((line = br.readLine()) != null) {
-            try {
-                if (line.isEmpty() || line.startsWith("#")) {
-                    // comments and empty lines are ignored
-                } else if (line.startsWith("newmtl ")) {
-                    addMaterial(name);
-                    name = line.substring("newmtl ".length());
-                } else if (line.startsWith("Kd ")) {
-                    material.setDiffuseColor(readColor(line.substring(3)));
-                    modified = true;
-                } else if (line.startsWith("Ks ")) {
-                    material.setSpecularColor(readColor(line.substring(3)));
-                    modified = true;
-                } else if (line.startsWith("Ns ")) {
-                    material.setSpecularPower(Double.parseDouble(line.substring(3)));
-                    modified = true;
-                } else if (line.startsWith("map_Kd ")) {
-                    material.setDiffuseColor(Color.WHITE);
-                    material.setDiffuseMap(loadImage(line.substring("map_Kd ".length())));
-//                    material.setSelfIlluminationMap(loadImage(line.substring("map_Kd ".length())));
-//                    material.setSpecularColor(Color.WHITE);
-                    modified = true;
-                    //            } else if (line.startsWith("illum ")) {
-                    //                int illumNo = Integer.parseInt(line.substring("illum ".length()));
-                    /*
-                        0    Color on and Ambient off
-                        1    Color on and Ambient on
-                        2    Highlight on
-                        3    Reflection on and Ray trace on
-                        4    Transparency: Glass on
-                             Reflection: Ray trace on
-                        5    Reflection: Fresnel on and Ray trace on
-                        6    Transparency: Refraction on
-                             Reflection: Fresnel off and Ray trace on
-                        7    Transparency: Refraction on
-                             Reflection: Fresnel on and Ray trace on
-                        8    Reflection on and Ray trace off
-                        9    Transparency: Glass on
-                             Reflection: Ray trace off
-                        10   Casts shadows onto invisible surfaces
-                     */
-                } else {
-                    //log("material line ignored for " + name + ": " + line);
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(MtlReader.class.getName()).log(Level.SEVERE, "Failed to parse line:" + line, ex);
+    // mtl format spec: http://paulbourke.net/dataformats/mtl/
+    private enum ParseKey {
+
+        // Material Name
+        NEW_MATERIAL("newmtl") {
+            @Override
+            protected void parse(String value, MtlReader reader) {
+                reader.parseNewMaterial(value);
             }
+        },
+        
+        // Material color and illumination
+        AMBIENT_REFLECTIVITY ("Ka"),
+        DIFFUSE_REFLECTIVITY ("Kd") {
+            @Override
+            protected void parse(String value, MtlReader reader) {
+                reader.parseDiffuseReflectivity(value);
+            }
+        },
+        SPECULAR_REFLECTIVITY("Ks") {
+            @Override
+            protected void parse(String value, MtlReader reader) {
+                reader.parseSpecularReflectivity(value);
+            }
+        },
+        SPECULAR_EXPONENT    ("Ns") {
+            @Override
+            protected void parse(String value, MtlReader reader) {
+                reader.parseSpecularExponent(value);
+            }
+        },
+        TRANSMISION_FILTER   ("Tf"),
+        ILLUMINATION_MODEL   ("illum"),
+        DISSOLVE             ("d"),
+        TRANSPARENCY         ("Tr"),
+        SHARPNESS            ("sharpness"),
+        OPTICAL_DENSITY      ("Ni"),
+
+        // Material texture map
+        AMBIENT_REFLECTIVITY_MAP ("map_Ka"),
+        DIFFUSE_REFLECTIVITY_MAP ("map_Kd") {
+            @Override
+            protected void parse(String value, MtlReader reader) {
+                reader.parseDiffuseReflectivityMap(value);
+            }
+        },
+        SPECULAR_REFLECTIVITY_MAP("map_Ks") {
+            @Override
+            protected void parse(String value, MtlReader reader) {
+                reader.parseSpecularReflectivityMap(value);
+            }
+        },
+        SPECULAR_EXPONENT_MAP    ("map_Ns"),
+        DISSOLVE_MAP             ("map_d"),
+        DISPLACEMENT_MAP         ("disp"),
+        DECAL_STENCIL_MAP        ("decal"),
+        BUMP_MAP                 ("bump") {
+            @Override
+            protected void parse(String value, MtlReader reader) {
+                reader.parseBumpMap(value);
+            }
+        },
+        REFLECTION_MAP           ("refl"),
+        ANTI_ALIASING            ("map_aat");
+
+        private String key;
+
+        private ParseKey(String key) {
+            this.key = key;
         }
-        addMaterial(name);
+
+        protected void parse(String value, MtlReader reader) {
+            reader.parseIgnore(toString() + " (" + key +")");
+        }
+
+        boolean testAndParse(String line, MtlReader reader) {
+            if (line.startsWith(key + " ")) {
+                parse(line.substring(key.length() + 1), reader);
+                return true;
+            }
+            return false;
+        }
     }
 
-    private void addMaterial(String name) {
-        if (modified) {
-            if (!materials.containsKey(name)) {
-                materials.put(name, material);
-            } else {
-                ObjImporter.log("This material is already added. Ignoring " + name);
+    private void parseIgnore(String nameAndKey) {
+        ObjImporter.log(nameAndKey + " is not supported. Ignoring.");
+    }
+
+    private void parseNewMaterial(String line) {
+        currentMaterial = new PhongMaterial();
+        materials.put(line, currentMaterial);
+//      TODO: ignore duplicates? ObjImporter.log("This material is already added. Ignoring " + line);
+    }
+    
+    private void parseDiffuseReflectivity(String value) {
+        currentMaterial.setDiffuseColor(readColor(value));
+    }
+
+    private void parseSpecularReflectivity(String value) {
+        currentMaterial.setSpecularColor(readColor(value));
+    }
+
+    private void parseSpecularExponent(String value) {
+        currentMaterial.setSpecularPower(Double.parseDouble(value));
+    }
+
+    private void parseDiffuseReflectivityMap(String value) {
+        currentMaterial.setDiffuseMap(loadImage(value));
+    }
+
+    private void parseSpecularReflectivityMap(String value) {
+        currentMaterial.setSpecularMap(loadImage(value));
+    }
+
+    private void parseBumpMap(String value) {
+        currentMaterial.setBumpMap(loadImage(value));
+    }
+
+    private void parse(String line) {
+        for (ParseKey parseKey : ParseKey.values()) {
+            if (parseKey.testAndParse(line, this)) {
+                return;
             }
-            material = new PhongMaterial(Color.WHITE);
         }
+        ObjImporter.log("No parser found for: " + line);
     }
 
     private Color readColor(String line) {
