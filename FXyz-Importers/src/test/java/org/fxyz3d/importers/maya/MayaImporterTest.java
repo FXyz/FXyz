@@ -28,6 +28,8 @@
  */
 package org.fxyz3d.importers.maya;
 
+import javafx.scene.Group;
+import javafx.scene.Node;
 import org.fxyz3d.importers.Model3D;
 import org.fxyz3d.importers.RunWithFX;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,5 +65,10 @@ class MayaImporterTest {
         assertEquals(1, model.getRoot().getChildren().size());
         assertEquals(1, model.getMeshNames().size());
         assertTrue(model.getTimeline().isPresent());
+        assertEquals(1, model.getMeshViews().size());
+
+        for (Node n : model.getMeshViews()) {
+            assertTrue(n instanceof Group);
+        }
     }
 }

@@ -41,8 +41,7 @@ import org.fxyz3d.importers.maya.values.MArray;
 import org.fxyz3d.importers.maya.values.MData;
 
 public class MArrayImpl extends MDataImpl implements MArray {
-    public static final boolean DEBUG = MayaImporter.DEBUG;
-    public static final boolean WARN = MayaImporter.WARN;
+    public static final boolean WARN = false;
 
     List<MData> data = new ArrayList<>();
 

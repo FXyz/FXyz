@@ -33,7 +33,6 @@
 package org.fxyz3d.importers.maya;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.DepthTest;
 import javafx.scene.Node;
@@ -46,13 +45,13 @@ import org.fxyz3d.importers.Model3D;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Maya Importer with support for Maya "ma" format.
  */
 public class MayaImporter implements Importer {
-    public static final boolean DEBUG = Loader.DEBUG;
-    public static final boolean WARN = Loader.WARN;
 
     private static final String SUPPORTED_EXT = "ma";
 
@@ -81,9 +80,8 @@ public class MayaImporter implements Importer {
             if (n != null) {
                 // Only add a node if it has no parents, ie. top level node
                 if (n.getParent() == null) {
-                    if (Loader.DEBUG) {
-                        System.out.println("Adding top level node " + n.getId() + " to root!");
-                    }
+                    log("Adding top level node " + n.getId() + " to root!");
+
                     n.setDepthTest(DepthTest.ENABLE);
                     if (!(n instanceof MeshView) || ((TriangleMesh)((MeshView)n).getMesh()).getPoints().size() > 0) {
                         mayaRoot.getChildren().add(n);
@@ -93,9 +91,7 @@ public class MayaImporter implements Importer {
             }
         }
         // rootCharacter.setRootJoint(loader.rootJoint);
-        if (Loader.DEBUG) {
-            System.out.println("There are " + nodeCount + " nodes.");
-        }
+        log("There are " + nodeCount + " nodes.");
 
         // if meshes were not loaded in the code above
         // (which they now are) one would need to
@@ -105,15 +101,12 @@ public class MayaImporter implements Importer {
 
         Timeline timeline = new Timeline();
 
-        loader.keyFrameMap.forEach((seconds, keyValues) -> {
-            timeline.getKeyFrames().add(
-                    new KeyFrame(Duration.millis(seconds * 1000), keyValues.toArray(new KeyValue[0]))
-            );
-        });
+        // TODO: possibly add parallel option
+        loader.keyFrameMap.entrySet().stream()
+                .map(entry -> new KeyFrame(Duration.seconds(entry.getKey()), null, null, entry.getValue()))
+                .forEach(timeline.getKeyFrames()::add);
 
-        if (Loader.DEBUG) {
-            System.out.println("Loaded " + timeline.getKeyFrames().size() + " key frames.");
-        }
+        log("Loaded " + timeline.getKeyFrames().size() + " key frames.");
 
         Model3D model = new Model3D() {
             @Override
@@ -130,5 +123,9 @@ public class MayaImporter implements Importer {
     @Override
     public boolean isSupported(String extension) {
         return SUPPORTED_EXT.equalsIgnoreCase(extension);
+    }
+
+    private static void log(String message) {
+        Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, message);
     }
 }
