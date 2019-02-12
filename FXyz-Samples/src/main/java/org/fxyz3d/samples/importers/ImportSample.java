@@ -50,6 +50,8 @@ import org.fxyz3d.shapes.polygon.PolygonMeshView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -79,12 +81,8 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
         subdivision.addListener((obs, ov, nv) -> setSubdivisionLevel(model, nv.intValue()));
         url.addListener((obs, ov, nv) -> {
             try {
-                Model3D model3D;
-                if (asPolygonMesh.get()) {
-                    model3D = Importer3D.loadAsPoly(url.get());
-                } else {
-                    model3D = Importer3D.load(url.get());
-                }
+                Model3D model3D = asPolygonMesh.get() ?
+                        Importer3D.loadAsPoly(url.get()) : Importer3D.load(url.get());
                 model.getChildren().setAll(model3D.getRoot().getChildren());
                 model3D.getTimeline().ifPresentOrElse(t -> {
                     model.sceneProperty().addListener(new InvalidationListener() {
@@ -100,7 +98,7 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
                 }, () -> timeline.set(null));
                 initModel();
             } catch (IOException e) {
-                e.printStackTrace();
+                Logger.getLogger(ImportSample.class.getName()).log(Level.SEVERE,null, e);
             }
         });
         yUp.addListener((obs, ov, nv) -> {

@@ -70,11 +70,7 @@ public class HierarchyControl extends ControlBase<Property<Node>>{
         }
         hierarchyTreeTable.rootProperty().bind(Bindings.createObjectBinding(() -> {
                 Node content3D = controlledProperty.getValue();
-                if (content3D != null) {
-                    return new TreeItemImpl(content3D);
-                } else {
-                    return null;
-                }
+                return (content3D != null) ? new TreeItemImpl(content3D) : null;
             }, controlledProperty));
     }
 

@@ -32,6 +32,8 @@ package org.fxyz3d.samples.importers;
 import org.fxyz3d.importers.Importer3D;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -46,7 +48,7 @@ public class ImportOBJ extends ImportSample {
         try {
             model = Importer3D.loadAsPoly(getClass().getResource("DukeKing.obj")).getRoot();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(ImportSample.class.getName()).log(Level.SEVERE,null, e);
         }
     }
 

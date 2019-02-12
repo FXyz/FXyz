@@ -40,6 +40,8 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class
@@ -65,7 +67,7 @@ public class FileLoadControl extends ControlBase<Property<URL>> {
             try {
                 controlledProperty.setValue(file.toURI().toURL());
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                Logger.getLogger(FileLoadControl.class.getName()).log(Level.SEVERE,null, e);
             }
         }
     }
