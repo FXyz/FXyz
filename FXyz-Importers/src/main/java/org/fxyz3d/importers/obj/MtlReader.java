@@ -32,6 +32,8 @@
  */
 package org.fxyz3d.importers.obj;
 
+import static java.util.Map.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,6 +42,8 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import javafx.scene.image.Image;
@@ -55,8 +59,11 @@ public class MtlReader {
     public MtlReader(String filename, String parentUrl) {
         baseUrl = parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1);
         String fileUrl = baseUrl + filename;
+        ObjImporter.log("Reading material from filename = " + fileUrl);
         try (Stream<String> line = Files.lines(Paths.get(new URI(fileUrl)))) {
-            line.map(String::trim).filter(l -> !l.isEmpty() && !l.startsWith("#")).forEach(this::parse);
+            line.map(String::trim)
+                .filter(l -> !l.isEmpty() && !l.startsWith("#"))
+                .forEach(this::parse2);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
@@ -66,88 +73,30 @@ public class MtlReader {
     private PhongMaterial currentMaterial;
 
     // mtl format spec: http://paulbourke.net/dataformats/mtl/
-    private enum ParseKey {
-
-        // Material Name
-        NEW_MATERIAL("newmtl") {
-            @Override
-            protected void parse(String value, MtlReader reader) {
-                reader.parseNewMaterial(value);
-            }
-        },
-        
-        // Material color and illumination
-        AMBIENT_REFLECTIVITY ("Ka"),
-        DIFFUSE_REFLECTIVITY ("Kd") {
-            @Override
-            protected void parse(String value, MtlReader reader) {
-                reader.parseDiffuseReflectivity(value);
-            }
-        },
-        SPECULAR_REFLECTIVITY("Ks") {
-            @Override
-            protected void parse(String value, MtlReader reader) {
-                reader.parseSpecularReflectivity(value);
-            }
-        },
-        SPECULAR_EXPONENT    ("Ns") {
-            @Override
-            protected void parse(String value, MtlReader reader) {
-                reader.parseSpecularExponent(value);
-            }
-        },
-        TRANSMISION_FILTER   ("Tf"),
-        ILLUMINATION_MODEL   ("illum"),
-        DISSOLVE             ("d"),
-        TRANSPARENCY         ("Tr"),
-        SHARPNESS            ("sharpness"),
-        OPTICAL_DENSITY      ("Ni"),
-
-        // Material texture map
-        AMBIENT_REFLECTIVITY_MAP ("map_Ka"),
-        DIFFUSE_REFLECTIVITY_MAP ("map_Kd") {
-            @Override
-            protected void parse(String value, MtlReader reader) {
-                reader.parseDiffuseReflectivityMap(value);
-            }
-        },
-        SPECULAR_REFLECTIVITY_MAP("map_Ks") {
-            @Override
-            protected void parse(String value, MtlReader reader) {
-                reader.parseSpecularReflectivityMap(value);
-            }
-        },
-        SPECULAR_EXPONENT_MAP    ("map_Ns"),
-        DISSOLVE_MAP             ("map_d"),
-        DISPLACEMENT_MAP         ("disp"),
-        DECAL_STENCIL_MAP        ("decal"),
-        BUMP_MAP                 ("bump") {
-            @Override
-            protected void parse(String value, MtlReader reader) {
-                reader.parseBumpMap(value);
-            }
-        },
-        REFLECTION_MAP           ("refl"),
-        ANTI_ALIASING            ("map_aat");
-
-        private String key;
-
-        private ParseKey(String key) {
-            this.key = key;
-        }
-
-        protected void parse(String value, MtlReader reader) {
-            reader.parseIgnore(toString() + " (" + key +")");
-        }
-
-        boolean testAndParse(String line, MtlReader reader) {
-            if (line.startsWith(key + " ")) {
-                parse(line.substring(key.length() + 1), reader);
-                return true;
-            }
-            return false;
-        }
-    }
+    private static final Map<String, BiConsumer<String, MtlReader>> PARSERS = Map.ofEntries(
+            entry("newmtl ",    (l, m) -> m.parseNewMaterial(l)),
+            // Material color and illumination
+            entry("Ka ",        (l, m) -> m.parseIgnore("Ambient reflectivity (Ka)")),
+            entry("Kd ",        (l, m) -> m.parseDiffuseReflectivity(l)),
+            entry("Ks ",        (l, m) -> m.parseSpecularReflectivity(l)),
+            entry("Ns ",        (l, m) -> m.parseSpecularExponent(l)),
+            entry("Tf ",        (l, m) -> m.parseIgnore("Transmission filter (Tf)")),
+            entry("illum ",     (l, m) -> m.parseIgnore("Illumination model (illum)")),
+            entry("d ",         (l, m) -> m.parseIgnore("dissolve (d)")),
+            entry("Tr ",        (l, m) -> m.parseIgnore("Transparency (Tr)")),
+            entry("sharpness ", (l, m) -> m.parseIgnore("Sharpness (sharpness)")),
+            entry("Ni ",        (l, m) -> m.parseIgnore("Optical density (Ni)")),
+            // Material texture map
+            entry("map_Ka ",    (l, m) -> m.parseIgnore("Ambient reflectivity map (map_Ka)")),
+            entry("map_Kd ",    (l, m) -> m.parseDiffuseReflectivityMap(l)),
+            entry("map_Ks ",    (l, m) -> m.parseSpecularReflectivityMap(l)),
+            entry("map_Ns ",    (l, m) -> m.parseIgnore("Specular exponent map (map_Ns)")),
+            entry("map_d ",     (l, m) -> m.parseIgnore("Dissolve map (map_d)")),
+            entry("disp ",      (l, m) -> m.parseIgnore("Displacement map (disp)")),
+            entry("decal ",     (l, m) -> m.parseIgnore("Decal stencil map (decal)")),
+            entry("bump ",      (l, m) -> m.parseBumpMap(l)),
+            entry("refl ",      (l, m) -> m.parseIgnore("Reflection map (refl)")),
+            entry("map_aat ",   (l, m) -> m.parseIgnore("Anti-aliasing (map_aat)")));
 
     private void parseIgnore(String nameAndKey) {
         ObjImporter.log(nameAndKey + " is not supported. Ignoring.");
@@ -183,9 +132,11 @@ public class MtlReader {
         currentMaterial.setBumpMap(loadImage(value));
     }
 
-    private void parse(String line) {
-        for (ParseKey parseKey : ParseKey.values()) {
-            if (parseKey.testAndParse(line, this)) {
+    private void parse2(String line) {
+        for (Entry<String, BiConsumer<String, MtlReader>> parser : PARSERS.entrySet()) {
+            String identifier = parser.getKey();
+            if (line.startsWith(identifier)) {
+                parser.getValue().accept(line.substring(identifier.length()), this);
                 return;
             }
         }
