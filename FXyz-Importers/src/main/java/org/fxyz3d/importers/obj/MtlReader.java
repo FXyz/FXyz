@@ -41,8 +41,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -71,6 +73,7 @@ public class MtlReader {
 
     private Map<String, Material> materials = new HashMap<>();
     private PhongMaterial currentMaterial;
+    private Set<String> readProperties = new HashSet<>(PARSERS.size() - 1);
 
     // mtl format spec: http://paulbourke.net/dataformats/mtl/
     private static final Map<String, BiConsumer<String, MtlReader>> PARSERS = Map.ofEntries(
@@ -98,14 +101,34 @@ public class MtlReader {
             entry("refl ",      (l, m) -> m.parseIgnore("Reflection map (refl)")),
             entry("map_aat ",   (l, m) -> m.parseIgnore("Anti-aliasing (map_aat)")));
 
+    private void parse2(String line) {
+        for (Entry<String, BiConsumer<String, MtlReader>> parser : PARSERS.entrySet()) {
+            String identifier = parser.getKey();
+            if (line.startsWith(identifier)) {
+                if (!"newmtl ".equals(identifier) && !readProperties.add(identifier)) {
+                    ObjImporter.log(identifier + "already read for current material. Ignoring.");
+                    return;
+                }
+                parser.getValue().accept(line.substring(identifier.length()), this);
+                return;
+            }
+        }
+        ObjImporter.log("No parser found for: " + line);
+    }
+
     private void parseIgnore(String nameAndKey) {
         ObjImporter.log(nameAndKey + " is not supported. Ignoring.");
     }
 
-    private void parseNewMaterial(String line) {
+    private void parseNewMaterial(String value) {
+        if (materials.containsKey(value)) {
+            ObjImporter.log(value + " material is already added. Ignoring.");
+            return;
+        }
         currentMaterial = new PhongMaterial();
-        materials.put(line, currentMaterial);
-//      TODO: ignore duplicates? ObjImporter.log("This material is already added. Ignoring " + line);
+        readProperties.clear();
+        materials.put(value, currentMaterial);
+        ObjImporter.log("Reading material " + value);
     }
     
     private void parseDiffuseReflectivity(String value) {
@@ -130,17 +153,6 @@ public class MtlReader {
 
     private void parseBumpMap(String value) {
         currentMaterial.setBumpMap(loadImage(value));
-    }
-
-    private void parse2(String line) {
-        for (Entry<String, BiConsumer<String, MtlReader>> parser : PARSERS.entrySet()) {
-            String identifier = parser.getKey();
-            if (line.startsWith(identifier)) {
-                parser.getValue().accept(line.substring(identifier.length()), this);
-                return;
-            }
-        }
-        ObjImporter.log("No parser found for: " + line);
     }
 
     private Color readColor(String line) {
