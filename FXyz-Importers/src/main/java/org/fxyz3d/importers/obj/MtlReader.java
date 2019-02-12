@@ -65,7 +65,7 @@ public class MtlReader {
         try (Stream<String> line = Files.lines(Paths.get(new URI(fileUrl)))) {
             line.map(String::trim)
                 .filter(l -> !l.isEmpty() && !l.startsWith("#"))
-                .forEach(this::parse2);
+                .forEach(this::parse);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class MtlReader {
             entry("refl ",      (l, m) -> m.parseIgnore("Reflection map (refl)")),
             entry("map_aat ",   (l, m) -> m.parseIgnore("Anti-aliasing (map_aat)")));
 
-    private void parse2(String line) {
+    private void parse(String line) {
         for (Entry<String, BiConsumer<String, MtlReader>> parser : PARSERS.entrySet()) {
             String identifier = parser.getKey();
             if (line.startsWith(identifier)) {
@@ -128,7 +128,7 @@ public class MtlReader {
         currentMaterial = new PhongMaterial();
         readProperties.clear();
         materials.put(value, currentMaterial);
-        ObjImporter.log("Reading material " + value);
+        ObjImporter.log(System.lineSeparator() + "Reading material " + value);
     }
     
     private void parseDiffuseReflectivity(String value) {
