@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javafx.collections.FXCollections;
@@ -113,9 +112,10 @@ public class ObjImporter implements Importer {
 
         ObjModel model = asPolygon ? new PolyObjModel(url) : new ObjModel(url);
 
-        boolean parallel = false; // TODO: allow option to enable
         try (Stream<String> lines = Files.lines(Paths.get(url.toURI()))) {
-            (parallel ? lines.parallel() : lines).forEach(model::parseLine);
+            lines.map(String::trim)
+                 .filter(l -> !l.isEmpty() && !l.startsWith("#"))
+                 .forEach(model::parseLine);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
@@ -134,22 +134,22 @@ public class ObjImporter implements Importer {
 
     private static class ObjModel extends Model3D {
 
-        private static final Map<Predicate<String>, BiConsumer<String, ObjModel>> PARSERS = Map.of(
-                l -> l.startsWith("g ") || l.equals("g"), (l, m) -> m.parseGroupName(l),
-                l -> l.startsWith("v "),                  (l, m) -> m.parseVertex(l),
-                l -> l.startsWith("vt "),                 (l, m) -> m.parseVertexTexture(l),
-                l -> l.startsWith("f "),                  (l, m) -> m.parseFace(l),
-                l -> l.startsWith("s "),                  (l, m) -> m.parseSmoothGroup(l),
-                l -> l.startsWith("mtllib "),             (l, m) -> m.parseMaterialLib(l),
-                l -> l.startsWith("usemtl "),             (l, m) -> m.parseUseMaterial(l),
-                l -> l.startsWith("vn "),                 (l, m) -> m.parseVertexNormal(l),
-                // comments and empty lines are ignored
-                l -> l.isEmpty() || l.startsWith("#"),    (l, m) -> {});
+        // obj format spec: http://paulbourke.net/dataformats/obj/
+        private static final Map<String, BiConsumer<String, ObjModel>> PARSERS = Map.of(
+                "g",       (l, m) -> m.parseGroupName(l),
+                "v ",      (l, m) -> m.parseVertex(l),
+                "vt ",     (l, m) -> m.parseVertexTexture(l),
+                "f ",      (l, m) -> m.parseFace(l),
+                "s ",      (l, m) -> m.parseSmoothGroup(l),
+                "mtllib ", (l, m) -> m.parseMaterialLib(l),
+                "usemtl ", (l, m) -> m.parseUseMaterial(l),
+                "vn ",     (l, m) -> m.parseVertexNormal(l));
 
         private void parseLine(String line) {
-            for (Entry<Predicate<String>, BiConsumer<String, ObjModel>> condition : PARSERS.entrySet()) {
-                if (condition.getKey().test(line)) {
-                    condition.getValue().accept(line, this);
+            for (Entry<String, BiConsumer<String, ObjModel>> parser : PARSERS.entrySet()) {
+                String identifier = parser.getKey();
+                if (line.startsWith(identifier)) {
+                    parser.getValue().accept(line.substring(identifier.length()), this);
                     return;
                 }
             }
@@ -308,12 +308,12 @@ public class ObjImporter implements Importer {
 
         private void parseGroupName(String line) {
             addMesh(key);
-            key = line.length() > 2 ? line.substring(2) : "default";
+            key = line.isEmpty() ? "default" : line.substring(1);
             log("key = " + key);
         }
 
         private void parseVertex(String line) {
-            String[] split = line.substring(2).trim().split(" +");
+            String[] split = line.split(" +");
             float x = Float.parseFloat(split[0]) * scale;
             float y = Float.parseFloat(split[1]) * scale;
             float z = Float.parseFloat(split[2]) * scale;
@@ -325,14 +325,14 @@ public class ObjImporter implements Importer {
         }
 
         private void parseVertexTexture(String line) {
-            String[] split = line.substring(3).trim().split(" +");
+            String[] split = line.split(" +");
             float u = split[0].trim().equalsIgnoreCase("nan") ? Float.NaN : Float.parseFloat(split[0]);
             float v = split[1].trim().equalsIgnoreCase("nan") ? Float.NaN : Float.parseFloat(split[1]);
             uvs.addAll(u, 1 - v);
         }
 
         protected void parseFace(String line) {
-            String[] split = line.substring(2).trim().split(" +");
+            String[] split = line.split(" +");
             int[][] data = new int[split.length][];
             boolean uvProvided = true;
             boolean normalProvided = true;
@@ -400,12 +400,12 @@ public class ObjImporter implements Importer {
         }
 
         private void parseSmoothGroup(String line) {
-            currentSmoothGroup = line.substring(2).equals("off") ? 0 : Integer.parseInt(line.substring(2));
+            currentSmoothGroup = line.equals("off") ? 0 : Integer.parseInt(line.substring(2));
         }
 
         private void parseMaterialLib(String line) {
             // setting materials lib
-            String[] split = line.substring("mtllib ".length()).trim().split(" +");
+            String[] split = line.split(" +");
             for (String filename : split) {
                 MtlReader mtlReader = new MtlReader(filename, url.toExternalForm());
                 materialLibrary.add(mtlReader.getMaterials());
@@ -416,7 +416,7 @@ public class ObjImporter implements Importer {
             addMesh(key);
 
             // setting new material for next mesh
-            String materialName = line.substring("usemtl ".length());
+            String materialName = line;
             for (Map<String, Material> mm : materialLibrary) {
                 Material m = mm.get(materialName);
                 if (m != null) {
@@ -427,7 +427,7 @@ public class ObjImporter implements Importer {
         }
 
         private void parseVertexNormal(String line) {
-            String[] split = line.substring(2).trim().split(" +");
+            String[] split = line.split(" +");
             float x = Float.parseFloat(split[0]);
             float y = Float.parseFloat(split[1]);
             float z = Float.parseFloat(split[2]);
@@ -570,7 +570,7 @@ public class ObjImporter implements Importer {
 
         @Override
         protected void parseFace(String line) {
-            String[] split = line.substring(2).trim().split(" +");
+            String[] split = line.split(" +");
             int[] faceIndexes = new int[split.length * 2];
             int[] faceNormalIndexes = new int[split.length];
             for (int i = 0; i < split.length; i++) {
