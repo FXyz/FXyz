@@ -32,6 +32,7 @@ package org.fxyz3d.samples.importers;
 import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -41,6 +42,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import org.fxyz3d.controls.ControlCategory;
+import org.fxyz3d.controls.HierarchyControl;
 import org.fxyz3d.controls.NumberSliderControl;
 import org.fxyz3d.controls.factory.ControlFactory;
 import org.fxyz3d.importers.Importer3D;
@@ -65,7 +67,8 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
     protected final ObjectProperty<Node> content = new SimpleObjectProperty<>(this, "content");
     protected final BooleanProperty asPolygonMesh = new SimpleBooleanProperty(this, "asPolygonMesh", true);
     protected final BooleanProperty yUp = new SimpleBooleanProperty(this, "yUp", true);
-    
+    private ControlCategory geomControls;
+
     @Override
     protected void addMeshAndListeners() {
         drawMode.addListener((obs, b, b1) -> {
@@ -101,9 +104,9 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
                 Logger.getLogger(ImportSample.class.getName()).log(Level.SEVERE,null, e);
             }
         });
-        yUp.addListener((obs, ov, nv) -> {
-            model.getTransforms().setAll(new Rotate(nv ? 180 : 0, Rotate.X_AXIS));
-        });
+        Rotate rt = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
+        rt.angleProperty().bind(Bindings.when(yUp).then(180).otherwise(0));
+        model.getTransforms().setAll(rt);
         initModel();
     }
 
@@ -111,11 +114,14 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
         setCullFace(model, culling.getValue());
         setDrawMode(model, drawMode.getValue());
         setSubdivisionLevel(model, subdivision.getValue());
+        content.set(model);
         double size = Math.max(Math.max(model.getBoundsInLocal().getWidth(),
                 model.getBoundsInLocal().getHeight()), model.getBoundsInLocal().getDepth());
-        model.getTransforms().setAll(new Rotate(yUp.get() ? 180 : 0, Rotate.X_AXIS));
-        content.set(model);
         camera.setTranslateZ(- size * 3);
+
+        geomControls.removeIf(HierarchyControl.class::isInstance);
+        HierarchyControl hierarchyControl = ControlFactory.buildHierarchyControl(content);
+        geomControls.addControls(hierarchyControl);
     }
 
     private void setDrawMode(Node node, DrawMode value) {
@@ -145,7 +151,7 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
             ((Parent) node).getChildrenUnmodifiable().forEach(n -> setSubdivisionLevel(n, subdivisionLevel));
         }
     }
-    
+
     @Override
     protected Node buildControlPanel() {
         NumberSliderControl subdivisionSlider = ControlFactory.buildNumberSlider(subdivision, 0, 2);
@@ -153,12 +159,11 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
         subdivisionSlider.getSlider().setMinorTickCount(0);
         subdivisionSlider.getSlider().setBlockIncrement(1);
         subdivisionSlider.getSlider().setSnapToTicks(true);
-        ControlCategory geomControls = ControlFactory.buildCategory("3D Settings");
+        geomControls = ControlFactory.buildCategory("3D Settings");
         geomControls.addControls(ControlFactory.buildFileLoadControl(url),
                 ControlFactory.buildCheckBoxControl(asPolygonMesh),
                 ControlFactory.buildCheckBoxControl(yUp),
-                subdivisionSlider,
-                ControlFactory.buildHierarchyControl(content));
+                subdivisionSlider);
         
         this.controlPanel = ControlFactory.buildControlPanel(
                 ControlFactory.buildMeshViewCategory(

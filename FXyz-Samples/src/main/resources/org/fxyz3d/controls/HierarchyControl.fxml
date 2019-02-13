@@ -19,7 +19,7 @@
               <columns>
                  <TreeTableColumn fx:id="nodeColumn" editable="false" prefWidth="75.0" sortable="false" text="Node" />
                  <TreeTableColumn fx:id="idColumn" editable="false" prefWidth="75.0" text="Id" />
-                 <TreeTableColumn fx:id="visibilityColumn" editable="true" text="Visible" />
+                 <TreeTableColumn fx:id="visibilityColumn" editable="true" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Show" />
               </columns>
             </TreeTableView>
          </children>

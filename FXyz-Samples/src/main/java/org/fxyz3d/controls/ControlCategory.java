@@ -31,6 +31,7 @@ package org.fxyz3d.controls;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -122,10 +123,13 @@ public class ControlCategory  extends TitledPane{
             controlItems.addAll(ctrls);
         }
     }
+
     public void removeControl(Node ...  n){
         controlItems.removeAll(Arrays.asList(n));
     }
     
-    
+    public void removeIf(Predicate<StackPane> filter) {
+        controlItems.removeIf(filter);
+    }
     
 }

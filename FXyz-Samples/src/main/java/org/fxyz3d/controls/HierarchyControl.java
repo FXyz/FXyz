@@ -34,25 +34,22 @@ import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
-import org.fxyz3d.controls.ControlBase;
 
 /**
  * FXML Controller class
  *
  * @author Jose Pereda
  */
-public class HierarchyControl extends ControlBase<Property<Node>>{
+public class HierarchyControl extends ControlBase<Property<Node>> {
 
     @FXML private TreeTableView<Node> hierarchyTreeTable;
     @FXML private TreeTableColumn<Node, String> nodeColumn;
     @FXML private TreeTableColumn<Node, String> idColumn;
     @FXML private TreeTableColumn<Node, Boolean> visibilityColumn;
-
 
     public HierarchyControl(Property<Node> prop) {
         super("/org/fxyz3d/controls/HierarchyControl.fxml", prop);
@@ -70,17 +67,17 @@ public class HierarchyControl extends ControlBase<Property<Node>>{
         }
         hierarchyTreeTable.rootProperty().bind(Bindings.createObjectBinding(() -> {
                 Node content3D = controlledProperty.getValue();
-                return (content3D != null) ? new TreeItemImpl(content3D) : null;
+                return (content3D != null) ? new HierarchyTreeItem(content3D) : null;
             }, controlledProperty));
     }
 
-    private class TreeItemImpl extends TreeItem<Node> {
+    private class HierarchyTreeItem extends TreeItem<Node> {
 
-        public TreeItemImpl(Node node) {
+        public HierarchyTreeItem(Node node) {
             super(node);
             if (node instanceof Parent) {
                 for (Node n : ((Parent) node).getChildrenUnmodifiable()) {
-                    getChildren().add(new TreeItemImpl(n));
+                    getChildren().add(new HierarchyTreeItem(n));
                 }
             }
             node.setOnMouseClicked(t -> {
@@ -89,7 +86,7 @@ public class HierarchyControl extends ControlBase<Property<Node>>{
                     parent.setExpanded(true);
                     parent = parent.getParent();
                 }
-                hierarchyTreeTable.getSelectionModel().select(TreeItemImpl.this);
+                hierarchyTreeTable.getSelectionModel().select(HierarchyTreeItem.this);
                 hierarchyTreeTable.scrollTo(hierarchyTreeTable.getSelectionModel().getSelectedIndex());
                 t.consume();
             });
