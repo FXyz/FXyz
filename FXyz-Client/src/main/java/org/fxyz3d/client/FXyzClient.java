@@ -52,6 +52,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -350,7 +351,8 @@ public class FXyzClient extends Application {
     }
 
     private void updateContent() {
-        HBox cPane = new HBox();
+        SplitPane cPane = new SplitPane();
+        cPane.setDividerPositions(0.75);
         cPane.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
         
         Node content = buildSampleContent(selectedSample);
@@ -362,7 +364,7 @@ public class FXyzClient extends Application {
             VBox.setVgrow(controls, Priority.ALWAYS);
         }
         
-        cPane.getChildren().addAll(content, contentControls);
+        cPane.getItems().addAll(content, contentControls);
         centerContent.getChildren().addAll(cPane);
         centerContent.toBack();
         

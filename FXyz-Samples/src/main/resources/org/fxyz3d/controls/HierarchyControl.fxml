@@ -15,11 +15,11 @@
          </padding>
          <children>
             <Label text="Node Hierarchy" />
-            <TreeTableView fx:id="hierarchyTreeTable" editable="true" prefHeight="200.0" prefWidth="200.0">
+            <TreeTableView fx:id="hierarchyTreeTable" editable="true" prefHeight="200.0" prefWidth="250.0">
               <columns>
-                 <TreeTableColumn fx:id="nodeColumn" editable="false" prefWidth="75.0" sortable="false" text="Node" />
-                 <TreeTableColumn fx:id="idColumn" editable="false" prefWidth="75.0" text="Id" />
-                 <TreeTableColumn fx:id="visibilityColumn" editable="true" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Show" />
+                 <TreeTableColumn fx:id="nodeColumn" editable="false" prefWidth="100.0" sortable="false" text="Node" />
+                 <TreeTableColumn fx:id="idColumn" editable="false" prefWidth="100.0" text="Id" />
+                 <TreeTableColumn fx:id="visibilityColumn" editable="true" maxWidth="50.0" prefWidth="50.0" resizable="false" text="Show" />
               </columns>
             </TreeTableView>
          </children>
