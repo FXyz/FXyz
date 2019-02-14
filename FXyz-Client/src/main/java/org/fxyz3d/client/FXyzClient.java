@@ -352,7 +352,9 @@ public class FXyzClient extends Application {
 
     private void updateContent() {
         SplitPane cPane = new SplitPane();
+        cPane.getStyleClass().add("fxyz-split-pane");
         cPane.setDividerPositions(0.75);
+
         cPane.setPrefSize(USE_COMPUTED_SIZE, USE_COMPUTED_SIZE);
         
         Node content = buildSampleContent(selectedSample);
