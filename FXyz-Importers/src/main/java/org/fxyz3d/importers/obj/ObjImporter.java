@@ -400,7 +400,7 @@ public class ObjImporter implements Importer {
         }
 
         private void parseSmoothGroup(String value) {
-            currentSmoothGroup = value.equals("off") ? 0 : Integer.parseInt(value.substring(2));
+            currentSmoothGroup = value.equals("off") ? 0 : Integer.parseInt(value);
         }
 
         private void parseMaterialLib(String value) {
