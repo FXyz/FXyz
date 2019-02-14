@@ -149,7 +149,7 @@ public class ObjImporter implements Importer {
             for (Entry<String, BiConsumer<String, ObjModel>> parser : PARSERS.entrySet()) {
                 String identifier = parser.getKey();
                 if (line.startsWith(identifier)) {
-                    parser.getValue().accept(line.substring(identifier.length()), this);
+                    parser.getValue().accept(line.substring(identifier.length()).trim(), this);
                     return;
                 }
             }
@@ -306,14 +306,14 @@ public class ObjImporter implements Importer {
             smoothingGroupsStart = smoothingGroups.size();
         }
 
-        private void parseGroupName(String line) {
+        private void parseGroupName(String value) {
             addMesh(key);
-            key = line.isEmpty() ? "default" : line.substring(1);
+            key = value.isEmpty() ? "default" : value;
             log("key = " + key);
         }
 
-        private void parseVertex(String line) {
-            String[] split = line.split(" +");
+        private void parseVertex(String value) {
+            String[] split = value.split(" +");
             float x = Float.parseFloat(split[0]) * scale;
             float y = Float.parseFloat(split[1]) * scale;
             float z = Float.parseFloat(split[2]) * scale;
@@ -324,15 +324,15 @@ public class ObjImporter implements Importer {
             }
         }
 
-        private void parseVertexTexture(String line) {
-            String[] split = line.split(" +");
+        private void parseVertexTexture(String value) {
+            String[] split = value.split(" +");
             float u = split[0].trim().equalsIgnoreCase("nan") ? Float.NaN : Float.parseFloat(split[0]);
             float v = split[1].trim().equalsIgnoreCase("nan") ? Float.NaN : Float.parseFloat(split[1]);
             uvs.addAll(u, 1 - v);
         }
 
-        protected void parseFace(String line) {
-            String[] split = line.split(" +");
+        protected void parseFace(String value) {
+            String[] split = value.split(" +");
             int[][] data = new int[split.length][];
             boolean uvProvided = true;
             boolean normalProvided = true;
@@ -399,24 +399,24 @@ public class ObjImporter implements Importer {
             }
         }
 
-        private void parseSmoothGroup(String line) {
-            currentSmoothGroup = line.equals("off") ? 0 : Integer.parseInt(line.substring(2));
+        private void parseSmoothGroup(String value) {
+            currentSmoothGroup = value.equals("off") ? 0 : Integer.parseInt(value.substring(2));
         }
 
-        private void parseMaterialLib(String line) {
+        private void parseMaterialLib(String value) {
             // setting materials lib
-            String[] split = line.split(" +");
+            String[] split = value.split(" +");
             for (String filename : split) {
                 MtlReader mtlReader = new MtlReader(filename, url.toExternalForm());
                 materialLibrary.add(mtlReader.getMaterials());
             }
         }
 
-        private void parseUseMaterial(String line) {
+        private void parseUseMaterial(String value) {
             addMesh(key);
 
             // setting new material for next mesh
-            String materialName = line;
+            String materialName = value;
             for (Map<String, Material> mm : materialLibrary) {
                 Material m = mm.get(materialName);
                 if (m != null) {
@@ -426,8 +426,8 @@ public class ObjImporter implements Importer {
             }
         }
 
-        private void parseVertexNormal(String line) {
-            String[] split = line.split(" +");
+        private void parseVertexNormal(String value) {
+            String[] split = value.split(" +");
             float x = Float.parseFloat(split[0]);
             float y = Float.parseFloat(split[1]);
             float z = Float.parseFloat(split[2]);
@@ -569,8 +569,8 @@ public class ObjImporter implements Importer {
         }
 
         @Override
-        protected void parseFace(String line) {
-            String[] split = line.split(" +");
+        protected void parseFace(String value) {
+            String[] split = value.split(" +");
             int[] faceIndexes = new int[split.length * 2];
             int[] faceNormalIndexes = new int[split.length];
             for (int i = 0; i < split.length; i++) {
