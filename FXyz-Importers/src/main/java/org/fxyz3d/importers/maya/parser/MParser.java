@@ -49,6 +49,7 @@ import java.util.logging.Logger;
 import org.fxyz3d.importers.maya.MEnv;
 import org.fxyz3d.importers.maya.MNode;
 import org.fxyz3d.importers.maya.MPath;
+import org.fxyz3d.importers.maya.MayaImporter;
 import org.fxyz3d.importers.maya.values.MData;
 import org.fxyz3d.importers.maya.values.MPointer;
 
@@ -559,7 +560,7 @@ public class MParser {
         try {
             data.parse(value);
         } catch (Exception e) {
-            Logger.getLogger(MParser.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(MayaImporter.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 }

@@ -91,8 +91,6 @@ import org.fxyz3d.utils.geom.Vec3f;
 
 /** Loader */
 class Loader {
-    public static final boolean DEBUG = false;
-    public static final boolean WARN = false;
 
     MEnv env;
 
@@ -156,7 +154,7 @@ class Loader {
                 resolveNode(n);
             }
         } catch (IOException e) {
-            if (WARN) System.err.println("Error loading url: [" + url + "]");
+            Logger.getLogger(MayaImporter.class.getName()).log(Level.WARNING, "Error loading url: [" + url + "]");
             throw new RuntimeException(e);
         }
     }
@@ -353,10 +351,9 @@ class Loader {
                 filePath = new URL(url, imageFilename).toString();
             }
             image = new Image(filePath);
-            if (DEBUG) {
-                System.out.println(name + " = " + filePath);
-                System.out.println(name + " w = " + image.getWidth() + " h = " + image.getHeight());
-            }
+
+            Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, name + " = " + filePath);
+            Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, name + " w = " + image.getWidth() + " h = " + image.getHeight());
         } catch (MalformedURLException ex) {
             Logger.getLogger(MayaImporter.class.getName()).log(Level.SEVERE, "Failed to load " + name + " '" + imageFilename + "'!", ex);
         }
@@ -376,13 +373,14 @@ class Loader {
         //                     meshParents.put(node, n);
 
         // Try to find an image or color from n (MNode)
-        if (DEBUG) { System.out.println("________________________________________"); }
-        if (DEBUG) { System.out.println("n.getName(): " + n.getName()); }
-        if (DEBUG) { System.out.println("n.getNodeType(): " + n.getNodeType()); }
+        Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "processMeshType()" + "\n" +
+                "n.getName(): " + n.getName() + "\n" + "n.getNodeType(): " + n.getNodeType() + "\n");
+
         MNode shadingGroup = n.getOutgoingConnectionToType("iog", "shadingEngine", true);
         MNode mat;
         MNode mFile;
-        if (DEBUG) { System.out.println("shadingGroup: " + shadingGroup); }
+
+        Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "shadingGroup: " + shadingGroup);
 
         MFloat3 mColor;
         Vec3f diffuseColor = null;
@@ -397,7 +395,9 @@ class Loader {
             mat = shadingGroup.getIncomingConnectionToType("ss", "lambert");
             if (mat != null) {
                 // shader = shaderMap.get(mat.getName()) as FixedFunctionShader;
-                if (DEBUG) { System.out.println("lambert mat: " + mat); }
+
+                Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "lambert mat: " + mat);
+
                 mColor = (MFloat3) mat.getAttr("c");
                 float diffuseIntensity = ((MFloat) mat.getAttr("dc")).get();
                 if (mColor != null) {
@@ -405,7 +405,8 @@ class Loader {
                             mColor.get()[0] * diffuseIntensity,
                             mColor.get()[1] * diffuseIntensity,
                             mColor.get()[2] * diffuseIntensity);
-                    if (DEBUG) { System.out.println("diffuseColor = " + diffuseColor); }
+
+                    Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "diffuseColor = " + diffuseColor);
                 }
 
                 mFile = mat.getIncomingConnectionToType("c", "file");
@@ -423,14 +424,16 @@ class Loader {
             mat = shadingGroup.getIncomingConnectionToType("ss", "phong");
             if (mat != null) {
                 // shader = shaderMap.get(mat.getName()) as FixedFunctionShader;
-                if (DEBUG) { System.out.println("phong mat: " + mat); }
+
+                Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "phong mat: " + mat);
                 mColor = (MFloat3) mat.getAttr("sc");
                 if (mColor != null) {
                     specularColor = new Vec3f(
                             mColor.get()[0],
                             mColor.get()[1],
                             mColor.get()[2]);
-                    if (DEBUG) { System.out.println("specularColor = " + specularColor); }
+
+                    Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "specularColor = " + specularColor);
                 }
                 mFile = mat.getIncomingConnectionToType("sc", "file");
                 if (mFile != null) {
@@ -438,7 +441,8 @@ class Loader {
                 }
 
                 specularPower = ((MFloat) mat.getAttr("cp")).get();
-                if (DEBUG) { System.out.println("specularPower = " + specularPower); }
+
+                Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "specularPower = " + specularPower);
             }
         }
 
@@ -601,7 +605,8 @@ class Loader {
         // Add the Joint to its JavaFX parent
         if (parentNode != null) {
             parentNode.getChildren().add(j);
-            if (DEBUG) System.out.println("j.getDepthTest() : " + j.getDepthTest());
+
+            Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "j.getDepthTest() : " + j.getDepthTest());
         }
         if (parentNode == null || !(parentNode instanceof Joint)) {
             // rootJoint = j;
@@ -1304,7 +1309,7 @@ class Loader {
             // to counter-act some strange behavior we are seeing
             // if there is no key at frame 0.
             if (needsOneFrameAdjustment && (j == 0)) {
-                if (DEBUG) System.out.println("[!] ATTEMPTING FRAME ONE ADJUSTMENT [!]");
+                Logger.getLogger(MayaImporter.class.getName()).log(Level.FINEST, "[!] ATTEMPTING FRAME ONE ADJUSTMENT [!]");
                 // [!] API change
                 // KeyValue keyValue0 = new KeyValue(property, kv, Interpolator.LINEAR);
                 KeyValue keyValue0 = new KeyValue(property, kv);
