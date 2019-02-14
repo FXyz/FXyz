@@ -10,6 +10,12 @@ sudo: false
 os:
   - linux
 
+# imitate a display for RunWithFX tests
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3
+  
 # run maven build.
 script:
   - ./gradlew build

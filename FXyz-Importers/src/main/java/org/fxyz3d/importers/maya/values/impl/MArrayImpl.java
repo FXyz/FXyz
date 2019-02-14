@@ -35,15 +35,15 @@ package org.fxyz3d.importers.maya.values.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.fxyz3d.importers.maya.MayaImporter;
 import org.fxyz3d.importers.maya.types.MArrayType;
 import org.fxyz3d.importers.maya.values.MArray;
 import org.fxyz3d.importers.maya.values.MData;
 
 public class MArrayImpl extends MDataImpl implements MArray {
-    public static final boolean DEBUG = MayaImporter.DEBUG;
-    public static final boolean WARN = MayaImporter.WARN;
-
     List<MData> data = new ArrayList<>();
 
     static class Parser {
@@ -137,7 +137,7 @@ public class MArrayImpl extends MDataImpl implements MArray {
         if (index >= data.size()) {  // TODO huge hack, to prevent out of bounds exception
             int oldIndex = index;
             index = data.size() - 1;
-            if (WARN) System.err.println("Changed index from [" + oldIndex + "] to [" + index + "]");
+            Logger.getLogger(MayaImporter.class.getName()).log(Level.WARNING, "Changed index from [" + oldIndex + "] to [" + index + "]");
         }
         return data.get(index);
     }

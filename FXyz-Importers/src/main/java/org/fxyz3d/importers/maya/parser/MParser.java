@@ -43,6 +43,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.fxyz3d.importers.maya.MEnv;
 import org.fxyz3d.importers.maya.MNode;
 import org.fxyz3d.importers.maya.MPath;
@@ -557,9 +560,7 @@ public class MParser {
         try {
             data.parse(value);
         } catch (Exception e) {
-            if (MayaImporter.DEBUG) {
-                e.printStackTrace(System.err);
-            }
+            Logger.getLogger(MayaImporter.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 }
