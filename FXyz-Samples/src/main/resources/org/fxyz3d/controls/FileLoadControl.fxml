@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 
-<fx:root minHeight="40.0" minWidth="167.0" type="StackPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="40.0" minWidth="167.0" type="StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER" style="">
          <children>
-            <Label fx:id="prefixLb" alignment="CENTER" minWidth="10.0" text="\@:" HBox.hgrow="NEVER">
-               <styleClass>
-                  <String fx:value="label" />
-                  <String fx:value="symbol-prefix" />
-               </styleClass>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <TextField fx:id="imagePathTf" prefWidth="30.0" HBox.hgrow="ALWAYS">
+            <TextField fx:id="filePathTf" prefWidth="30.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets right="1.0" />
                </HBox.margin>
             </TextField>
-            <Button mnemonicParsing="false" onAction="#chooseImage" text="..." HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#chooseFile" text="..." HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

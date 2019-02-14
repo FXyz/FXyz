@@ -52,6 +52,7 @@ public class CheckBoxControl extends ControlBase<Property<Boolean>>{
         if(controlledProperty==null){
             return;
         }
+        checkBox.setSelected(controlledProperty.getValue());
         checkBox.selectedProperty().addListener(l->{
             if(checkBox != null){
                 controlledProperty.setValue(checkBox.isSelected());
