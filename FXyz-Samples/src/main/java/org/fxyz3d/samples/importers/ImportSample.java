@@ -49,6 +49,7 @@ import org.fxyz3d.importers.Importer3D;
 import org.fxyz3d.importers.Model3D;
 import org.fxyz3d.samples.shapes.ShapeBaseSample;
 import org.fxyz3d.shapes.polygon.PolygonMeshView;
+import org.fxyz3d.shapes.polygon.SkinningMesh;
 
 import java.io.IOException;
 import java.net.URL;
@@ -67,6 +68,12 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
     protected final ObjectProperty<Node> content = new SimpleObjectProperty<>(this, "content");
     protected final BooleanProperty asPolygonMesh = new SimpleBooleanProperty(this, "asPolygonMesh", true);
     protected final BooleanProperty yUp = new SimpleBooleanProperty(this, "yUp", true);
+    protected final BooleanProperty skeleton = new SimpleBooleanProperty(this, "Show skeleton", false) {
+        @Override
+        protected void invalidated() {
+            setDrawMode(model, get() ? DrawMode.LINE : drawMode.getValue());
+        }
+    };
     private ControlCategory geomControls;
 
     @Override
@@ -115,6 +122,7 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
         setDrawMode(model, drawMode.getValue());
         setSubdivisionLevel(model, subdivision.getValue());
         content.set(model);
+        setSkeleton(model);
         double size = Math.max(Math.max(model.getBoundsInLocal().getWidth(),
                 model.getBoundsInLocal().getHeight()), model.getBoundsInLocal().getDepth());
         camera.setTranslateZ(- size * 3);
@@ -152,6 +160,14 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
         }
     }
 
+    private void setSkeleton(Node node) {
+        if (node instanceof PolygonMeshView && ((PolygonMeshView) node).getMesh() instanceof SkinningMesh) {
+            ((SkinningMesh) ((PolygonMeshView) node).getMesh()).showSkeletonProperty().bind(skeleton);
+        } else if (node instanceof Parent) {
+            ((Parent) node).getChildrenUnmodifiable().forEach(this::setSkeleton);
+        }
+    }
+
     @Override
     protected Node buildControlPanel() {
         NumberSliderControl subdivisionSlider = ControlFactory.buildNumberSlider(subdivision, 0, 2);
@@ -163,6 +179,7 @@ public abstract class ImportSample extends ShapeBaseSample<Group> {
         geomControls.addControls(ControlFactory.buildFileLoadControl(url),
                 ControlFactory.buildCheckBoxControl(asPolygonMesh),
                 ControlFactory.buildCheckBoxControl(yUp),
+                ControlFactory.buildCheckBoxControl(skeleton),
                 subdivisionSlider);
         
         this.controlPanel = ControlFactory.buildControlPanel(

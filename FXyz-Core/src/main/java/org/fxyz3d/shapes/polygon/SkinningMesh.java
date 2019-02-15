@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Set;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableFloatArray;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
@@ -45,6 +47,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.MatrixType;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
+import org.fxyz3d.utils.geom.JointChain;
 import org.fxyz3d.utils.geom.Joint;
 
 /**
@@ -61,7 +64,7 @@ public class SkinningMesh extends PolygonMesh {
     private final Transform[] jointToRootTransforms; // the root refers to the group containing all the mesh skinning nodes (i.e. the parent of jointForest)
     private final int nPoints;
     private final int nJoints;
-
+    private final List<Joint> joints;
 
     /**
      * SkinningMesh constructor
@@ -80,6 +83,7 @@ public class SkinningMesh extends PolygonMesh {
         this.getFaceSmoothingGroups().addAll(mesh.getFaceSmoothingGroups());
 
         this.weights = weights;
+        this.joints = joints;
 
         nJoints = joints.size();
         nPoints = getPoints().size()/ getPointElementSize();
@@ -203,4 +207,38 @@ public class SkinningMesh extends PolygonMesh {
 
         jointsTransformDirty = false;
     }
+
+    // showSkeleton
+    private final BooleanProperty showSkeleton = new SimpleBooleanProperty(this, "showSkeleton") {
+        @Override
+        protected void invalidated() {
+            if (joints == null) {
+                return;
+            }
+            if (get()) {
+                createSkeleton(joints);
+            } else {
+                joints.forEach(jn -> jn.getChildren().removeIf(JointChain.class::isInstance));
+            }
+        }
+    };
+    public final BooleanProperty showSkeletonProperty() {
+       return showSkeleton;
+    }
+    public final boolean isShowSkeleton() {
+       return showSkeleton.get();
+    }
+    public final void setShowSkeleton(boolean value) {
+        showSkeleton.set(value);
+    }
+
+    private void createSkeleton(List<Joint> joints) {
+        joints.forEach(this::addJointChain);
+    }
+
+    private void addJointChain(Joint joint) {
+        joint.getChildren().removeIf(JointChain.class::isInstance);
+        joint.getChildren().add(new JointChain(joint, 0.01));
+    }
+
 }
