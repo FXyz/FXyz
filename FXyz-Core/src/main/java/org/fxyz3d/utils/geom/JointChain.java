@@ -41,7 +41,6 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import org.fxyz3d.shapes.primitives.FrustumMesh;
 import org.fxyz3d.shapes.primitives.helper.TriangleMeshHelper;
 

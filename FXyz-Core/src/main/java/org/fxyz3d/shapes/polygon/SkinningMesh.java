@@ -233,7 +233,7 @@ public class SkinningMesh extends PolygonMesh {
     }
 
     private void addJointChain(Joint joint) {
-        joint.getChildren().removeIf(JointChain.class::isInstance);
+        removeJointChain(joint);
         joint.getChildren().add(new JointChain(joint, 0.01));
     }
 
