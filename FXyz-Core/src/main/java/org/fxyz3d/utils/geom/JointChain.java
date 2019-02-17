@@ -43,6 +43,7 @@ import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import org.fxyz3d.shapes.primitives.FrustumMesh;
+import org.fxyz3d.shapes.primitives.helper.TriangleMeshHelper;
 
 /**
  * A node that can be used as a visible link between two joints
@@ -57,15 +58,13 @@ public class JointChain extends Group {
     private final double scale;
 
     public JointChain(Joint joint, double scale) {
-        if (scale == 0) {
-            scale = 1;
-        }
-        this.scale = scale;
+        this.scale = scale == 0 ? 1 : scale;
 
         origin = new Box(16, 16, 16);
         origin.setMaterial(new PhongMaterial(getColor()));
 
-        bone = new FrustumMesh(6, 3, 10, 0);
+        bone = new FrustumMesh(6, 3, 1, 0);
+        bone.setSectionType(TriangleMeshHelper.SectionType.TRIANGLE);
         bone.setTextureModeNone(getColor());
         
         end = new Sphere(5);
@@ -80,8 +79,14 @@ public class JointChain extends Group {
 
     private void updateChain(Joint joint) {
         Point3D scaled = getJointLocation(joint).multiply(1d / scale);
-        origin.getTransforms().setAll(new Translate(scaled.getX(), scaled.getY(), scaled.getZ()));
+        origin.setTranslateX(scaled.getX());
+        origin.setTranslateY(scaled.getY());
+        origin.setTranslateZ(scaled.getZ());
         bone.setAxisOrigin(org.fxyz3d.geometry.Point3D.convertFromJavaFXPoint3D(scaled));
+        end.setTranslateX(bone.getAxisEnd().x);
+        end.setTranslateY(bone.getAxisEnd().y);
+        end.setTranslateZ(bone.getAxisEnd().z);
+
     }
 
     private Point3D getJointLocation(Joint joint) {

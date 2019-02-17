@@ -86,12 +86,12 @@ public class SkinningMesh extends PolygonMesh {
         this.joints = joints;
 
         nJoints = joints.size();
-        nPoints = getPoints().size()/ getPointElementSize();
+        nPoints = getPoints().size() / getPointElementSize();
 
         // Create the jointIndexForest forest. Its structure is the same as
         // jointForest, except that this forest have indices information and
         // some branches are pruned if they don't contain joints.
-        jointIndexForest = new ArrayList<JointIndex>(jointForest.size());
+        jointIndexForest = new ArrayList<>(jointForest.size());
         for (Parent jointRoot : jointForest) {
             jointIndexForest.add(new JointIndex(jointRoot, joints.indexOf(jointRoot), joints));
         }
@@ -110,7 +110,7 @@ public class SkinningMesh extends PolygonMesh {
             weightIndices[j] = new ArrayList<Integer>();
             for (int i = 0; i < nPoints; i++) {
                 if (weights[j][i] != 0.0f) {
-                    weightIndices[j].add(new Integer(i));
+                    weightIndices[j].add(i);
                 }
             }
         }
@@ -130,7 +130,7 @@ public class SkinningMesh extends PolygonMesh {
 
         // Add a listener to all the joints (and their parents nodes) so that we can track when any of their transforms have changed
         // Set of joints that already have a listener (so we don't attach a listener to the same node more than once)
-        Set<Node> processedNodes = new HashSet<Node>(joints.size());
+        Set<Node> processedNodes = new HashSet<>(joints.size());
         InvalidationListener invalidationListener = observable -> jointsTransformDirty = true;
         for (int j = 0; j < joints.size(); j++) {
             Node node = joints.get(j);
@@ -149,14 +149,14 @@ public class SkinningMesh extends PolygonMesh {
     private class JointIndex {
         public Node node;
         public int index;
-        public List<JointIndex> children = new ArrayList<JointIndex>();
+        public List<JointIndex> children = new ArrayList<>();
         public JointIndex parent = null;
         public Transform localToGlobalTransform;
         public JointIndex(Node n, int ind, List<Joint> orderedJoints) {
             node = n;
             index = ind;
             if (node instanceof Parent) {
-                for (Node childJoint : ((Parent)node).getChildrenUnmodifiable()) {
+                for (Node childJoint : ((Parent) node).getChildrenUnmodifiable()) {
                     if (childJoint instanceof Parent) { // is childJoint a joint or a node with children?
                         int childInd = orderedJoints.indexOf(childJoint);
                         JointIndex childJointIndex = new JointIndex(childJoint, childInd, orderedJoints);
@@ -216,9 +216,9 @@ public class SkinningMesh extends PolygonMesh {
                 return;
             }
             if (get()) {
-                createSkeleton(joints);
+                joints.forEach(SkinningMesh.this::addJointChain);
             } else {
-                joints.forEach(jn -> jn.getChildren().removeIf(JointChain.class::isInstance));
+                joints.forEach(SkinningMesh.this::removeJointChain);
             }
         }
     };
@@ -232,13 +232,13 @@ public class SkinningMesh extends PolygonMesh {
         showSkeleton.set(value);
     }
 
-    private void createSkeleton(List<Joint> joints) {
-        joints.forEach(this::addJointChain);
-    }
-
     private void addJointChain(Joint joint) {
         joint.getChildren().removeIf(JointChain.class::isInstance);
         joint.getChildren().add(new JointChain(joint, 0.01));
+    }
+
+    private void removeJointChain(Joint joint) {
+        joint.getChildren().removeIf(JointChain.class::isInstance);
     }
 
 }
