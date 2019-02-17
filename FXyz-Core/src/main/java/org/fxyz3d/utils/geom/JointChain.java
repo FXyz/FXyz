@@ -85,7 +85,6 @@ public class JointChain extends Group {
         end.setTranslateX(bone.getAxisEnd().x);
         end.setTranslateY(bone.getAxisEnd().y);
         end.setTranslateZ(bone.getAxisEnd().z);
-
     }
 
     private Point3D getJointLocation(Joint joint) {
