@@ -35,14 +35,15 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
+import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
-import org.fxyz3d.shapes.primitives.FrustumMesh;
-import org.fxyz3d.shapes.primitives.helper.TriangleMeshHelper;
+import javafx.scene.transform.Translate;
 
 /**
  * A node that can be used as a visible link between two joints
@@ -51,10 +52,13 @@ import org.fxyz3d.shapes.primitives.helper.TriangleMeshHelper;
  */
 public class JointChain extends Group {
 
+    private static final Point3D POINT_Y = new Point3D(0, 1, 0);
     private final Box origin;
-    private final FrustumMesh bone;
+    private final Cylinder bone;
     private final Sphere end;
     private final double scale;
+    private final Rotate rotate;
+    private final Translate translate;
 
     public JointChain(Joint joint, double scale) {
         this.scale = scale == 0 ? 1 : scale;
@@ -62,13 +66,17 @@ public class JointChain extends Group {
         origin = new Box(16, 16, 16);
         origin.setMaterial(new PhongMaterial(getColor()));
 
-        bone = new FrustumMesh(6, 3, 1, 0);
-        bone.setSectionType(TriangleMeshHelper.SectionType.TRIANGLE);
-        bone.setTextureModeNone(getColor());
-        
+        bone = new Cylinder(5, 1);
+        rotate = new Rotate();
+        translate = new Translate();
+        bone.getTransforms().setAll(rotate, translate);
+        bone.setMaterial(new PhongMaterial(getColor()));
         end = new Sphere(5);
         end.setMaterial(new PhongMaterial(getColor()));
-        
+        end.translateXProperty().bind(bone.translateXProperty());
+        end.translateYProperty().bind(bone.translateYProperty());
+        end.translateZProperty().bind(bone.translateZProperty());
+
         getChildren().addAll(origin, bone, end);
         getTransforms().add(new Scale(scale, scale, scale));
 
@@ -81,10 +89,11 @@ public class JointChain extends Group {
         origin.setTranslateX(scaled.getX());
         origin.setTranslateY(scaled.getY());
         origin.setTranslateZ(scaled.getZ());
-        bone.setAxisOrigin(org.fxyz3d.geometry.Point3D.convertFromJavaFXPoint3D(scaled));
-        end.setTranslateX(bone.getAxisEnd().x);
-        end.setTranslateY(bone.getAxisEnd().y);
-        end.setTranslateZ(bone.getAxisEnd().z);
+        bone.setHeight(scaled.magnitude());
+        double angle = Math.toDegrees(Math.acos(POINT_Y.dotProduct(scaled) / scaled.magnitude()));
+        rotate.setAngle(angle);
+        rotate.setAxis(POINT_Y.crossProduct(scaled));
+        translate.setY(scaled.magnitude() / 2d);
     }
 
     private Point3D getJointLocation(Joint joint) {
