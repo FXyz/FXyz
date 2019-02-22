@@ -71,7 +71,7 @@ public class JointChain extends Group {
         translate = new Translate();
         bone.getTransforms().setAll(rotate, translate);
         bone.setMaterial(new PhongMaterial(getColor()));
-        end = new Sphere(5);
+        end = new Sphere(6);
         end.setMaterial(new PhongMaterial(getColor()));
         end.translateXProperty().bind(bone.translateXProperty());
         end.translateYProperty().bind(bone.translateYProperty());
@@ -86,14 +86,15 @@ public class JointChain extends Group {
 
     private void updateChain(Joint joint) {
         Point3D scaled = getJointLocation(joint).multiply(1d / scale);
+        final double magnitude = scaled.magnitude();
         origin.setTranslateX(scaled.getX());
         origin.setTranslateY(scaled.getY());
         origin.setTranslateZ(scaled.getZ());
-        bone.setHeight(scaled.magnitude());
-        double angle = Math.toDegrees(Math.acos(POINT_Y.dotProduct(scaled) / scaled.magnitude()));
+        bone.setHeight(magnitude);
+        double angle = Math.toDegrees(Math.acos(POINT_Y.dotProduct(scaled) / magnitude));
         rotate.setAngle(angle);
         rotate.setAxis(POINT_Y.crossProduct(scaled));
-        translate.setY(scaled.magnitude() / 2d);
+        translate.setY(magnitude / 2d);
     }
 
     private Point3D getJointLocation(Joint joint) {
