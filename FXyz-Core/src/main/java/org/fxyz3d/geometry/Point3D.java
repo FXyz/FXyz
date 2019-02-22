@@ -157,5 +157,12 @@ public class Point3D {
     public String toCSV() {
         return "" + x + ";" + y + ";" + z + ";"+f;
     }
-    
+
+    public static Point3D convertFromJavaFXPoint3D(javafx.geometry.Point3D point3D) {
+        return new Point3D((float) point3D.getX(), (float) point3D.getY(), (float) point3D.getZ());
+    }
+
+    public static javafx.geometry.Point3D convertToJavaFXPoint3D(Point3D point3D) {
+        return new javafx.geometry.Point3D(point3D.x, point3D.y, point3D.z);
+    }
 }
