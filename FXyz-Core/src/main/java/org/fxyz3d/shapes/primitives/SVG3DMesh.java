@@ -278,8 +278,8 @@ public class SVG3DMesh extends Group implements TextureMode {
     }
 
     @Override
-    public void setTextureModeVertices3D(Palette.ColorPalette palette, int colors, Function<Point3D, Number> dens) {
-        meshes.stream().forEach(m->m.setTextureModeVertices3D(palette, colors, dens));
+    public void setTextureModeVertices3D(Palette.ColorPalette palette, Function<Point3D, Number> dens) {
+        meshes.stream().forEach(m->m.setTextureModeVertices3D(palette, dens));
     }
 
     @Override
@@ -293,8 +293,8 @@ public class SVG3DMesh extends Group implements TextureMode {
     }
 
     @Override
-    public void setTextureModeVertices1D(Palette.ColorPalette palette, int colors, Function<Number, Number> function) {
-        meshes.stream().forEach(m->m.setTextureModeVertices1D(palette, colors, function));
+    public void setTextureModeVertices1D(Palette.ColorPalette palette, Function<Number, Number> function) {
+        meshes.stream().forEach(m->m.setTextureModeVertices1D(palette, function));
     }
 
     @Override
@@ -308,8 +308,13 @@ public class SVG3DMesh extends Group implements TextureMode {
     }
     
     @Override
-    public void setTextureModeFaces(Palette.ColorPalette palette, int colors) {
-        meshes.stream().forEach(m->m.setTextureModeFaces(palette, colors));
+    public void setTextureModeFaces(Palette.ColorPalette palette) {
+        meshes.stream().forEach(m->m.setTextureModeFaces(palette));
+    }
+
+    @Override
+    public void setTextureOpacity(double value) {
+        meshes.stream().forEach(m->m.setTextureOpacity(value));
     }
     
     @Override
