@@ -1,7 +1,7 @@
 /**
- * F(X)yz
+ * Triangle3D.java
  *
- * Copyright (c) 2013-2018, F(X)yz
+ * Copyright (c) 2018-2019, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,31 +25,39 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
+package org.fxyz3d.shapes.primitives.helper.delaunay;
 
-module org.fxyz3d.core {
-    requires transitive javafx.controls;
-    requires transitive javafx.swing;
-    requires java.desktop;
-    requires java.logging;
-    requires jcsg;
-    requires vvecmath;
-    requires poly2tri.core;
-    requires jzy3d.jdt.core;
+import org.fxyz3d.geometry.Point3D;
 
-    exports org.fxyz3d.geometry;
-    exports org.fxyz3d.io;
-    exports org.fxyz3d.scene;
-    exports org.fxyz3d.scene.paint;
-    exports org.fxyz3d.shapes;
-    exports org.fxyz3d.shapes.complex.cloth;
-    exports org.fxyz3d.shapes.composites;
-    exports org.fxyz3d.shapes.containers;
-    exports org.fxyz3d.shapes.polygon;
-    exports org.fxyz3d.shapes.polygon.symbolic;
-    exports org.fxyz3d.shapes.primitives;
-    exports org.fxyz3d.shapes.primitives.helper;
-    exports org.fxyz3d.tools;
-    exports org.fxyz3d.utils;
-    exports org.fxyz3d.utils.geom;
+/**
+ * a triangle consisting of three data points.
+ * Holds the result of delaunay triangulation
+ */
+public class Triangle3D {
+
+    private final Point3D p0, p1, p2;
+
+    private Triangle3D(Point3D p0, Point3D p1, Point3D p2) {
+        this.p0 = p0;
+        this.p1 = p1;
+        this.p2 = p2;
+    }
+
+    public static Triangle3D of(Point3D p1, Point3D p2, Point3D p3) {
+        return new Triangle3D(p1, p2, p3);
+    }
+
+    public Point3D getP0() {
+        return p0;
+    }
+
+    public Point3D getP1() {
+        return p1;
+    }
+
+    public Point3D getP2() {
+        return p2;
+    }
+
 }

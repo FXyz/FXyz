@@ -38,12 +38,17 @@ subprojects {
 
     repositories {
         jcenter()
+        maven {
+            url = "http://maven.jzy3d.org/releases"
+        }
     }
     
     dependencies {     
         implementation ('eu.mihosoft.vrl.jcsg:jcsg:0.5.7') { transitive = false }
         implementation 'eu.mihosoft.vvecmath:vvecmath:0.3.8'
         implementation 'org.orbisgis:poly2tri-core:0.1.2'
+        // A fork of JDT (Java Delaunay Triangulation) Core API from https://github.com/yonatang/JDT for Jzy3d
+        implementation 'org.jzy3d:jzy3d-jdt-core:1.0.2'
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
         testImplementation 'org.junit.jupiter:junit-jupiter-params:5.3.1'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
