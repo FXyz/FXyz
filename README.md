@@ -7,6 +7,9 @@ FXyz3D
  - FXyz3D Client: 
 [ ![Download](https://api.bintray.com/packages/jpereda/FXyz3D/fxyz3d-client/images/download.svg) ](https://bintray.com/jpereda/FXyz3D/fxyz3d-client/_latestVersion)
 
+ - FXyz3D Importers: 
+[ ![Download](https://api.bintray.com/packages/jpereda/FXyz3D/fxyz3d-importers/images/download.svg) ](https://bintray.com/jpereda/FXyz3D/fxyz3d-importers/_latestVersion)
+
 A JavaFX 3D Visualization and Component Library
 
 ## How to build
@@ -43,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.fxyz3d:fxyz3d:0.4.0'
+    implementation 'org.fxyz3d:fxyz3d:0.5.0'
 }
 
 javafx {
