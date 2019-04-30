@@ -3,7 +3,7 @@
 // -----------------------------------------------------------------------------
 ext.publishing.artifactId =  'fxyz3d-client'
 ext.publishing.groupId    =  'org.fxyz3d'
-ext.publishing.versionId  =  '0.4.0'
+ext.publishing.versionId  =  '0.5.0'
 
 ext.publishing.inceptionYear         = '2016'
 
