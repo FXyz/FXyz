@@ -1,7 +1,7 @@
 /**
  * TextureMode.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2019, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,36 +25,38 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 package org.fxyz3d.shapes.primitives.helper;
 
 import java.util.List;
 import java.util.function.Function;
-import javafx.scene.paint.Color;
+
 import org.fxyz3d.geometry.Point3D;
-import org.fxyz3d.scene.paint.Palette.ColorPalette;
-import org.fxyz3d.scene.paint.Patterns.CarbonPatterns;
+import org.fxyz3d.scene.paint.Patterns;
+import javafx.scene.paint.Color;
+import org.fxyz3d.scene.paint.Palette;
 
 /**
  *
- * @author usuario
+ * @author jpereda
  */
 public interface TextureMode {
-    
-    public void setTextureModeNone();
-    public void setTextureModeNone(Color color);
-    public void setTextureModeNone(Color color, String image);
-    public void setTextureModeImage(String image);
-    public void setTextureModePattern(CarbonPatterns pattern, double scale);
-    public void setTextureModeVertices3D(int colors, Function<Point3D, Number> dens);
-    public void setTextureModeVertices3D(ColorPalette palette, int colors, Function<Point3D, Number> dens);
-    public void setTextureModeVertices3D(int colors, Function<Point3D, Number> dens, double min, double max);
-    public void setTextureModeVertices1D(int colors, Function<Number, Number> function);
-    public void setTextureModeVertices1D(ColorPalette palette, int colors, Function<Number, Number> function);
-    public void setTextureModeVertices1D(int colors, Function<Number, Number> function, double min, double max);
-    public void setTextureModeFaces(int colors);
-    public void setTextureModeFaces(ColorPalette palette, int colors);
-    
-    public void updateF(List<Number> values);
+
+    void setTextureModeNone();
+    void setTextureModeNone(Color color);
+    void setTextureModeNone(Color color, String image);
+    void setTextureModeImage(String image);
+    void setTextureModePattern(Patterns.CarbonPatterns pattern, double scale);
+    void setTextureModeVertices3D(int colors, Function<Point3D, Number> dens);
+    void setTextureModeVertices3D(Palette.ColorPalette palette, Function<Point3D, Number> dens);
+    void setTextureModeVertices3D(int colors, Function<Point3D, Number> dens, double min, double max);
+    void setTextureModeVertices1D(int colors, Function<Number, Number> function);
+    void setTextureModeVertices1D(Palette.ColorPalette palette, Function<Number, Number> function);
+    void setTextureModeVertices1D(int colors, Function<Number, Number> function, double min, double max);
+    void setTextureModeFaces(int colors);
+    void setTextureModeFaces(Palette.ColorPalette palette);
+    void setTextureOpacity(double value);
+
+    void updateF(List<Number> values);
 }

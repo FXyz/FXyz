@@ -1,7 +1,7 @@
 /**
- * F(X)yz
+ * DelaunayPointAdapter.java
  *
- * Copyright (c) 2013-2018, F(X)yz
+ * Copyright (c) 2018-2019, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,31 +25,27 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
-module org.fxyz3d.core {
-    requires transitive javafx.controls;
-    requires transitive javafx.swing;
-    requires java.desktop;
-    requires java.logging;
-    requires jcsg;
-    requires vvecmath;
-    requires poly2tri.core;
-    requires jzy3d.jdt.core;
+package org.fxyz3d.shapes.primitives.helper.delaunay;
 
-    exports org.fxyz3d.geometry;
-    exports org.fxyz3d.io;
-    exports org.fxyz3d.scene;
-    exports org.fxyz3d.scene.paint;
-    exports org.fxyz3d.shapes;
-    exports org.fxyz3d.shapes.complex.cloth;
-    exports org.fxyz3d.shapes.composites;
-    exports org.fxyz3d.shapes.containers;
-    exports org.fxyz3d.shapes.polygon;
-    exports org.fxyz3d.shapes.polygon.symbolic;
-    exports org.fxyz3d.shapes.primitives;
-    exports org.fxyz3d.shapes.primitives.helper;
-    exports org.fxyz3d.tools;
-    exports org.fxyz3d.utils;
-    exports org.fxyz3d.utils.geom;
+import il.ac.idc.jdt.Point;
+import org.fxyz3d.geometry.Point3D;
+
+/**
+ * Conversion between Point and Point3D.
+ *
+ * FXyz uses Y axis for F(x,z) values
+ * Delaunay uses regular z = F(x,y)
+ * So y,z are switched
+ */
+public class DelaunayPointAdapter {
+
+    public Point convertPoint3DtoDelaunay(Point3D point) {
+        return new Point(point.getX(), point.getZ(), point.getY());
+    }
+
+    public Point3D convertPointFromDelaunay(Point coord) {
+        return new Point3D((float) coord.getX(), (float) coord.getZ(), (float) coord.getY());
+    }
 }

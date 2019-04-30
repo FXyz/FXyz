@@ -378,8 +378,8 @@ public class Text3DMesh extends Group implements TextureMode {
     }
 
     @Override
-    public void setTextureModeVertices3D(ColorPalette palette, int colors, Function<Point3D, Number> dens) {
-        meshes.stream().forEach(m->m.setTextureModeVertices3D(palette, colors, dens));
+    public void setTextureModeVertices3D(ColorPalette palette, Function<Point3D, Number> dens) {
+        meshes.stream().forEach(m->m.setTextureModeVertices3D(palette, dens));
     }
 
     @Override
@@ -393,8 +393,8 @@ public class Text3DMesh extends Group implements TextureMode {
     }
 
     @Override
-    public void setTextureModeVertices1D(ColorPalette palette, int colors, Function<Number, Number> function) {
-        meshes.stream().forEach(m->m.setTextureModeVertices1D(palette, colors, function));
+    public void setTextureModeVertices1D(ColorPalette palette, Function<Number, Number> function) {
+        meshes.stream().forEach(m->m.setTextureModeVertices1D(palette, function));
     }
 
     @Override
@@ -408,10 +408,15 @@ public class Text3DMesh extends Group implements TextureMode {
     }
     
     @Override
-    public void setTextureModeFaces(ColorPalette palette, int colors) {
-        meshes.stream().forEach(m->m.setTextureModeFaces(palette, colors));
+    public void setTextureModeFaces(ColorPalette palette) {
+        meshes.stream().forEach(m->m.setTextureModeFaces(palette));
     }
-    
+
+    @Override
+    public void setTextureOpacity(double value) {
+        meshes.stream().forEach(m->m.setTextureOpacity(value));
+    }
+
     @Override
     public void updateF(List<Number> values) {
          meshes.stream().forEach(m->m.updateF(values));
