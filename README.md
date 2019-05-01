@@ -2,15 +2,18 @@ FXyz3D
 ======
 
  - FXyz3D Core: 
- [ ![Download](https://api.bintray.com/packages/jpereda/FXyz3D/fxyz3d/images/download.svg) ](https://bintray.com/jpereda/FXyz3D/fxyz3d/_latestVersion)
+ [ ![Download](http://img.shields.io/maven-central/v/org.fxyz3d/fxyz3d.svg?color=%234DC71F) ](https://search.maven.org/search?q=g:org.fxyz3d%20AND%20a:fxyz3d)
 
  - FXyz3D Client: 
-[ ![Download](https://api.bintray.com/packages/jpereda/FXyz3D/fxyz3d-client/images/download.svg) ](https://bintray.com/jpereda/FXyz3D/fxyz3d-client/_latestVersion)
+[ ![Download](https://img.shields.io/maven-central/v/org.fxyz3d/fxyz3d-client.svg?color=%234DC71F) ](https://search.maven.org/search?q=g:org.fxyz3d%20AND%20a:fxyz3d-client)
 
  - FXyz3D Importers: 
-[ ![Download](https://api.bintray.com/packages/jpereda/FXyz3D/fxyz3d-importers/images/download.svg) ](https://bintray.com/jpereda/FXyz3D/fxyz3d-importers/_latestVersion)
+[ ![Download](https://img.shields.io/maven-central/v/org.fxyz3d/fxyz3d-importers.svg?color=%234DC71F) ](https://search.maven.org/search?q=g:org.fxyz3d%20AND%20a:fxyz3d-importers)
 
 A JavaFX 3D Visualization and Component Library
+
+[![BSD-3 license](https://img.shields.io/badge/license-BSD--3-%230778B9.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
 
 ## How to build
 
@@ -42,7 +45,7 @@ plugins {
 mainClassName = 'org.fxyz3d.Sample'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
