@@ -317,7 +317,7 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
             PickResult pr = me.getPickResult();
             if (pr != null && pr.getIntersectedNode() != null
                     && pr.getIntersectedNode() instanceof Sphere
-                    && pr.getIntersectedNode().getId().equals("knot")) {
+                    && "knot".equals(pr.getIntersectedNode().getId())) {
                 distance = pr.getIntersectedDistance();
                 sphere = (Sphere) pr.getIntersectedNode();
                 isPicking.set(true);

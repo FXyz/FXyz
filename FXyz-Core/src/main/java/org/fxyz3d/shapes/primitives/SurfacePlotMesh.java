@@ -1,7 +1,7 @@
 /**
  * SurfacePlotMesh.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2019, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,11 +25,13 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
-
+ */
 package org.fxyz3d.shapes.primitives;
 
+import java.util.Arrays;
 import java.util.function.Function;
+
+import org.fxyz3d.geometry.Face3;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -41,8 +43,8 @@ import javafx.scene.DepthTest;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
-import org.fxyz3d.geometry.Face3;
 import org.fxyz3d.geometry.Point3D;
+import org.fxyz3d.shapes.polygon.PolygonMesh;
 
 /**
  * SurfacePlotMesh to plot 2D functions z = f(x,y)
@@ -50,13 +52,15 @@ import org.fxyz3d.geometry.Point3D;
 public class SurfacePlotMesh extends TexturedMesh {
 
     private static final Function<Point2D,Number> DEFAULT_FUNCTION = p->Math.sin(p.magnitude())/p.magnitude();
-    
+
     private static final double DEFAULT_X_RANGE = 10; // -5 +5
     private static final double DEFAULT_Y_RANGE = 10; // -5 +5
     private static final int DEFAULT_X_DIVISIONS = 64;
     private static final int DEFAULT_Y_DIVISIONS = 64;
     private static final double DEFAULT_FUNCTION_SCALE = 1.0D;
-    
+
+    private PolygonMesh polygonMesh;
+
     public SurfacePlotMesh() {
         this(DEFAULT_FUNCTION,DEFAULT_X_RANGE,DEFAULT_Y_RANGE,DEFAULT_X_DIVISIONS, DEFAULT_Y_DIVISIONS,DEFAULT_FUNCTION_SCALE);
     }
@@ -80,7 +84,7 @@ public class SurfacePlotMesh extends TexturedMesh {
         setDivisionsX(divisionsX);
         setDivisionsY(divisionsY);
         setFunctionScale(functionScale);
-        
+
         updateMesh();
         setCullFace(CullFace.BACK);
         setDrawMode(DrawMode.FILL);
@@ -88,16 +92,21 @@ public class SurfacePlotMesh extends TexturedMesh {
     }
 
     @Override
-    protected final void updateMesh(){       
+    protected final void updateMesh(){
         setMesh(null);
         mesh=createPlotMesh(
-            getFunction2D(), 
-            getRangeX(),getRangeY(),
-            getDivisionsX(),getDivisionsY(), 
-            getFunctionScale());
+                getFunction2D(),
+                getRangeX(),getRangeY(),
+                getDivisionsX(),getDivisionsY(),
+                getFunctionScale());
+        polygonMesh=createPolygonMesh(
+                getFunction2D(),
+                getRangeX(),getRangeY(),
+                getDivisionsX(),getDivisionsY(),
+                getFunctionScale());
         setMesh(mesh);
     }
-    
+
     private final ObjectProperty<Function<Point2D, Number>> function2D = new SimpleObjectProperty<Function<Point2D, Number>>(DEFAULT_FUNCTION){
         @Override
         protected void invalidated() {
@@ -118,7 +127,7 @@ public class SurfacePlotMesh extends TexturedMesh {
     public ObjectProperty function2DProperty() {
         return function2D;
     }
-    
+
     private final DoubleProperty rangeX = new SimpleDoubleProperty(DEFAULT_X_RANGE){
         @Override
         protected void invalidated() {
@@ -139,7 +148,7 @@ public class SurfacePlotMesh extends TexturedMesh {
     public DoubleProperty rangeXProperty() {
         return rangeX;
     }
-    
+
     private final DoubleProperty rangeY = new SimpleDoubleProperty(DEFAULT_Y_RANGE){
         @Override
         protected void invalidated() {
@@ -160,7 +169,7 @@ public class SurfacePlotMesh extends TexturedMesh {
     public DoubleProperty rangeYProperty() {
         return rangeY;
     }
-    
+
     private final IntegerProperty divisionsX = new SimpleIntegerProperty(DEFAULT_X_DIVISIONS){
         @Override
         protected void invalidated() {
@@ -181,7 +190,7 @@ public class SurfacePlotMesh extends TexturedMesh {
     public IntegerProperty divisionsXProperty() {
         return divisionsX;
     }
-    
+
     private final IntegerProperty divisionsY = new SimpleIntegerProperty(DEFAULT_Y_DIVISIONS){
         @Override
         protected void invalidated() {
@@ -222,32 +231,35 @@ public class SurfacePlotMesh extends TexturedMesh {
     public DoubleProperty functionScaleProperty() {
         return functionScale;
     }
-    
-    
+
+    public PolygonMesh getPolygonMesh() {
+        return polygonMesh;
+    }
+
     private TriangleMesh createPlotMesh(Function<Point2D,Number> function2D, double rangeX, double rangeY, int divisionsX, int divisionsY, double scale) {
-    
+
         listVertices.clear();
         listTextures.clear();
         listFaces.clear();
-        
+
         int numDivX = divisionsX + 1;
         float pointY;
-        
+
         areaMesh.setWidth(rangeX);
         areaMesh.setHeight(rangeY);
-        
+
         // Create points
         for (int y = 0; y <= divisionsY; y++) {
             float dy = (float)(-rangeY/2d + ((float)y /(float)divisionsY)*rangeY);
             for (int x = 0; x <= divisionsX; x++) {
                 float dx = (float)(-rangeX/2d + ((float)x /(float)divisionsX)*rangeX);
-                    pointY = (float)scale*function2D.apply(new Point2D(dx,dy)).floatValue();
-                    listVertices.add(new Point3D(dx, pointY, dy));
+                pointY = (float)scale*function2D.apply(new Point2D(dx,dy)).floatValue();
+                listVertices.add(new Point3D(dx, pointY, dy));
             }
         }
         // Create texture coordinates
         createTexCoords(divisionsX,divisionsY);
-        
+
         // Create textures indices
         for (int y = 0; y < divisionsY; y++) {
             for (int x = 0; x < divisionsX; x++) {
@@ -255,7 +267,7 @@ public class SurfacePlotMesh extends TexturedMesh {
                 int p01 = p00 + 1;
                 int p10 = p00 + numDivX;
                 int p11 = p10 + 1;
-                listTextures.add(new Face3(p00,p10,p11));                
+                listTextures.add(new Face3(p00,p10,p11));
                 listTextures.add(new Face3(p11,p01,p00));
             }
         }
@@ -266,11 +278,54 @@ public class SurfacePlotMesh extends TexturedMesh {
                 int p01 = p00 + 1;
                 int p10 = p00 + numDivX;
                 int p11 = p10 + 1;
-                listFaces.add(new Face3(p00,p10,p11));                
+                listFaces.add(new Face3(p00,p10,p11));
                 listFaces.add(new Face3(p11,p01,p00));
             }
         }
         return createMesh();
+    }
+
+    private PolygonMesh createPolygonMesh(Function<Point2D,Number> function2D, double rangeX, double rangeY, int divisionsX, int divisionsY, double scale) {
+
+        int numDivX = divisionsX + 1;
+        float pointY;
+
+        // Create points
+        float[] points = new float[(divisionsY + 1) * numDivX * 3];
+        int counter = 0;
+        for (int y = 0; y <= divisionsY; y++) {
+            float dy = (float)(-rangeY/2d + ((float)y /(float)divisionsY)*rangeY);
+            for (int x = 0; x <= divisionsX; x++) {
+                float dx = (float)(-rangeX/2d + ((float)x /(float)divisionsX)*rangeX);
+                pointY = 1.0f*(float)scale*function2D.apply(new Point2D(dx,dy)).floatValue();
+                points[counter++] = dx;
+                points[counter++] = pointY;
+                points[counter++] = dy;
+            }
+        }
+
+        // Create faces indices
+        int[][] faces = new int[divisionsY * divisionsX][8];
+        counter = 0;
+        for (int y = 0; y < divisionsY; y++) {
+            for (int x = 0; x < divisionsX; x++) {
+                int p00 = y * numDivX + x;
+                int p01 = p00 + 1;
+                int p10 = p00 + numDivX;
+                int p11 = p10 + 1;
+                faces[counter][0] = p00;
+                faces[counter][2] = p10;
+                faces[counter][4] = p11;
+                faces[counter][6]= p01;
+                counter++;
+            }
+        }
+
+        PolygonMesh mesh = new PolygonMesh(points, new float[]{0, 0}, faces);
+        int[] faceSmoothingGroups = new int[faces.length]; // 0 == hard edges
+        Arrays.fill(faceSmoothingGroups, 1);
+        mesh.getFaceSmoothingGroups().addAll(faceSmoothingGroups);
+        return mesh;
     }
 
 

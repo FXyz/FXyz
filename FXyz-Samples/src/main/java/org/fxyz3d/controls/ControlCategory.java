@@ -31,6 +31,7 @@ package org.fxyz3d.controls;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -43,7 +44,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -79,37 +79,19 @@ public class ControlCategory  extends TitledPane{
         this.setText(title);
         this.setFocusTraversable(false);
         //EasyBind.listBind(controlItems, controls.getChildren());       
-        this.listView.setCellFactory(new Callback<ListView<StackPane>,ListCell<StackPane>>() {
-            
-            @Override
-            public ListCell<StackPane> call(ListView<StackPane> param) {
-                return new ListCell<StackPane>(){
-                    {
-                        this.setFocusTraversable(false);
-                        this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    }
-                    @Override
-                    public boolean isResizable() {
-                        return false; //To change body of generated methods, choose Tools | Templates.
-                    }
-                    
-                    @Override
-                    public void updateSelected(boolean selected) {
-                        //do nothing...
-                    }
-                    
-                    @Override
-                    protected void updateItem(StackPane item, boolean empty) {
-                        if(item != null && !empty){
-                            
-                            super.updateItem(item, empty);                            
-                            super.setGraphic(item);                            
-                        }
-                    }
-                    
-                };
-            }
-        });
+        this.listView.setCellFactory(p -> new ListCell<>() {
+                {
+                    this.setFocusTraversable(false);
+                    this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                }
+
+                @Override
+                protected void updateItem(StackPane item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setGraphic(item != null && !empty ? item : null);
+                }
+
+            });
     }
         
     public void addControl(StackPane n){
@@ -122,10 +104,13 @@ public class ControlCategory  extends TitledPane{
             controlItems.addAll(ctrls);
         }
     }
+
     public void removeControl(Node ...  n){
         controlItems.removeAll(Arrays.asList(n));
     }
     
-    
+    public void removeIf(Predicate<StackPane> filter) {
+        controlItems.removeIf(filter);
+    }
     
 }

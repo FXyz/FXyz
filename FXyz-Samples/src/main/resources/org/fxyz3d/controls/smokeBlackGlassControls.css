@@ -173,7 +173,7 @@
  ******************************************************************************/
 
 * .cell:hover{
-    -fx-background-color: -fx-selection-bar;
+    -fx-background-color: -fxyz-selection-bar;
     -fx-background-insets: 0;
     -fx-border-insets: 0;
 }
@@ -200,7 +200,8 @@
 }
 /* standard cell */
 .list-cell,
-.tree-cell {
+.tree-cell,
+.tree-table-cell {
     -fx-text-fill: white;
 }
 
@@ -215,8 +216,9 @@
 
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
 .tree-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-cell:filled:selected{
-    -fx-background: -fx-selection-bar;
-    -fx-table-cell-border-color: derive(-fx-selection-bar, 20%);
+.tree-table-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell .tree-table-cell:filled:selected{
+    -fx-background: -fxyz-selection-bar;
+    -fx-table-cell-border-color: derive(-fxyz-selection-bar, 20%);
 }
 
 /*******************************************************************************
@@ -246,11 +248,11 @@
 }
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
     -fx-background: -fx-faint-focus-color, #ffffff33;
-    -fx-background-color: -fx-selection-bar;
+    -fx-background-color: -fxyz-selection-bar;
 }
 .combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
 .combo-box-popup  > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected:hover {
-    -fx-background: -fx-selection-bar;
+    -fx-background: -fxyz-selection-bar;
     -fx-background-color: -fx-background, -fx-cell-focus-inner-border, -fx-background;
     -fx-background-insets: 0, 1, 2;
 }
@@ -420,8 +422,9 @@
  * TreeView and TreeCell                                                       *
  *                                                                             *
  ******************************************************************************/
-.tree-view{
-    -fx-background-color: -fx-selection-bar;
+.tree-view,
+.tree-table-view {
+    -fx-background-color: -fxyz-selection-bar;
 }
 .tree-cell {
     -fx-padding: 0.25em; /* 3 */
@@ -446,6 +449,13 @@
     -fx-rotate: 90;
 }
 
+.tree-table-view > .column-header-background {
+    -fx-background-color: -fx-inner-border, -fxyz-selection-bar;
+    -fx-background-insets: 0, 1;
+}
+.tree-table-view .column-header .label {
+    -fx-text-fill: white;
+}
 /*******************************************************************************
  *                                                                             *
  * Tooltip                                                                     *

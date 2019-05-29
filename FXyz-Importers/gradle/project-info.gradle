@@ -3,13 +3,13 @@
 // -----------------------------------------------------------------------------
 ext.publishing.artifactId =  'fxyz3d-importers' // project.name.toLowerCase()
 ext.publishing.groupId    =  'org.fxyz3d'
-ext.publishing.versionId  =  '0.4.0'
+ext.publishing.versionId  =  '0.5.0'
 
 ext.publishing.inceptionYear         = '2016'
 
 ext.publishing.bintray.repo          = 'FXyz3D'
 ext.publishing.bintray.userOrg       = 'jpereda'
-ext.publishing.bintray.name          = 'fxyz3d' // project.name
+ext.publishing.bintray.name          = 'fxyz3d-importers' // project.name
 
 ext.publishing.desc                  = 'Fxyz3D'
 ext.publishing.license               = 'BSD 3-Clause'

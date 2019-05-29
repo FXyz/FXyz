@@ -239,7 +239,9 @@
      * remove the setting -fx-background in all the sections that use
      * -fx-selection-bar.
      */
-    -fx-selection-bar-non-focused: 
+
+    -fx-selection-bar-non-focused: -fx-faint-focus-color;
+    -fxyz-selection-bar-non-focused:
         linear-gradient(
         to right,
         transparent 0%,
@@ -247,7 +249,8 @@
         transparent 100%
         );
 
-    -fx-selection-bar: 
+    -fx-selection-bar: -fx-faint-focus-color;
+    -fxyz-selection-bar:
         linear-gradient(
         to right,
         transparent 0%,
@@ -279,12 +282,12 @@
     -fx-padding: inherit;
 
     /* The color to use in ListView/TreeView/TableView to indicate hover. */
-    -fx-cell-hover-color: -fx-selection-bar;
+    -fx-cell-hover-color: -fxyz-selection-bar;
 
-    -fx-cell-focus-inner-border: -fx-selection-bar-non-focused;
+    -fx-cell-focus-inner-border: -fxyz-selection-bar-non-focused;
 
     /* The colors to use in Pagination */
-    -fx-page-bullet-border: -fx-box-border;    
+    -fx-page-bullet-border: -fx-box-border;
     -fx-page-indicator-hover-border: -fx-box-border;
 
 }

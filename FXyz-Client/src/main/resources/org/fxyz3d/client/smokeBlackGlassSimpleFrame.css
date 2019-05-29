@@ -68,3 +68,15 @@
 .fxyz-control-window-icon{
     -fx-image:url("../images/logo2.png");
 }
+
+.fxyz-split-pane {
+    -fx-background-color: transparent;
+}
+
+.fxyz-split-pane:horizontal > .split-pane-divider {
+    -fx-background-color: transparent;
+}
+
+.fxyz-split-pane:horizontal > .split-pane-divider:hover {
+    -fx-background-color: -fxyz-selection-bar;
+}
