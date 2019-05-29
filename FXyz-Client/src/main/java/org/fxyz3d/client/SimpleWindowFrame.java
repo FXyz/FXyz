@@ -49,6 +49,7 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -213,25 +214,26 @@ public class SimpleWindowFrame extends AnchorPane {
             stage.setY(e.getScreenY() - mY);
         });
         // window resizing
-        /*southEastResize.setOnMouseEntered(e -> e.consume());
+        southEastResize.setCursor(Cursor.SE_RESIZE);
+
+        southEastResize.setOnMouseEntered(e -> e.consume());
         southEastResize.setOnMouseExited(e -> e.consume());
         southEastResize.setOnMousePressed((e) -> {
             dragOffsetX = (getTranslateX() + getWidth() - e.getScreenX());
             dragOffsetY = (getTranslateY() + getHeight() - e.getScreenY());
-            //e.consume();
         });        
         southEastResize.setOnMouseDragged((e) -> {
-            double x = e.getScreenX() + dragOffsetX,
-                    y = e.getScreenY() + dragOffsetY;
+            double x = e.getScreenX() + dragOffsetX;
+            double y = e.getScreenY() + dragOffsetY;
             double w = x - getTranslateX();
             double h = y - getTranslateY();
 
             setPrefWidth(Math.max(stageMinWidth, w));
             setPrefHeight(Math.max(stageMinHeight, h));
-            Platform.runLater(() -> stage.sizeToScene());
-            //e.consume();
-        });*/
 
+            stage.setWidth(getPrefWidth());
+            stage.setHeight(getPrefHeight());
+        });
     }
 
     public HBox getHeaderBar() {
