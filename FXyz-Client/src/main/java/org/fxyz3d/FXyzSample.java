@@ -37,71 +37,59 @@ import javafx.stage.Stage;
 public interface FXyzSample {
 
     /**
-     * A short, most likely single-word, name to show to the user - e.g. "CheckBox"
-     * @return 
+     * @return A short, most likely single-word, name to show to the user - e.g. "CheckBox"
      */
     public String getSampleName();
 
     /**
-     * A short, multiple sentence description of the sample. 
-     * @return 
+     * @return A short, multiple sentence description of the sample.
      */
     public String getSampleDescription();
     
     /**
-     * Returns the name of the project that this sample belongs to (e.g. 'JFXtras'
-     * or 'ControlsFX').
-     * @return 
+     * @return the name of the project that this sample belongs to (e.g. 'JFXtras' or 'ControlsFX').
      */
     public String getProjectName();
     
     /**
-     * Returns the version of the project that this sample belongs to (e.g. '1.0.0')
-     * @return 
+     * @return the version of the project that this sample belongs to (e.g. '1.0.0')
      */
     public String getProjectVersion();
     
     /**
-     * Returns the main sample panel.
      * @param stage
-     * @return 
+     * @return the main sample panel.
      */
     public Node getPanel(final Stage stage);
 
     /**
-     * Returns the panel to display to the user that allows for manipulating
-     * the sample.
-     * @return 
+     * @return the panel to display to the user that allows for manipulating the sample.
      */
     public Node getControlPanel();
     
-    /**
+    /*
      * Returns divider position to use for split between main panel and control panel 
      * @return 
      */
     //public double getControlPanelDividerPosition();
 
     /**
-     * A full URL to the javadoc for the API being demonstrated in this sample.
-     * @return 
+     * @return A full URL to the javadoc for the API being demonstrated in this sample.
      */
     public String getJavaDocURL();
     
     /**
-     * Returns URL for control's stylsheet
-     * @return 
+     * @return URL for control's stylesheet
      */
     public String getControlStylesheetURL();
     
     /**
-     * A full URL to a sample source code, which is assumed to be in java.
-     * @return 
+     * @return A full URL to a sample source code, which is assumed to be in java.
      */
     public String getSampleSourceURL();
     
     /**
-     * If true this sample is shown to users, if false it is not.
-     * @return 
+     * @return If true this sample is shown to users, if false it is not.
      */
     public boolean isVisible();
 
