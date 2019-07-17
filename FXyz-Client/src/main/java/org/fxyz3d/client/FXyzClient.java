@@ -76,7 +76,6 @@ import org.fxyz3d.model.SampleTree;
 import org.fxyz3d.model.WelcomePage;
 import org.fxyz3d.util.SampleScanner;
 
-
 public class FXyzClient extends Application {
 
     public static final String 
@@ -92,12 +91,14 @@ public class FXyzClient extends Application {
 
     private static FXyzClient rootClientInstance;
 
+    public static FXyzClient getRootClientInstance() {
+        return rootClientInstance;
+    }
+
     public FXyzClient() {
         rootClientInstance = FXyzClient.this;
     }
-    
-    
-    
+
     private Map<String, Project> projectsMap;
     private Stage stage;
     private FXyzSample selectedSample;
@@ -107,7 +108,6 @@ public class FXyzClient extends Application {
 
     private VBox leftSideContent, contentControls;
     private StackPane centerContent;
-    private HBox contentPane;
     
     private HiddenSidesClient client;
     private SimpleWindowFrame frame;
@@ -464,12 +464,6 @@ public class FXyzClient extends Application {
         String template = getResource("/fxsampler/util/CssTemplate.html", null);
         return template.replace("<source/>", src);
     }
-
-    public static FXyzClient getRootClientInstance() {
-        return rootClientInstance;
-    }
-    
-    
 
     public static void main(String[] args) {
         launch(args);

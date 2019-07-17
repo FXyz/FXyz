@@ -130,10 +130,48 @@ public class SimpleWindowFrame extends AnchorPane {
             }
         });
         exit.setOnAction(a -> Platform.exit());
-        
-        
-        //setTranslateX(stage.getX());
-        //setTranslateY(stage.getY());
+    }
+
+    private void initWindowControls() {
+        // drag controls
+        sceneProperty().addListener(i -> {
+            if (getScene() != null) {
+                getScene().setOnMousePressed(e -> {
+                    mOX = mX;
+                    mOY = mY;
+                    mX = e.getSceneX();
+                    mY = e.getSceneY();
+                    mDX = mX - mOX;
+                    mDY = mY - mOY;
+
+                });
+            }
+        });
+        headerBar.setOnMouseDragged((e) -> {
+            stage.setX(e.getScreenX() - mX);
+            stage.setY(e.getScreenY() - mY);
+        });
+        // window resizing
+        southEastResize.setCursor(Cursor.SE_RESIZE);
+
+        southEastResize.setOnMouseEntered(e -> e.consume());
+        southEastResize.setOnMouseExited(e -> e.consume());
+        southEastResize.setOnMousePressed((e) -> {
+            dragOffsetX = (getTranslateX() + getWidth() - e.getScreenX());
+            dragOffsetY = (getTranslateY() + getHeight() - e.getScreenY());
+        });
+        southEastResize.setOnMouseDragged((e) -> {
+            double x = e.getScreenX() + dragOffsetX;
+            double y = e.getScreenY() + dragOffsetY;
+            double w = x - getTranslateX();
+            double h = y - getTranslateY();
+
+            setPrefWidth(Math.max(stageMinWidth, w));
+            setPrefHeight(Math.max(stageMinHeight, h));
+
+            stage.setWidth(getPrefWidth());
+            stage.setHeight(getPrefHeight());
+        });
     }
 
     public void setRootContent(Node node) {
@@ -194,48 +232,6 @@ public class SimpleWindowFrame extends AnchorPane {
         return iconView.getImage();
     }
 
-    private void initWindowControls() {
-        // drag controls
-        sceneProperty().addListener(i -> {
-            if (getScene() != null) {
-                getScene().setOnMousePressed(e -> {
-                    mOX = mX;
-                    mOY = mY;
-                    mX = e.getSceneX();
-                    mY = e.getSceneY();
-                    mDX = mX - mOX;
-                    mDY = mY - mOY;
-
-                });
-            }
-        });
-        headerBar.setOnMouseDragged((e) -> {
-            stage.setX(e.getScreenX() - mX);
-            stage.setY(e.getScreenY() - mY);
-        });
-        // window resizing
-        southEastResize.setCursor(Cursor.SE_RESIZE);
-
-        southEastResize.setOnMouseEntered(e -> e.consume());
-        southEastResize.setOnMouseExited(e -> e.consume());
-        southEastResize.setOnMousePressed((e) -> {
-            dragOffsetX = (getTranslateX() + getWidth() - e.getScreenX());
-            dragOffsetY = (getTranslateY() + getHeight() - e.getScreenY());
-        });        
-        southEastResize.setOnMouseDragged((e) -> {
-            double x = e.getScreenX() + dragOffsetX;
-            double y = e.getScreenY() + dragOffsetY;
-            double w = x - getTranslateX();
-            double h = y - getTranslateY();
-
-            setPrefWidth(Math.max(stageMinWidth, w));
-            setPrefHeight(Math.max(stageMinHeight, h));
-
-            stage.setWidth(getPrefWidth());
-            stage.setHeight(getPrefHeight());
-        });
-    }
-
     public HBox getHeaderBar() {
         return headerBar;
     }
@@ -272,9 +268,6 @@ public class SimpleWindowFrame extends AnchorPane {
         return southEastResize;
     }
 
-    
-    
-    //==========================================================================
     public final Window getOwner() {
         return stage.getOwner();
     }
@@ -634,5 +627,4 @@ public class SimpleWindowFrame extends AnchorPane {
     public EventDispatchChain buildStageEventDispatchChain(EventDispatchChain tail) {
         return stage.buildEventDispatchChain(tail);
     }
-
 }
