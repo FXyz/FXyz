@@ -83,9 +83,6 @@ public class HiddenSidesClient extends AnchorPane{
         this.getChildren().add(rootPane);
     }
 
-
-   
-
     public final DoubleProperty triggerDistanceProperty() {
         return rootPane.triggerDistanceProperty();
     }
@@ -202,7 +199,4 @@ public class HiddenSidesClient extends AnchorPane{
     public final String getUserAgentStylesheet() {
         return rootPane.getUserAgentStylesheet();
     }
-    
-    
-    
 }

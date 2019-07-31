@@ -76,21 +76,29 @@ import org.fxyz3d.model.SampleTree;
 import org.fxyz3d.model.WelcomePage;
 import org.fxyz3d.util.SampleScanner;
 
-
 public class FXyzClient extends Application {
 
     public static final String 
             BACKGROUNDS = FXyzClient.class.getResource("/org/fxyz3d/client/clientBackgrounds.css").toExternalForm(),
             BLACK_GLASS_BASE = FXyzClient.class.getResource("/org/fxyz3d/client/smokeBlackGlassBase.css").toExternalForm();
             //BLACK_GLASS_CONTROLS = FXyzClient.class.getResource("/org/fxyz3d/client/smokeBlackGlassControls.css").toExternalForm();
+
+    private static final int MIN_WINDOW_WIDTH = 800;
+    private static final int MIN_WINDOW_HEIGHT = 600;
+
+    private static final int INITIAL_WINDOW_WIDTH = 1200;
+    private static final int INITIAL_WINDOW_HEIGHT = 768;
+
     private static FXyzClient rootClientInstance;
+
+    public static FXyzClient getRootClientInstance() {
+        return rootClientInstance;
+    }
 
     public FXyzClient() {
         rootClientInstance = FXyzClient.this;
     }
-    
-    
-    
+
     private Map<String, Project> projectsMap;
     private Stage stage;
     private FXyzSample selectedSample;
@@ -100,7 +108,6 @@ public class FXyzClient extends Application {
 
     private VBox leftSideContent, contentControls;
     private StackPane centerContent;
-    private HBox contentPane;
     
     private HiddenSidesClient client;
     private SimpleWindowFrame frame;
@@ -193,7 +200,7 @@ public class FXyzClient extends Application {
         client.setLeft(leftSideContent);
         client.setTriggerDistance(20);
         
-        frame = new SimpleWindowFrame(stage, 1280, 800);
+        frame = new SimpleWindowFrame(stage, MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
         frame.setText("Fxyz-SamplerApp <ver: 0.1.1>");
         frame.setRootContent(client);
                 
@@ -205,7 +212,7 @@ public class FXyzClient extends Application {
             changeToWelcomePage(null);
         }
 
-        Scene scene = new Scene(frame, 1200, 768);
+        Scene scene = new Scene(frame, INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT);
         scene.setFill(Color.TRANSPARENT);
         scene.getStylesheets().addAll(BLACK_GLASS_BASE);
 
@@ -457,12 +464,6 @@ public class FXyzClient extends Application {
         String template = getResource("/fxsampler/util/CssTemplate.html", null);
         return template.replace("<source/>", src);
     }
-
-    public static FXyzClient getRootClientInstance() {
-        return rootClientInstance;
-    }
-    
-    
 
     public static void main(String[] args) {
         launch(args);

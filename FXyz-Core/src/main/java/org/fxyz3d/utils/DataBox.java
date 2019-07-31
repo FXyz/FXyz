@@ -147,7 +147,7 @@ public class DataBox {
                 .orElse(1.0);
         setMaxY(Math.max(max, getMaxY()));
         max = points.parallelStream()
-                .mapToDouble(p -> p.x)
+                .mapToDouble(p -> p.z)
                 .max()
                 .orElse(1.0);
         setMaxZ(Math.max(max, getMaxZ()));

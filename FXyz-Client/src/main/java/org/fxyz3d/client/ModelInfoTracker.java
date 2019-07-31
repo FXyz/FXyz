@@ -126,7 +126,4 @@ public class ModelInfoTracker extends StackPane {
     public Label getFaces() {
         return faces;
     }
-
-       
-    
 }
