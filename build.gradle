@@ -1,7 +1,7 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.7'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'com.github.hierynomus.license' version '0.15.0'
     id 'net.nemerosa.versioning' version '2.7.1'
     id 'com.jfrog.bintray' version '1.8.4'

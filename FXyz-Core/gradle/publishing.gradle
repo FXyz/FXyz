@@ -103,6 +103,9 @@ publishing {
                 root.dependencies.'*'
                         .findAll() { it.groupId.text() == 'org.openjfx' }
                         .each { it.remove(it.classifier) }
+                def repository = root.appendNode('repositories').appendNode('repository')
+                repository.appendNode('id', 'jzy3d')
+                repository.appendNode('url', 'http://maven.jzy3d.org/releases')
                 root.appendNode 'description', publishing.desc
                 root.children().last() + pomConfig
             }
