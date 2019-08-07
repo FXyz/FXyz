@@ -30,7 +30,7 @@ dependencies {
 
 compileJava {
     doFirst {
-        options.compilerArgs = [
+        options.compilerArgs += [
                 '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples'
         ]
     }
@@ -39,7 +39,7 @@ compileJava {
 
 run {
     doFirst {
-        jvmArgs = ['--add-exports', 'javafx.base/com.sun.javafx.runtime=controlsfx', 
+        jvmArgs += ['--add-exports', 'javafx.base/com.sun.javafx.runtime=controlsfx',
                    '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples']
     }
 }
