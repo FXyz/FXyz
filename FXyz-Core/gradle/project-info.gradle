@@ -3,7 +3,7 @@
 // -----------------------------------------------------------------------------
 ext.publishing.artifactId =  'fxyz3d' // project.name.toLowerCase()
 ext.publishing.groupId    =  'org.fxyz3d'
-ext.publishing.versionId  =  '0.5.1'
+ext.publishing.versionId  =  '0.5.2'
 
 ext.publishing.inceptionYear         = '2016'
 
