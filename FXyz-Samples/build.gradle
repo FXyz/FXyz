@@ -44,7 +44,7 @@ compileJava {
 
 run {
     doFirst {
-        jvmArgs += ['--add-exports', 'javafx.base/com.sun.javafx.runtime=controlsfx',
+        jvmArgs += ['--add-exports', 'javafx.base/com.sun.javafx.runtime=org.controlsfx.controls',
                    '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples']
     }
 }
