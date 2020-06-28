@@ -20,7 +20,6 @@ application {
 applicationName = 'FXyz-Samples'
 mainClassName = "${fxyz_sampler_mainClass}"
 ext.mainClass = mainClassName
-applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC"]
 
 dependencies {
     implementation project(':FXyz-Client')
