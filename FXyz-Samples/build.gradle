@@ -13,8 +13,12 @@ repositories {
     }
 }
 
+application {
+    mainModule = moduleName
+}
+
 applicationName = 'FXyz-Samples'
-mainClassName = "${moduleName}/${fxyz_sampler_mainClass}"
+mainClassName = "${fxyz_sampler_mainClass}"
 ext.mainClass = mainClassName
 applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC"]
 
