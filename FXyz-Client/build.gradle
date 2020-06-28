@@ -16,7 +16,9 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {    
-    implementation 'org.controlsfx:controlsfx:9.0.0'
+    implementation ('org.controlsfx:controlsfx:11.0.1') {
+        exclude group:"org.openjfx"
+    }
     implementation 'org.reactfx:reactfx:2.0-M5'    
 }
 

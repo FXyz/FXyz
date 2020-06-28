@@ -34,7 +34,7 @@ module org.fxyz3d.FXyz.Samples {
     requires transitive javafx.controls;
     requires transitive javafx.fxml;
     requires java.logging;
-    requires controlsfx;
+    requires org.controlsfx.controls;
     requires easybind;
     requires reactfx;
     requires jfxtras.common;
