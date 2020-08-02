@@ -1,12 +1,12 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
     id 'com.github.hierynomus.license' version '0.15.0'
-    id 'net.nemerosa.versioning' version '2.7.1'
-    id 'com.jfrog.bintray' version '1.8.4'
-    id 'com.github.ben-manes.versions' version '0.13.0'
-    id "com.github.johnrengelman.shadow" version "4.0.3"
+    id 'net.nemerosa.versioning' version '2.8.2'
+    id 'com.jfrog.bintray' version '1.8.5'
+    id 'com.github.ben-manes.versions' version '0.28.0'
+    id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
 apply plugin: 'base'
@@ -45,7 +45,7 @@ subprojects {
     
     dependencies {     
         implementation ('eu.mihosoft.vrl.jcsg:jcsg:0.5.7') { transitive = false }
-        implementation 'eu.mihosoft.vvecmath:vvecmath:0.3.8'
+        implementation 'eu.mihosoft.vvecmath:vvecmath:0.4.0'
         implementation 'org.orbisgis:poly2tri-core:0.1.2'
         // A fork of JDT (Java Delaunay Triangulation) Core API from https://github.com/yonatang/JDT for Jzy3d
         implementation 'org.jzy3d:jzy3d-jdt-core:1.0.2'
@@ -71,7 +71,7 @@ subprojects {
     }
 	
     task wrapper(type: Wrapper) {
-        gradleVersion = '5.0'
+        gradleVersion = '6.5'
     }
 
     task sourceJar(type: Jar) {
