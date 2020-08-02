@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 F(X)yz
+ * Copyright (c) 2019, 2020, F(X)yz
  * Copyright (c) 2014, 2016, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -32,11 +32,11 @@
  */
 package org.fxyz3d.importers.obj;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
@@ -112,11 +111,12 @@ public class ObjImporter implements Importer {
 
         ObjModel model = asPolygon ? new PolyObjModel(url) : new ObjModel(url);
 
-        try (Stream<String> lines = Files.lines(Paths.get(url.toURI()))) {
-            lines.map(String::trim)
-                 .filter(l -> !l.isEmpty() && !l.startsWith("#"))
-                 .forEach(model::parseLine);
-        } catch (IOException | URISyntaxException e) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+            reader.lines()
+                .map(String::trim)
+                .filter(l -> !l.isEmpty() && !l.startsWith("#"))
+                .forEach(model::parseLine);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
