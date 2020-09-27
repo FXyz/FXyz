@@ -34,9 +34,13 @@ package org.fxyz3d.importers.obj;
 
 import static java.util.Map.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -61,9 +65,11 @@ public class MtlReader {
     public MtlReader(String filename, String parentUrl) {
         baseUrl = parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1);
         String fileUrl = baseUrl + filename;
+        URL url = new URL(fileUrl);
         ObjImporter.log("Reading material from filename = " + fileUrl);
-        try (Stream<String> line = Files.lines(Paths.get(new URI(fileUrl)))) {
-            line.map(String::trim)
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+        	reader.lines()
+            	.map(String::trim)
                 .filter(l -> !l.isEmpty() && !l.startsWith("#"))
                 .forEach(this::parse);
         } catch (IOException | URISyntaxException e) {
