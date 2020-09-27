@@ -60,9 +60,8 @@ public class MtlReader {
     public MtlReader(String filename, String parentUrl) {
         baseUrl = parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1);
         String fileUrl = baseUrl + filename;
-        URL url = new URL(fileUrl);
         ObjImporter.log("Reading material from filename = " + fileUrl);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(fileUrl).openStream(), StandardCharsets.UTF_8))) {
         	reader.lines()
             	.map(String::trim)
                 .filter(l -> !l.isEmpty() && !l.startsWith("#"))
