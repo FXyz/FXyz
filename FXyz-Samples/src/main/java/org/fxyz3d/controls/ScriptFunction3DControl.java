@@ -1,7 +1,7 @@
 /**
  * ScriptFunction3DControl.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2020, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,6 +47,9 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -65,7 +68,10 @@ public class ScriptFunction3DControl extends ControlBase<Property<Function<Point
     
     public ScriptFunction3DControl(Property<Function<Point3D,Number>> prop, final Collection<String> items, boolean subControl) {
         super("/org/fxyz3d/controls/ScriptFunction3DControl.fxml", prop);
-        
+
+        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        bindings.put("polyglot.js.allowAllAccess", true);
+
         Point3D p=new Point3D(1f,2f,3f);
         res1.setText("p: {"+p.x+","+p.y+","+p.z+"}");
                     
@@ -151,7 +157,7 @@ public class ScriptFunction3DControl extends ControlBase<Property<Function<Point
     private Label res2;
     @FXML
     private ComboBox<String> selection;
-    private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+    private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
     
     @FXML
     protected VBox subControls;

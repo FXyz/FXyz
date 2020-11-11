@@ -1,7 +1,7 @@
 /**
  * TexturedMeshSample.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2020, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,10 @@ import org.fxyz3d.tools.NormalMap;
  * @author Jason Pollastrini aka jdub1581
  */
 public abstract class TexturedMeshSample extends ShapeBaseSample<TexturedMesh> {
+
+    static {
+        TriangleMeshHelper.PARALLEL_ALLOWED = false;
+    }
 
     //specific
     protected final Property<TriangleMeshHelper.SectionType> sectionType = new SimpleObjectProperty<TriangleMeshHelper.SectionType>(model, "secType", TriangleMeshHelper.SectionType.CIRCLE) {

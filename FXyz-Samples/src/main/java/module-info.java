@@ -41,8 +41,7 @@ module org.fxyz3d.FXyz.Samples {
     requires jfxtras.controls;
     requires jfxtras.fxml;
     requires java.scripting;
-    requires jdk.scripting.nashorn;
-    
+
     opens org.fxyz3d.controls to javafx.fxml;
     provides org.fxyz3d.FXyzSamplerProject with org.fxyz3d.samples.FXyzProject;
     
