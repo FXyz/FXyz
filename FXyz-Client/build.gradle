@@ -16,10 +16,10 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {    
-    implementation ('org.controlsfx:controlsfx:11.0.1') {
+    api ('org.controlsfx:controlsfx:11.0.2') {
         exclude group:"org.openjfx"
     }
-    implementation 'org.reactfx:reactfx:2.0-M5'    
+    api 'org.reactfx:reactfx:2.0-M5'
 }
 
 javadoc {

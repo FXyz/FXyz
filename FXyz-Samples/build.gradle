@@ -11,6 +11,9 @@ repositories {
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
+    maven {
+        url = "http://maven.jzy3d.org/releases"
+    }
 }
 
 application {
@@ -25,7 +28,7 @@ dependencies {
     implementation project(':FXyz-Client')
     implementation project(':FXyz-Core')
     implementation project(':FXyz-Importers')
-    implementation ('org.controlsfx:controlsfx:11.0.1') {
+    implementation ('org.controlsfx:controlsfx:11.0.2') {
         exclude group:"org.openjfx"
     }
     implementation ('org.reactfx:reactfx:2.0-M5')
