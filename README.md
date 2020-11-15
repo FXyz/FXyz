@@ -39,7 +39,7 @@ Create a gradle project, edit the build.gradle file and add:
 ```
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 mainClassName = 'org.fxyz3d.Sample'
