@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.PhongMaterial?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.MeshView?>
+<?import javafx.scene.shape.TriangleMesh?>
+
+<MeshView id="tetrahedron" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <material>
+        <PhongMaterial>
+            <diffuseColor>
+                <Color red="1.0"/>
+            </diffuseColor>
+        </PhongMaterial>
+    </material>
+    <mesh>
+        <TriangleMesh>
+            <points>0.0 0.0 7.348464 -3.4641001 -6.0 -2.4494882 -3.4641001 6.0 -2.4494882 6.9282002 0.0 -2.4494882</points>
+            <texCoords>0.0 0.0 0.5 0.866025 1.0 0.0 1.0 1.73205 1.5 0.866025 2.0 0.0</texCoords>
+            <faces>1 0 2 2 3 1 2 3 1 1 0 4 3 2 0 4 1 1 0 4 3 2 2 5</faces>
+            <faceSmoothingGroups>1 2 4 8</faceSmoothingGroups>
+        </TriangleMesh>
+    </mesh>
+</MeshView>
