@@ -1,7 +1,7 @@
 /**
- * F(X)yz
+ * FXMLImporter.java
  *
- * Copyright (c) 2013-2018, F(X)yz
+ * Copyright (c) 2013-2020, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,20 +25,52 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
-module org.fxyz3d.importers {
-    requires org.fxyz3d.core;
-    requires transitive javafx.graphics;
-    requires static javafx.fxml;
-    requires java.logging;
-    
-    opens org.fxyz3d.importers to javafx.fxml;
-    
-    uses org.fxyz3d.importers.Importer;
-    
-    exports org.fxyz3d.importers;
-    exports org.fxyz3d.importers.fxml;
-    exports org.fxyz3d.importers.maya;
-    exports org.fxyz3d.importers.obj;
+package org.fxyz3d.importers.fxml;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
+import org.fxyz3d.importers.Importer;
+import org.fxyz3d.importers.Model3D;
+
+import java.io.IOException;
+import java.net.URL;
+
+public class FXMLImporter implements Importer {
+
+    private static final String SUPPORTED_EXT = "fxml";
+
+    @Override
+    public Model3D load(URL url) throws IOException {
+        return read(url);
+    }
+
+    @Override
+    public Model3D loadAsPoly(URL url) throws IOException {
+        return read(url);
+    }
+
+    @Override
+    public boolean isSupported(String extension) {
+        return SUPPORTED_EXT.equalsIgnoreCase(extension);
+    }
+
+    private Model3D read(URL url) throws IOException {
+        final Object fxmlRoot = FXMLLoader.load(url);
+
+        Model3D model = new Model3D();
+
+        if (fxmlRoot instanceof Node) {
+            model.addMeshView("default", (Node) fxmlRoot);
+            return model;
+        } else if (fxmlRoot instanceof TriangleMesh) {
+            model.addMeshView("default", new MeshView((TriangleMesh) fxmlRoot));
+            return model;
+        }
+
+        throw new IOException("Unknown object in FXML file [" + fxmlRoot.getClass().getName() + "]");
+    }
 }

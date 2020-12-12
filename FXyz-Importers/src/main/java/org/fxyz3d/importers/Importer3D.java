@@ -32,11 +32,6 @@
  */
 package org.fxyz3d.importers;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.TriangleMesh;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -114,12 +109,13 @@ public final class Importer3D {
         }
 
         // Check well known loaders that might not be in a jar (ie. running from an IDE)
-        if ((importer == null) && (!extension.equals("fxml"))){
+        if (importer == null) {
             String [] names = {
-                 "org.fxyz3d.importers.dae.DaeImporter",
-                 "org.fxyz3d.importers.max.MaxLoader",
+//                 "org.fxyz3d.importers.dae.DaeImporter", // Not supported yet
+//                 "org.fxyz3d.importers.max.MaxLoader",   // Not supported yet
                  "org.fxyz3d.importers.maya.MayaImporter",
                  "org.fxyz3d.importers.obj.ObjImporter",
+                 "org.fxyz3d.importers.fxml.FXMLImporter",
             };
             boolean fail = true;
             for (String name : names) {
@@ -142,22 +138,7 @@ public final class Importer3D {
             if (fail) throw new IOException("Unknown 3D file format [" + extension + "]");
         }
 
-        if (extension.equals("fxml")) {
-            final Object fxmlRoot = FXMLLoader.load(fileUrl);
 
-            Model3D model = new Model3D();
-
-            if (fxmlRoot instanceof Node) {
-                model.addMeshView("default", (Node) fxmlRoot);
-                return model;
-            } else if (fxmlRoot instanceof TriangleMesh) {
-                model.addMeshView("default", new MeshView((TriangleMesh) fxmlRoot));
-                return model;
-            }
-
-            throw new IOException("Unknown object in FXML file [" + fxmlRoot.getClass().getName() + "]");
-        } else {
-            return asPolygonMesh ? importer.loadAsPoly(fileUrl) : importer.load(fileUrl);
-        }
+        return asPolygonMesh ? importer.loadAsPoly(fileUrl) : importer.load(fileUrl);
     }
 }
