@@ -64,9 +64,8 @@ public abstract class FXyzSampleBase extends Application implements FXyzSample {
         return null;
     }
     
-    /** {@inheritDoc}
+    /**
      * @return  */
-    //@Override
     public double getControlPanelDividerPosition() {
     	return 0.6;
     }

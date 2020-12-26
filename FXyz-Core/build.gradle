@@ -4,6 +4,9 @@ apply from: 'gradle/publishing.gradle'
 
 repositories {
     jcenter()
+    maven {
+        url = "http://maven.jzy3d.org/releases"
+    }
 }
 
 sourceCompatibility = '1.9'
@@ -12,4 +15,12 @@ targetCompatibility = '1.9'
 javadoc {
     options.addBooleanOption("Xdoclint:none").setValue(true);
     options.addBooleanOption("javafx").setValue(true);
+}
+
+dependencies {
+    api ('eu.mihosoft.vrl.jcsg:jcsg:0.5.7') { transitive = false }
+    api 'eu.mihosoft.vvecmath:vvecmath:0.4.0'
+    api 'org.orbisgis:poly2tri-core:0.1.2'
+    // A fork of JDT (Java Delaunay Triangulation) Core API from https://github.com/yonatang/JDT for Jzy3d
+    api 'org.jzy3d:jzy3d-jdt-core:1.0.2'
 }

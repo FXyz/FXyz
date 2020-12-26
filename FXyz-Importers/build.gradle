@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':FXyz-Core')
+    api (project(':FXyz-Core')) { transitive = false }
 }
 
 javadoc {

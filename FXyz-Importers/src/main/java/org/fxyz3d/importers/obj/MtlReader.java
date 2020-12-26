@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2019, F(X)yz
+ * Copyright (c) 2013-2020, F(X)yz
  * Copyright (c) 2010, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
  *
@@ -34,11 +34,11 @@ package org.fxyz3d.importers.obj;
 
 import static java.util.Map.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -62,11 +61,12 @@ public class MtlReader {
         baseUrl = parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1);
         String fileUrl = baseUrl + filename;
         ObjImporter.log("Reading material from filename = " + fileUrl);
-        try (Stream<String> line = Files.lines(Paths.get(new URI(fileUrl)))) {
-            line.map(String::trim)
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(fileUrl).openStream(), StandardCharsets.UTF_8))) {
+        	reader.lines()
+            	.map(String::trim)
                 .filter(l -> !l.isEmpty() && !l.startsWith("#"))
                 .forEach(this::parse);
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

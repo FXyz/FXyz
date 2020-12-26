@@ -29,13 +29,13 @@
 
 module org.fxyz3d.core {
     requires transitive javafx.controls;
-    requires transitive javafx.swing;
+    requires static javafx.swing;
     requires java.desktop;
     requires java.logging;
-    requires jcsg;
-    requires vvecmath;
-    requires poly2tri.core;
-    requires jzy3d.jdt.core;
+    requires static jcsg;
+    requires static vvecmath;
+    requires static poly2tri.core;
+    requires static jzy3d.jdt.core;
 
     exports org.fxyz3d.geometry;
     exports org.fxyz3d.io;

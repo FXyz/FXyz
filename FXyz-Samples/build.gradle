@@ -1,6 +1,6 @@
 plugins {
     id 'application'
-    id 'org.beryx.jlink' version '2.3.1'
+    id 'org.beryx.jlink' version '2.20.0'
 }
 
 sourceCompatibility = '1.9'
@@ -11,18 +11,26 @@ repositories {
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
+    maven {
+        url = "http://maven.jzy3d.org/releases"
+    }
+}
+
+application {
+    mainModule = moduleName
 }
 
 applicationName = 'FXyz-Samples'
-mainClassName = "${moduleName}/${fxyz_sampler_mainClass}"
+mainClassName = "${fxyz_sampler_mainClass}"
 ext.mainClass = mainClassName
-applicationDefaultJvmArgs = ["-XX:+UseConcMarkSweepGC"]
 
 dependencies {
     implementation project(':FXyz-Client')
     implementation project(':FXyz-Core')
     implementation project(':FXyz-Importers')
-    implementation 'org.controlsfx:controlsfx:9.0.0'
+    implementation ('org.controlsfx:controlsfx:11.0.2') {
+        exclude group:"org.openjfx"
+    }
     implementation ('org.reactfx:reactfx:2.0-M5')
     implementation ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')
     implementation ('org.jfxtras:jfxtras-controls:9.0-r1')
@@ -39,7 +47,7 @@ compileJava {
 
 run {
     doFirst {
-        jvmArgs += ['--add-exports', 'javafx.base/com.sun.javafx.runtime=controlsfx',
+        jvmArgs += ['--add-exports', 'javafx.base/com.sun.javafx.runtime=org.controlsfx.controls',
                    '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples']
     }
 }

@@ -31,7 +31,7 @@ module org.fxyz3d.client {
     requires transitive javafx.controls;
     requires transitive javafx.fxml;
     requires java.logging;
-    requires controlsfx;
+    requires org.controlsfx.controls;
     
     opens org.fxyz3d to javafx.fxml;
     opens org.fxyz3d.client to javafx.fxml;
