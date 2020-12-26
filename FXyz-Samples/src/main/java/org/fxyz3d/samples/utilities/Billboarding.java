@@ -58,7 +58,7 @@ import org.fxyz3d.samples.shapes.ShapeBaseSample;
 import org.fxyz3d.scene.BillboardNode;
 import org.fxyz3d.scene.BillboardNode.BillboardMode;
 import org.fxyz3d.scene.CameraView;
-import org.fxyz3d.shapes.primitives.TorusMesh;
+import org.fxyz3d.shapes.primitives.TorusMeshView;
 
 /**
  *
@@ -106,7 +106,7 @@ public class Billboarding extends ShapeBaseSample<BillBoard> {
             boolean ambientRandom = r.nextBoolean();
             boolean fillRandom = r.nextBoolean();
 
-            TorusMesh torus = new TorusMesh(randomTubeDivisions, randomRadiusDivisions, randomRadius, randomTubeRadius);
+            TorusMeshView torus = new TorusMeshView(randomTubeDivisions, randomRadiusDivisions, randomRadius, randomTubeRadius);
             torus.setMaterial(new PhongMaterial(randomColor));
 
             double translationX = Math.random() * 1024 * 1.95;
