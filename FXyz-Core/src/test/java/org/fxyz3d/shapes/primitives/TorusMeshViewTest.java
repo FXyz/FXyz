@@ -43,7 +43,7 @@ public class TorusMeshViewTest {
 
     @Test
     public void testTorusConstruction() {
-        TorusMeshView torus = new TorusMeshView(100, 80, 15.0, 13.0);
+        TorusMesh torus = new TorusMesh(100, 80, 15.0, 13.0);
 
         assertThat(torus.getRadiusDivisions(), is(100));
         assertThat(torus.getTubeDivisions(), is(80));
@@ -54,7 +54,7 @@ public class TorusMeshViewTest {
     @Test
     @DisplayName("Mesh is updated when radius changes")
     public void testTorusUpdateMesh() {
-        TorusMeshView torus = new TorusMeshView();
+        TorusMesh torus = new TorusMesh();
 
         Mesh oldMesh = torus.getMesh();
 

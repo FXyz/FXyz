@@ -36,19 +36,19 @@ import javafx.scene.paint.Material;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import org.fxyz3d.shapes.containers.ShapeContainer;
-import org.fxyz3d.shapes.primitives.TorusMeshView;
+import org.fxyz3d.shapes.primitives.TorusMesh;
 
 /**
  *
  * @author JDub https://github.com/jdub1581
  * refactored by Sean refactored again by jdub
  */
-public class Torus extends ShapeContainer<TorusMeshView> {
+public class Torus extends ShapeContainer<TorusMesh> {
 
-    public TorusMeshView mesh;
+    public TorusMesh mesh;
 
     public Torus() {
-        super(new TorusMeshView());
+        super(new TorusMesh());
         this.mesh = getShape();        
     }
     

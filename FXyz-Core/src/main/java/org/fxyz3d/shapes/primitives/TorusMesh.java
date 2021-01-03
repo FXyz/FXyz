@@ -44,7 +44,7 @@ import static java.lang.Math.sin;
  *
  * @author jDub1581
  */
-public class TorusMeshView extends MeshView {
+public class TorusMesh extends MeshView {
 
     private static final int DEFAULT_DIVISIONS = 64;
     private static final int DEFAULT_T_DIVISIONS = 64;
@@ -55,15 +55,15 @@ public class TorusMeshView extends MeshView {
     private static final double DEFAULT_Y_OFFSET = 0.0;
     private static final double DEFAULT_Z_OFFSET = 1.0;
 
-    public TorusMeshView() {
+    public TorusMesh() {
         this(DEFAULT_DIVISIONS, DEFAULT_T_DIVISIONS, DEFAULT_RADIUS, DEFAULT_T_RADIUS);
     }
 
-    public TorusMeshView(double radius, double tubeRadius) {
+    public TorusMesh(double radius, double tubeRadius) {
         this(DEFAULT_DIVISIONS, DEFAULT_T_DIVISIONS, radius, tubeRadius);
     }
 
-    public TorusMeshView(int radiusDivisions, int tubeDivisions, double radius, double tubeRadius) {
+    public TorusMesh(int radiusDivisions, int tubeDivisions, double radius, double tubeRadius) {
         setRadiusDivisions(radiusDivisions);
         setTubeDivisions(tubeDivisions);
         setRadius(radius);
