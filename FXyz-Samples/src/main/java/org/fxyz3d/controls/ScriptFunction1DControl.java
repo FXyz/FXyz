@@ -1,7 +1,7 @@
 /**
  * ScriptFunction1DControl.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2020, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,6 +47,9 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -64,8 +67,11 @@ public class ScriptFunction1DControl extends ControlBase<Property<Function<Numbe
     
     public ScriptFunction1DControl(Property<Function<Number,Number>> prop, final Collection<String> items, boolean subControl) {
         super("/org/fxyz3d/controls/ScriptFunction1DControl.fxml", prop);
-        
-       Double x=1d;
+
+        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        bindings.put("polyglot.js.allowAllAccess", true);
+
+        Double x=1d;
         res1.setText("x: {"+x+"}");
                     
         selection.getItems().setAll(items);
@@ -150,7 +156,7 @@ public class ScriptFunction1DControl extends ControlBase<Property<Function<Numbe
     private Label res2;
     @FXML
     private ComboBox<String> selection;
-    private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+    private final ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
     
     @FXML
     protected VBox subControls;
