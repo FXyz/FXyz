@@ -34,6 +34,8 @@ dependencies {
     implementation ('org.reactfx:reactfx:2.0-M5')
     implementation ('org.fxmisc.easybind:easybind:1.0.4-SNAPSHOT')
     implementation ('org.jfxtras:jfxtras-controls:9.0-r1')
+    implementation "org.graalvm.js:js:20.2.0"
+    implementation "org.graalvm.js:js-scriptengine:20.2.0"
 }
 
 compileJava {

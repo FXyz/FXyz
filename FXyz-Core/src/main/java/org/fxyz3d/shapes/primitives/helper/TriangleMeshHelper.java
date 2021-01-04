@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.fxyz3d.collections.FloatCollector;
 import org.fxyz3d.geometry.Face3;
@@ -55,6 +56,8 @@ import static org.fxyz3d.scene.paint.Palette.DEFAULT_COLOR_PALETTE;
  * @author jpereda
  */
 public class TriangleMeshHelper {
+
+    public static boolean PARALLEL_ALLOWED = true;
 
     private double textureOpacity;
 
@@ -335,8 +338,8 @@ public class TriangleMeshHelper {
     }
 
     public void updateExtremes(List<Point3D> points){
-        max=points.parallelStream().mapToDouble(p->density.apply(p).doubleValue()).max().orElse(1.0);
-        min=points.parallelStream().mapToDouble(p->density.apply(p).doubleValue()).min().orElse(0.0);
+        max=getStreamOf(points).mapToDouble(p->density.apply(p).doubleValue()).max().orElse(1.0);
+        min=getStreamOf(points).mapToDouble(p->density.apply(p).doubleValue()).min().orElse(0.0);
         max=(float)Math.round(max*1e6)/1e6;
         min=(float)Math.round(min*1e6)/1e6;
         if(max==min){
@@ -346,8 +349,8 @@ public class TriangleMeshHelper {
     }
 
     public void updateExtremesByFunction(List<Point3D> points){
-        max=points.parallelStream().mapToDouble(p->function.apply((double) p.f).doubleValue()).max().orElse(1.0);
-        min=points.parallelStream().mapToDouble(p->function.apply((double) p.f).doubleValue()).min().orElse(0.0);
+        max=getStreamOf(points).mapToDouble(p->function.apply((double) p.f).doubleValue()).max().orElse(1.0);
+        min=getStreamOf(points).mapToDouble(p->function.apply((double) p.f).doubleValue()).min().orElse(0.0);
         max=(float)Math.round(max*1e6)/1e6;
         min=(float)Math.round(min*1e6)/1e6;
         if(max==min){
@@ -449,11 +452,11 @@ public class TriangleMeshHelper {
     }
 
     public int[] updateFacesWithoutTexture(List<Face3> faces){
-        return faces.parallelStream().map(Face3::getFace).flatMapToInt(i->i).toArray();
+        return getStreamOf(faces).map(Face3::getFace).flatMapToInt(i->i).toArray();
     }
 
     public int[] updateFacesWithVertices(List<Face3> faces){
-        return faces.parallelStream().map(f->f.getFace(f)).flatMapToInt(i->i).toArray();
+        return getStreamOf(faces).map(f->f.getFace(f)).flatMapToInt(i->i).toArray();
     }
 
     public int[] updateFacesWithTextures(List<Face3> faces, List<Face3> textures){
@@ -466,7 +469,7 @@ public class TriangleMeshHelper {
 
     public int[] updateFacesWithDensityMap(List<Point3D> points, List<Face3> faces){
         updateExtremes(points);
-        return faces.parallelStream().map(f->{
+        return getStreamOf(faces).map(f->{
             int t0=mapDensity(points.get(f.p0));
             int t1=mapDensity(points.get(f.p1));
             int t2=mapDensity(points.get(f.p2));
@@ -476,7 +479,7 @@ public class TriangleMeshHelper {
 
     public int[] updateFacesWithDensityMap(List<Point3D> points, List<Face3> faces, double min, double max){
         updateExtremes(min, max);
-        return faces.parallelStream().map(f->{
+        return getStreamOf(faces).map(f->{
             int t0=mapDensity(points.get(f.p0));
             int t1=mapDensity(points.get(f.p1));
             int t2=mapDensity(points.get(f.p2));
@@ -486,7 +489,7 @@ public class TriangleMeshHelper {
 
     public int[] updateFacesWithFunctionMap(List<Point3D> points, List<Face3> faces){
         updateExtremesByFunction(points);
-        return faces.parallelStream().map(f->{
+        return getStreamOf(faces).map(f->{
             int t0=mapFunction(points.get(f.p0).f);
             int t1=mapFunction(points.get(f.p1).f);
             int t2=mapFunction(points.get(f.p2).f);
@@ -495,7 +498,7 @@ public class TriangleMeshHelper {
     }
     public int[] updateFacesWithFunctionMap(List<Point3D> points, List<Face3> faces, double min, double max){
         updateExtremes(min, max);
-        return faces.parallelStream().map(f->{
+        return getStreamOf(faces).map(f->{
             int t0=mapFunction(points.get(f.p0).f);
             int t1=mapFunction(points.get(f.p1).f);
             int t2=mapFunction(points.get(f.p2).f);
@@ -511,7 +514,7 @@ public class TriangleMeshHelper {
     utils
     */
     public double getMeshArea(List<Point3D> points, List<Face3> faces){
-        return faces.parallelStream().mapToDouble(f->{
+        return getStreamOf(faces).mapToDouble(f->{
             Point3D a = points.get(f.p0);
             Point3D b = points.get(f.p1);
             Point3D c = points.get(f.p2);
@@ -531,7 +534,7 @@ public class TriangleMeshHelper {
     * This sets the texture of every face: 0 without intersection, 1 intersected
     */
     public int[] updateFacesWithIntersections(Point3D origin, Point3D direction,List<Point3D> points, List<Face3> faces){
-        return faces.parallelStream().map(f->{
+        return getStreamOf(faces).map(f->{
             Point3D a = points.get(f.p0);
             Point3D b = points.get(f.p1);
             Point3D c = points.get(f.p2);
@@ -564,7 +567,7 @@ public class TriangleMeshHelper {
     Return a list of interesected faces (with their 3 vertices)
     */
     public List<Face3> getListIntersections(Point3D origin, Point3D direction,List<Point3D> points, List<Face3> faces){
-        return faces.parallelStream().filter(f->{
+        return getStreamOf(faces).filter(f->{
             Point3D a = points.get(f.p0);
             Point3D b = points.get(f.p1);
             Point3D c = points.get(f.p2);
@@ -588,5 +591,9 @@ public class TriangleMeshHelper {
             }
             return false;
         }).collect(Collectors.toList());
+    }
+
+    private <T> Stream<T> getStreamOf(List<T> list) {
+        return PARALLEL_ALLOWED ? list.parallelStream() : list.stream();
     }
 }

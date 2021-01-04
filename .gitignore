@@ -14,3 +14,7 @@
 .classpath
 .project
 .settings
+/FXyz-Importers/out/
+/FXyz-Samples/out/
+/FXyz-Client/out/
+/FXyz-Core/out/
