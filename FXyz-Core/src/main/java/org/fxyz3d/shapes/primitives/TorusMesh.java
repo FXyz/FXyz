@@ -112,7 +112,7 @@ public class TorusMesh extends MeshView {
         float tubeFraction = 1.0f / tubeDivisions;
         float radiusFraction = 1.0f / radiusDivisions;
 
-        float TWO_PI = 2.0f * 3.141592653589793f;
+        float TWO_PI = (float) (2 * Math.PI);
 
         // create points
         // create texCoords
