@@ -1,7 +1,7 @@
 /**
  * TorusMesh.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2020, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,9 @@ import javafx.scene.DepthTest;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 /**
  *
  * @author jDub1581
@@ -45,153 +48,150 @@ public class TorusMesh extends MeshView {
 
     private static final int DEFAULT_DIVISIONS = 64;
     private static final int DEFAULT_T_DIVISIONS = 64;
-    private static final double DEFAULT_RADIUS = 12.5D;
-    private static final double DEFAULT_T_RADIUS = 5.0D;
-    private static final double DEFAULT_START_ANGLE = 0.0D;
-    private static final double DEFAULT_X_OFFSET = 0.0D;
-    private static final double DEFAULT_Y_OFFSET = 0.0D;
-    private static final double DEFAULT_Z_OFFSET = 1.0D;
+    private static final double DEFAULT_RADIUS = 12.5;
+    private static final double DEFAULT_T_RADIUS = 5.0;
+    private static final double DEFAULT_START_ANGLE = 0.0;
+    private static final double DEFAULT_X_OFFSET = 0.0;
+    private static final double DEFAULT_Y_OFFSET = 0.0;
+    private static final double DEFAULT_Z_OFFSET = 1.0;
 
     public TorusMesh() {
         this(DEFAULT_DIVISIONS, DEFAULT_T_DIVISIONS, DEFAULT_RADIUS, DEFAULT_T_RADIUS);
     }
 
-    public TorusMesh(double radius, double tRadius) {
-        this(DEFAULT_DIVISIONS, DEFAULT_T_DIVISIONS, radius, tRadius);
+    public TorusMesh(double radius, double tubeRadius) {
+        this(DEFAULT_DIVISIONS, DEFAULT_T_DIVISIONS, radius, tubeRadius);
     }
 
-    public TorusMesh(int rDivs, int tDivs, double radius, double tRadius) {
-        setRadiusDivisions(rDivs);
-        setTubeDivisions(tDivs);
+    public TorusMesh(int radiusDivisions, int tubeDivisions, double radius, double tubeRadius) {
+        setRadiusDivisions(radiusDivisions);
+        setTubeDivisions(tubeDivisions);
         setRadius(radius);
-        setTubeRadius(tRadius);
+        setTubeRadius(tubeRadius);
         
         setDepthTest(DepthTest.ENABLE);
         updateMesh();
     }
 
     private void updateMesh(){       
-        setMesh(createTorus(
-            getRadiusDivisions(), 
-            getTubeDivisions(), 
-            (float) getRadius(), 
-            (float) getTubeRadius(), 
-            (float) getTubeStartAngleOffset(), 
-            (float)getxOffset(),
-            (float)getyOffset(), 
-            (float)getzOffset()));     
+        setMesh(
+                createTorusMesh(
+                        getRadiusDivisions(),
+                        getTubeDivisions(),
+                        (float) getRadius(),
+                        (float) getTubeRadius(),
+                        (float) getTubeStartAngleOffset(),
+                        (float) getxOffset(),
+                        (float) getyOffset(),
+                        (float) getzOffset()
+                )
+        );
     }
     
-    private TriangleMesh createTorus(
-            int radiusDivisions,
-            int tubeDivisions,
-            float radius,
-            float tRadius,
-            float tubeStartAngle,
-            float xOffset,
-            float yOffset,
-            float zOffset) {
+    private TriangleMesh createTorusMesh(
+            final int radiusDivisions,
+            final int tubeDivisions,
+            final float radius,
+            final float tRadius,
+            final float tubeStartAngle,
+            final float xOffset,
+            final float yOffset,
+            final float zOffset) {
 
-        int numVerts = tubeDivisions * radiusDivisions;
+        final int numVerts = tubeDivisions * radiusDivisions;
         int faceCount = numVerts * 2;
-        float[] points = new float[numVerts * 3],
-                texCoords = new float[numVerts * 2];
+
+        float[] points = new float[numVerts * 3];
+        float[] texCoords = new float[numVerts * 2];
         int[] faces = new int[faceCount * 6];
 
-        int pointIndex = 0, texIndex = 0, faceIndex = 0;
+        int pointIndex = 0;
+        int texIndex = 0;
+        int faceIndex = 0;
+
         float tubeFraction = 1.0f / tubeDivisions;
         float radiusFraction = 1.0f / radiusDivisions;
-        float x, y, z;
 
-        int p0 = 0, p1 = 0, p2 = 0, p3 = 0, t0 = 0, t1 = 0, t2 = 0, t3 = 0;
+        float TWO_PI = (float) (2 * Math.PI);
 
         // create points
+        // create texCoords
         for (int tubeIndex = 0; tubeIndex < tubeDivisions; tubeIndex++) {
 
-            float radian = tubeStartAngle + tubeFraction * tubeIndex * 2.0f * 3.141592653589793f;
+            float radian = tubeStartAngle + tubeFraction * tubeIndex * TWO_PI;
 
             for (int radiusIndex = 0; radiusIndex < radiusDivisions; radiusIndex++) {
 
-                float localRadian = radiusFraction * (radiusIndex) * 2.0f * 3.141592653589793f;
+                float localRadian = radiusFraction * radiusIndex * TWO_PI;
 
-                points[pointIndex + 0] = x = (radius + tRadius * ((float) Math.cos(radian))) * ((float) Math.cos(localRadian) + xOffset);
-                points[pointIndex + 1] = y = (radius + tRadius * ((float) Math.cos(radian))) * ((float) Math.sin(localRadian) + yOffset);
-                points[pointIndex + 2] = z = (tRadius * (float) Math.sin(radian) * zOffset);
+                points[pointIndex + 0] = (radius + tRadius * ((float) cos(radian))) * ((float) cos(localRadian) + xOffset);
+                points[pointIndex + 1] = (radius + tRadius * ((float) cos(radian))) * ((float) sin(localRadian) + yOffset);
+                points[pointIndex + 2] = (tRadius * (float) sin(radian) * zOffset);
 
                 pointIndex += 3;
 
-                float r = radiusIndex < tubeDivisions ? tubeFraction * radiusIndex * 2.0F * 3.141592653589793f : 0.0f;
-                texCoords[texIndex] = (0.5F + (float) (Math.sin(r) * 0.5D));
-                texCoords[texIndex + 1] = ((float) (Math.cos(r) * 0.5D) + 0.5F);
+                float r = radiusIndex < tubeDivisions ? tubeFraction * radiusIndex * TWO_PI : 0.0f;
+                texCoords[texIndex + 0] = (float) (sin(r) * 0.5) + 0.5f;
+                texCoords[texIndex + 1] = (float) (cos(r) * 0.5) + 0.5f;
 
                 texIndex += 2;
-
             }
-
         }
-        //create faces        
-        for (int point = 0; point < (tubeDivisions); point++) {
-            for (int crossSection = 0; crossSection < (radiusDivisions); crossSection++) {
-                p0 = point * radiusDivisions + crossSection;
-                p1 = p0 >= 0 ? p0 + 1 : p0 - (radiusDivisions);
-                p1 = p1 % (radiusDivisions) != 0 ? p0 + 1 : p0 - (radiusDivisions - 1);
-                p2 = (p0 + radiusDivisions) < ((tubeDivisions * radiusDivisions)) ? p0 + radiusDivisions : p0 - (tubeDivisions * radiusDivisions) + radiusDivisions;
-                p3 = p2 < ((tubeDivisions * radiusDivisions) - 1) ? p2 + 1 : p2 - (tubeDivisions * radiusDivisions) + 1;
-                p3 = p3 % (radiusDivisions) != 0 ? p2 + 1 : p2 - (radiusDivisions - 1);
 
-                t0 = point * (radiusDivisions) + crossSection;
-                t1 = t0 >= 0 ? t0 + 1 : t0 - (radiusDivisions);
-                t1 = t1 % (radiusDivisions) != 0 ? t0 + 1 : t0 - (radiusDivisions - 1);
-                t2 = (t0 + radiusDivisions) < ((tubeDivisions * radiusDivisions)) ? t0 + radiusDivisions : t0 - (tubeDivisions * radiusDivisions) + radiusDivisions;
-                t3 = t2 < ((tubeDivisions * radiusDivisions) - 1) ? t2 + 1 : t2 - (tubeDivisions * radiusDivisions) + 1;
-                t3 = t3 % (radiusDivisions) != 0 ? t2 + 1 : t2 - (radiusDivisions - 1);
+        //create faces        
+        for (int point = 0; point < tubeDivisions; point++) {
+            for (int crossSection = 0; crossSection < radiusDivisions; crossSection++) {
+
+                final int p0 = point * radiusDivisions + crossSection;
+
+                int p1 = p0 >= 0 ? p0 + 1 : p0 - radiusDivisions;
+                p1 = p1 % radiusDivisions != 0 ? p0 + 1 : p0 + 1 - radiusDivisions;
+
+                final int p0r = p0 + radiusDivisions;
+
+                final int p2 = p0r < numVerts ? p0r : p0r - numVerts;
+
+                int p3 = p2 < (numVerts - 1) ? p2 + 1 : p2 + 1 - numVerts;
+                p3 = p3 % radiusDivisions != 0 ? p2 + 1 : p2 + 1 - radiusDivisions;
 
                 try {
-                    faces[faceIndex] = (p2);
-                    faces[faceIndex + 1] = (t3);
-                    faces[faceIndex + 2] = (p0);
-                    faces[faceIndex + 3] = (t2);
-                    faces[faceIndex + 4] = (p1);
-                    faces[faceIndex + 5] = (t0);
+                    faces[faceIndex + 0] = p2;
+                    faces[faceIndex + 1] = p3;
+                    faces[faceIndex + 2] = p0;
+                    faces[faceIndex + 3] = p2;
+                    faces[faceIndex + 4] = p1;
+                    faces[faceIndex + 5] = p0;
 
                     faceIndex += 6;
 
-                    faces[faceIndex] = (p2);
-                    faces[faceIndex + 1] = (t3);
-                    faces[faceIndex + 2] = (p1);
-                    faces[faceIndex + 3] = (t0);
-                    faces[faceIndex + 4] = (p3);
-                    faces[faceIndex + 5] = (t1);
+                    faces[faceIndex + 0] = p2;
+                    faces[faceIndex + 1] = p3;
+                    faces[faceIndex + 2] = p1;
+                    faces[faceIndex + 3] = p0;
+                    faces[faceIndex + 4] = p3;
+                    faces[faceIndex + 5] = p1;
+
                     faceIndex += 6;
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        TriangleMesh localTriangleMesh = new TriangleMesh();
-        localTriangleMesh.getPoints().setAll(points);
-        localTriangleMesh.getTexCoords().setAll(texCoords);
-        localTriangleMesh.getFaces().setAll(faces);
+        TriangleMesh mesh = new TriangleMesh();
+        mesh.getPoints().setAll(points);
+        mesh.getTexCoords().setAll(texCoords);
+        mesh.getFaces().setAll(faces);
 
-        return localTriangleMesh;
+        return mesh;
     }
 
     private final IntegerProperty radiusDivisions = new SimpleIntegerProperty(DEFAULT_DIVISIONS) {
-
         @Override
         protected void invalidated() {
-            setMesh(createTorus(
-                getRadiusDivisions(), 
-                getTubeDivisions(), 
-                (float) getRadius(), 
-                (float) getTubeRadius(), 
-                (float) getTubeStartAngleOffset(), 
-                (float)getxOffset(),
-                (float)getyOffset(), 
-                (float)getzOffset()));
+            updateMesh();
         }
-
     };
 
     public final int getRadiusDivisions() {
@@ -207,12 +207,10 @@ public class TorusMesh extends MeshView {
     }
 
     private final IntegerProperty tubeDivisions = new SimpleIntegerProperty(DEFAULT_T_DIVISIONS) {
-
         @Override
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final int getTubeDivisions() {
@@ -228,12 +226,10 @@ public class TorusMesh extends MeshView {
     }
 
     private final DoubleProperty radius = new SimpleDoubleProperty(DEFAULT_RADIUS) {
-
         @Override
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getRadius() {
@@ -249,12 +245,10 @@ public class TorusMesh extends MeshView {
     }
 
     private final DoubleProperty tubeRadius = new SimpleDoubleProperty(DEFAULT_T_RADIUS) {
-
         @Override
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getTubeRadius() {
@@ -270,12 +264,10 @@ public class TorusMesh extends MeshView {
     }
 
     private final DoubleProperty tubeStartAngleOffset = new SimpleDoubleProperty(DEFAULT_START_ANGLE) {
-
         @Override
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getTubeStartAngleOffset() {
@@ -289,13 +281,12 @@ public class TorusMesh extends MeshView {
     public DoubleProperty tubeStartAngleOffsetProperty() {
         return tubeStartAngleOffset;
     }
-    private final DoubleProperty xOffset = new SimpleDoubleProperty(DEFAULT_X_OFFSET) {
 
+    private final DoubleProperty xOffset = new SimpleDoubleProperty(DEFAULT_X_OFFSET) {
         @Override
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getxOffset() {
@@ -309,13 +300,12 @@ public class TorusMesh extends MeshView {
     public DoubleProperty xOffsetProperty() {
         return xOffset;
     }
-    private final DoubleProperty yOffset = new SimpleDoubleProperty(DEFAULT_Y_OFFSET) {
 
+    private final DoubleProperty yOffset = new SimpleDoubleProperty(DEFAULT_Y_OFFSET) {
         @Override
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getyOffset() {
@@ -329,13 +319,12 @@ public class TorusMesh extends MeshView {
     public DoubleProperty yOffsetProperty() {
         return yOffset;
     }
-    private final DoubleProperty zOffset = new SimpleDoubleProperty(DEFAULT_Z_OFFSET) {
 
+    private final DoubleProperty zOffset = new SimpleDoubleProperty(DEFAULT_Z_OFFSET) {
         @Override
         protected void invalidated() {
             updateMesh();
         }
-
     };
 
     public final double getzOffset() {
@@ -349,5 +338,4 @@ public class TorusMesh extends MeshView {
     public DoubleProperty zOffsetProperty() {
         return zOffset;
     }
-
 }
