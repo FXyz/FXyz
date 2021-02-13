@@ -1,16 +1,5 @@
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
-apply from: 'gradle/publishing.gradle'
+ext.moduleName = 'org.fxyz3d.client'
 
-repositories {
-    jcenter()
-}
-
-version = fxyz_sampler_version
-
-sourceCompatibility = '1.9'
-targetCompatibility = '1.9'
-    
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.fxyz3d.client.FXyzClient'
 }
@@ -39,23 +28,4 @@ javadoc {
             into "$buildDir/docs/javadoc"
         }
     }
-}
-// merge everything into one jar
-// https://github.com/johnrengelman/shadow
-shadow {
-}
-shadowJar {
-    mergeServiceFiles {
-        include 'META-INF/services/org.fxyz3d.*'
-    }
-}
-// sign all generated jars
-//signing {
-//sign configurations.archives
-// sign shadow.shadowJar
-//}
-// determine the artifacts to be uploaded
-artifacts {
-    // add the by shadow generated jar to the artifacts
-    archives shadowJar
 }

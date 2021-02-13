@@ -1,0 +1,16 @@
+// -----------------------------------------------------------------------------
+// publishing information
+// -----------------------------------------------------------------------------
+ext.publish.artifactId =  project.name
+ext.publish.groupId    =  group
+ext.publish.versionId  =  version
+
+ext.publish.inceptionYear         = '2016'
+
+ext.publish.desc                  = 'Fxyz3D'
+ext.publish.license               = 'BSD 3-Clause'
+ext.publish.licenseUrl            = 'https://github.com/FXyz/FXyz/blob/master/LICENSE'
+ext.publish.labels                = ['javafx 3d', 'javafx', '3d']
+ext.publish.websiteUrl            = 'https://github.com/FXyz/FXyz'
+ext.publish.issueTrackerUrl       = 'https://github.com/FXyz/FXyz/issues'
+ext.publish.vcsUrl                = 'https://github.com/FXyz/FXyz.git'

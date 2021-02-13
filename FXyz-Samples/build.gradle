@@ -3,9 +3,6 @@ plugins {
     id 'org.beryx.jlink' version '2.20.0'
 }
 
-sourceCompatibility = '1.9'
-targetCompatibility = '1.9'
-    
 repositories {
     mavenCentral()
     maven {
@@ -16,13 +13,17 @@ repositories {
     }
 }
 
+ext.moduleName = 'org.fxyz3d.samples'
+archivesBaseName = project.name.toLowerCase()
+
 application {
     mainModule = moduleName
+    mainClass = "${fxyz_sampler_mainClass}"
 }
 
-applicationName = 'FXyz-Samples'
-mainClassName = "${fxyz_sampler_mainClass}"
-ext.mainClass = mainClassName
+run {
+    main = "$moduleName/${fxyz_sampler_mainClass}"
+}
 
 dependencies {
     implementation project(':FXyz-Client')
@@ -41,7 +42,7 @@ dependencies {
 compileJava {
     doFirst {
         options.compilerArgs += [
-                '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples'
+                '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.samples'
         ]
     }
     options.encoding = "UTF-8"
@@ -50,7 +51,7 @@ compileJava {
 run {
     doFirst {
         jvmArgs += ['--add-exports', 'javafx.base/com.sun.javafx.runtime=org.controlsfx.controls',
-                   '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples']
+                    '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.samples']
     }
 }
 

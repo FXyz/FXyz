@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-module org.fxyz3d.FXyz.Samples {
+module org.fxyz3d.samples {
     requires org.fxyz3d.core;
     requires org.fxyz3d.importers;
     requires org.fxyz3d.client;
