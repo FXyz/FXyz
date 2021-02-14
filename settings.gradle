@@ -1,3 +1,3 @@
-include "FXyz-Core", "FXyz-Client", "FXyz-Samples", "FXyz-Importers"
+include "FXyz-Client", "FXyz-Core", "FXyz-Importers", "FXyz-Samples"
 
 rootProject.name = "FXyzLibs"
