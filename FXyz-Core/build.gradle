@@ -1,7 +1,7 @@
 ext.moduleName = 'org.fxyz3d.core'
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven {
         url = "http://maven.jzy3d.org/releases"
     }
