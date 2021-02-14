@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install packages
+        run: |
+          sudo apt-get install xvfb tigervnc-standalone-server tigervnc-common
+
       - name: Checkout
         uses: actions/checkout@v2
 
