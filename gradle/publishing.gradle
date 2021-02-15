@@ -7,9 +7,12 @@ apply plugin: 'maven-publish'
 apply plugin: 'de.marcphilipp.nexus-publish'
 apply from: "$rootDir/gradle/project-info.gradle"
 
-archivesBaseName = project.name.toLowerCase()
+archivesBaseName = project.name.toLowerCase().split('-').collect {
+    it.replace('fxyz', 'fxyz3d')
+}.join('-')
+
 if (project.name == 'FXyz-Core') {
-    archivesBaseName = 'fxyz'
+    archivesBaseName = 'fxyz3d'
 }
 
 signing {
@@ -19,10 +22,7 @@ signing {
 
 nexusPublishing {
     repositories {
-        sonatype {
-            username = project.hasProperty('sonatypeUsername') ? project.property('sonatypeUsername') : ''
-            password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
-        }
+        sonatype()
     }
     clientTimeout = Duration.ofMinutes(5)
     connectTimeout = Duration.ofMinutes(5)
