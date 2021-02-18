@@ -25,9 +25,9 @@ cache:
   directories:
   - $HOME/.gradle/caches/
   
-deploy:
-  provider: script
-  script: bash .ci/publish.sh
-  skip_cleanup: true
-  on:
-    tags: true
+#deploy:
+#  provider: script
+#  script: bash .ci/publish.sh
+#  skip_cleanup: true
+#  on:
+#    tags: true
