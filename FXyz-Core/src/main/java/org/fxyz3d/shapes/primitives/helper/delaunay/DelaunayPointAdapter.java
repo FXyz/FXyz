@@ -29,7 +29,7 @@
 
 package org.fxyz3d.shapes.primitives.helper.delaunay;
 
-import il.ac.idc.jdt.Point;
+import org.fxyz3d.shapes.primitives.helper.delaunay.jdt.Point;
 import org.fxyz3d.geometry.Point3D;
 
 /**
