@@ -39,6 +39,7 @@ jobs:
           vncserver -kill :90
 
       - name: Deploy Snapshot
+        if: github.ref == 'refs/heads/master'
         run: ./gradlew publish -PsonatypeUsername=$SONATYPE_USERNAME -PsonatypePassword=$SONATYPE_PASSWORD
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
