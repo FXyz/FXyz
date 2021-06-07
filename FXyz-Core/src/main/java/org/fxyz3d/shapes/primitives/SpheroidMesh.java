@@ -1,7 +1,7 @@
 /**
  * SpheroidMesh.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2021, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 package org.fxyz3d.shapes.primitives;
 
@@ -42,65 +42,134 @@ import javafx.scene.shape.TriangleMesh;
  *
  * @author Dub
  */
-public class SpheroidMesh extends TexturedMesh{
-    
-    private static final double DEFAULT_MAJOR_RADIUS = 50f;
-    private static final double DEFAULT_MINOR_RADIUS = 12f;
-    private static final int   DEFAULT_DIVISIONS = 64;
+public class SpheroidMesh extends TexturedMesh {
+
+    private static final double DEFAULT_MAJOR_RADIUS = 50.0;
+    private static final double DEFAULT_MINOR_RADIUS = 12.0;
+    private static final int DEFAULT_DIVISIONS = 64;
 
     public SpheroidMesh() {
-        setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
-        setCullFace(CullFace.BACK);
-        setDepthTest(DepthTest.ENABLE);
-    }   
+        this(DEFAULT_MAJOR_RADIUS, DEFAULT_MINOR_RADIUS);
+    }
 
     /**
-     * 
      * @param radius Creates a Sphere with the specified Radius
      */
     public SpheroidMesh(double radius) {
-        this();
-        setMajorRadius(radius);
-        setMinorRadius(radius);
+        this(radius, radius);
     }
+
     /**
-     * 
      * @param majRad The major(horizontal) radius
      * @param minRad The minor(vertical) radius
      */
     public SpheroidMesh(double majRad, double minRad) {
-        this();
-        setMajorRadius(majRad);
-        setMinorRadius(minRad);
+        this(DEFAULT_DIVISIONS, majRad, minRad);
     }
-    
+
     /**
-     * 
      * @param divs  Divisions for the Spheroid. Default is 64
      * @param majRad The major(horizontal) radius
      * @param minRad The minor(vertical) radius
      */
     public SpheroidMesh(int divs, double majRad, double minRad) {
-        this();
         setDivisions(divs);
         setMajorRadius(majRad);
         setMinorRadius(minRad);
+
+        setCullFace(CullFace.BACK);
+        setDepthTest(DepthTest.ENABLE);
+
+        updateMesh();
     }
-    
+
+    /**
+     * @return true if both major and minor radii are equal
+     */
     public boolean isSphere(){
         return Objects.equals(getMajorRadius(), getMinorRadius());
     }
+
+    /**
+     * @return true if major radius is greater than minor radius
+     */
     public boolean isOblateSpheroid(){
         return getMajorRadius() > getMinorRadius();
     }
+
+    /**
+     * @return true if major radius is less than minor radius
+     */
     public boolean isProlateSpheroid(){
         return getMajorRadius() < getMinorRadius();
     }
-    
-    private TriangleMesh createSpheroid(int divs, double major, double minor) {
+
+    private final DoubleProperty majorRadius = new SimpleDoubleProperty(this, "majorRadius", DEFAULT_MAJOR_RADIUS){
+        @Override
+        protected void invalidated() {
+            updateMesh();
+        }
+    };
+
+    public final Double getMajorRadius() {
+        return majorRadius.get();
+    }
+
+    public final void setMajorRadius(Double value) {
+        majorRadius.set(value);
+    }
+
+    public DoubleProperty majorRadiusProperty() {
+        return majorRadius;
+    }
+
+    private final DoubleProperty minorRadius = new SimpleDoubleProperty(this, "minorRadius", DEFAULT_MINOR_RADIUS){
+        @Override
+        protected void invalidated() {
+            updateMesh();
+        }
+    };
+
+    public final Double getMinorRadius() {
+        return minorRadius.get();
+    }
+
+    public final void setMinorRadius(double value) {
+        minorRadius.set(value);
+    }
+
+    public DoubleProperty minorRadiusProperty() {
+        return minorRadius;
+    }
+
+    private final IntegerProperty divisions = new SimpleIntegerProperty(this, "divisions", DEFAULT_DIVISIONS){
+        @Override
+        protected void invalidated() {
+            updateMesh();
+        }
+    };
+
+    public final int getDivisions() {
+        return divisions.get();
+    }
+
+    public final void setDivisions(int value) {
+        divisions.set(value);
+    }
+
+    public IntegerProperty divisionsProperty() {
+        return divisions;
+    }
+
+    @Override
+    protected void updateMesh() {
+        setMesh(createSpheroidMesh(getDivisions(), getMajorRadius(), getMinorRadius()));
+    }
+
+    private TriangleMesh createSpheroidMesh(int divs, double major, double minor) {
         divs = correctDivisions(divs);
         TriangleMesh m = new TriangleMesh();
-        
+
         final int divsHalf = divs / 2;
 
         final int numPoints = divs * (divsHalf - 1) + 2;
@@ -109,35 +178,37 @@ public class SpheroidMesh extends TexturedMesh{
 
         final float divf = 1.f / divs;
 
-        float points[] = new float[numPoints * m.getPointElementSize()];
-        float tPoints[] = new float[numTexCoords * m.getTexCoordElementSize()];
-        int faces[] = new int[numFaces * m.getFaceElementSize()];
+        float[] points = new float[numPoints * m.getPointElementSize()];
+        float[] tPoints = new float[numTexCoords * m.getTexCoordElementSize()];
+        int[] faces = new int[numFaces * m.getFaceElementSize()];
 
-        int pPos = 0, tPos = 0;
+        int pPos = 0;
+        int tPos = 0;
 
-        for (int lat = 0; lat < divsHalf-1 ; ++lat) {
-            
+        for (int lat = 0; lat < divsHalf-1; ++lat) {
+
             float latRad = divf * (lat + 1 - divsHalf / 2) * 2 * (float) Math.PI;
             float sin_v = (float) Math.sin(latRad);
             float cos_v = (float) Math.cos(latRad);
 
             float ty = 0.5f + sin_v * 0.5f;
-            
+
             for (int lon = 0; lon < divs; ++lon) {
-                
+
                 double lonRad = divf * lon * 2 * (float) Math.PI;
                 float sin_u = (float) Math.sin(lonRad);
                 float cos_u = (float) Math.cos(lonRad);
-                
+
                 points[pPos + 0] = (float) (cos_v * cos_u * major); // x
                 points[pPos + 2] = (float) (cos_v * sin_u * major); // z
-                points[pPos + 1] = (float) (sin_v * minor);        // y up 
-                
+                points[pPos + 1] = (float) (sin_v * minor);         // y up
+
                 tPoints[tPos + 0] = 1 - divf * lon;
                 tPoints[tPos + 1] = ty;
                 pPos += 3;
                 tPos += 2;
             }
+
             tPoints[tPos + 0] = 0;
             tPoints[tPos + 1] = ty;
             tPos += 2;
@@ -202,7 +273,10 @@ public class SpheroidMesh extends TexturedMesh{
         int p0 = pS;
         int tB = (divsHalf - 1) * (divs + 1);
         for (int x = 0; x < divs; ++x) {
-            int p2 = x, p1 = x + 1, t0 = tB + x;
+            int p2 = x;
+            int p1 = x + 1;
+            int t0 = tB + x;
+
             faces[fIndex + 0] = p0;
             faces[fIndex + 1] = t0;
             faces[fIndex + 2] = p1 == divs ? 0 : p1;
@@ -217,8 +291,13 @@ public class SpheroidMesh extends TexturedMesh{
         int pB = (divsHalf - 2) * divs;
 
         for (int x = 0; x < divs; ++x) {
-            int p1 = pB + x, p2 = pB + x + 1, t0 = tB + x;
-            int t1 = (divsHalf - 2) * (divs + 1) + x, t2 = t1 + 1;
+            int p1 = pB + x;
+            int p2 = pB + x + 1;
+
+            int t0 = tB + x;
+            int t1 = (divsHalf - 2) * (divs + 1) + x;
+            int t2 = t1 + 1;
+
             faces[fIndex + 0] = p0;
             faces[fIndex + 1] = t0;
             faces[fIndex + 2] = p1;
@@ -227,70 +306,15 @@ public class SpheroidMesh extends TexturedMesh{
             faces[fIndex + 5] = t2;
             fIndex += 6;
         }
-        
+
         m.getPoints().addAll(points);
         m.getTexCoords().addAll(tPoints);
         m.getFaces().addAll(faces);
-        
+
         return m;
     }
-    
+
     private int correctDivisions(int div) {
         return ((div + 3) / 4) * 4;
-    }
-    /*
-    
-    */
-    private final DoubleProperty majorRadius = new SimpleDoubleProperty(this, "majorRadius", DEFAULT_MAJOR_RADIUS){
-        @Override
-        protected void invalidated() {
-            setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
-        }
-    };
-    public final Double getMajorRadius() {
-        return majorRadius.get();
-    }
-    public final void setMajorRadius(Double value) {
-        majorRadius.set(value);
-    }
-    public DoubleProperty majorRadiusProperty() {
-        return majorRadius;
-    }
-    
-    private final DoubleProperty minorRadius = new SimpleDoubleProperty(this, "minorRadius", DEFAULT_MINOR_RADIUS){
-        @Override
-        protected void invalidated() {
-            setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
-        }
-    };
-    public final Double getMinorRadius() {
-        return minorRadius.get();
-    }
-    public final void setMinorRadius(double value) {
-        minorRadius.set(value);
-    }
-    public DoubleProperty minorRadiusProperty() {
-        return minorRadius;
-    }
-    
-    private final IntegerProperty divisions = new SimpleIntegerProperty(this, "divisions", DEFAULT_DIVISIONS){
-        @Override
-        protected void invalidated() {
-            setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
-        }
-    };
-    public final int getDivisions() {
-        return divisions.get();
-    }
-    public final void setDivisions(int value) {
-        divisions.set(value);
-    }
-    public IntegerProperty divisionsProperty() {
-        return divisions;
-    }
-
-    @Override
-    protected void updateMesh() {
-        setMesh(createSpheroid(getDivisions(), getMajorRadius(), getMinorRadius()));
     }
 }
