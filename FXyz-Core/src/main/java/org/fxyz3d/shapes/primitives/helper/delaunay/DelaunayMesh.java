@@ -28,9 +28,9 @@
  */
 package org.fxyz3d.shapes.primitives.helper.delaunay;
 
-import il.ac.idc.jdt.DelaunayTriangulation;
-import il.ac.idc.jdt.Point;
-import il.ac.idc.jdt.Triangle;
+import org.fxyz3d.shapes.primitives.helper.delaunay.jdt.DelaunayTriangulation;
+import org.fxyz3d.shapes.primitives.helper.delaunay.jdt.Point;
+import org.fxyz3d.shapes.primitives.helper.delaunay.jdt.Triangle;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.utils.DataBox;
 

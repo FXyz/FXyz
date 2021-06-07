@@ -8,9 +8,6 @@ repositories {
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
-    maven {
-        url = "http://maven.jzy3d.org/releases"
-    }
 }
 
 ext.moduleName = 'org.fxyz3d.samples'
