@@ -1,46 +1,46 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'org.openjfx.javafxplugin' version '0.0.9'
-    id 'com.github.hierynomus.license' version '0.15.0'
+    id 'base'
     id 'net.nemerosa.versioning' version '2.8.2'
-    id 'com.jfrog.bintray' version '1.8.5'
     id 'com.github.ben-manes.versions' version '0.28.0'
-    id "com.github.johnrengelman.shadow" version "6.0.0"
+    id 'io.codearte.nexus-staging' version '0.21.1'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
+    id 'com.github.hierynomus.license' version '0.15.0' apply false
+    id 'de.marcphilipp.nexus-publish' version '0.4.0' apply false
 }
-
-apply plugin: 'base'
-
-Properties cfg = new Properties()
-cfg.load(new FileInputStream("$rootDir/fxyz-build.properties"))
 
 ext {
-    artifact_suffix          = cfg.artifact_suffix
-    specification_title      = cfg.fxyz_specification_title
-    specification_version    = cfg.fxyz_specification_version
-    fxyz_name                = 'FXyzLibs'
-    fxyz_sampler_name        = 'FXyz-Sampler'
-    fxyz_sampler_version     = cfg.fxyz_sampler_specification_version + artifact_suffix
     fxyz_sampler_mainClass   = 'org.fxyz3d.samples.Launcher'
-    fxyz_group               = cfg.fxyz_group
 }
-    
+
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'java-library'
-    apply plugin: 'maven'
     apply plugin: 'eclipse'
     apply plugin: 'org.openjfx.javafxplugin'
-    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'com.github.hierynomus.license'
 
-    group = fxyz_group
-    version = specification_version + artifact_suffix
-
-    repositories {
-        jcenter()
+    java {
+        modularity.inferModulePath.set(true)
     }
     
+    if (project.name != 'FXyz-Samples') {
+        apply plugin: 'java-library'
+        apply plugin: 'maven'
+        apply from: "$rootDir/gradle/publishing.gradle"
+    } else {
+        javadoc {
+            enabled(false)
+        }
+    }
+
+    sourceCompatibility = '1.9'
+    targetCompatibility = '1.9'
+
+    repositories {
+        mavenCentral()
+    }
+
     dependencies {     
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
         testImplementation 'org.junit.jupiter:junit-jupiter-params:5.3.1'
@@ -49,8 +49,13 @@ subprojects {
     }
 
     javafx {
-        version = "15.0.1"
+        version = javafx_version
         modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
+    }
+
+    javadoc {
+        options.addBooleanOption("Xdoclint:none").setValue(true);
+        options.addBooleanOption("javafx").setValue(true);
     }
 
     eclipse {
@@ -63,20 +68,6 @@ subprojects {
                 }
             }
         }
-    }
-	
-    task wrapper(type: Wrapper) {
-        gradleVersion = '6.5'
-    }
-
-    task sourceJar(type: Jar) {
-        from sourceSets.main.java
-        from sourceSets.main.resources
-        classifier = 'sources'
-    }
-
-    artifacts {
-        archives sourceJar
     }
 
     license {
@@ -99,10 +90,16 @@ subprojects {
 
     test {
         useJUnitPlatform()
-
         testLogging {
             events "failed"
             exceptionFormat "full"
         }
     }
+}
+
+nexusStaging {
+    username = project.hasProperty('sonatypeUsername') ? project.property('sonatypeUsername') : ''
+    password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
+    numberOfRetries = 30
+    delayBetweenRetriesInMillis = 10000
 }

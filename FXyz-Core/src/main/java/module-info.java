@@ -35,7 +35,6 @@ module org.fxyz3d.core {
     requires static jcsg;
     requires static vvecmath;
     requires static poly2tri.core;
-    requires static jzy3d.jdt.core;
 
     exports org.fxyz3d.geometry;
     exports org.fxyz3d.io;

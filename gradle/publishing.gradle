@@ -1,0 +1,114 @@
+import java.time.Duration
+
+ext.publish = [:]
+
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+apply plugin: 'de.marcphilipp.nexus-publish'
+apply from: "$rootDir/gradle/project-info.gradle"
+
+archivesBaseName = project.name.toLowerCase().split('-').collect {
+    it.replace('fxyz', 'fxyz3d')
+}.join('-')
+
+if (project.name == 'FXyz-Core') {
+    archivesBaseName = 'fxyz3d'
+}
+
+signing {
+    required = { gradle.taskGraph.hasTask("publish") && !version.endsWith("SNAPSHOT") }
+    sign publishing.publications
+}
+
+nexusPublishing {
+    repositories {
+        sonatype()
+    }
+    clientTimeout = Duration.ofMinutes(5)
+    connectTimeout = Duration.ofMinutes(5)
+}
+
+// -----------------------------------------------------------------------------
+// Performs publishing
+// -----------------------------------------------------------------------------
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new java.text.SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+}
+
+jar {
+    manifest {
+        attributes(
+                'Built-By': System.properties['user.name'],
+                'Created-By': System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")",
+                'Build-Date': project.buildDate,
+                'Build-Time': project.buildTime,
+                'Build-Revision': versioning.info.commit,
+                'Specification-Title': project.name,
+                'Specification-Version': project.version,
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+        )
+    }
+}
+
+def pomConfig = {
+    name ext.publish.artifactId
+    description ext.publish.desc
+    url ext.publish.websiteUrl
+    inceptionYear ext.publish.inceptionYear
+    licenses {
+        license([:]) {
+            name ext.publish.license
+            url ext.publish.licenseUrl
+            distribution 'repo'
+        }
+    }
+    scm {
+        url ext.publish.vcsUrl
+        connection ext.publish.vcsUrl
+        developerConnection ext.publish.vcsUrl
+    }
+    developers {
+        developer {
+            id 'jperedadnr'
+            name 'José Pereda Llamas'
+            email 'jperedadnr@gmail.com'
+        }
+        developer {
+            id 'Birdasaur'
+            name 'Sean Phillips'
+            email 'sean.mi.phillips@gmail.com'
+        }
+        developer {
+            id 'jdub1581'
+            name 'Jason Pollastrini'
+            email 'jdub1581@gmail.com'
+        }
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId archivesBaseName
+
+            pom.withXml {
+                def root = asNode()
+                root.dependencies.'*'
+                        .findAll() { it.groupId.text() == 'org.openjfx' }
+                        .each { it.remove(it.classifier) }
+                root.appendNode 'description', publish.desc
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}

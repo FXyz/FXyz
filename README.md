@@ -46,10 +46,13 @@ mainClassName = 'org.fxyz3d.Sample'
 
 repositories {
     mavenCentral()
+    maven {
+        url = "http://maven.jzy3d.org/releases"
+    }
 }
 
 dependencies {
-    implementation 'org.fxyz3d:fxyz3d:0.5.2'
+    implementation 'org.fxyz3d:fxyz3d:0.5.3'
 }
 
 javafx {

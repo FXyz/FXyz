@@ -1,19 +1,5 @@
-apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
-apply from: 'gradle/publishing.gradle'
-
-sourceCompatibility = '1.9'
-targetCompatibility = '1.9'
-
-repositories {
-    jcenter()
-}
+ext.moduleName = 'org.fxyz3d.importers'
 
 dependencies {
     api (project(':FXyz-Core')) { transitive = false }
-}
-
-javadoc {
-    options.addBooleanOption("Xdoclint:none").setValue(true);
-    options.addBooleanOption("javafx").setValue(true);
 }
