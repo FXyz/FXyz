@@ -57,6 +57,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 import org.fxyz3d.importers.Importer;
+import org.fxyz3d.importers.MaterialData;
 import org.fxyz3d.importers.Model3D;
 import org.fxyz3d.importers.SmoothingGroups;
 import org.fxyz3d.shapes.polygon.PolygonMesh;
@@ -162,7 +163,8 @@ public class ObjImporter implements Importer {
         ObservableFloatArray uvs = FXCollections.observableFloatArray();
         ObservableFloatArray normals = FXCollections.observableFloatArray();
         ObservableIntegerArray smoothingGroups = FXCollections.observableIntegerArray();
-        Material material = new PhongMaterial(Color.WHITE);
+        MaterialData materialData = new MaterialData("default", new PhongMaterial(Color.WHITE));
+        Map<String, String> meshNamesToMaterialNames = new HashMap<>();
 
         int facesStart = 0;
         int facesNormalStart = 0;
@@ -202,7 +204,7 @@ public class ObjImporter implements Importer {
         Node buildMeshView(String key) {
             MeshView meshView = new MeshView();
             meshView.setId(key);
-            meshView.setMaterial(getMaterial(key));
+            meshView.setMaterial(getMaterial(meshNamesToMaterialNames.get(key)));
             meshView.setMesh(meshes.get(key));
             meshView.setCullFace(CullFace.NONE);
             return meshView;
@@ -292,14 +294,15 @@ public class ObjImporter implements Importer {
             meshes.put(key, mesh);
             meshNames.add(key);
 
-            addMaterial(key, material);
+            meshNamesToMaterialNames.put(key, materialData.getName());
+            addMaterial(materialData.getName(), materialData.getMaterial());
 
             log("Added mesh '" + key + "' of " + mesh.getPoints().size() / mesh.getPointElementSize() + " vertices, "
                             + mesh.getTexCoords().size() / mesh.getTexCoordElementSize() + " uvs, "
                             + mesh.getFaces().size() / mesh.getFaceElementSize() + " faces, "
                             + mesh.getFaceSmoothingGroups().size() + " smoothing groups.");
-            log("material diffuse color = " + ((PhongMaterial) material).getDiffuseColor());
-            log("material diffuse map = " + ((PhongMaterial) material).getDiffuseMap());
+            log("material diffuse color = " + ((PhongMaterial) materialData.getMaterial()).getDiffuseColor());
+            log("material diffuse map = " + ((PhongMaterial) materialData.getMaterial()).getDiffuseMap());
 
             facesStart = faces.size();
             facesNormalStart = faceNormals.size();
@@ -420,7 +423,7 @@ public class ObjImporter implements Importer {
             for (Map<String, Material> mm : materialLibrary) {
                 Material m = mm.get(materialName);
                 if (m != null) {
-                    material = m;
+                    materialData = new MaterialData(materialName, m);
                     break;
                 }
             }
@@ -455,7 +458,7 @@ public class ObjImporter implements Importer {
         Node buildMeshView(String key) {
             PolygonMeshView polygonMeshView = new PolygonMeshView();
             polygonMeshView.setId(key);
-            polygonMeshView.setMaterial(getMaterial(key));
+            polygonMeshView.setMaterial(getMaterial(meshNamesToMaterialNames.get(key)));
             polygonMeshView.setMesh(polygonMeshes.get(key));
             // TODO:
             // polygonMeshView.setCullFace(CullFace.NONE);
@@ -554,14 +557,15 @@ public class ObjImporter implements Importer {
             polygonMeshes.put(key, mesh);
             meshNames.add(key);
 
-            addMaterial(key, material);
+            meshNamesToMaterialNames.put(key, materialData.getName());
+            addMaterial(materialData.getName(), materialData.getMaterial());
 
             log("Added mesh '" + key + "' of " + (mesh.getPoints().size()/3) + " vertices, "
                     + (mesh.getTexCoords().size()/2) + " uvs, "
                     + mesh.getFaces().length + " faces, "
                     + 0 + " smoothing groups.");
-            log("material diffuse color = " + ((PhongMaterial) material).getDiffuseColor());
-            log("material diffuse map = " + ((PhongMaterial) material).getDiffuseMap());
+            log("material diffuse color = " + ((PhongMaterial) materialData.getMaterial()).getDiffuseColor());
+            log("material diffuse map = " + ((PhongMaterial) materialData.getMaterial()).getDiffuseMap());
 
             facesStart = facesPolygon.size();
             facesNormalStart = faceNormalsPolygon.size();
