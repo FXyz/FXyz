@@ -85,6 +85,10 @@ public class Model3D {
     public final void addMaterial(String key, Material material) {
         materials.put(key, material);
     }
+    
+    public final Set<String> getMaterialNames() {
+        return materials.keySet();
+    }
 
     public final Material getMaterial(String key) {
         return materials.get(key);
