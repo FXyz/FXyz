@@ -39,20 +39,17 @@ Create a gradle project, edit the build.gradle file and add:
 ```
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.9'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 mainClassName = 'org.fxyz3d.Sample'
 
 repositories {
     mavenCentral()
-    maven {
-        url = "http://maven.jzy3d.org/releases"
-    }
 }
 
 dependencies {
-    implementation 'org.fxyz3d:fxyz3d:0.5.3'
+    implementation 'org.fxyz3d:fxyz3d:0.5.4'
 }
 
 javafx {
