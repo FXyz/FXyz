@@ -5,7 +5,7 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {    
-    api ('org.controlsfx:controlsfx:11.0.2') {
+    api ('org.controlsfx:controlsfx:11.1.2') {
         exclude group:"org.openjfx"
     }
     api 'org.reactfx:reactfx:2.0-M5'

@@ -17,7 +17,7 @@ A JavaFX 3D Visualization and Component Library
 
 ## How to build
 
-The project is managed by gradle. To build, type
+The project is managed by gradle. To build with JDK 17, type:
 
 	./gradlew assemble
 
@@ -39,7 +39,7 @@ Create a gradle project, edit the build.gradle file and add:
 ```
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
 mainClassName = 'org.fxyz3d.Sample'
@@ -53,7 +53,7 @@ dependencies {
 }
 
 javafx {
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls' ]
 }
 ```
 
@@ -90,7 +90,7 @@ and create a JavaFX Application class `Sample` under the `org.fxyz3d` package:
     }
 ```
 
-Note: For more information on JavaFX 11, check this [link](https://openjfx.io).
+Note: For more information on JavaFX, check this [link](https://openjfx.io).
 
 ### FXSampler
 
@@ -108,7 +108,7 @@ You can create a custom image for your platform running:
 
     ./gradlew clean :FXyz-Samples:jlink  
 
-And you can run it with Java 9+ on your platform:
+And you can run it with Java 17 on your platform:
 
     FXyz-Samples/build/FXyz/bin/FXyzSamples
 
