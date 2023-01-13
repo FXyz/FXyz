@@ -94,7 +94,7 @@ public class ScatterPlotColors extends FXyzSample {
         List<Color> colors = new ArrayList<>();
         int k = 0;
         for (int i = -250; i < 250; i++) {
-            dataX.add(new Double(i));
+            dataX.add(Double.valueOf(i));
             dataY.add(Math.sin(i) * 50 + i);
             dataZ.add(Math.cos(i) * 50 + i);
             colors.add(new Color(Math.abs(i) / 250D, Math.abs(dataY.get(k)) / 300D, Math.abs(dataZ.get(k) / 300D), 0.25));

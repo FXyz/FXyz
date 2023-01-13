@@ -121,7 +121,13 @@ public class Skybox extends Group{
         startTimer();
     }
 
-    
+    public void setEnableTimer(boolean enable) {
+        if(null != timer)
+            if(enable)
+                timer.start();
+            else
+                timer.stop();
+    }
     
     private void loadImageViews(){
                         
@@ -259,8 +265,8 @@ public class Skybox extends Group{
     private void setMultipleImages() {        
         layoutViews();
         
-        back.setImage(frontImg);
-        front.setImage(backImg);
+        back.setImage(backImg);
+        front.setImage(frontImg);
         top.setImage(topImg);
         bottom.setImage(bottomImg);
         left.setImage(leftImg);
