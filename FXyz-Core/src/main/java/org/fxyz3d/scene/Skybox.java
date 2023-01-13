@@ -29,7 +29,6 @@
 
 package org.fxyz3d.scene;
 
-import javafx.animation.AnimationTimer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Rectangle2D;
@@ -37,10 +36,8 @@ import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 
 /** 
  * 
@@ -78,10 +75,7 @@ public class Skybox extends Group{
     };
     private Image 
             topImg, bottomImg, leftImg, rightImg, frontImg, backImg, singleImg;
-    private WritableImage convertedImage;
-    
     private final PerspectiveCamera camera;
-    private AnimationTimer timer;
     private final SkyboxImageType imageType;
     /**
      * Projects ImageViews in a way that creates a seamless (mostly) view.
@@ -159,32 +153,23 @@ public class Skybox extends Group{
         getTransforms().add(affine);
                         
         getChildren().addAll(views);
-        
-        startTimer();
+        // @since 0.5.5
+        if (camera != null) {
+            camera.localToSceneTransformProperty().addListener((obs, ov, ct) -> {
+                if (ct != null) {
+                    affine.setTx(ct.getTx());
+                    affine.setTy(ct.getTy());
+                    affine.setTz(ct.getTz());
+                }
+            });
+        }
     }
-    /**
-     * @since 0.5.5
-     * @param enable If the internal AnimationTimer object is properly initialized
-     * then this will start (true) or stop the Animation. 
-     */
-    public void setEnableTimer(boolean enable) {
-        if(null != timer)
-            if(enable)
-                timer.start();
-            else
-                timer.stop();
-    }
-    
     private void loadImageViews(){
-                        
         for(ImageView iv : views){      
             iv.setSmooth(true);
             iv.setPreserveRatio(true);            
         }
-        
         validateImageType();
-        
-        
     }
 
     private void layoutViews() {
@@ -317,21 +302,6 @@ public class Skybox extends Group{
         bottom.setImage(bottomImg);
         left.setImage(leftImg);
         right.setImage(rightImg);
-    }
-    
-    private void startTimer(){
-        timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                Transform ct = (camera != null) ? camera.getLocalToSceneTransform() : null;
-                if(ct != null){
-                    affine.setTx(ct.getTx());
-                    affine.setTy(ct.getTy());
-                    affine.setTz(ct.getTz());
-                }
-            }
-        };
-        timer.start();
     }
     
     /*
