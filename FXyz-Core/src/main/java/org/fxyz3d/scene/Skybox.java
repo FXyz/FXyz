@@ -1,7 +1,7 @@
 /**
  * Skybox.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2023, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,7 +83,25 @@ public class Skybox extends Group{
     private final PerspectiveCamera camera;
     private AnimationTimer timer;
     private final SkyboxImageType imageType;
-
+    /**
+     * Projects ImageViews in a way that creates a seamless (mostly) view.
+     * Images are projected using an Affine transform which is updated whenever 
+     * the camera is changed. AnimationTimer is used to synchronize projection
+     * updates with camera changes.
+     * 
+     * @param singleImg One image which is chunked up in this pattern
+     *              ____
+     *             |top |
+     *         ____|____|____ ____
+     *        |left|fwd |rght|back|
+     *        |____|____|____|____|
+     *             |bot |
+     *             |____|
+     * @param size effective distance to have the image panels projected from
+     * the location of the camera
+     * @param camera The camera to track
+     * 
+     */
     public Skybox(Image singleImg, double size, PerspectiveCamera camera) {
         super();
         this.imageType = SkyboxImageType.SINGLE;
@@ -98,7 +116,31 @@ public class Skybox extends Group{
         
         getChildren().addAll(views);
     }
-
+    /**
+     * Projects ImageViews in a way that creates a seamless (mostly) view.
+     * Images are projected using an Affine transform which is updated whenever 
+     * the camera is changed.AnimationTimer is used to synchronize projection 
+     * updates with camera changes.The images are arranged like this: 
+              ____
+             |top |
+         ____|____|____ ____
+        |left|fwd |rght|back|
+        |____|____|____|____|
+             |bot |
+             |____|
+     * It is recommended that each image be exactly square in pixels and the same size.
+     * 
+     * @param topImg The image on top, camera look -y
+     * @param bottomImg The image on the bottom, camera look +y
+     * @param leftImg The image to the left, camera look -x
+     * @param rightImg The image to the right, camera look +x
+     * @param frontImg The image initially toward the screen, camera look +z
+     * @param backImg The image behind the camera, camera look -z
+     * @param size effective distance to have the image panels projected from
+     * the location of the camera
+     * @param camera The camera to track
+     * 
+     */
     public Skybox(Image topImg, Image bottomImg, Image leftImg, Image rightImg, Image frontImg, Image backImg, double size, PerspectiveCamera camera) {
         super();            
         this.imageType = SkyboxImageType.MULTIPLE;
@@ -120,7 +162,11 @@ public class Skybox extends Group{
         
         startTimer();
     }
-
+    /**
+     * @since 0.5.5
+     * @param enable If the internal AnimationTimer object is properly initialized
+     * then this will start (true) or stop the Animation. 
+     */
     public void setEnableTimer(boolean enable) {
         if(null != timer)
             if(enable)

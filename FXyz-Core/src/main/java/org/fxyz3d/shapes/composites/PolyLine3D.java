@@ -57,7 +57,7 @@ public class PolyLine3D extends Group {
     
     @Deprecated
     public PolyLine3D(List<Point3D> points, int width, Color color) {
-        this(points, new Integer(width).floatValue(), color);
+        this(points, Float.valueOf(width), color);
     }
     //Creates a Ribbon PolyLine3D
     public PolyLine3D(List<Point3D> points, float width, Color color) {
@@ -65,7 +65,7 @@ public class PolyLine3D extends Group {
     }
     @Deprecated
     public PolyLine3D(List<Point3D> points, int width, Color color, LineType lineType ) {
-        this(points, new Integer(width).floatValue(), color, lineType);
+        this(points, Float.valueOf(width), color, lineType);
     }
     //Creates a PolyLine3D with the user's choice of mesh style
     public PolyLine3D(List<Point3D> points, float width, Color color, LineType lineType ) {
@@ -97,7 +97,7 @@ public class PolyLine3D extends Group {
     }
     private void buildTriangleTube() {
         //For each data point add three mesh points as an equilateral triangle
-        float half = new Float(width / 2.0);
+        float half = width / 2.0f;
         for(Point3D point: points) {
             //-0.288675f*hw, -0.5f*hw, -0.204124f*hw,
             mesh.getPoints().addAll(point.x - 0.288675f*half, point.y - 0.5f*half, point.z - 0.204124f*half);

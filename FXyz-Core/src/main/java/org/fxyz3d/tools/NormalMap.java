@@ -178,15 +178,12 @@ public class NormalMap extends WritableImage {
     }
     /**
      * 
-     * @return 
+     * @return intensity
      */
     public DoubleProperty intensityProperty() {
         return intensity;
     }
-    //=========================================
-    /**
-     * 
-     */
+
     private final DoubleProperty intensityScale = new SimpleDoubleProperty(this, "intensityScale" , DEFAULT_INTENSITY_SCALE){
 
         
@@ -207,15 +204,12 @@ public class NormalMap extends WritableImage {
     }
     /**
      * 
-     * @return 
+     * @return intensityScale
      */
     public DoubleProperty intensityScaleProperty() {
         return intensityScale;
     }
-    //==========================================
-    /**
-     * 
-     */
+
     private final BooleanProperty invertNormals = new SimpleBooleanProperty(this, "inverted" , DEFAULT_INVERTED){
 
         
@@ -236,12 +230,9 @@ public class NormalMap extends WritableImage {
     }
     /**
      * 
-     * @return 
+     * @return invertNormals
      */
     public BooleanProperty invertNormalsProperty() {
         return invertNormals;
     }
-    
-    
-    
 }

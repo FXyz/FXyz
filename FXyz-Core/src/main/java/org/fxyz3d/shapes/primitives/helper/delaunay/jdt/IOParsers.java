@@ -103,13 +103,13 @@ public class IOParsers {
 
 		double dx = 1, dy = 1, dz = 1, minX = 0, minY = 0, minZ = 0;
 
-		List<Point> points = new ArrayList<Point>();
+		List<Point> points = new ArrayList<>();
 		while (s != null && s.charAt(0) == 'v') {
 			StringTokenizer st = new StringTokenizer(s);
 			st.nextToken();
-			double d1 = new Double(st.nextToken()).doubleValue() * dx + minX;
-			double d2 = new Double(st.nextToken()).doubleValue() * dy + minY;
-			double d3 = new Double(st.nextToken()).doubleValue() * dz + minZ;
+			double d1 = Double.parseDouble(st.nextToken()) * dx + minX;
+			double d2 = Double.parseDouble(st.nextToken()) * dy + minY;
+			double d3 = Double.parseDouble(st.nextToken()) * dz + minZ;
 			points.add(new Point(d1, d2, d3));
 			s = is.readLine();
 		}
@@ -118,13 +118,13 @@ public class IOParsers {
 
 	private static List<Point> readTsin(BufferedReader is, String firstLine) throws IOException {
 
-		List<Point> points = new ArrayList<Point>();
+		List<Point> points = new ArrayList<>();
 		String s;
 		while ((s = is.readLine()) != null) {
 			StringTokenizer st = new StringTokenizer(s);
-			double d1 = new Double(st.nextToken()).doubleValue();
-			double d2 = new Double(st.nextToken()).doubleValue();
-			double d3 = new Double(st.nextToken()).doubleValue();
+			double d1 = Double.parseDouble(st.nextToken());
+			double d2 = Double.parseDouble(st.nextToken());
+			double d3 = Double.parseDouble(st.nextToken());
 			points.add(new Point(d1, d2, d3));
 		}
 		return points;
