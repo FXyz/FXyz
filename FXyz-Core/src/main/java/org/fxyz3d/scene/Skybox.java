@@ -1,7 +1,7 @@
 /**
  * Skybox.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2023, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@
 
 package org.fxyz3d.scene;
 
-import javafx.animation.AnimationTimer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Rectangle2D;
@@ -37,10 +36,8 @@ import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 
 /** 
  * 
@@ -78,12 +75,27 @@ public class Skybox extends Group{
     };
     private Image 
             topImg, bottomImg, leftImg, rightImg, frontImg, backImg, singleImg;
-    private WritableImage convertedImage;
-    
     private final PerspectiveCamera camera;
-    private AnimationTimer timer;
     private final SkyboxImageType imageType;
-
+    /**
+     * Projects ImageViews in a way that creates a seamless (mostly) view.
+     * Images are projected using an Affine transform which is updated whenever 
+     * the camera is changed. AnimationTimer is used to synchronize projection
+     * updates with camera changes.
+     * 
+     * @param singleImg One image which is chunked up in this pattern
+     *              ____
+     *             |top |
+     *         ____|____|____ ____
+     *        |left|fwd |rght|back|
+     *        |____|____|____|____|
+     *             |bot |
+     *             |____|
+     * @param size effective distance to have the image panels projected from
+     * the location of the camera
+     * @param camera The camera to track
+     * 
+     */
     public Skybox(Image singleImg, double size, PerspectiveCamera camera) {
         super();
         this.imageType = SkyboxImageType.SINGLE;
@@ -98,7 +110,31 @@ public class Skybox extends Group{
         
         getChildren().addAll(views);
     }
-
+    /**
+     * Projects ImageViews in a way that creates a seamless (mostly) view.
+     * Images are projected using an Affine transform which is updated whenever 
+     * the camera is changed.AnimationTimer is used to synchronize projection 
+     * updates with camera changes.The images are arranged like this: 
+              ____
+             |top |
+         ____|____|____ ____
+        |left|fwd |rght|back|
+        |____|____|____|____|
+             |bot |
+             |____|
+     * It is recommended that each image be exactly square in pixels and the same size.
+     * 
+     * @param topImg The image on top, camera look -y
+     * @param bottomImg The image on the bottom, camera look +y
+     * @param leftImg The image to the left, camera look -x
+     * @param rightImg The image to the right, camera look +x
+     * @param frontImg The image initially toward the screen, camera look +z
+     * @param backImg The image behind the camera, camera look -z
+     * @param size effective distance to have the image panels projected from
+     * the location of the camera
+     * @param camera The camera to track
+     * 
+     */
     public Skybox(Image topImg, Image bottomImg, Image leftImg, Image rightImg, Image frontImg, Image backImg, double size, PerspectiveCamera camera) {
         super();            
         this.imageType = SkyboxImageType.MULTIPLE;
@@ -117,22 +153,23 @@ public class Skybox extends Group{
         getTransforms().add(affine);
                         
         getChildren().addAll(views);
-        
-        startTimer();
+        // @since 0.5.5
+        if (camera != null) {
+            camera.localToSceneTransformProperty().addListener((obs, ov, ct) -> {
+                if (ct != null) {
+                    affine.setTx(ct.getTx());
+                    affine.setTy(ct.getTy());
+                    affine.setTz(ct.getTz());
+                }
+            });
+        }
     }
-
-    
-    
     private void loadImageViews(){
-                        
         for(ImageView iv : views){      
             iv.setSmooth(true);
             iv.setPreserveRatio(true);            
         }
-        
         validateImageType();
-        
-        
     }
 
     private void layoutViews() {
@@ -259,27 +296,12 @@ public class Skybox extends Group{
     private void setMultipleImages() {        
         layoutViews();
         
-        back.setImage(frontImg);
-        front.setImage(backImg);
+        back.setImage(backImg);
+        front.setImage(frontImg);
         top.setImage(topImg);
         bottom.setImage(bottomImg);
         left.setImage(leftImg);
         right.setImage(rightImg);
-    }
-    
-    private void startTimer(){
-        timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                Transform ct = (camera != null) ? camera.getLocalToSceneTransform() : null;
-                if(ct != null){
-                    affine.setTx(ct.getTx());
-                    affine.setTy(ct.getTy());
-                    affine.setTz(ct.getTz());
-                }
-            }
-        };
-        timer.start();
     }
     
     /*
