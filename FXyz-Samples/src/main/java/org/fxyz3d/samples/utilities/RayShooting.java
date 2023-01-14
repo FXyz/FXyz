@@ -100,9 +100,9 @@ public class RayShooting extends ShapeBaseSample {
 
         subScene.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.isControlDown()) {
+                //cube location will be the starting point of the ray
                 Point3D o = new Point3D(origin.getTranslateX(), origin.getTranslateY(), 
-                    origin.getTranslateZ()); //so it looks like its a bit in front
-
+                    origin.getTranslateZ()); 
                 if (e.isPrimaryButtonDown()) {
                     // set Target and Direction
                     Point3D t = Point3D.ZERO.add(target2.getTranslateX(), target2.getTranslateY(), target2.getTranslateZ()),
