@@ -52,6 +52,7 @@ import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -281,10 +282,10 @@ public abstract class ShapeBaseSample<T extends Node> extends FXyzSample {
         subScene.setFill(Color.TRANSPARENT);//Color.web("#0d0d0d"));        
         subScene.setCamera(camera);
         subScene.setFocusTraversable(false);
-
+        subScene.setOnMouseEntered(event -> subScene.requestFocus());
+        
         //First person shooter keyboard movement 
         subScene.setOnKeyPressed(event -> {
-
             double change = 10.0;
             //Add shift modifier to simulate "Running Speed"
             if (event.isShiftDown()) {

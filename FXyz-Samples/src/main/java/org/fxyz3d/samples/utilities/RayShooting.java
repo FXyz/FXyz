@@ -1,7 +1,7 @@
 /**
  * RayShooting.java
  *
- * Copyright (c) 2013-2016, F(X)yz
+ * Copyright (c) 2013-2023, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@
 
 package org.fxyz3d.samples.utilities;
 
-import com.sun.javafx.scene.CameraHelper;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
@@ -39,8 +38,11 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
@@ -52,9 +54,10 @@ import org.fxyz3d.samples.shapes.ShapeBaseSample;
 /**
  * A simple app Showing the newly added Ray class.
  * <br><p>
- * Clicking on the Scene will spawn a Sphere at that position (origin of
- * Ray)<br>
- * Mouse buttons target different nodes Targets are breifly highlighted if an
+ * Holding Control and Clicking on the Scene will spawn a Sphere at the position 
+ * of the small cube (origin of Ray)<br>
+ * keyboard movement controls I,J,K,L,U,M translates the origin cube.<br>
+ * Mouse buttons target different nodes Targets are briefly highlighted when an
  * intersection occurs.
  * <br><br>
  * RayTest in org.fxyz3d.tests package has reference on TriangleMesh intersections
@@ -74,33 +77,30 @@ public class RayShooting extends ShapeBaseSample {
     
     private final AmbientLight rayLight = new AmbientLight();
     protected PointLight light, light2, light3;
-    private boolean fireRay = true;
     protected Sphere target1, target2;
-
+    protected Box origin;
+    
     @Override
     protected void addMeshAndListeners() {
-              
-        
-        camera.setTranslateZ(-5000);
-        //First person shooter keyboard movement
-        subScene.setOnKeyPressed(ke -> {
-            // add a flag so we can still move the camera
-            if (ke.getCode().equals(KeyCode.CONTROL)) {
-                fireRay = false;
-            }
-            
-        });
-        
-        subScene.setOnKeyReleased(ke -> {
-            // release flag
-            if (ke.getCode().equals(KeyCode.CONTROL)) {
-                fireRay = true;
-            }
+        camera.setTranslateZ(-2000);
+
+        subScene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            double change = 10.0;
+            KeyCode keycode = event.getCode();                
+            //move Origin
+            if(keycode == KeyCode.I) { origin.setTranslateZ(origin.getTranslateZ() + change); }
+            if(keycode == KeyCode.K) { origin.setTranslateZ(origin.getTranslateZ() - change); }
+            if(keycode == KeyCode.J) { origin.setTranslateX(origin.getTranslateX() - change); }
+            if(keycode == KeyCode.L) { origin.setTranslateX(origin.getTranslateX() + change); }
+            if(keycode == KeyCode.U ) { origin.setTranslateY(origin.getTranslateY() - change); }
+            if(keycode == KeyCode.M ) { origin.setTranslateY(origin.getTranslateY() + change); }
         });
 
-        subScene.setOnMousePressed(e -> {
-            if (fireRay) {
-                Point3D o = CameraHelper.pickProjectPlane(camera, e.getX(), e.getY());
+        subScene.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+            if (e.isControlDown()) {
+                //cube location will be the starting point of the ray
+                Point3D o = new Point3D(origin.getTranslateX(), origin.getTranslateY(), 
+                    origin.getTranslateZ()); 
                 if (e.isPrimaryButtonDown()) {
                     // set Target and Direction
                     Point3D t = Point3D.ZERO.add(target2.getTranslateX(), target2.getTranslateY(), target2.getTranslateZ()),
@@ -111,9 +111,7 @@ public class RayShooting extends ShapeBaseSample {
                     // If ray intersects node, spawn and animate
                     if (target2.getBoundsInParent().contains(r.project(dist))) {
                         animateRayTo(r, target2, Duration.seconds(2));
-                        e.consume();
                     }
-                    e.consume();
                 } // repeat for other target as well
                 else if (e.isSecondaryButtonDown()) {
                     Point3D tgt = Point3D.ZERO.add(target1.getTranslateX(), target1.getTranslateY(), target1.getTranslateZ()),
@@ -123,13 +121,11 @@ public class RayShooting extends ShapeBaseSample {
                     double dist = tgt.distance(o);
                     if (target1.getBoundsInParent().contains(r.project(dist))) {
                         animateRayTo(r, target1, Duration.seconds(2));
-                        e.consume();
                     }
-                    e.consume();
                 }
-            }e.consume();
+                e.consume();
+            }
         });
-        //*/
     }
 
     /**
@@ -227,28 +223,29 @@ public class RayShooting extends ShapeBaseSample {
         target1.setId("t1");
         target1.setDrawMode(DrawMode.LINE);
         target1.setCullFace(CullFace.NONE);
-        target1.setTranslateX(300);
-        target1.setTranslateY(300);
-        target1.setTranslateZ(2500);
+        target1.setTranslateX(500);
+        target1.setTranslateY(500);
+        target1.setTranslateZ(500);
         target1.setMaterial(red);
         // create another target
         target2 = new Sphere(150);
         target2.setId("t2");
         target2.setDrawMode(DrawMode.LINE);
         target2.setCullFace(CullFace.NONE);
-        target2.setTranslateX(200);
-        target2.setTranslateY(-200);
+        target2.setTranslateX(-500);
+        target2.setTranslateY(-500);
         target2.setTranslateZ(-500);
         target2.setMaterial(blue);
 
-        model = new Group(target1, target2, light, light2, light3, rayLight);
+        origin = new Box(20, 20, 20);
+        origin.setDrawMode(DrawMode.LINE);
+        origin.setCullFace(CullFace.NONE);
+        
+        model = new Group(target1, target2, origin, light, light2, light3, rayLight);
     }
-    
-    
+        
     @Override
     protected Node buildControlPanel() {
         return null;
     }
-    
-
 }
