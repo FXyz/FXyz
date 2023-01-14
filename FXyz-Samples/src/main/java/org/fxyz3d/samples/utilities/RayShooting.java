@@ -56,7 +56,7 @@ import org.fxyz3d.samples.shapes.ShapeBaseSample;
  * <br><p>
  * Holding Control and Clicking on the Scene will spawn a Sphere at the position 
  * of the small cube (origin of Ray)<br>
- * Control plus keyboard movement controls (WASD,SPACE,Z) moves the origin cube.<br>
+ * keyboard movement controls I,J,K,L,U,M translates the origin cube.<br>
  * Mouse buttons target different nodes Targets are briefly highlighted when an
  * intersection occurs.
  * <br><br>
@@ -85,17 +85,15 @@ public class RayShooting extends ShapeBaseSample {
         camera.setTranslateZ(-2000);
 
         subScene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if(event.isControlDown()) {
-                double change = 10.0;
-                KeyCode keycode = event.getCode();                
-                //move Origin
-                if(keycode == KeyCode.W) { origin.setTranslateZ(origin.getTranslateZ() + change); }
-                if(keycode == KeyCode.S) { origin.setTranslateZ(origin.getTranslateZ() - change); }
-                if(keycode == KeyCode.A) { origin.setTranslateX(origin.getTranslateX() - change); }
-                if(keycode == KeyCode.D) { origin.setTranslateX(origin.getTranslateX() + change); }
-                if(keycode == KeyCode.SPACE ) { origin.setTranslateZ(origin.getTranslateZ() + change); }
-                if(keycode == KeyCode.Z ) { origin.setTranslateZ(origin.getTranslateZ() - change); }
-            }            
+            double change = 10.0;
+            KeyCode keycode = event.getCode();                
+            //move Origin
+            if(keycode == KeyCode.I) { origin.setTranslateZ(origin.getTranslateZ() + change); }
+            if(keycode == KeyCode.K) { origin.setTranslateZ(origin.getTranslateZ() - change); }
+            if(keycode == KeyCode.J) { origin.setTranslateX(origin.getTranslateX() - change); }
+            if(keycode == KeyCode.L) { origin.setTranslateX(origin.getTranslateX() + change); }
+            if(keycode == KeyCode.U ) { origin.setTranslateY(origin.getTranslateY() - change); }
+            if(keycode == KeyCode.M ) { origin.setTranslateY(origin.getTranslateY() + change); }
         });
 
         subScene.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
