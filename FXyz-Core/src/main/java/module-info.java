@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 module org.fxyz3d.core {
     requires transitive javafx.controls;
@@ -35,6 +35,7 @@ module org.fxyz3d.core {
     requires static jcsg;
     requires static vvecmath;
     requires static poly2tri.core;
+    requires org.slf4j;
 
     exports org.fxyz3d.geometry;
     exports org.fxyz3d.io;
