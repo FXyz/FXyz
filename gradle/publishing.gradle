@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat
 import java.time.Duration
 
 ext.publish = [:]
@@ -7,12 +8,13 @@ apply plugin: 'maven-publish'
 apply plugin: 'de.marcphilipp.nexus-publish'
 apply from: "$rootDir/gradle/project-info.gradle"
 
-archivesBaseName = project.name.toLowerCase().split('-').collect {
-    it.replace('fxyz', 'fxyz3d')
-}.join('-')
-
-if (project.name == 'FXyz-Core') {
-    archivesBaseName = 'fxyz3d'
+base {
+    archivesName = project.name.toLowerCase().split('-').collect {
+        it.replace('fxyz', 'fxyz3d')
+    }.join('-')
+    if (project.name == 'FXyz-Core') {
+        archivesName = 'fxyz3d'
+    }
 }
 
 signing {
@@ -34,8 +36,8 @@ nexusPublishing {
 
 Date buildTimeAndDate = new Date()
 ext {
-    buildDate = new java.text.SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildTime = new java.text.SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
 jar {
@@ -99,7 +101,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifactId archivesBaseName
+            artifactId base.archivesName.get()
 
             pom.withXml {
                 def root = asNode()
