@@ -2,4 +2,5 @@ ext.moduleName = 'org.fxyz3d.importers'
 
 dependencies {
     api (project(':FXyz-Core')) { transitive = false }
+    implementation (project(':FXyz-Core'))
 }
