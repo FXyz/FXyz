@@ -2,5 +2,5 @@ ext.moduleName = 'org.fxyz3d.importers'
 
 dependencies {
     api (project(':FXyz-Core')) { transitive = false }
-    implementation (project(':FXyz-Core'))
+    testRuntimeOnly "org.slf4j:slf4j-api:$slf4j_version"
 }
