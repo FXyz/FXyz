@@ -53,8 +53,8 @@ subprojects {
     }
 
     javadoc {
-        options.addBooleanOption("Xdoclint:none").setValue(true);
-        options.addBooleanOption("javafx").setValue(true);
+        options.addBooleanOption("Xdoclint:none").setValue(true)
+        options.addBooleanOption("javafx").setValue(true)
     }
 
     eclipse {
