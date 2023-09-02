@@ -5,7 +5,8 @@ plugins {
     id 'net.nemerosa.versioning' version '3.0.0'
     id 'com.github.ben-manes.versions' version '0.44.0'
     id 'io.codearte.nexus-staging' version '0.30.0'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.openjfx.javafxplugin' version '0.0.15-SNAPSHOT' apply false
+    id 'org.javamodularity.moduleplugin' version '1.8.12' apply false
     id 'com.github.hierynomus.license' version '0.16.1' apply false
     id 'de.marcphilipp.nexus-publish' version '0.4.0' apply false
 }
@@ -18,10 +19,11 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'org.openjfx.javafxplugin'
+    apply plugin: 'org.javamodularity.moduleplugin'
     apply plugin: 'com.github.hierynomus.license'
 
     java {
-        modularity.inferModulePath.set(true)
+        modularity.inferModulePath.set(false)
     }
     
     if (project.name != 'FXyz-Samples') {
