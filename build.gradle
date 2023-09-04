@@ -5,7 +5,7 @@ plugins {
     id 'net.nemerosa.versioning' version '3.0.0'
     id 'com.github.ben-manes.versions' version '0.44.0'
     id 'io.codearte.nexus-staging' version '0.30.0'
-    id 'org.openjfx.javafxplugin' version '0.0.15-SNAPSHOT' apply false
+    id 'org.openjfx.javafxplugin' version '0.1.0' apply false
     id 'org.javamodularity.moduleplugin' version '1.8.12' apply false
     id 'com.github.hierynomus.license' version '0.16.1' apply false
     id 'de.marcphilipp.nexus-publish' version '0.4.0' apply false
