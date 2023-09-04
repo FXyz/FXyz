@@ -12,6 +12,7 @@ plugins {
 
 ext {
     fxyz_sampler_mainClass   = 'org.fxyz3d.samples.Launcher'
+    gradleWrapperVersion = '8.3'
 }
 
 subprojects {
@@ -101,4 +102,9 @@ nexusStaging {
     password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
     numberOfRetries = 30
     delayBetweenRetriesInMillis = 10000
+}
+
+wrapper {
+    gradleVersion = gradleWrapperVersion
+    distributionType = Wrapper.DistributionType.BIN
 }
