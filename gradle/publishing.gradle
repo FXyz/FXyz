@@ -105,9 +105,6 @@ publishing {
 
             pom.withXml {
                 def root = asNode()
-                root.dependencies.'*'
-                        .findAll() { it.groupId.text() == 'org.openjfx' }
-                        .each { it.remove(it.classifier) }
                 root.appendNode 'description', publish.desc
                 root.children().last() + pomConfig
             }
