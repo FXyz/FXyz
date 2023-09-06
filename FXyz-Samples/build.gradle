@@ -11,7 +11,10 @@ repositories {
 }
 
 ext.moduleName = 'org.fxyz3d.samples'
-archivesBaseName = project.name.toLowerCase()
+
+base {
+    archivesName = project.name.toLowerCase()
+}
 
 application {
     mainModule = moduleName
@@ -65,7 +68,7 @@ jlink {
     addExtraDependencies("javafx")
     launcher {
         name = 'FXyzSamples'
-        jvmArgs = ['--add-exports', 'javafx.base/com.sun.javafx.runtime=org.fxyz3d.merged.module', 
+        jvmArgs = ['--add-exports', 'javafx.base/com.sun.javafx.runtime=org.fxyz3d.merged.module',
                    '--add-exports', 'javafx.graphics/com.sun.javafx.scene=org.fxyz3d.FXyz.Samples']
     }
 }

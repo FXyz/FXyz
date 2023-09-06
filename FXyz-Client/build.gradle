@@ -4,7 +4,7 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.fxyz3d.client.FXyzClient'
 }
 
-dependencies {    
+dependencies {
     api ('org.controlsfx:controlsfx:11.1.2') {
         exclude group:"org.openjfx"
     }
@@ -14,18 +14,18 @@ dependencies {
 javadoc {
     exclude 'impl/*'
     failOnError = false
-    
+
     options.windowTitle("FXSampler Project ${version}")
-    options.addBooleanOption("Xdoclint:none").setValue(true);
-    options.addBooleanOption("javafx").setValue(true);
-    
+    options.addBooleanOption("Xdoclint:none").setValue(true)
+    options.addBooleanOption("javafx").setValue(true)
+
     // All doc-files are located in src/main/docs because Gradle's javadoc doesn't copy
     // over the doc-files if they are embedded with the sources. I find this arrangement
     // somewhat cleaner anyway (never was a fan of mixing javadoc files with the sources)
     doLast {
         copy {
             from "src/main/docs"
-            into "$buildDir/docs/javadoc"
+            into layout.buildDirectory.dir('docs/javadoc')
         }
     }
 }

@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 plugins {
     id 'base'
     id 'net.nemerosa.versioning' version '3.0.0'
-    id 'com.github.ben-manes.versions' version '0.44.0'
+    id 'com.github.ben-manes.versions' version '0.47.0'
     id 'io.codearte.nexus-staging' version '0.30.0'
     id 'org.openjfx.javafxplugin' version '0.1.0' apply false
     id 'org.javamodularity.moduleplugin' version '1.8.12' apply false
@@ -13,6 +13,7 @@ plugins {
 
 ext {
     fxyz_sampler_mainClass   = 'org.fxyz3d.samples.Launcher'
+    gradleWrapperVersion = '8.3'
 }
 
 subprojects {
@@ -23,9 +24,11 @@ subprojects {
     apply plugin: 'com.github.hierynomus.license'
 
     java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
         modularity.inferModulePath.set(false)
     }
-    
+
     if (project.name != 'FXyz-Samples') {
         apply plugin: 'java-library'
         apply plugin: 'maven-publish'
@@ -36,14 +39,11 @@ subprojects {
         }
     }
 
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
-
     repositories {
         mavenCentral()
     }
 
-    dependencies {     
+    dependencies {
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
         testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.2'
         testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -56,8 +56,8 @@ subprojects {
     }
 
     javadoc {
-        options.addBooleanOption("Xdoclint:none").setValue(true);
-        options.addBooleanOption("javafx").setValue(true);
+        options.addBooleanOption("Xdoclint:none").setValue(true)
+        options.addBooleanOption("javafx").setValue(true)
     }
 
     eclipse {
@@ -104,4 +104,9 @@ nexusStaging {
     password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
     numberOfRetries = 30
     delayBetweenRetriesInMillis = 10000
+}
+
+wrapper {
+    gradleVersion = gradleWrapperVersion
+    distributionType = Wrapper.DistributionType.BIN
 }
