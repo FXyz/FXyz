@@ -15,3 +15,10 @@ dependencies {
     // configuration to make it a runtimeElement when publishing.
     implementation "org.slf4j:slf4j-api:$slf4j_version"
 }
+
+extraJavaModuleInfo {
+    failOnMissingModuleInfo.set(true)
+    automaticModule('eu.mihosoft.vrl.jcsg:jcsg', 'jcsg')
+    automaticModule('eu.mihosoft.vvecmath:vvecmath', 'vvecmath')
+    automaticModule('org.orbisgis:poly2tri-core', 'poly2tri.core')
+}

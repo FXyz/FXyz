@@ -35,6 +35,15 @@ dependencies {
     implementation "org.graalvm.js:js-scriptengine:22.3.0"
 }
 
+extraJavaModuleInfo {
+    failOnMissingModuleInfo.set(true)
+    automaticModule('eu.mihosoft.vrl.jcsg:jcsg', 'jcsg')
+    automaticModule('eu.mihosoft.vvecmath:vvecmath', 'vvecmath')
+    automaticModule('org.orbisgis:poly2tri-core', 'poly2tri.core')
+    automaticModule('org.reactfx:reactfx', 'reactfx')
+    automaticModule('org.fxmisc.easybind:easybind', 'easybind')
+}
+
 compileJava {
     doFirst {
         options.compilerArgs += [
