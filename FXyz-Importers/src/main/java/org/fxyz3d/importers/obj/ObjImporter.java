@@ -107,7 +107,7 @@ public class ObjImporter implements Importer {
         return SUPPORTED_EXT.equalsIgnoreCase(extension);
     }
 
-    private ObjModel read(URL url, boolean asPolygon) {
+    private ObjModel read(URL url, boolean asPolygon) throws IOException {
         log("Reading from URL: " + url + " as polygon: " + asPolygon);
 
         ObjModel model = asPolygon ? new PolyObjModel(url) : new ObjModel(url);
@@ -117,8 +117,6 @@ public class ObjImporter implements Importer {
                 .map(String::trim)
                 .filter(l -> !l.isEmpty() && !l.startsWith("#"))
                 .forEach(model::parseLine);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         model.addMesh(model.key);
