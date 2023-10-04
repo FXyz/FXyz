@@ -39,17 +39,19 @@ Create a gradle project, edit the build.gradle file and add:
 ```
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
-mainClassName = 'org.fxyz3d.Sample'
+application {
+    mainClass = 'org.fxyz3d.Sample'
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.fxyz3d:fxyz3d:0.5.4'
+    implementation 'org.fxyz3d:fxyz3d:0.6.0'
 }
 
 javafx {
@@ -60,34 +62,50 @@ javafx {
 and create a JavaFX Application class `Sample` under the `org.fxyz3d` package: 
 
 ```java
+package org.fxyz3d;
+
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.CullFace;
+import javafx.stage.Stage;
+import org.fxyz3d.shapes.primitives.SpringMesh;
+import org.fxyz3d.utils.CameraTransformer;
+
+public class Sample extends Application {
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        PerspectiveCamera camera = new PerspectiveCamera(true);        
+        PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setTranslateX(10);
         camera.setTranslateZ(-100);
         camera.setFieldOfView(20);
-        
+
         CameraTransformer cameraTransform = new CameraTransformer();
         cameraTransform.getChildren().add(camera);
         cameraTransform.ry.setAngle(-30.0);
         cameraTransform.rx.setAngle(-15.0);
-        
+
         SpringMesh spring = new SpringMesh(10, 2, 2, 8 * 2 * Math.PI, 200, 100, 0, 0);
         spring.setCullFace(CullFace.NONE);
         spring.setTextureModeVertices3D(1530, p -> p.f);
-        
+
         Group group = new Group(cameraTransform, spring);
-        
+
         Scene scene = new Scene(group, 600, 400, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BISQUE);
         scene.setCamera(camera);
-        
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("FXyz3D Sample");
         primaryStage.show();
     }
+}
 ```
 
 Note: For more information on JavaFX, check this [link](https://openjfx.io).
