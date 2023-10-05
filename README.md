@@ -30,26 +30,28 @@ To deploy it to your local Maven repository, type:
 With FXyz3D there are many different 3D custom shapes. The following sample makes use of `SpringMesh` to create 
 a 3D mesh of a spring.
 
-![](/resources/SpringMesh.png)
-
 ### Sample
 
-Create a gradle project, edit the build.gradle file and add:
+#### Gradle project
+
+If you have a gradle project, edit the `build.gradle` file and add:
 
 ```
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
-mainClassName = 'org.fxyz3d.Sample'
+application {
+    mainClass = 'org.fxyz3d.Sample'
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.fxyz3d:fxyz3d:0.5.4'
+    implementation 'org.fxyz3d:fxyz3d:0.6.0'
 }
 
 javafx {
@@ -57,38 +59,120 @@ javafx {
 }
 ```
 
-and create a JavaFX Application class `Sample` under the `org.fxyz3d` package: 
+#### Maven project
+
+Or if you have maven project, edit the `pom.xml` file and add:
+
+```
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.fxyz3d</groupId>
+    <artifactId>sample</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+        <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fxyz3d</groupId>
+            <artifactId>fxyz3d</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>${javafx.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>org.fxyz3d.Sample</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+#### Application class
+
+Then create a JavaFX Application class `Sample` under the `org.fxyz3d` package: 
 
 ```java
+package org.fxyz3d;
+
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.CullFace;
+import javafx.stage.Stage;
+import org.fxyz3d.shapes.primitives.SpringMesh;
+import org.fxyz3d.utils.CameraTransformer;
+
+public class Sample extends Application {
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        PerspectiveCamera camera = new PerspectiveCamera(true);        
+        PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setTranslateX(10);
         camera.setTranslateZ(-100);
         camera.setFieldOfView(20);
-        
+
         CameraTransformer cameraTransform = new CameraTransformer();
         cameraTransform.getChildren().add(camera);
         cameraTransform.ry.setAngle(-30.0);
         cameraTransform.rx.setAngle(-15.0);
-        
+
         SpringMesh spring = new SpringMesh(10, 2, 2, 8 * 2 * Math.PI, 200, 100, 0, 0);
         spring.setCullFace(CullFace.NONE);
         spring.setTextureModeVertices3D(1530, p -> p.f);
-        
+
         Group group = new Group(cameraTransform, spring);
-        
+
         Scene scene = new Scene(group, 600, 400, true, SceneAntialiasing.BALANCED);
         scene.setFill(Color.BISQUE);
         scene.setCamera(camera);
-        
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("FXyz3D Sample");
         primaryStage.show();
     }
+}
 ```
+
+#### Run the sample
+
+If you have a gradle project:
+
+```
+.gradlew run
+```
+or if you have a maven one:
+```
+mvn javafx:run
+```
+
+and you should see the result:
+
+![](/resources/SpringMesh.png)
 
 Note: For more information on JavaFX, check this [link](https://openjfx.io).
 
