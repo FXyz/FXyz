@@ -30,11 +30,11 @@ To deploy it to your local Maven repository, type:
 With FXyz3D there are many different 3D custom shapes. The following sample makes use of `SpringMesh` to create 
 a 3D mesh of a spring.
 
-![](/resources/SpringMesh.png)
-
 ### Sample
 
-Create a gradle project, edit the build.gradle file and add:
+#### Gradle project
+
+If you have a gradle project, edit the `build.gradle` file and add:
 
 ```
 plugins {
@@ -59,7 +59,57 @@ javafx {
 }
 ```
 
-and create a JavaFX Application class `Sample` under the `org.fxyz3d` package: 
+#### Maven project
+
+Or if you have maven project, edit the `pom.xml` file and add:
+
+```
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.fxyz3d</groupId>
+    <artifactId>sample</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+        <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fxyz3d</groupId>
+            <artifactId>fxyz3d</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>${javafx.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>org.fxyz3d.Sample</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+#### Application class
+
+Then create a JavaFX Application class `Sample` under the `org.fxyz3d` package: 
 
 ```java
 package org.fxyz3d;
@@ -107,6 +157,22 @@ public class Sample extends Application {
     }
 }
 ```
+
+#### Run the sample
+
+If you have a gradle project:
+
+```
+.gradlew run
+```
+or if you have a maven one:
+```
+mvn javafx:run
+```
+
+and you should see the result:
+
+![](/resources/SpringMesh.png)
 
 Note: For more information on JavaFX, check this [link](https://openjfx.io).
 
