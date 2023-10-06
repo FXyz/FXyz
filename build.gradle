@@ -24,8 +24,7 @@ subprojects {
     apply plugin: 'com.github.hierynomus.license'
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        toolchain.languageVersion = JavaLanguageVersion.of(11)
         modularity.inferModulePath.set(false)
     }
 
@@ -34,6 +33,9 @@ subprojects {
         apply plugin: 'maven-publish'
         apply from: "$rootDir/gradle/publishing.gradle"
     } else {
+        java {
+            toolchain.languageVersion = JavaLanguageVersion.of(17)
+        }
         javadoc {
             enabled(false)
         }
