@@ -11,6 +11,11 @@ dependencies {
     api 'org.reactfx:reactfx:2.0-M5'
 }
 
+extraJavaModuleInfo {
+    failOnMissingModuleInfo.set(true)
+    automaticModule('org.reactfx:reactfx', 'reactfx')
+}
+
 javadoc {
     exclude 'impl/*'
     failOnError = false
