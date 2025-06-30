@@ -1,0 +1,21 @@
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
+		maven {
+			url = "https://plugins.gradle.org/m2/"
+		}
+	}
+}
+
+dependencyResolutionManagement {
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
+		maven {
+			url = "https://plugins.gradle.org/m2/"
+		}
+	}
+}
+
+include("plugins")

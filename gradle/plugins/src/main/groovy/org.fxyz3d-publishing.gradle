@@ -1,12 +1,12 @@
 import java.text.SimpleDateFormat
 import java.time.Duration
 
-ext.publish = [:]
-
-apply plugin: 'signing'
-apply plugin: 'maven-publish'
-apply plugin: 'de.marcphilipp.nexus-publish'
-apply from: "$rootDir/gradle/project-info.gradle"
+plugins {
+	id("signing")
+	id("maven-publish")
+	id("de.marcphilipp.nexus-publish")
+	id("org.fxyz3d-project-info")    
+}
 
 base {
     archivesName = project.name.toLowerCase().split('-').collect {

@@ -1,3 +1,16 @@
+pluginManagement {
+	includeBuild("gradle")
+}
+
+dependencyResolutionManagement {
+	repositories {
+		mavenCentral()
+		maven {
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+	}
+}
+
 include "FXyz-Client", "FXyz-Core", "FXyz-Importers", "FXyz-Samples"
 
 rootProject.name = "FXyzLibs"
