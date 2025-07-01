@@ -1,7 +1,7 @@
 /**
  * F(X)yz
  *
- * Copyright (c) 2013-2023, F(X)yz
+ * Copyright (c) 2013-2025, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
