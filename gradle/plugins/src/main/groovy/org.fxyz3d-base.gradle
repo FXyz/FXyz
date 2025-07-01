@@ -6,8 +6,14 @@ plugins {
 	id("eclipse")
 }
 
-// Convert unnamed modules to automatic modules. Can also be configured as "real" modules.
+// Convert unnamed modules to automatic modules.
+// They can also be converted to "real" modules, which requires 'exports' and 'requires' configurations
+// See https://github.com/gradlex-org/extra-java-module-info 
 extraJavaModuleInfo {
+	// prevent transforms of local jars. See:
+	// https://github.com/gradlex-org/extra-java-module-info?tab=readme-ov-file#how-do-i-deactivate-the-plugin-functionality-for-my-own-jars
+	skipLocalJars = true
+
 	// used by core
 	automaticModule("eu.mihosoft.vrl.jcsg:jcsg", "eu.mihosoft.vrl.jcsg")
 	automaticModule("eu.mihosoft.vvecmath:vvecmath", "eu.mihosoft.vvecmath")
