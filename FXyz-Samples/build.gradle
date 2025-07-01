@@ -59,7 +59,7 @@ jar {
                     "Implementation-Version":   project.version,
                     "Class-Path":               configurations.runtimeClasspath.collect { it.getName() }.join(" "),
                     "Main-Class":               mainClassName,
-                    "Automatic-Module-Name" :   "org.fxyz3d.samples"
+                    "Automatic-Module-Name" :   moduleName
     }
     from sourceSets.main.allJava
 }
