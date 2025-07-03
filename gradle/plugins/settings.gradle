@@ -3,5 +3,3 @@ dependencyResolutionManagement {
 		gradlePluginPortal()
 	}
 }
-
-include("plugins")
