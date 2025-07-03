@@ -16,7 +16,7 @@ dependencies {
 }
 
 javafx {
-	modules = [ "javafx.graphics", "javafx.fxml" ]
+	modules = [ "javafx.controls", "javafx.fxml" ]
 }
 
 javadoc {
