@@ -6,8 +6,7 @@ plugins {
 	id("eclipse")
 }
 
-// Convert unnamed modules to automatic modules.
-// They can also be converted to "real" modules, which requires 'exports' and 'requires' configurations
+// Convert unnamed modules to automatic modules. They can also be converted to "real" modules with 'module(...)'.
 // See https://github.com/gradlex-org/extra-java-module-info 
 extraJavaModuleInfo {
 	// prevent transforms of local jars. See:
