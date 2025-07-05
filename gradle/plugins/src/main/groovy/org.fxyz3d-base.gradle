@@ -1,0 +1,84 @@
+plugins {
+	id("java")
+	id("org.openjfx.javafxplugin")
+	id("org.gradlex.extra-java-module-info")
+	id("com.github.hierynomus.license")
+	id("eclipse")
+}
+
+// Convert unnamed modules to automatic modules. They can also be converted to "real" modules with 'module(...)'.
+// See https://github.com/gradlex-org/extra-java-module-info 
+extraJavaModuleInfo {
+	// prevent transforms of local jars. See:
+	// https://github.com/gradlex-org/extra-java-module-info?tab=readme-ov-file#how-do-i-deactivate-the-plugin-functionality-for-my-own-jars
+	skipLocalJars = true
+
+	// used by core
+	automaticModule("eu.mihosoft.vrl.jcsg:jcsg", "eu.mihosoft.vrl.jcsg")
+	automaticModule("eu.mihosoft.vvecmath:vvecmath", "eu.mihosoft.vvecmath")
+	automaticModule("org.orbisgis:poly2tri-core", "org.orbisgis.poly2tri.core")
+
+	// used by samples
+	automaticModule("org.reactfx:reactfx", "org.reactfx")
+	automaticModule("org.fxmisc.easybind:easybind", "org.fxmisc.easybind")
+}
+
+testing {
+	suites {
+		configureEach {
+			useJUnitJupiter()
+			dependencies {
+				implementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+				runtimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformVersion")
+				runtimeOnly("org.slf4j:slf4j-api:$slf4jVersion")
+				implementation("org.hamcrest:hamcrest:$hamcrestVersion")
+			}
+			targets {
+				all {
+					testTask.configure {
+						testLogging {
+							showStandardStreams = true
+							events "failed"
+							exceptionFormat "full"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+java {
+	toolchain.languageVersion.set(JavaLanguageVersion.of(javaVersion))
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = "UTF-8"
+}
+
+javafx {
+	version = "$javafxVersion"
+}
+
+eclipse.classpath {
+	downloadJavadoc = true
+	downloadSources = true
+}
+
+license {
+	header = rootProject.file('fxyz-license.txt')
+	strictCheck = true
+	ignoreFailures = false
+	skipExistingHeaders = true
+	mapping {
+		java   = 'SLASHSTAR_STYLE'
+		groovy = 'SLASHSTAR_STYLE'
+		fxml   = 'XML_STYLE'
+	}
+	
+	ext.title		= 'F(X)yz'
+	ext.yearCurrent = new java.text.SimpleDateFormat("yyyy").format(new Date())
+	ext.yearSince	= '2013'
+	
+	excludes(['**/*.txt', '**/*.html', '**/*.fxml', '**/*.css', '**/*.obj', '**/*.mtl', '**/*.ma', '**/*.png', '**/*.gif', '**/*.jpg'])
+}

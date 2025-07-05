@@ -1,102 +1,11 @@
-import java.text.SimpleDateFormat
-
 plugins {
-    id 'base'
-    id 'net.nemerosa.versioning' version '3.0.0'
-    id 'com.github.ben-manes.versions' version '0.47.0'
-    id 'io.codearte.nexus-staging' version '0.30.0'
-    id 'org.openjfx.javafxplugin' version '0.1.0' apply false
-    id 'org.javamodularity.moduleplugin' version '1.8.12' apply false
-    id 'com.github.hierynomus.license' version '0.16.1' apply false
-    id 'de.marcphilipp.nexus-publish' version '0.4.0' apply false
-}
+    id "net.nemerosa.versioning" version "$versioningPluginVersion"
+    id "com.github.ben-manes.versions" version "$versionsPluginVersion"
+    id "io.codearte.nexus-staging" version "$nexusStagingPluginVersion"
 
-ext {
-    fxyz_sampler_mainClass   = 'org.fxyz3d.samples.Launcher'
-    gradleWrapperVersion = '8.3'
-}
-
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'eclipse'
-    apply plugin: 'org.openjfx.javafxplugin'
-    apply plugin: 'org.javamodularity.moduleplugin'
-    apply plugin: 'com.github.hierynomus.license'
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-        modularity.inferModulePath.set(false)
-    }
-
-    if (project.name != 'FXyz-Samples') {
-        apply plugin: 'java-library'
-        apply plugin: 'maven-publish'
-        apply from: "$rootDir/gradle/publishing.gradle"
-    } else {
-        javadoc {
-            enabled(false)
-        }
-    }
-
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-        testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.2'
-        testImplementation 'org.hamcrest:hamcrest:2.2'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
-    }
-
-    javafx {
-        version = javafx_version
-        modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing' ]
-    }
-
-    javadoc {
-        options.addBooleanOption("Xdoclint:none").setValue(true)
-        options.addBooleanOption("javafx").setValue(true)
-    }
-
-    eclipse {
-        classpath {
-            file {
-                whenMerged {
-                    entries.findAll { it.kind == 'src' || it.kind == 'lib' }.each {
-                        it.entryAttributes['module'] = 'true'
-                    }
-                }
-            }
-        }
-    }
-
-    license {
-        header = rootProject.file('fxyz-license.txt')
-        strictCheck = true
-        ignoreFailures = false
-        skipExistingHeaders = true
-        mapping {
-            java   = 'SLASHSTAR_STYLE'
-            groovy = 'SLASHSTAR_STYLE'
-            fxml   = 'XML_STYLE'
-        }
-
-        ext.title           = 'F(X)yz'
-        ext.yearCurrent     = new SimpleDateFormat("yyyy").format(new Date())
-        ext.yearSince       = '2013'
-
-        excludes(['**/*.txt', '**/*.html', '**/*.fxml', '**/*.css', '**/*.obj', '**/*.mtl', '**/*.ma', '**/*.png', '**/*.gif', '**/*.jpg'])
-    }
-
-    test {
-        useJUnitPlatform()
-        testLogging {
-            events "failed"
-            exceptionFormat "full"
-        }
-    }
+    id "org.openjfx.javafxplugin" version "$javafxPluginVersion" apply false
+    id "com.github.hierynomus.license" version "$hierynomusLicensePluginVersion" apply false
+    id "de.marcphilipp.nexus-publish" version "$nexusPublishPluginVersion" apply false
 }
 
 nexusStaging {

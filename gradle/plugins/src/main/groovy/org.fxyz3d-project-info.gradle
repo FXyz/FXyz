@@ -1,6 +1,7 @@
 // -----------------------------------------------------------------------------
 // publishing information
 // -----------------------------------------------------------------------------
+ext.publish = [:]
 ext.publish.artifactId =  project.name
 ext.publish.groupId    =  group
 ext.publish.versionId  =  version

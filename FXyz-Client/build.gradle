@@ -1,18 +1,26 @@
-ext.moduleName = 'org.fxyz3d.client'
+plugins {
+	id("org.fxyz3d-lib")
+}
 
-if (!hasProperty('mainClass')) {
-    ext.mainClass = 'org.fxyz3d.client.FXyzClient'
+ext.moduleName = "org.fxyz3d.client"
+
+if (!hasProperty("mainClass")) {
+    ext.mainClass = "org.fxyz3d.client.FXyzClient"
 }
 
 dependencies {
-    api ('org.controlsfx:controlsfx:11.1.2') {
+    api ("org.controlsfx:controlsfx:$controlsfxVersion") {
         exclude group:"org.openjfx"
     }
-    api 'org.reactfx:reactfx:2.0-M5'
+    api ("org.reactfx:reactfx:$reactfxVersion")
+}
+
+javafx {
+	modules = [ "javafx.controls", "javafx.fxml" ]
 }
 
 javadoc {
-    exclude 'impl/*'
+    exclude "impl/*"
     failOnError = false
 
     options.windowTitle("FXSampler Project ${version}")
@@ -25,7 +33,7 @@ javadoc {
     doLast {
         copy {
             from "src/main/docs"
-            into layout.buildDirectory.dir('docs/javadoc')
+            into layout.buildDirectory.dir("docs/javadoc")
         }
     }
 }

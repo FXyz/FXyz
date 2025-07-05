@@ -1,0 +1,9 @@
+plugins {
+	id("groovy-gradle-plugin")
+}
+
+group = "org.fxyz3d"
+
+dependencies {
+	implementation("org.gradlex:extra-java-module-info:1.12")
+}

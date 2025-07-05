@@ -1,0 +1,11 @@
+plugins {
+	id("org.fxyz3d-base")
+	id("java-library")
+	id("maven-publish")
+	id("org.fxyz3d-publishing")
+}
+
+javadoc {
+	options.addBooleanOption("Xdoclint:none").setValue(true)
+	options.addBooleanOption("javafx").setValue(true)
+}

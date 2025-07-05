@@ -1,7 +1,7 @@
 /**
  * F(X)yz
  *
- * Copyright (c) 2013-2018, F(X)yz
+ * Copyright (c) 2013-2025, F(X)yz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,8 +35,8 @@ module org.fxyz3d.samples {
     requires transitive javafx.fxml;
     requires java.logging;
     requires org.controlsfx.controls;
-    requires easybind;
-    requires reactfx;
+    requires org.reactfx;		  // unnamed module converted to automatic module in gradle
+    requires org.fxmisc.easybind; // unnamed module converted to automatic module in gradle
     requires jfxtras.common;
     requires jfxtras.controls;
     requires jfxtras.fxml;
