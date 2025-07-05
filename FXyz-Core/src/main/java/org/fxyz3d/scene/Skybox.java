@@ -181,35 +181,33 @@ public class Skybox extends Group{
         
         back.setTranslateX(-0.5 * getSize());
         back.setTranslateY(-0.5 * getSize());
-        back.setTranslateZ(-0.5 * getSize());          
+        back.setTranslateZ(-0.5 * getSize());
+        back.setRotationAxis(Rotate.Y_AXIS);
+        back.setRotate(180);
                 
         front.setTranslateX(-0.5 * getSize());
         front.setTranslateY(-0.5 * getSize());
         front.setTranslateZ(0.5 * getSize());
-        front.setRotationAxis(Rotate.Z_AXIS);
-        front.setRotate(-180);
-        front.getTransforms().add(new Rotate(180,front.getFitHeight() / 2, 0,0, Rotate.X_AXIS));
-        front.setTranslateY(front.getTranslateY() - getSize());
                 
         top.setTranslateX(-0.5 * getSize());
         top.setTranslateY(-1 * getSize());
         top.setRotationAxis(Rotate.X_AXIS);
-        top.setRotate(-90);
+        top.setRotate(90);
                 
         bottom.setTranslateX(-0.5 * getSize());
         bottom.setTranslateY(0);
         bottom.setRotationAxis(Rotate.X_AXIS);
-        bottom.setRotate(90);
+        bottom.setRotate(-90);
                 
         left.setTranslateX(-1 * getSize());
         left.setTranslateY(-0.5 * getSize());
         left.setRotationAxis(Rotate.Y_AXIS);
-        left.setRotate(90);        
+        left.setRotate(-90);
         
         right.setTranslateX(0);
         right.setTranslateY(-0.5 * getSize());
         right.setRotationAxis(Rotate.Y_AXIS);
-        right.setRotate(-90);      
+        right.setRotate(90);
        
     }
     
