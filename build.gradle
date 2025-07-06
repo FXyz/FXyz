@@ -1,21 +1,28 @@
+import java.time.Duration
+
 plugins {
     id "net.nemerosa.versioning" version "$versioningPluginVersion"
     id "com.github.ben-manes.versions" version "$versionsPluginVersion"
-    id "io.codearte.nexus-staging" version "$nexusStagingPluginVersion"
+    id "io.github.gradle-nexus.publish-plugin" version "$nexusPublishPluginVersion"
 
     id "org.openjfx.javafxplugin" version "$javafxPluginVersion" apply false
     id "com.github.hierynomus.license" version "$hierynomusLicensePluginVersion" apply false
-    id "de.marcphilipp.nexus-publish" version "$nexusPublishPluginVersion" apply false
-}
-
-nexusStaging {
-    username = project.hasProperty('sonatypeUsername') ? project.property('sonatypeUsername') : ''
-    password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
-    numberOfRetries = 30
-    delayBetweenRetriesInMillis = 10000
 }
 
 wrapper {
     gradleVersion = gradleWrapperVersion
     distributionType = Wrapper.DistributionType.BIN
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+            username = project.hasProperty('sonatypeUsername') ? project.property('sonatypeUsername') : ''
+            password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
+        }
+    }
+    clientTimeout = Duration.ofMinutes(5)
+    connectTimeout = Duration.ofMinutes(5)
 }

@@ -1,11 +1,9 @@
 import java.text.SimpleDateFormat
-import java.time.Duration
 
 plugins {
 	id("signing")
 	id("maven-publish")
-	id("de.marcphilipp.nexus-publish")
-	id("org.fxyz3d-project-info")    
+	id("org.fxyz3d-project-info")
 }
 
 base {
@@ -20,19 +18,6 @@ base {
 signing {
     required = { gradle.taskGraph.hasTask("publish") && !version.endsWith("SNAPSHOT") }
     sign publishing.publications
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
-            username = project.hasProperty('sonatypeUsername') ? project.property('sonatypeUsername') : ''
-            password = project.hasProperty('sonatypePassword') ? project.property('sonatypePassword') : ''
-        }
-    }
-    clientTimeout = Duration.ofMinutes(5)
-    connectTimeout = Duration.ofMinutes(5)
 }
 
 // -----------------------------------------------------------------------------
