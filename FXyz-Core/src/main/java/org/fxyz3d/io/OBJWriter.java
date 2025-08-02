@@ -29,6 +29,17 @@
 
 package org.fxyz3d.io;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.TriangleMesh;
+import org.fxyz3d.geometry.Point3D;
+import org.fxyz3d.scene.paint.Palette;
+import org.fxyz3d.scene.paint.Patterns;
+import org.fxyz3d.shapes.primitives.helper.TriangleMeshHelper.TextureType;
+
+import javax.imageio.ImageIO;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,16 +48,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.TriangleMesh;
-import javax.imageio.ImageIO;
-import org.fxyz3d.geometry.Point3D;
-import org.fxyz3d.scene.paint.Palette;
-import org.fxyz3d.scene.paint.Patterns;
-import org.fxyz3d.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *
@@ -54,7 +55,6 @@ import org.fxyz3d.shapes.primitives.helper.TriangleMeshHelper.TextureType;
  */
 public class OBJWriter {
     
-    private final String newline = System.getProperty("line.separator");
     private float[] points0, texCoord0;
     private int[] faces0, sm0;
     private BufferedWriter writer = null;
@@ -103,8 +103,10 @@ public class OBJWriter {
         try{
             writer = new BufferedWriter(new FileWriter(objFile));
             
-            writer.write("# Material"+newline);
-            writer.write("mtllib "+fileName+".mtl"+newline);
+            writer.write("# Material");
+            writer.newLine();
+            writer.write("mtllib "+fileName+".mtl");
+            writer.newLine();
             
             points0=new float[mesh.getPoints().size()];
             mesh.getPoints().toArray(points0);
@@ -112,16 +114,18 @@ public class OBJWriter {
                 .mapToObj(i -> new Point3D(points0[3*i], points0[3*i+1], points0[3*i+2]))
                 .collect(Collectors.toList());
             
-            writer.write("# Vertices ("+points1.size()+")"+newline);
+            writer.write("# Vertices ("+points1.size()+")");
+            writer.newLine();
             points1.forEach(p->{
                 try {
-                    writer.write("v "+p.x+" "+p.y+" "+p.z+""+newline);
+                    writer.write("v "+p.x+" "+p.y+" "+p.z);
+                    writer.newLine();
                 } catch (IOException ex) {
                     System.out.println("Error writting vertex "+ex);
                 }
             });
-            writer.write("# End Vertices"+newline);
-            writer.write(newline);
+            writer.write("# End Vertices");
+            writer.newLine();
             
             texCoord0=new float[mesh.getTexCoords().size()];
             mesh.getTexCoords().toArray(texCoord0);
@@ -130,17 +134,19 @@ public class OBJWriter {
                     .mapToObj(i -> new Point2D(texCoord0[2*i], texCoord0[2*i+1]))
                     .collect(Collectors.toList());
             
-            writer.write("# Textures Coordinates ("+texCoord1.size()+")"+newline);
+            writer.write("# Textures Coordinates ("+texCoord1.size()+")");
+            writer.newLine();
             texCoord1.forEach(t->{
                 try {
                     // objimporter u->u, v->(1-v)
-                    writer.write("vt "+((float)t.getX())+" "+((float)(1d-t.getY()))+""+newline);
+                    writer.write("vt "+((float)t.getX())+" "+((float)(1d-t.getY())));
+                    writer.newLine();
                 } catch (IOException ex) {
                     System.out.println("Error writting texture coordinate "+ex);
                 }
             });
-            writer.write("# End Texture Coordinates "+newline);
-            writer.write(newline);
+            writer.write("# End Texture Coordinates ");
+            writer.newLine();
             
             faces0=new int[mesh.getFaces().size()];
             mesh.getFaces().toArray(faces0);
@@ -150,29 +156,35 @@ public class OBJWriter {
                         faces0[6*i+4], faces0[6*i+5]})
                     .collect(Collectors.toList());
             
-            writer.write("# Faces ("+faces1.size()+")"+newline);
-            writer.write("# Material"+newline);
-            writer.write("usemtl "+fileName+""+newline);
+            writer.write("# Faces ("+faces1.size()+")");
+            writer.newLine();
+            writer.write("# Material");
+            writer.newLine();
+            writer.write("usemtl "+fileName);
+            writer.newLine();
             sm0=new int[mesh.getFaces().size()];
             mesh.getFaceSmoothingGroups().toArray(sm0);
             if(sm0[0]>0){
-                writer.write("s "+sm0[0]+""+newline);
+                writer.write("s "+sm0[0]);
+                writer.newLine();
             }
             AtomicInteger count = new AtomicInteger();
             faces1.forEach(f->{
                 try {
                     writer.write("f "+(f[0]+1)+"/"+(f[1]+1)+
                                  " "+(f[2]+1)+"/"+(f[3]+1)+
-                                 " "+(f[4]+1)+"/"+(f[5]+1)+""+newline);
+                                 " "+(f[4]+1)+"/"+(f[5]+1));
+                    writer.newLine();
                     if(sm0[count.getAndIncrement()]!=sm0[count.get()]){
-                        writer.write("s "+(sm0[count.get()]>0?sm0[count.get()]:"off")+""+newline);
+                        writer.write("s "+(sm0[count.get()]>0?sm0[count.get()]:"off"));
+                        writer.newLine();
                     }
                 } catch (IOException ex) {
-                    System.out.println("Error writting face "+ex);
+                    System.out.println("Error writing face "+ex);
                 }
             });
-            writer.write("# End Faces "+newline);
-            writer.write(newline);
+            writer.write("# End Faces");
+            writer.newLine();
             
         } catch(IOException io){
              System.out.println("Error creating writer obj "+io);
@@ -187,19 +199,29 @@ public class OBJWriter {
         File mtlFile = new File(fileName+".mtl");
         try{
             writer = new BufferedWriter(new FileWriter(mtlFile));
-            writer.write("# Material "+fileName+""+newline);
-            writer.write("newmtl "+fileName+""+newline);
-            writer.write("illum 4"+newline); // Illumination [0-10]
-            writer.write("Kd "+diffuseColor+""+newline); // diffuse color black
-            writer.write("Ka 0.10 0.10 0.10"+newline); // ambient color
-            writer.write("Tf 1.00 1.00 1.00"+newline); // Transmission filter
+            writer.write("# Material "+fileName);
+            writer.newLine();
+            writer.write("newmtl "+fileName);
+            writer.newLine();
+            writer.write("illum 4"); // Illumination [0-10]
+            writer.newLine();
+            writer.write("Kd "+diffuseColor); // diffuse color black
+            writer.newLine();
+            writer.write("Ka 0.10 0.10 0.10"); // ambient color
+            writer.newLine();
+            writer.write("Tf 1.00 1.00 1.00"); // Transmission filter
+            writer.newLine();
             if(diffuseMap!=null){
-                writer.write("map_Kd "+diffuseMap+""+newline);
+                writer.write("map_Kd "+diffuseMap);
+                writer.newLine();
             }
-            writer.write("Ni 1.00"+newline); // optical density
-            writer.write("Ks 1.00 1.00 1.00"+newline); // specular reflectivity
-            writer.write("Ns 32.00"+newline); // specular exponent
-            
+            writer.write("Ni 1.00"); // optical density
+            writer.newLine();
+            writer.write("Ks 1.00 1.00 1.00"); // specular reflectivity
+            writer.newLine();
+            writer.write("Ns 32.00"); // specular exponent
+            writer.newLine();
+
         } catch(IOException io){
              System.out.println("Error creating writer mtl "+io);
         } finally {
